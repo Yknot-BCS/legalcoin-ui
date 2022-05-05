@@ -1,0 +1,22 @@
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  name: 'Error404'
+});
+</script>
+
+<template lang="pug">
+div.fullscreen.bg-blue.text-white.text-center.q-pa-md.flex.flex-center
+  div
+    div(style="font-size: 30vh") Wow
+    div.text-h2( style="opacity:.4") Much Client here...
+    q-btn.q-mt-xl(
+      color="white"
+      text-color="blue"
+      unelevated
+      to="/"
+      label="Go Home"
+      no-caps
+    )
+</template>
