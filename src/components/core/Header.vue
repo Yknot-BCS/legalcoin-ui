@@ -1,7 +1,7 @@
 <template lang="pug">
 q-header.text-black( style='background: white')
   q-toolbar.row.q-py-sm.q-px-md
-    a.row.items-center.cursor-pointer
+    router-link(:to="{name: 'home'}").row.items-center.cursor-pointer
       img.HL__logo.q-mr-md(src="~assets/legalcoin-full.png")
 
     .HL__toolbar-link.q-mx-md.q-gutter-md.text-h5.row.items-center.no-wrap(v-if='$q.screen.gt.sm')
