@@ -22,6 +22,24 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
+    path: '/buy',
+    name: 'buy',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Buy.vue') }],
+    meta: {
+      resource: 'Browse'
+    }
+  },
+  {
+    path: '/gallery',
+    name: 'gallery',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Gallery.vue') }],
+    meta: {
+      resource: 'Browse'
+    }
+  },
+  {
     path: '/admin',
     name: 'admin',
     component: () => import('layouts/MainLayout.vue'),

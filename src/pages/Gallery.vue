@@ -3,7 +3,7 @@ import { defineComponent } from 'vue';
 import Index from './Index.vue';
 
 export default defineComponent({
-  name: 'Login',
+  name: 'Gallery',
   components: {
     Index
   }
@@ -11,5 +11,5 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-h1 Login
+h1 Gallery
 </template>
