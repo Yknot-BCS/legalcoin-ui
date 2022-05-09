@@ -1,9 +1,8 @@
 <template lang="pug">
 q-header.text-black( style='background: white')
   q-toolbar.q-py-sm.q-px-md
-    q-btn.q-mr-sm( flat='' :ripple='false' size='19px' no-caps='')
-      img.HL__logo.q-mr-md(src="~assets/tlos.png") 
-      .text-h6 Legalcoin
+    a.row.items-center.cursor-pointer
+      img.HL__logo.q-mr-md(src="~assets/legalcoin-full.png")
 
     q-space
     .HL__toolbar-link.q-mx-md.q-gutter-md.text-h5.row.items-center.no-wrap(v-if='$q.screen.gt.sm')
@@ -117,6 +116,5 @@ q-header.text-black( style='background: white')
     .q-field__append
       display: none
   &__logo
-    width: 40px
     height:40px
 </style>
