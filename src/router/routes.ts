@@ -8,15 +8,14 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/Home.vue') }],
     meta: {
       layout: 'full',
-      resource: 'read',
-      redirectIfLoggedIn: true
+      resource: 'Browse'
     }
   },
   {
     path: '/login',
     name: 'auth-login',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Home.vue') }],
+    children: [{ path: '', component: () => import('pages/Login.vue') }],
     meta: {
       resource: 'Auth',
       redirectIfLoggedIn: true
@@ -29,7 +28,7 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/Admin.vue') }],
     meta: {
       layout: 'full',
-      resource: 'read',
+      resource: 'Admin',
       redirectIfLoggedIn: true
     }
   },
