@@ -1,17 +1,16 @@
 <template lang="pug">
 q-header.text-black( style='background: white')
-  q-toolbar.q-py-sm.q-px-md
+  q-toolbar.row.q-py-sm.q-px-md
     a.row.items-center.cursor-pointer
       img.HL__logo.q-mr-md(src="~assets/legalcoin-full.png")
 
-    q-space
     .HL__toolbar-link.q-mx-md.q-gutter-md.text-h5.row.items-center.no-wrap(v-if='$q.screen.gt.sm')
       a.text-black(href='javascript:void(0)')
         | Buy
       a.text-black(href='javascript:void(0)')
         | Gallery
 
-    q-select.HL__toolbar-select(ref='search' :dense='true' :outlined='true' :stack-label='false' label='Search or jump to...' v-model='text' :options='filteredOptions' @filter='filter' style='width: 300px')
+    q-select.col.HL__toolbar-select(ref='search' :dense='true' :outlined='true' :stack-label='false' label='Search or jump to...' v-model='text' :options='filteredOptions' @filter='filter')
       template(v-slot:append='')
         q-icon.text-weight-bold(name='search' size='18px')
 
@@ -31,7 +30,6 @@ q-header.text-black( style='background: white')
             q-btn.bg-grey-1.q-px-sm(outline='' dense='' no-caps='' text-color='blue-grey-5' size='12px')
               div {{ scope.opt.type || 'Jump to' }}
               q-icon(name='subdirectory_arrow_left' size='14px')
-    q-space
     
     .q-pl-sm.q-gutter-sm.row.items-center.no-wrap
       q-btn(v-if='$q.screen.gt.sm' dense='' flat='' round='' size='md' icon='wallet' color='grey-6')
@@ -111,7 +109,7 @@ q-header.text-black( style='background: white')
     &:hover
       color: $light-blue-9
   &__toolbar-select.q-field--focused
-    width: 450px !important
+    // width: 450px !important
     border-radius: 10px
     .q-field__append
       display: none
