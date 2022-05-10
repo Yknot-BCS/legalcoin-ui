@@ -1,13 +1,13 @@
 <template lang="pug">
 q-header.text-black( style='background: white')
   q-toolbar.row.q-py-sm.q-px-md
-    router-link(:to="{name: 'home'}").row.items-center.cursor-pointer
+    router-link(to="/").row.items-center.cursor-pointer
       img.HL__logo.q-mr-md(src="~assets/legalcoin-full.png")
 
     .HL__toolbar-link.q-mx-md.q-gutter-md.text-h5.row.items-center.no-wrap(v-if='$q.screen.gt.sm')
-      router-link(:to="{name: 'buy'}").text-black(href='javascript:void(0)')
+      router-link(to="/buy").text-black(href='javascript:void(0)')
         | Buy
-      router-link(:to="{name: 'gallery'}").text-black(href='javascript:void(0)')
+      router-link(to="gallery").text-black(href='javascript:void(0)')
         | Gallery
 
     q-select.col.HL__toolbar-select(ref='search' :dense='true' :outlined='true' :stack-label='false' label='Search or jump to...' v-model='text' :options='filteredOptions' @filter='filter')

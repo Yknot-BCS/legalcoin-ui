@@ -1,15 +1,13 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Index from './Index.vue';
 
 export default defineComponent({
   name: 'Home',
-  components: {
-    Index
-  }
+  components: {}
 });
 </script>
 
 <template lang="pug">
-h1 Home
+q-page
+  h1 Home
 </template>

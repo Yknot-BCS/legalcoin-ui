@@ -61,7 +61,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/not-authorized',
     name: 'not-authorized',
-    component: () => import('pages/NotAuthorized.vue'),
+    component: () => import('src/pages/miscellaneous/NotAuthorized.vue'),
     meta: {
       resource: 'Auth'
     }
@@ -69,7 +69,7 @@ const routes: RouteRecordRaw[] = [
   // Always leave 404 as last route, or remove
   {
     path: '/:catchAll(.*)*',
-    component: () => import('pages/Error404.vue')
+    component: () => import('src/pages/miscellaneous/Error404.vue')
   }
 ];
 

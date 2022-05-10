@@ -7,7 +7,12 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-div.fullscreen.bg-blue.text-white.text-center.q-pa-md.flex.flex-center
+.row.q-pt-lg.q-pl-lg
+  router-link(to="/").row.items-center.cursor-pointer
+    img.HL__logo.q-mr-md(src="~assets/legalcoin-full.png")
+
+
+div.fullscreen.text-white.text-center.q-pa-md.flex.flex-center
   div
     div(style="font-size: 30vh") 404
     div.text-h2( style="opacity:.4") Oops. Nothing here...
