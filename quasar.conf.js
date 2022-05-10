@@ -169,8 +169,8 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: '\'OBE\'',
-        short_name: '\'OBE\'',
+        name: '\'LegalCoin\'',
+        short_name: '\'LegalCoin\'',
         description: '..',
         display: 'standalone',
         orientation: 'portrait',

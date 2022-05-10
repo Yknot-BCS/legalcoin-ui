@@ -40,22 +40,68 @@ const routes: RouteRecordRaw[] = [
     }
   },
   {
-    path: '/admin',
-    name: 'admin',
+    path: '/explore',
+    name: 'explore',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Admin.vue') }],
+    children: [{ path: '', component: () => import('pages/Explore.vue') }],
     meta: {
-      layout: 'full',
-      resource: 'Admin',
-      redirectIfLoggedIn: true
+      resource: 'Browse'
     }
   },
   {
-    path: '/access-control',
-    name: 'access-control',
-    component: () => import('pages/Client.vue'),
+    path: '/profile/:profile',
+    name: 'profile',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Profile.vue') }],
+    meta: {
+      resource: 'Browse'
+    }
+  },
+  {
+    path: '/wallet',
+    name: 'wallet',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Wallet.vue') }],
+    meta: {
+      resource: 'Browse'
+    }
+  },
+  {
+    path: '/listing/:listing',
+    name: 'listing',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      { path: '', component: () => import('pages/SingleListing.vue') }
+    ],
+    meta: {
+      resource: 'Browse'
+    }
+  },
+  {
+    path: '/collection/:collection',
+    name: 'collection',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Collection.vue') }],
     meta: {
       resource: 'Auth'
+    }
+  },
+  {
+    path: '/template/:collection/:template',
+    name: 'template',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Template.vue') }],
+    meta: {
+      resource: 'Auth'
+    }
+  },
+  {
+    path: '/asset/:asset',
+    name: 'asset',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/Asset.vue') }],
+    meta: {
+      resource: 'Browse'
     }
   },
   {
