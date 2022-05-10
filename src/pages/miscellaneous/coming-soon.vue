@@ -7,14 +7,14 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-.row.q-pt-lg.q-pl-lg
+.row.q-pt-lg.q-pl-lg.q-mb-lg
   router-link(to="/").row.items-center.cursor-pointer
     img.logo.q-mr-md(src="~assets/legalcoin-full.png")
 
-div.fullscreen.text-white.text-center.q-pa-md.flex.flex-center
+div.fullscreen.text-white.text-center.q-pa-xl.flex.flex-center
   .div.q-pt-lg
-    div.text-black.text-h4.q-pb-lg( style="opacity:.8") Page Not Found 🕵🏻‍♀️
-    div.text-black.text-h5.text-grey-7 Oops! 😖 The requested URL was not found on this server.
+    div.text-black.text-h4.q-pb-lg( style="opacity:.8") We are launching soon 🚀
+    div.text-black.text-h5.text-grey-7 We're creating something awesome. We will be ready in no time!
     q-btn.q-mt-lg.q-mb-md(
       color="primary"
       text-color="white"
@@ -25,12 +25,13 @@ div.fullscreen.text-white.text-center.q-pa-md.flex.flex-center
     )
     .row.justify-center
       q-card(class="my-card" flat )
-        img.auth-image.q-mr-md(src="~assets/error.svg")
+        img.q-mr-md(src="~assets/error.svg")
 </template>
 
 <style scoped lang="sass">
 .logo
   height:40px
+
 .my-card
   width: 100%
   max-width: 350px

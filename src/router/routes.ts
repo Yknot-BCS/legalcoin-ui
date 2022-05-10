@@ -66,6 +66,22 @@ const routes: RouteRecordRaw[] = [
       resource: 'Auth'
     }
   },
+  {
+    path: '/404',
+    name: '404',
+    component: () => import('src/pages/miscellaneous/Error404.vue'),
+    meta: {
+      resource: 'Auth'
+    }
+  },
+  {
+    path: '/coming-soon',
+    name: 'coming-soon',
+    component: () => import('src/pages/miscellaneous/coming-soon.vue'),
+    meta: {
+      resource: 'Auth'
+    }
+  },
   // Always leave 404 as last route, or remove
   {
     path: '/:catchAll(.*)*',
