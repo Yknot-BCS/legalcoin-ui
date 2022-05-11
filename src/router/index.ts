@@ -2,12 +2,6 @@
 import { route } from 'quasar/wrappers';
 import { createRouter, createWebHistory } from 'vue-router';
 import { StateInterface } from '../store';
-import { canNavigate } from 'src/libs/acl/routeProtection';
-import {
-  isUserLoggedIn,
-  getUserData,
-  getHomeRouteForLoggedInUser
-} from 'src/auth/utils';
 import routes from './routes';
 
 /*
@@ -29,26 +23,6 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE)
-  });
-
-  Router.beforeEach((to, _, next) => {
-    const isLoggedIn = isUserLoggedIn();
-
-    if (!canNavigate(to)) {
-      // Redirect to login if not logged in
-      if (!isLoggedIn) return next({ name: 'auth-login' });
-
-      // If logged in => not authorized
-      return next({ name: 'not-authorized' });
-    }
-
-    // Redirect if logged in
-    if (to.meta.redirectIfLoggedIn && isLoggedIn) {
-      const userData = getUserData();
-      next(getHomeRouteForLoggedInUser(userData ? userData.role : null));
-    }
-
-    return next();
   });
 
   Router.afterEach(() => {

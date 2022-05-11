@@ -5,128 +5,82 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     name: 'home',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Home.vue') }],
-    meta: {
-      layout: 'full',
-      resource: 'Browse'
-    }
+    children: [{ path: '', component: () => import('pages/Home.vue') }]
   },
   {
     path: '/login',
     name: 'auth-login',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Login.vue') }],
-    meta: {
-      resource: 'Auth',
-      redirectIfLoggedIn: true
-    }
+    children: [{ path: '', component: () => import('pages/Login.vue') }]
   },
   {
     path: '/buy',
     name: 'buy',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Buy.vue') }],
-    meta: {
-      resource: 'Browse'
-    }
+    children: [{ path: '', component: () => import('pages/Buy.vue') }]
   },
   {
     path: '/gallery',
     name: 'gallery',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Gallery.vue') }],
-    meta: {
-      resource: 'Browse'
-    }
+    children: [{ path: '', component: () => import('pages/Gallery.vue') }]
   },
   {
     path: '/explore',
     name: 'explore',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Explore.vue') }],
-    meta: {
-      resource: 'Browse'
-    }
+    children: [{ path: '', component: () => import('pages/Explore.vue') }]
   },
   {
     path: '/profile/:profile',
     name: 'profile',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Profile.vue') }],
-    meta: {
-      resource: 'Browse'
-    }
+    children: [{ path: '', component: () => import('pages/Profile.vue') }]
   },
   {
     path: '/wallet',
     name: 'wallet',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Wallet.vue') }],
-    meta: {
-      resource: 'Browse'
-    }
+    children: [{ path: '', component: () => import('pages/Wallet.vue') }]
   },
   {
     path: '/listing/:listing',
     name: 'listing',
     component: () => import('layouts/MainLayout.vue'),
-    children: [
-      { path: '', component: () => import('pages/SingleListing.vue') }
-    ],
-    meta: {
-      resource: 'Browse'
-    }
+    children: [{ path: '', component: () => import('pages/SingleListing.vue') }]
   },
   {
     path: '/collection/:collection',
     name: 'collection',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Collection.vue') }],
-    meta: {
-      resource: 'Auth'
-    }
+    children: [{ path: '', component: () => import('pages/Collection.vue') }]
   },
   {
     path: '/template/:collection/:template',
     name: 'template',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Template.vue') }],
-    meta: {
-      resource: 'Auth'
-    }
+    children: [{ path: '', component: () => import('pages/Template.vue') }]
   },
   {
     path: '/asset/:asset',
     name: 'asset',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Asset.vue') }],
-    meta: {
-      resource: 'Browse'
-    }
+    children: [{ path: '', component: () => import('pages/Asset.vue') }]
   },
   {
     path: '/not-authorized',
     name: 'not-authorized',
-    component: () => import('src/pages/miscellaneous/NotAuthorized.vue'),
-    meta: {
-      resource: 'Auth'
-    }
+    component: () => import('src/pages/miscellaneous/NotAuthorized.vue')
   },
   {
     path: '/404',
     name: '404',
-    component: () => import('src/pages/miscellaneous/Error404.vue'),
-    meta: {
-      resource: 'Auth'
-    }
+    component: () => import('src/pages/miscellaneous/Error404.vue')
   },
   {
     path: '/coming-soon',
     name: 'coming-soon',
-    component: () => import('src/pages/miscellaneous/coming-soon.vue'),
-    meta: {
-      resource: 'Auth'
-    }
+    component: () => import('src/pages/miscellaneous/coming-soon.vue')
   },
   // Always leave 404 as last route, or remove
   {
