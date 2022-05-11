@@ -1,3 +1,31 @@
+<script lang="ts">
+import { computed } from 'vue';
+import { isUserLoggedIn } from 'src/auth/utils';
+import useJwt from 'src/auth/jwt/useJwt';
+
+export default {
+  setup() {
+    return {
+      isLoggedIn: computed((): boolean => {
+        return isUserLoggedIn();
+      }),
+      signOut: () => {
+        localStorage.setItem(useJwt.jwtConfig.storageTokenKeyName, '');
+      },
+      signIn: () => {
+        const refreshToken = localStorage.getItem(
+          useJwt.jwtConfig.storageRefreshTokenKeyName
+        );
+        localStorage.setItem(
+          useJwt.jwtConfig.storageTokenKeyName,
+          refreshToken
+        );
+      }
+    };
+  }
+};
+</script>
+
 <template lang="pug">
 q-header.text-black( style='background: white')
   q-toolbar.row.q-py-sm.q-px-md
@@ -39,41 +67,43 @@ q-header.text-black( style='background: white')
         q-icon(name='arrow_drop_down' size='16px')
         q-menu(auto-close='')
           q-list(dense='')
-            q-item.HL__menu-link-signed-in
+            q-item.HL__menu-link-signed-in(v-if="isLoggedIn")
               q-item-section
                 div
                   | Signed in as 
                   strong Peanutbutter
             q-separator
-            q-item.HL__menu-link(clickable='')
+            q-item.HL__menu-link(clickable)
               q-item-section Your profile
-            q-item.HL__menu-link(clickable='')
+            q-item.HL__menu-link(clickable)
               q-item-section Your assets
-            q-item.HL__menu-link(clickable='')
+            q-item.HL__menu-link(clickable)
               q-item-section Your listings
-            q-item.HL__menu-link(clickable='')
+            q-item.HL__menu-link(clickable)
               q-item-section Your wallet
             q-separator
-            q-item.HL__menu-link(clickable='')
+            q-item.HL__menu-link(clickable)
               q-item-section Help
-            q-item.HL__menu-link(clickable='')
+            q-item.HL__menu-link(clickable)
               q-item-section Settings
-            q-item.HL__menu-link(clickable='')
+            q-item.HL__menu-link(clickable v-if="isLoggedIn" @click="signOut()")
               q-item-section Sign out
+            q-item.HL__menu-link(clickable v-if="!isLoggedIn" @click="signIn()")
+              q-item-section Sign in
 
       q-btn(dense='' flat='')
         .row.items-center.no-wrap
           q-icon(name='more_vert' size='20px')
         q-menu(auto-close='')
           q-list(dense='' style='min-width: 100px')
-            q-item.HL__menu-link(clickable='')
+            q-item.HL__menu-link(clickable)
               q-item-section Buy
-            q-item.HL__menu-link(clickable='')
+            q-item.HL__menu-link(clickable)
               q-item-section Sell
-            q-item.HL__menu-link(clickable='')
+            q-item.HL__menu-link(clickable)
               q-item-section Marketplace
             q-separator
-            q-item.HL__menu-link(clickable='')
+            q-item.HL__menu-link(clickable)
               q-item-section New listing
 </template>
 
