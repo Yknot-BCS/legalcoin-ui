@@ -7,13 +7,13 @@ export const getters: GetterTree<AccountStateInterface, StateInterface> = {
   account(state): AccountStateInterface {
     return state;
   },
-  isAuthenticated(state): boolean {
-    return state.isAuthenticated;
+  cryptoIsAuthenticated(state): boolean {
+    return state.cryptoIsAuthenticated;
   },
-  accountName(state): string {
-    return state.accountName;
+  cryptoAccountName(state): string {
+    return state.cryptoAccountName;
   },
   getAccountData(state): AccountDetails {
-    return state.data;
+    return state.cryptoAccountDetails;
   }
 };

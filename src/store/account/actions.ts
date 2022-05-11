@@ -22,13 +22,13 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
     const users = await (authenticator as Authenticator).login();
     if (users.length) {
       const account = users[0];
-      const accountName = await account.getAccountName();
-      commit('setAccountName', accountName);
+      const cryptoAccountName = await account.getAccountName();
+      commit('setCryptoAccountName', cryptoAccountName);
       localStorage.setItem(
         'autoLogin',
         (authenticator as Authenticator).constructor.name
       );
-      localStorage.setItem('account', accountName);
+      localStorage.setItem('account', cryptoAccountName);
       localStorage.setItem('returning', 'true');
       commit('setLoadingWallet');
     }
@@ -41,7 +41,7 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
         name: 'transfer',
         authorization: [
           {
-            actor: this.state.account.accountName,
+            actor: this.state.account.cryptoAccountName,
             permission: 'active'
           }
         ],
@@ -71,7 +71,7 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
         name: 'delegatebw',
         authorization: [
           {
-            actor: this.state.account.accountName,
+            actor: this.state.account.cryptoAccountName,
             permission: 'active'
           }
         ],
@@ -101,7 +101,7 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
         name: 'undelegatebw',
         authorization: [
           {
-            actor: this.state.account.accountName,
+            actor: this.state.account.cryptoAccountName,
             permission: 'active'
           }
         ],
@@ -131,7 +131,7 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
         name: 'refund',
         authorization: [
           {
-            actor: this.state.account.accountName,
+            actor: this.state.account.cryptoAccountName,
             permission: 'active'
           }
         ],

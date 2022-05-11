@@ -3,16 +3,16 @@ import { AccountStateInterface } from './state';
 import { AccountDetails } from 'src/types';
 
 export const mutations: MutationTree<AccountStateInterface> = {
-  setLoadingWallet(state: AccountStateInterface, wallet: string) {
-    state.loading = wallet;
+  setCryptoAccountName(
+    state: AccountStateInterface,
+    cryptoAccountName: string
+  ) {
+    state.cryptoAccountName = cryptoAccountName;
   },
-  setAccountName(state: AccountStateInterface, accountName: string) {
-    state.accountName = accountName;
-  },
-  setAutoLogin(state: AccountStateInterface, status: string) {
-    state.autoLogin = status;
-  },
-  setAccountData(state: AccountStateInterface, AccountData: AccountDetails) {
-    state.data = AccountData;
+  setCryptoAccountDetails(
+    state: AccountStateInterface,
+    accountDetails: AccountDetails
+  ) {
+    state.cryptoAccountDetails = accountDetails;
   }
 };
