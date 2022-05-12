@@ -11,14 +11,13 @@ q-layout( view="hHh lpR fFf")
   div.logo-wrapper.row.justify-center.items-center
     router-link(to="/").cursor-pointer
       img.logo(src="~assets/legalcoin-full.png")
-  q-page-container
+  q-page-container.row.justify-center
     router-view
-    q-separator
 </template>
 
 <style lang="sass" scoped>
 .logo-wrapper
   margin-top: 5vh
-.logo
-  width: clamp(15rem, 60vw, 25rem)
+  .logo
+    width: clamp(15rem, 60vw, 25rem)
 </style>
