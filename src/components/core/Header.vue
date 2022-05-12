@@ -50,8 +50,8 @@ q-header.text-black( style='background: white')
     .q-pl-sm.q-gutter-sm.row.items-center.no-wrap
       q-btn(v-if='$q.screen.gt.sm' dense='' flat='' round='' size='md' icon='wallet' color='grey-6')
       div(v-if="isLoggedIn") Peanutbutter
-      q-btn(clickable v-if="isLoggedIn" @click="signOut()") Sign out
-      q-btn(clickable v-if="!isLoggedIn" @click="signIn()") Sign in
+      q-btn(clickable v-if="!isLoggedIn" to="login") Sign in
+      //- q-btn(clickable v-if="!isLoggedIn" @click="signIn()") Sign in
       //- q-btn(v-if='$q.screen.gt.sm' dense='' flat='' no-wrap='')
       //-   q-avatar(rounded='' size='30px' )
       //-     q-icon.material-icons-outlined(name='account_circle' color='grey-6')
