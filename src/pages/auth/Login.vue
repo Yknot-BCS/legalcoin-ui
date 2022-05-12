@@ -1,15 +1,13 @@
 <script lang="ts">
 import { ref } from 'vue';
+import { requiredRule } from './inputRules';
 
 export default {
   setup() {
-    function inputRequired(val: string): string | boolean {
-      return (val && val.length > 0) || 'Required';
-    }
     return {
       userEmail: ref(''),
       userPassword: ref(''),
-      inputRequired,
+      requiredRule,
       onSubmit: () => {
         console.log('submit');
       }
@@ -21,21 +19,21 @@ export default {
 <template lang="pug">
 .form-wrapper.row.q-pa-md.bg-grey-3
   .text-h5.col-12 Login
-  q-form(@submit="onSubmit").col-12.row.q-mb-sm
+  q-form(@submit="onSubmit").col-12.row.q-mb-sm.q-gutter-y-lg
     q-input(
         v-model="userEmail"
         label="Email"
         lazy-rules
-        :rules="[ inputRequired ]"
+        :rules="[ requiredRule ]"
     ).col-12
     q-input(
         v-model="userPassword"
         type="password"
         label="Password"
         lazy-rules
-        :rules="[ inputRequired ]"
+        :rules="[ requiredRule ]"
     ).col-12
-    q-btn(type="submit" color="primary") Login
+    q-btn(type="submit" color="primary").col-12 Login
   .col-12.text-center
     span.q-mr-xs Need an account?
     router-link(to="register") Register
