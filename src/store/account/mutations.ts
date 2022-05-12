@@ -14,5 +14,8 @@ export const mutations: MutationTree<AccountStateInterface> = {
     accountDetails: AccountDetails
   ) {
     state.cryptoAccountDetails = accountDetails;
+  },
+  setIsLoggedIn(state: AccountStateInterface, isLoggedIn: boolean) {
+    state.isLoggedIn = isLoggedIn;
   }
 };

@@ -1,26 +1,14 @@
 <script lang="ts">
 import { computed } from 'vue';
-import { isUserLoggedIn } from 'src/auth/utils';
-import useJwt from 'src/auth/jwt/useJwt';
+import { useStore } from 'src/store';
 
 export default {
   setup() {
+    const store = useStore();
     return {
-      isLoggedIn: computed((): boolean => {
-        return isUserLoggedIn();
-      }),
-      signOut: () => {
-        localStorage.setItem(useJwt.jwtConfig.storageTokenKeyName, '');
-      },
-      signIn: () => {
-        const refreshToken = localStorage.getItem(
-          useJwt.jwtConfig.storageRefreshTokenKeyName
-        );
-        localStorage.setItem(
-          useJwt.jwtConfig.storageTokenKeyName,
-          refreshToken
-        );
-      }
+      isLoggedIn: computed((): boolean => store.state.account.isLoggedIn),
+      signOut: () => store.commit('account/setIsLoggedIn', false),
+      signIn: () => store.commit('account/setIsLoggedIn', true)
     };
   }
 };
@@ -62,7 +50,7 @@ q-header.text-black( style='background: white')
     .q-pl-sm.q-gutter-sm.row.items-center.no-wrap
       q-btn(v-if='$q.screen.gt.sm' dense='' flat='' round='' size='md' icon='wallet' color='grey-6')
       div(v-if="isLoggedIn") Peanutbutter
-      q-btn(clickable v-if="isLoggedIn" @click="signIn()") Sign out
+      q-btn(clickable v-if="isLoggedIn" @click="signOut()") Sign out
       q-btn(clickable v-if="!isLoggedIn" @click="signIn()") Sign in
       //- q-btn(v-if='$q.screen.gt.sm' dense='' flat='' no-wrap='')
       //-   q-avatar(rounded='' size='30px' )
