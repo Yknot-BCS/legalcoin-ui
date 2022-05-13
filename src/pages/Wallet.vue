@@ -9,5 +9,23 @@ export default defineComponent({
 
 <template lang="pug">
 q-page
-    h1 Wallet
+    q-card( class="my-card")
+      q-card-section
+        q-card-section-title
+          | My Balance
+      q-card-section
+        | x LEGAL
+      q-card-section
+        | x NFTS
+      q-card-section
+        | Options
+        q-btn(
+                color="primary"
+                label="BUY LEGAL TOKENS"
+                @click="$router.push({name: 'buytokens'})"
+                )
+            
+
+
+
 </template>

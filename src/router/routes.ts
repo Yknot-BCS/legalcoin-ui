@@ -78,6 +78,17 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: '/wallet/buytokens',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'buytokens',
+        component: () => import('pages/BuyTokens.vue')
+      }
+    ]
+  },
+  {
     path: '/listing/:listing',
     component: () => import('layouts/MainLayout.vue'),
     children: [
