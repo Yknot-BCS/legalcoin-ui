@@ -11,7 +11,7 @@
     "lint": "eslint --ext .js,.ts,.vue ./",
     "test": "jest --coverage",
     "test:coverage": "quasar serve test/jest/coverage/lcov-report/ --port 8788",
-    "gen:types": "npx apollo client:codegen --target typescript --includes **/*.graphql --excludes **/__generated__ --endpoint https://api.spacex.land/graphql"
+    "gen:types": "npx apollo client:codegen --target typescript --includes **/*.graphql.ts --excludes **/__generated__ --endpoint https://api.spacex.land/graphql"
   },
   "dependencies": {
     "@apollo/client": "^3.6.2",
