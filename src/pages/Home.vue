@@ -7,13 +7,16 @@ export default defineComponent({
   components: {},
   methods: {
     async onClick() {
-      const res = await api.accounts.query(`
+      type UserData = {
+        name: string[];
+      };
+      const res = (await api.accounts.query(`
           {
             users {
               name
             }
           }
-        `);
+        `)) as UserData;
       console.log(res);
     }
   }
