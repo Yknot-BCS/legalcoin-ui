@@ -1,0 +1,5 @@
+usersQuer {
+    users {
+        name
+    }
+}

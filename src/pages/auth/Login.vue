@@ -3,11 +3,21 @@ import { ref } from 'vue';
 import { requiredRule } from './inputRules';
 import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
+import { gql } from 'graphql-tag';
+import { useQuery } from '@vue/apollo-composable';
 
 export default {
   setup() {
     const store = useStore();
     const router = useRouter();
+    const { result } = useQuery(gql`
+      {
+        users {
+          name
+        }
+      }
+    `);
+
     return {
       userEmail: ref(''),
       userPassword: ref(''),
@@ -19,7 +29,8 @@ export default {
         // Navigate to home
         store.commit('account/setIsLoggedIn', true);
         await router.push({ name: 'home' });
-      }
+      },
+      result
     };
   }
 };
@@ -28,6 +39,7 @@ export default {
 <template lang="pug">
 .form-wrapper.row.q-pa-md.bg-grey-3
   .text-h5.col-12 Login
+  div {{ result }}
   q-form(@submit="onSubmit").col-12.row.q-mb-sm.q-gutter-y-lg
     q-input(
         v-model="userEmail"

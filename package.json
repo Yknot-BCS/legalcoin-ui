@@ -10,13 +10,18 @@
     "build": "quasar clean && quasar build",
     "lint": "eslint --ext .js,.ts,.vue ./",
     "test": "jest --coverage",
-    "test:coverage": "quasar serve test/jest/coverage/lcov-report/ --port 8788"
+    "test:coverage": "quasar serve test/jest/coverage/lcov-report/ --port 8788",
+    "gen:types": "npx apollo client:codegen --target typescript --includes **/*.graphql --excludes **/__generated__ --endpoint https://api.spacex.land/graphql"
   },
   "dependencies": {
+    "@apollo/client": "^3.6.2",
     "@greymass/eosio": "^0.5.4",
     "@quasar/extras": "^1.13.4",
+    "@vue/apollo-composable": "^4.0.0-alpha.17",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "graphql": "^16.5.0",
+    "graphql-tag": "^2.12.6",
     "highcharts": "^9.3.2",
     "highcharts-vue": "^1.4.0",
     "moment": "^2.29.2",
