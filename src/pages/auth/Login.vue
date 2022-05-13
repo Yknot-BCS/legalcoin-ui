@@ -1,15 +1,24 @@
 <script lang="ts">
 import { ref } from 'vue';
 import { requiredRule } from './inputRules';
+import { useStore } from 'src/store';
+import { useRouter } from 'vue-router';
 
 export default {
   setup() {
+    const store = useStore();
+    const router = useRouter();
     return {
       userEmail: ref(''),
       userPassword: ref(''),
       requiredRule,
-      onSubmit: () => {
-        console.log('submit');
+      onSubmit: async () => {
+        // Verify user
+        // Open session
+        // Get Telos account and other user data
+        // Navigate to home
+        store.commit('account/setIsLoggedIn', true);
+        await router.push({ name: 'home' });
       }
     };
   }
