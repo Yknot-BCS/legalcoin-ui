@@ -18,6 +18,7 @@ q-layout( view="hHh lpR fFf")
 <style lang="sass" scoped>
 .logo-wrapper
   margin-top: 5vh
+  margin-bottom: 2vh
   .logo
     width: clamp(15rem, 60vw, 25rem)
 </style>

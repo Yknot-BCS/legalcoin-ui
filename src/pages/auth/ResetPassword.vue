@@ -9,10 +9,7 @@ export default {
       return val === userPassword.value || 'Passwords do not match';
     }
     return {
-      userName: ref(''),
-      userSurname: ref(''),
-      userEmail: ref(''),
-      userPassword,
+      userPassword: ref(''),
       userRetypePassword: ref(''),
       requiredRule,
       passwordMatchRule,
@@ -26,26 +23,8 @@ export default {
 
 <template lang="pug">
 .form-wrapper.row.q-pa-md.bg-grey-3
-  .text-h5.col-12 Register
+  .text-h5.col-12 Reset Password
   q-form(@submit="onSubmit").col-12.row.q-mb-sm.q-gutter-y-lg
-    q-input(
-        v-model="userName"
-        label="Name"
-        lazy-rules
-        :rules="[ requiredRule ]"
-    ).col-6.q-pr-md
-    q-input(
-        v-model="userSurname"
-        label="Surname"
-        lazy-rules
-        :rules="[ requiredRule ]"
-    ).col-6
-    q-input(
-        v-model="userEmail"
-        label="Email"
-        lazy-rules
-        :rules="[ requiredRule ]"
-    ).col-12
     q-input(
         v-model="userPassword"
         type="password"
@@ -60,10 +39,10 @@ export default {
         lazy-rules
         :rules="[ requiredRule, passwordMatchRule ]"
     ).col-12
-    q-btn(type="submit" color="primary").col-12 Create an account
+    q-btn(type="submit" color="primary").col-12 Reset Password
   .col-12.text-center
-    span.q-mr-xs Already have an account?
-    router-link(to="login") Login
+    span.q-mr-xs Need an account?
+    router-link(to="register") Register
 
 </template>
 

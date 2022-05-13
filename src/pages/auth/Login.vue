@@ -37,6 +37,9 @@ export default {
   .col-12.text-center
     span.q-mr-xs Need an account?
     router-link(to="register") Register
+  .col-12.text-center
+    span.q-mr-xs Forgot your password?
+    router-link(to="resetpassword") Reset Password
 
 </template>
 
