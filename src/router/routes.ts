@@ -3,75 +3,119 @@ import { RouteRecordRaw } from 'vue-router';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    name: 'home',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Home.vue') }]
+    children: [
+      { path: '', name: 'home', component: () => import('pages/Home.vue') }
+    ]
   },
   {
     path: '/login',
-    name: 'login',
     component: () => import('layouts/Auth.vue'),
-    children: [{ path: '', component: () => import('pages/auth/Login.vue') }]
+    children: [
+      {
+        path: '',
+        name: 'login',
+        component: () => import('pages/auth/Login.vue')
+      }
+    ]
   },
   {
     path: '/register',
-    name: 'register',
     component: () => import('layouts/Auth.vue'),
-    children: [{ path: '', component: () => import('pages/auth/Register.vue') }]
+    children: [
+      {
+        path: '',
+        name: 'register',
+        component: () => import('pages/auth/Register.vue')
+      }
+    ]
   },
   {
     path: '/buy',
-    name: 'buy',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Buy.vue') }]
+    children: [
+      { path: '', name: 'buy', component: () => import('pages/Buy.vue') }
+    ]
   },
   {
     path: '/gallery',
-    name: 'gallery',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Gallery.vue') }]
+    children: [
+      {
+        path: '',
+        name: 'gallery',
+        component: () => import('pages/Gallery.vue')
+      }
+    ]
   },
   {
     path: '/explore',
-    name: 'explore',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Explore.vue') }]
+    children: [
+      {
+        path: '',
+        name: 'explore',
+        component: () => import('pages/Explore.vue')
+      }
+    ]
   },
   {
     path: '/profile/:profile',
-    name: 'profile',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Profile.vue') }]
+    children: [
+      {
+        path: '',
+        name: 'profile',
+        component: () => import('pages/Profile.vue')
+      }
+    ]
   },
   {
     path: '/wallet',
-    name: 'wallet',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Wallet.vue') }]
+    children: [
+      { path: '', name: 'wallet', component: () => import('pages/Wallet.vue') }
+    ]
   },
   {
     path: '/listing/:listing',
-    name: 'listing',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/SingleListing.vue') }]
+    children: [
+      {
+        path: '',
+        name: 'listing',
+        component: () => import('pages/SingleListing.vue')
+      }
+    ]
   },
   {
     path: '/collection/:collection',
-    name: 'collection',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Collection.vue') }]
+    children: [
+      {
+        path: '',
+        name: 'collection',
+        component: () => import('pages/Collection.vue')
+      }
+    ]
   },
   {
     path: '/template/:collection/:template',
-    name: 'template',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Template.vue') }]
+    children: [
+      {
+        path: '',
+        name: 'template',
+        component: () => import('pages/Template.vue')
+      }
+    ]
   },
   {
     path: '/asset/:asset',
-    name: 'asset',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/Asset.vue') }]
+    children: [
+      { path: '', name: 'asset', component: () => import('pages/Asset.vue') }
+    ]
   },
   {
     path: '/not-authorized',

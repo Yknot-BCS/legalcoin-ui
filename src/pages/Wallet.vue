@@ -9,5 +9,5 @@ export default defineComponent({
 
 <template lang="pug">
 q-page
-  h1 Wallet
+    h1 Wallet
 </template>

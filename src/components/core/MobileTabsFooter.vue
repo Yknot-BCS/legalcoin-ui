@@ -12,11 +12,10 @@ export default {
 
 <template lang="pug">
 q-tabs.bg-white.text-grey.footer-background(no-caps dense active-color="primary" indicator-color="transparent" v-model="tab")
-  q-tab(name="buy" label="BUY" icon="wallet")
-  q-tab(name="wallet" label="GALLERY" icon="wallet")
-  q-tab(name="gallery" label="WALLET" icon="mail")
-  q-tab(name="account" label="ACCOUNT" icon="person")
-
+  q-route-tab(name="buy" label="BUY" icon="wallet" :to="{ name: 'buy' }" exact)
+  q-route-tab(name="gallery" label="GALLERY" icon="fas fa-th" :to="{ name: 'gallery' }" exact)
+  q-route-tab(name="wallet" label="WALLET" icon="fas fa-wallet" :to="{ name: 'wallet' }" exact)
+  q-route-tab(name="account" label="ACCOUNT" icon="person" :to="{ name: 'profile', params: {profile: 'fuzz'}}" exact)
 </template>
 
 <style lang="sass" scoped>
