@@ -40,9 +40,6 @@ export default {
         :rules="[ requiredRule, passwordMatchRule ]"
     ).col-12
     q-btn(type="submit" color="primary").col-12 Reset Password
-  .col-12.text-center
-    span.q-mr-xs Need an account?
-    router-link(to="register") Register
 
 </template>
 
