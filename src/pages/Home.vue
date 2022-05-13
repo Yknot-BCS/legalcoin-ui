@@ -7,16 +7,24 @@ export default defineComponent({
   components: {},
   methods: {
     async onClick() {
-      type UserData = {
-        name: string[];
-      };
-      const res = (await api.accounts.query(`
+      // type UserData = {
+      //   name: string[];
+      // };
+      // const res = (await api.accounts.query(`
+      //     {
+      //       me {
+      //         name
+      //       }
+      //     }
+      //   `)) as UserData;
+      // console.log(res);
+      const res = await api.accounts.mutation(`
           {
-            users {
-              name
-            }
+            signIn(input: 
+            {"email": "example@gmail.com",
+             "password": "temppassword"}) {
           }
-        `)) as UserData;
+        `);
       console.log(res);
     }
   }

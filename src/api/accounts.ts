@@ -5,6 +5,7 @@ import axios from 'axios';
 // TODO include bearer token in headers
 const headers = {
     'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
 }
 
 const query = async function (query: string): Promise<unknown>{
