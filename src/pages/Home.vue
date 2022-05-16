@@ -18,13 +18,13 @@ export default defineComponent({
       //     }
       //   `)) as UserData;
       // console.log(res);
-      const res = await api.accounts.mutation(`
+      const res = (await api.accounts.mutation(`
           {
             signIn(input: 
             {"email": "example@gmail.com",
              "password": "temppassword"}) {
           }
-        `);
+        `)) as string;
       console.log(res);
     }
   }
