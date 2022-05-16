@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { api } from 'src/api';
+import { SignInResponse } from 'src/types';
 
 export default defineComponent({
   name: 'Home',
@@ -18,14 +19,19 @@ export default defineComponent({
       //     }
       //   `)) as UserData;
       // console.log(res);
-      const res = (await api.accounts.mutation(`
+      try {
+        const res = (await api.accounts.mutation(`
           {
-            signIn(input: 
-            {"email": "example@gmail.com",
-             "password": "temppassword"}) {
+            signIn(input: { 
+              email: "jpbeukes01@gmail.com", 
+              password: "smile123" 
+            })
           }
-        `)) as string;
-      console.log(res);
+        `)) as SignInResponse;
+        console.log(res);
+      } catch (error) {
+        console.log((error as Error).message);
+      }
     }
   }
 });
