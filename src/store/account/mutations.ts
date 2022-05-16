@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex';
 import { AccountStateInterface } from './state';
 import { AccountDetails, User, Session } from 'src/types';
-import { api } from 'src/api';
+import { auth } from 'src/auth';
 
 export const mutations: MutationTree<AccountStateInterface> = {
   setCryptoAccountName(
@@ -33,7 +33,7 @@ export const mutations: MutationTree<AccountStateInterface> = {
       emailVerified: false,
       receiveEmailNotifications: false
     };
-    api.accounts.setAccessToken('');
+    auth.setAccessToken('');
   },
   setUserProfile(state: AccountStateInterface, userProfile?: User) {
     state.profile = userProfile;

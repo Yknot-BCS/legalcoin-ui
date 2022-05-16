@@ -8,6 +8,7 @@ import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
 import { api } from 'src/api';
 import { useQuasar } from 'quasar';
+import { auth } from 'src/auth';
 
 export default {
   setup() {
@@ -45,7 +46,8 @@ export default {
         `)) as any;
 
           // Set access token in local storage
-          api.accounts.setAccessToken(res.signIn.token);
+          auth.setAccessToken(res.signIn.token);
+          auth.setSessionExpiry(res.signIn.sessionLength);
 
           // Set session in state
           store.commit('account/setLogin', res.signIn);
