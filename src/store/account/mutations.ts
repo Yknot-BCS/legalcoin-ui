@@ -18,10 +18,10 @@ export const mutations: MutationTree<AccountStateInterface> = {
   },
   setLogin(state: AccountStateInterface, session: Session) {
     state.session = session;
-    state.isLoggedIn = true;
+    state.isAuthenticated = true;
   },
   setLogout(state: AccountStateInterface) {
-    state.isLoggedIn = false;
+    state.isAuthenticated = false;
     state.session = {
       token: '',
       sessionLength: 0

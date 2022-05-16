@@ -6,7 +6,9 @@ export default {
   setup() {
     const store = useStore();
     return {
-      isLoggedIn: computed((): boolean => store.state.account.isLoggedIn),
+      isAuthenticated: computed(
+        (): boolean => store.state.account.isAuthenticated
+      ),
       logout: () => store.commit('account/setLogout')
     };
   }
@@ -48,8 +50,8 @@ q-header.text-black( style='background: white')
     
     .q-pl-sm.q-gutter-sm.row.items-center.no-wrap
       q-btn(v-if='$q.screen.gt.sm' dense='' flat='' round='' size='md' icon='wallet' color='grey-6')
-      div(v-if="isLoggedIn") Peanutbutter
-      q-btn(clickable v-if="isLoggedIn" @click="logout") Logout
+      div(v-if="isAuthenticated") Peanutbutter
+      q-btn(clickable v-if="isAuthenticated" @click="logout") Logout
       q-btn(clickable v-else to="login") Login
       //- q-btn(v-if='$q.screen.gt.sm' dense='' flat='' no-wrap='')
       //-   q-avatar(rounded='' size='30px' )
@@ -57,7 +59,7 @@ q-header.text-black( style='background: white')
       //-   q-icon(name='arrow_drop_down' size='16px')
       //-   q-menu(auto-close='')
       //-     q-list(dense='')
-      //-       q-item.HL__menu-link-signed-in(v-if="isLoggedIn")
+      //-       q-item.HL__menu-link-signed-in(v-if="isAuthenticated")
       //-         q-item-section
       //-           div
       //-             | Signed in as 
@@ -76,9 +78,9 @@ q-header.text-black( style='background: white')
       //-         q-item-section Help
       //-       q-item.HL__menu-link(clickable)
       //-         q-item-section Settings
-      //-       q-item.HL__menu-link(clickable v-if="isLoggedIn" @click="logout()")
+      //-       q-item.HL__menu-link(clickable v-if="isAuthenticated" @click="logout()")
       //-         q-item-section Sign out
-      //-       q-item.HL__menu-link(clickable v-if="!isLoggedIn" @click="signIn()")
+      //-       q-item.HL__menu-link(clickable v-if="!isAuthenticated" @click="signIn()")
       //-         q-item-section Sign in
 
       //- q-btn(dense='' flat='')

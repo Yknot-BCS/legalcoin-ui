@@ -4,7 +4,7 @@ export interface AccountStateInterface {
   cryptoAccountName: string;
   cryptoIsAuthenticated: boolean;
   cryptoAccountDetails: AccountDetails;
-  isLoggedIn: boolean;
+  isAuthenticated: boolean;
   profile: User;
   session: Session;
 }
@@ -14,7 +14,7 @@ export function state(): AccountStateInterface {
     cryptoAccountName: '',
     cryptoIsAuthenticated: false,
     cryptoAccountDetails: {} as AccountDetails,
-    isLoggedIn: false,
+    isAuthenticated: false,
     profile: {
       name: '',
       surname: '',
