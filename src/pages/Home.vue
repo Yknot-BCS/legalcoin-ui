@@ -1,26 +1,15 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
 import { api } from 'src/api';
 import { SignInResponse } from 'src/types';
+import { useQuasar } from 'quasar';
 
-export default defineComponent({
-  name: 'Home',
-  components: {},
-  methods: {
-    async onClick() {
-      // type UserData = {
-      //   name: string[];
-      // };
-      // const res = (await api.accounts.query(`
-      //     {
-      //       me {
-      //         name
-      //       }
-      //     }
-      //   `)) as UserData;
-      // console.log(res);
-      try {
-        const res = (await api.accounts.mutation(`
+export default {
+  setup() {
+    const $q = useQuasar();
+    return {
+      onClick: async () => {
+        try {
+          const res = (await api.accounts.mutation(`
           {
             signIn(input: { 
               email: "jpbeukes01@gmail.com", 
@@ -28,13 +17,20 @@ export default defineComponent({
             })
           }
         `)) as SignInResponse;
-        console.log(res);
-      } catch (error) {
-        console.log((error as Error).message);
+          $q.notify({
+            type: 'positive',
+            message: res.signIn
+          });
+        } catch (error) {
+          $q.notify({
+            type: 'negative',
+            message: (error as Error).message
+          });
+        }
       }
-    }
+    };
   }
-});
+};
 </script>
 
 <template lang="pug">
