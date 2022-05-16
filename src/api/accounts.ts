@@ -1,11 +1,12 @@
 /* eslint-disable */
 import axios from 'axios';
 
-// TODO request error handling
-// TODO include bearer token in headers
-const headers = {
-  'Content-Type': 'application/json',
-  'Access-Control-Allow-Origin': '*'
+const getAccessToken = () => {
+  return localStorage.getItem('accessToken');
+};
+
+const setAccessToken = (token: string) => {
+  localStorage.setItem('accessToken', token);
 };
 
 const query = async function (query: string): Promise<unknown> {
@@ -15,7 +16,13 @@ const query = async function (query: string): Promise<unknown> {
       query,
       variables: { now: new Date().toISOString() }
     },
-    { headers }
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        Authorization: `Bearer ${getAccessToken()}`
+      }
+    }
   );
   if (res.data.errors) throw res.data.errors[0];
   else return res.data.data;
@@ -27,7 +34,13 @@ const mutation = async function (query: string): Promise<unknown> {
       query: `mutation ${query}`,
       variables: { now: new Date().toISOString() }
     },
-    { headers }
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
+        Authorization: `Bearer ${getAccessToken()}`
+      }
+    }
   );
   if (res.data.errors) throw res.data.errors[0];
   else return res.data.data;
@@ -35,5 +48,7 @@ const mutation = async function (query: string): Promise<unknown> {
 
 export default {
   query,
-  mutation
+  mutation,
+  setAccessToken,
+  getAccessToken
 };

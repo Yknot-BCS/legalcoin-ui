@@ -1,6 +1,6 @@
 import { MutationTree } from 'vuex';
 import { AccountStateInterface } from './state';
-import { AccountDetails } from 'src/types';
+import { AccountDetails, User, Session } from 'src/types';
 
 export const mutations: MutationTree<AccountStateInterface> = {
   setCryptoAccountName(
@@ -15,7 +15,18 @@ export const mutations: MutationTree<AccountStateInterface> = {
   ) {
     state.cryptoAccountDetails = accountDetails;
   },
-  setIsLoggedIn(state: AccountStateInterface, isLoggedIn: boolean) {
-    state.isLoggedIn = isLoggedIn;
+  setLogin(state: AccountStateInterface, session: Session) {
+    state.session = session;
+    state.isLoggedIn = true;
+  },
+  setLogout(state: AccountStateInterface) {
+    state.isLoggedIn = false;
+    state.session = {
+      token: '',
+      sessionLength: 0
+    };
+  },
+  setUserProfile(state: AccountStateInterface, userProfile?: User) {
+    state.profile = userProfile;
   }
 };

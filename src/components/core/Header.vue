@@ -7,7 +7,7 @@ export default {
     const store = useStore();
     return {
       isLoggedIn: computed((): boolean => store.state.account.isLoggedIn),
-      signOut: () => store.commit('account/setIsLoggedIn', false)
+      signOut: () => store.commit('account/setLogin', false)
     };
   }
 };

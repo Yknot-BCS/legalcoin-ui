@@ -1,11 +1,12 @@
-import { AccountDetails } from 'src/types';
+import { AccountDetails, User, Session } from 'src/types';
 
 export interface AccountStateInterface {
   cryptoAccountName: string;
   cryptoIsAuthenticated: boolean;
   cryptoAccountDetails: AccountDetails;
   isLoggedIn: boolean;
-  userName: string;
+  profile: User;
+  session: Session;
 }
 
 export function state(): AccountStateInterface {
@@ -14,6 +15,16 @@ export function state(): AccountStateInterface {
     cryptoIsAuthenticated: false,
     cryptoAccountDetails: {} as AccountDetails,
     isLoggedIn: false,
-    userName: ''
+    profile: {
+      name: '',
+      surname: '',
+      email: '',
+      emailVerified: false,
+      receiveEmailNotifications: false
+    },
+    session: {
+      token: '',
+      sessionLength: 0
+    }
   };
 }

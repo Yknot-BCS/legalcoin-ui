@@ -17,7 +17,7 @@ export default {
         // Open session
         // Get Telos account and other user data
         // Navigate to home
-        store.commit('account/setIsLoggedIn', true);
+        store.commit('account/setLogin', true);
         await router.push({ name: 'home' });
       }
     };
