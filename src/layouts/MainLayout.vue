@@ -1,13 +1,23 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
 import Header from 'src/components/core/Header.vue';
 import Footer from 'src/components/core/Footer.vue';
 import MobileTabsFooter from 'src/components/core/MobileTabsFooter.vue';
+import { useStore } from 'src/store';
+import { onMounted } from 'vue';
+import { auth } from 'src/auth';
 
-export default defineComponent({
-  name: 'MainLayout',
+export default {
+  setup() {
+    const store = useStore();
+    onMounted(() => {
+      if (auth.isAuthenticated()) {
+        store.commit('account/setIsAuthenticated', true);
+      }
+    });
+    return {};
+  },
   components: { Header, Footer, MobileTabsFooter }
-});
+};
 </script>
 
 <template lang="pug">

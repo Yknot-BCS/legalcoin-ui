@@ -20,6 +20,9 @@ export const mutations: MutationTree<AccountStateInterface> = {
     state.session = session;
     state.isAuthenticated = true;
   },
+  setIsAuthenticated(state: AccountStateInterface, isAuthenticated: boolean) {
+    state.isAuthenticated = isAuthenticated;
+  },
   setLogout(state: AccountStateInterface) {
     state.isAuthenticated = false;
     state.session = {
