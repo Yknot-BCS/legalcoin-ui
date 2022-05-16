@@ -13,7 +13,7 @@ const query = async function (query: string): Promise<unknown> {
     process.env.ACCOUNTS_API_ENDPOINT,
     {
       query,
-      variables: null
+      variables: { now: new Date().toISOString() }
     },
     { headers }
   );
@@ -25,7 +25,7 @@ const mutation = async function (query: string): Promise<unknown> {
     process.env.ACCOUNTS_API_ENDPOINT,
     {
       query: `mutation ${query}`,
-      variables: null
+      variables: { now: new Date().toISOString() }
     },
     { headers }
   );

@@ -9,17 +9,21 @@ export default {
     return {
       onClick: async () => {
         try {
+          type ResponseType = { signIn: SignInResponse };
           const res = (await api.accounts.mutation(`
           {
             signIn(input: { 
               email: "jpbeukes01@gmail.com", 
               password: "smile123" 
-            })
+            }) {
+              token
+              sessionLength
+            }
           }
-        `)) as SignInResponse;
+        `)) as ResponseType;
           $q.notify({
             type: 'positive',
-            message: res.signIn
+            message: 'Logged in'
           });
         } catch (error) {
           $q.notify({
