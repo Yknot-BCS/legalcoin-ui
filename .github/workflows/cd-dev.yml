@@ -42,4 +42,4 @@ jobs:
           port: 21
           protocol: ftp
           local-dir: ./dist/spa/
-          server-dir: apps/dev-legalcoin.y-knot.io/
+          server-dir: dev-legalcoin.y-knot.io/
