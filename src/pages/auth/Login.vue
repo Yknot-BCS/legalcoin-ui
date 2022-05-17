@@ -92,6 +92,7 @@ export default {
         label="Email"
         lazy-rules
         :rules="[ requiredRule ]"
+        autocomplete="email"
     ).col-12
     q-input(
         v-model="userPassword"
@@ -99,6 +100,7 @@ export default {
         label="Password"
         lazy-rules
         :rules="[ requiredRule ]"
+        autocomplete="current-password"
     ).col-12
     q-btn(type="submit" color="primary").col-12 Login
   .col-12.text-center
