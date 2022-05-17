@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "quasar dev",
     "build": "quasar clean && quasar build",
+    "serve": "quasar serve ./dist",
     "lint": "eslint --ext .js,.ts,.vue ./",
     "test": "jest --coverage",
     "test:coverage": "quasar serve test/jest/coverage/lcov-report/ --port 8788"
