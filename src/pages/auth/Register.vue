@@ -33,18 +33,21 @@ export default {
         label="Name"
         lazy-rules
         :rules="[ requiredRule ]"
+        autocomplete="given-name"
     ).col-6.q-pr-md
     q-input(
         v-model="userSurname"
         label="Surname"
         lazy-rules
         :rules="[ requiredRule ]"
+        autocomplete="family-name"
     ).col-6
     q-input(
         v-model="userEmail"
         label="Email"
         lazy-rules
         :rules="[ requiredRule ]"
+        autocomplete="email"
     ).col-12
     q-input(
         v-model="userPassword"
@@ -52,6 +55,7 @@ export default {
         label="Password"
         lazy-rules
         :rules="[ requiredRule ]"
+        autocomplete="new-password"
     ).col-12
     q-input(
         v-model="userRetypePassword"
@@ -59,6 +63,7 @@ export default {
         label="Retype Password"
         lazy-rules
         :rules="[ requiredRule, passwordMatchRule ]"
+        autocomplete="new-password"
     ).col-12
     q-btn(type="submit" color="primary").col-12 Create an account
   .col-12.text-center
