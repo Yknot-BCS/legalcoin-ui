@@ -13,35 +13,33 @@ export async function useLogin(
   // Sign in
   let res;
   res = (await api.accounts.mutation(`
-          {
-            signIn(input: {
-              email: "${userEmail}",
-              password: "${userPassword}"
-            }) {
-              token
-              sessionLength
-            }
-          }
-        `)) as any;
+      {
+        signIn(input: {
+          email: "${userEmail}",
+          password: "${userPassword}"
+        }) {
+          token
+          sessionLength
+        }
+      }
+    `)) as any;
 
-  // Set access token in local storage
+  // Set session in local storage
   auth.setAccessToken(res.signIn.token);
   auth.setSessionExpiry(res.signIn.sessionLength);
 
-  // Set session in state
-  store.commit('account/setLogin', res.signIn);
-
   // Get profile
   res = (await api.accounts.query(`
-            {
-              profile{
-                name
-                surname
-                email
-                emailVerified
-                receiveEmailNotifications
-              }
-            }`)) as any;
-
+    {
+      profile{
+        name
+        surname
+        email
+        emailVerified
+        receiveEmailNotifications
+      }
+    }`)) as any;
   store.commit('account/setUserProfile', res.profile);
+
+  // TODO get Telos account
 }

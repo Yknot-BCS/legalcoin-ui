@@ -18,21 +18,14 @@ export default {
       userPassword,
       requiredRule,
       onSubmit: async () => {
-        // Verify user
-        // Open session
-        // Get Telos account and other user data
-        // Navigate to home
-        store.commit('account/setLogin', true);
-        await router.push({ name: 'home' });
-      },
-      onLogin: async () => {
         try {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+          // Login
           await useLogin(store, userEmail.value, userPassword.value);
           $q.notify({
             type: 'positive',
             message: 'Logged in'
           });
+          // Navigate to home
           await router.push({ name: 'home' });
         } catch (error) {
           $q.notify({
@@ -49,7 +42,7 @@ export default {
 <template lang="pug">
 .form-wrapper.row.q-pa-md.bg-grey-3
   .text-h5.col-12 Login
-  q-form(@submit="onLogin").col-12.row.q-mb-sm.q-gutter-y-lg
+  q-form(@submit="onSubmit").col-12.row.q-mb-sm.q-gutter-y-lg
     q-input(
         v-model="userEmail"
         label="Email"
