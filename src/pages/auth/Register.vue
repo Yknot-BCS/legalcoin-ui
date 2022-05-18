@@ -1,7 +1,7 @@
 <script lang="ts">
 import { ref } from 'vue';
 import { requiredRule } from './inputRules';
-import { useLogin } from './useLogin';
+import { useLogin, useRegister } from './useAuth';
 import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
 import { api } from 'src/api';
@@ -10,7 +10,10 @@ import { auth } from 'src/auth';
 
 export default {
   setup() {
+    const $q = useQuasar();
     const store = useStore();
+    const router = useRouter();
+    const userEmail = ref('');
     const userPassword = ref('');
     function passwordMatchRule(val: string): string | boolean {
       return val === userPassword.value || 'Passwords do not match';
@@ -18,13 +21,27 @@ export default {
     return {
       userName: ref(''),
       userSurname: ref(''),
-      userEmail: ref(''),
+      userEmail,
       userPassword,
       userRetypePassword: ref(''),
       requiredRule,
       passwordMatchRule,
-      onSubmit: () => {
-        console.log('submit');
+      onSubmit: async () => {
+        try {
+          await useRegister(store, userEmail, userPassword);
+          // await useLogin(store, userEmail, userPassword);
+          $q.notify({
+            type: 'positive',
+            message: 'Registered'
+          });
+          // Navigate to home
+          await router.push({ name: 'home' });
+        } catch (error) {
+          $q.notify({
+            type: 'negative',
+            message: (error as Error).message
+          });
+        }
       }
     };
   }

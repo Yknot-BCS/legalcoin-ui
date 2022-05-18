@@ -1,6 +1,6 @@
 <script lang="ts">
 import { requiredRule } from './inputRules';
-import { useLogin } from './useLogin';
+import { useLogin } from './useAuth';
 import { ref } from 'vue';
 import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
