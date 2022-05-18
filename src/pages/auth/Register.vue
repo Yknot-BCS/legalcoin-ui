@@ -13,14 +13,16 @@ export default {
     const $q = useQuasar();
     const store = useStore();
     const router = useRouter();
+    const userName = ref('');
+    const userSurname = ref('');
     const userEmail = ref('');
     const userPassword = ref('');
     function passwordMatchRule(val: string): string | boolean {
       return val === userPassword.value || 'Passwords do not match';
     }
     return {
-      userName: ref(''),
-      userSurname: ref(''),
+      userName,
+      userSurname,
       userEmail,
       userPassword,
       userRetypePassword: ref(''),
@@ -28,14 +30,20 @@ export default {
       passwordMatchRule,
       onSubmit: async () => {
         try {
-          await useRegister(store, userEmail, userPassword);
+          await useRegister(
+            store,
+            userName,
+            userSurname,
+            userEmail,
+            userPassword
+          );
           // await useLogin(store, userEmail, userPassword);
           $q.notify({
             type: 'positive',
             message: 'Registered'
           });
           // Navigate to home
-          await router.push({ name: 'home' });
+          // await router.push({ name: 'home' });
         } catch (error) {
           $q.notify({
             type: 'negative',

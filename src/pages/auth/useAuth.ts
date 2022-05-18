@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { api } from 'src/api';
@@ -46,39 +47,26 @@ export async function useLogin(
 
 export async function useRegister(
   store: Store<any>,
+  userName: Ref<string>,
+  userSurname: Ref<string>,
   userEmail: Ref<string>,
   userPassword: Ref<string>
 ) {
-  // Sign in
-  let res;
-  res = (await api.accounts.mutation(`
+  // Sign Up
+  const res = (await api.accounts.mutation(`
       {
-        signIn(input: {
+        signUp(input: {
           email: "${userEmail.value}",
           password: "${userPassword.value}"
-        }) {
-          token
-          sessionLength
-        }
+          name: "${userName.value}"
+          surname: "${userSurname.value}"
+          receiveEmailNotifications: false
+        }) 
       }
     `)) as any;
 
-  // Set session in local storage
-  auth.setAccessToken(res.signIn.token);
-  auth.setSessionExpiry(res.signIn.sessionLength);
+  // Send Email Verification
 
-  // Get profile
-  res = (await api.accounts.query(`
-    {
-      profile{
-        name
-        surname
-        email
-        emailVerified
-        receiveEmailNotifications
-      }
-    }`)) as any;
-  store.commit('account/setUserProfile', res.profile);
-
-  // TODO get Telos account
+  // Sing In
+  console.log(res);
 }
