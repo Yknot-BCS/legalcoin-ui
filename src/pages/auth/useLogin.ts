@@ -3,19 +3,20 @@
 import { api } from 'src/api';
 import { auth } from 'src/auth';
 import { Store } from 'vuex';
+import { Ref } from 'vue';
 
 export async function useLogin(
   store: Store<any>,
-  userEmail: string,
-  userPassword: string
+  userEmail: Ref<string>,
+  userPassword: Ref<string>
 ) {
   // Sign in
   let res;
   res = (await api.accounts.mutation(`
       {
         signIn(input: {
-          email: "${userEmail}",
-          password: "${userPassword}"
+          email: "${userEmail.value}",
+          password: "${userPassword.value}"
         }) {
           token
           sessionLength

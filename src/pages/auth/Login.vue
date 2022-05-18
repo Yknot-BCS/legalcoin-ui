@@ -20,7 +20,7 @@ export default {
       onSubmit: async () => {
         try {
           // Login
-          await useLogin(store, userEmail.value, userPassword.value);
+          await useLogin(store, userEmail, userPassword);
           $q.notify({
             type: 'positive',
             message: 'Logged in'

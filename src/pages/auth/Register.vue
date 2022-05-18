@@ -1,6 +1,7 @@
 <script lang="ts">
 import { ref } from 'vue';
 import { requiredRule } from './inputRules';
+import { useLogin } from './useLogin';
 import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
 import { api } from 'src/api';
@@ -9,6 +10,7 @@ import { auth } from 'src/auth';
 
 export default {
   setup() {
+    const store = useStore();
     const userPassword = ref('');
     function passwordMatchRule(val: string): string | boolean {
       return val === userPassword.value || 'Passwords do not match';
