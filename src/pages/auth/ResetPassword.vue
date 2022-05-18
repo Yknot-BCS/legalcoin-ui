@@ -31,6 +31,7 @@ export default {
         label="Password"
         lazy-rules
         :rules="[ requiredRule ]"
+        autocomplete="new-password"
     ).col-12
     q-input(
         v-model="userRetypePassword"
@@ -38,6 +39,7 @@ export default {
         label="Retype Password"
         lazy-rules
         :rules="[ requiredRule, passwordMatchRule ]"
+        autocomplete="new-password"
     ).col-12
     q-btn(type="submit" color="primary").col-12 Reset Password
 
