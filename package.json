@@ -16,6 +16,7 @@
     "@greymass/eosio": "^0.5.4",
     "@quasar/extras": "^1.13.4",
     "axios": "^0.21.1",
+    "checkout-sdk-node": "^2.0.1",
     "core-js": "^3.6.5",
     "highcharts": "^9.3.2",
     "highcharts-vue": "^1.4.0",

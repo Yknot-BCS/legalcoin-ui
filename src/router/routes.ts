@@ -78,7 +78,7 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: '/wallet/buytokens',
+    path: '/wallet/buytokens/:status',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {

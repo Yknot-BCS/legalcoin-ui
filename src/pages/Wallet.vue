@@ -22,7 +22,7 @@ q-page
         q-btn(
                 color="primary"
                 label="BUY LEGAL TOKENS"
-                @click="$router.push({name: 'buytokens'})"
+                @click="$router.push({name: 'buytokens', params: {status: 'checkout'}})"
                 )
             
 
