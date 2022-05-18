@@ -1,14 +1,10 @@
 <script lang="ts">
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { ref } from 'vue';
 import { requiredRule } from './inputRules';
+import { useLogin } from './useLogin';
+import { ref } from 'vue';
 import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
-import { api } from 'src/api';
 import { useQuasar } from 'quasar';
-import { auth } from 'src/auth';
 
 export default {
   setup() {
@@ -29,43 +25,10 @@ export default {
         store.commit('account/setLogin', true);
         await router.push({ name: 'home' });
       },
-      login: async () => {
+      onLogin: async () => {
         try {
-          // Sign in
-          let res;
-          res = (await api.accounts.mutation(`
-          {
-            signIn(input: {
-              email: "${userEmail.value}",
-              password: "${userPassword.value}"
-            }) {
-              token
-              sessionLength
-            }
-          }
-        `)) as any;
-
-          // Set access token in local storage
-          auth.setAccessToken(res.signIn.token);
-          auth.setSessionExpiry(res.signIn.sessionLength);
-
-          // Set session in state
-          store.commit('account/setLogin', res.signIn);
-
-          // Get profile
-          res = (await api.accounts.query(`
-            {
-              profile{
-                name
-                surname
-                email
-                emailVerified
-                receiveEmailNotifications
-              }
-            }`)) as any;
-
-          store.commit('account/setUserProfile', res.profile);
-
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+          await useLogin(store, userEmail.value, userPassword.value);
           $q.notify({
             type: 'positive',
             message: 'Logged in'
@@ -86,7 +49,7 @@ export default {
 <template lang="pug">
 .form-wrapper.row.q-pa-md.bg-grey-3
   .text-h5.col-12 Login
-  q-form(@submit="login").col-12.row.q-mb-sm.q-gutter-y-lg
+  q-form(@submit="onLogin").col-12.row.q-mb-sm.q-gutter-y-lg
     q-input(
         v-model="userEmail"
         label="Email"

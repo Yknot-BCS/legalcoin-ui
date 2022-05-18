@@ -1,6 +1,11 @@
 <script lang="ts">
 import { ref } from 'vue';
 import { requiredRule } from './inputRules';
+import { useStore } from 'src/store';
+import { useRouter } from 'vue-router';
+import { api } from 'src/api';
+import { useQuasar } from 'quasar';
+import { auth } from 'src/auth';
 
 export default {
   setup() {
