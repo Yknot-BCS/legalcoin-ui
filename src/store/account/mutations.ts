@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex';
 import { AccountStateInterface } from './state';
 import { AccountDetails, User, Session } from 'src/types';
-import { auth } from 'src/auth';
+import auth from 'src/auth';
 
 export const mutations: MutationTree<AccountStateInterface> = {
   setCryptoAccountName(

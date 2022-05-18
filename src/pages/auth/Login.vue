@@ -1,6 +1,6 @@
 <script lang="ts">
 import { requiredRule } from './inputRules';
-import { useLogin } from './useAuth';
+import auth from 'src/auth';
 import { ref } from 'vue';
 import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
@@ -20,7 +20,7 @@ export default {
       onSubmit: async () => {
         try {
           // Login
-          await useLogin(store, userEmail, userPassword);
+          await auth.login(store, userEmail, userPassword);
           $q.notify({
             type: 'positive',
             message: 'Logged in'

@@ -2,11 +2,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { api } from 'src/api';
-import { auth } from 'src/auth';
+import { setAccessToken, setSessionExpiry } from './sessions';
 import { Store } from 'vuex';
 import { Ref } from 'vue';
 
-export async function useLogin(
+export async function login(
   store: Store<any>,
   userEmail: Ref<string>,
   userPassword: Ref<string>
@@ -26,8 +26,8 @@ export async function useLogin(
     `)) as any;
 
   // Set session in local storage
-  auth.setAccessToken(res.signIn.token);
-  auth.setSessionExpiry(res.signIn.sessionLength);
+  setAccessToken(res.signIn.token);
+  setSessionExpiry(res.signIn.sessionLength);
 
   // Get profile
   res = (await api.accounts.query(`
@@ -45,7 +45,7 @@ export async function useLogin(
   // TODO get Telos account
 }
 
-export async function useRegister(
+export async function register(
   store: Store<any>,
   userName: Ref<string>,
   userSurname: Ref<string>,

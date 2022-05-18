@@ -3,7 +3,7 @@ import { route } from 'quasar/wrappers';
 import { createRouter, createWebHistory } from 'vue-router';
 import { StateInterface } from '../store';
 import routes from './routes';
-import { auth } from 'src/auth';
+import auth from 'src/auth';
 
 /*
  * If not building with SSR mode, you can

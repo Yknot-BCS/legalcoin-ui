@@ -4,7 +4,7 @@ import Footer from 'src/components/core/Footer.vue';
 import MobileTabsFooter from 'src/components/core/MobileTabsFooter.vue';
 import { useStore } from 'src/store';
 import { onMounted, computed } from 'vue';
-import { auth } from 'src/auth';
+import auth from 'src/auth';
 
 export default {
   setup() {

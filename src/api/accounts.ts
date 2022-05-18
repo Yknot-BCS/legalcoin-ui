@@ -1,6 +1,6 @@
 /* eslint-disable */
 import axios from 'axios';
-import { auth } from 'src/auth';
+import auth from 'src/auth';
 
 const query = async function (query: string): Promise<unknown> {
   const res = await axios.post(

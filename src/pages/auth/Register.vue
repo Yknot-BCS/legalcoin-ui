@@ -1,12 +1,11 @@
 <script lang="ts">
 import { ref } from 'vue';
 import { requiredRule } from './inputRules';
-import { useLogin, useRegister } from './useAuth';
+import auth from 'src/auth';
 import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
-import { api } from 'src/api';
+// import { api } from 'src/api';
 import { useQuasar } from 'quasar';
-import { auth } from 'src/auth';
 
 export default {
   setup() {
@@ -30,20 +29,20 @@ export default {
       passwordMatchRule,
       onSubmit: async () => {
         try {
-          await useRegister(
+          await auth.register(
             store,
             userName,
             userSurname,
             userEmail,
             userPassword
           );
-          // await useLogin(store, userEmail, userPassword);
+          // await auth.login(store, userEmail, userPassword);
           $q.notify({
             type: 'positive',
             message: 'Registered'
           });
           // Navigate to home
-          // await router.push({ name: 'home' });
+          await router.push({ name: 'home' });
         } catch (error) {
           $q.notify({
             type: 'negative',
