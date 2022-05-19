@@ -1,8 +1,12 @@
 import { MutationTree } from 'vuex';
 import { AccountStateInterface } from './state';
-import { AccountDetails } from 'src/types';
+import { AccountDetails, User, Session } from 'src/types';
+import auth from 'src/auth';
 
 export const mutations: MutationTree<AccountStateInterface> = {
+  setLoadingWallet(state: AccountStateInterface, wallet: string) {
+    state.loading = wallet;
+  },
   setCryptoAccountName(
     state: AccountStateInterface,
     cryptoAccountName: string
@@ -15,7 +19,29 @@ export const mutations: MutationTree<AccountStateInterface> = {
   ) {
     state.cryptoAccountDetails = accountDetails;
   },
-  setIsLoggedIn(state: AccountStateInterface, isLoggedIn: boolean) {
-    state.isLoggedIn = isLoggedIn;
+  setLogin(state: AccountStateInterface, session: Session) {
+    state.session = session;
+    state.isAuthenticated = true;
+  },
+  setIsAuthenticated(state: AccountStateInterface, isAuthenticated: boolean) {
+    state.isAuthenticated = isAuthenticated;
+  },
+  setLogout(state: AccountStateInterface) {
+    state.isAuthenticated = false;
+    state.session = {
+      token: '',
+      sessionLength: 0
+    };
+    state.profile = {
+      name: '',
+      surname: '',
+      email: '',
+      emailVerified: false,
+      receiveEmailNotifications: false
+    };
+    auth.setAccessToken('');
+  },
+  setUserProfile(state: AccountStateInterface, userProfile?: User) {
+    state.profile = userProfile;
   }
 };

@@ -8,7 +8,7 @@ export const getters: GetterTree<AccountStateInterface, StateInterface> = {
     return state;
   },
   cryptoIsAuthenticated(state): boolean {
-    return state.cryptoIsAuthenticated;
+    return !!state.cryptoAccountName;
   },
   cryptoAccountName(state): string {
     return state.cryptoAccountName;

@@ -3,6 +3,7 @@ import { route } from 'quasar/wrappers';
 import { createRouter, createWebHistory } from 'vue-router';
 import { StateInterface } from '../store';
 import routes from './routes';
+import auth from 'src/auth';
 
 /*
  * If not building with SSR mode, you can
@@ -13,7 +14,9 @@ import routes from './routes';
  * with the Router instance.
  */
 
-export default route<StateInterface>(function (/* { store, ssrContext } */) {
+export default route<StateInterface>(function (
+  { store } /* { store, ssrContext } */
+) {
   const createHistory = createWebHistory;
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
@@ -23,6 +26,13 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(process.env.VUE_ROUTER_BASE)
+  });
+
+  Router.beforeEach((to, _) => {
+    // Route to home when already logged in
+    if (to.name === 'login' && auth.isAuthenticated()) {
+      return { name: 'home' };
+    }
   });
 
   Router.afterEach(() => {

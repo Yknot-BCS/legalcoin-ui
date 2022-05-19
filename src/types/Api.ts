@@ -30,6 +30,11 @@ export interface GetTableRowsParams {
   key_type: string;
 }
 
+interface AccountsApi {
+  query: (query: string) => Promise<unknown>;
+  mutation: (query: string) => Promise<unknown>;
+}
+
 export type ApiClient = {
   getAccount: (address: string) => Promise<AccountDetails>;
   getCreator: (address: string) => Promise<any>;
@@ -37,6 +42,9 @@ export type ApiClient = {
   getTransactions: (address?: string) => Promise<Action[]>;
   getTransaction: (address: string) => Promise<Action[]>;
   getChildren: (address: string) => Promise<Action[]>;
+  getTableRows: (tableInput: GetTableRowsParams) => Promise<unknown>;
+  getTokenBalances: (address: string) => Promise<unknown>;
   getTableByScope: (address: string) => Promise<Userres[]>;
   getBlock: (block: string) => Promise<Block>;
+  accounts: AccountsApi;
 };

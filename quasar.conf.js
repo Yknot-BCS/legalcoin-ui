@@ -30,7 +30,7 @@ module.exports = configure(function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli/boot-files
-    boot: ['axios', 'api', 'ual'],
+    boot: ['axios', 'api', 'ual', 'notify-defaults'],
 
     // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: ['app.sass'],
@@ -39,8 +39,8 @@ module.exports = configure(function (ctx) {
     extras: [
       // 'ionicons-v4',
       // 'mdi-v5',
-    //    'fontawesome-v5',
-        'fontawesome-v6',
+      //    'fontawesome-v5',
+      'fontawesome-v6',
       // 'eva-icons',
       // 'themify',
       // 'line-awesome',
@@ -83,8 +83,8 @@ module.exports = configure(function (ctx) {
           .use('pug-plain-loader')
           .loader('pug-plain-loader')
           .end();
-        const nodePolyfillWebpackPlugin = require('node-polyfill-webpack-plugin')
-        config.plugin('node-polyfill').use(nodePolyfillWebpackPlugin)
+        const nodePolyfillWebpackPlugin = require('node-polyfill-webpack-plugin');
+        config.plugin('node-polyfill').use(nodePolyfillWebpackPlugin);
       }
     },
 
@@ -126,9 +126,7 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [
-        'Notify'
-      ]
+      plugins: ['Notify']
     },
 
     // animations: 'all', // --- includes all animations
@@ -170,8 +168,8 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: '\'LegalCoin\'',
-        short_name: '\'LegalCoin\'',
+        name: "'LegalCoin'",
+        short_name: "'LegalCoin'",
         description: '..',
         display: 'standalone',
         orientation: 'portrait',
@@ -223,13 +221,11 @@ module.exports = configure(function (ctx) {
 
       packager: {
         // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
-
         // OS X / Mac App Store
         // appBundleId: '',
         // appCategoryType: '',
         // osxSign: '',
         // protocol: 'myapp://path',
-
         // Windows only
         // win32metadata: { ... }
       },
@@ -241,16 +237,16 @@ module.exports = configure(function (ctx) {
       },
 
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-      chainWebpack (/* chain */) {
+      chainWebpack(/* chain */) {
         // do something with the Electron main process Webpack cfg
         // extendWebpackMain also available besides this chainWebpackMain
       },
 
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-      chainWebpackPreload (/* chain */) {
+      chainWebpackPreload(/* chain */) {
         // do something with the Electron main process Webpack cfg
         // extendWebpackPreload also available besides this chainWebpackPreload
-      },
+      }
     }
-  }
+  };
 });

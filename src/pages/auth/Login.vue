@@ -1,18 +1,43 @@
 <script lang="ts">
-import { ref } from 'vue';
 import { requiredRule } from './inputRules';
+import auth from 'src/auth';
+import { ref } from 'vue';
+import { useStore } from 'src/store';
+import { useRouter } from 'vue-router';
+import { useQuasar } from 'quasar';
+import UalLoginHandler from 'src/components/ual/UalLoginHandler.vue';
 
 export default {
   setup() {
+    const userEmail = ref('');
+    const userPassword = ref('');
+    const store = useStore();
+    const router = useRouter();
+    const $q = useQuasar();
     return {
-      userEmail: ref(''),
-      userPassword: ref(''),
+      userEmail,
+      userPassword,
       requiredRule,
-      onSubmit: () => {
-        console.log('submit');
+      onSubmit: async () => {
+        try {
+          // Login
+          await auth.login(store, userEmail, userPassword);
+          $q.notify({
+            type: 'positive',
+            message: 'Logged in'
+          });
+          // Navigate to home
+          await router.push({ name: 'home' });
+        } catch (error) {
+          $q.notify({
+            type: 'negative',
+            message: (error as Error).message
+          });
+        }
       }
     };
-  }
+  },
+  components: { UalLoginHandler }
 };
 </script>
 
@@ -25,6 +50,7 @@ export default {
         label="Email"
         lazy-rules
         :rules="[ requiredRule ]"
+        autocomplete="email"
     ).col-12
     q-input(
         v-model="userPassword"
@@ -32,11 +58,18 @@ export default {
         label="Password"
         lazy-rules
         :rules="[ requiredRule ]"
+        autocomplete="current-password"
     ).col-12
     q-btn(type="submit" color="primary").col-12 Login
+
+    UalLoginHandler
+
   .col-12.text-center
     span.q-mr-xs Need an account?
     router-link(to="register") Register
+  .col-12.text-center
+    span.q-mr-xs Forgot your password?
+    router-link(to="resetpassword") Reset Password
 
 </template>
 
