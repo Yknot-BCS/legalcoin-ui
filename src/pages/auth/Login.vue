@@ -5,6 +5,7 @@ import { ref } from 'vue';
 import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
+import UalLoginHandler from 'src/components/ual/UalLoginHandler.vue';
 
 export default {
   setup() {
@@ -35,7 +36,8 @@ export default {
         }
       }
     };
-  }
+  },
+  components: { UalLoginHandler }
 };
 </script>
 
@@ -59,6 +61,9 @@ export default {
         autocomplete="current-password"
     ).col-12
     q-btn(type="submit" color="primary").col-12 Login
+
+    UalLoginHandler
+
   .col-12.text-center
     span.q-mr-xs Need an account?
     router-link(to="register") Register

@@ -4,6 +4,9 @@ import { AccountDetails, User, Session } from 'src/types';
 import auth from 'src/auth';
 
 export const mutations: MutationTree<AccountStateInterface> = {
+  setLoadingWallet(state: AccountStateInterface, wallet: string) {
+    state.loading = wallet;
+  },
   setCryptoAccountName(
     state: AccountStateInterface,
     cryptoAccountName: string

@@ -1,6 +1,7 @@
 import { AccountDetails, User, Session } from 'src/types';
 
 export interface AccountStateInterface {
+  loading: unknown;
   cryptoAccountName: string;
   cryptoIsAuthenticated: boolean;
   cryptoAccountDetails: AccountDetails;
@@ -11,6 +12,7 @@ export interface AccountStateInterface {
 
 export function state(): AccountStateInterface {
   return {
+    loading: false,
     cryptoAccountName: '',
     cryptoIsAuthenticated: false,
     cryptoAccountDetails: {} as AccountDetails,
