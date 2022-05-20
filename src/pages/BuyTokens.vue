@@ -2,9 +2,7 @@
 import { defineComponent } from 'vue';
 import { ref } from 'vue';
 import axios from 'axios';
-import { Checkout } from 'checkout-sdk-node';
 import { mapGetters } from 'vuex';
-import fetch from 'node-fetch';
 
 export default defineComponent({
   name: 'BuyTokens',
@@ -14,12 +12,12 @@ export default defineComponent({
       paymentStatus: ref(''),
       spendAmount: ref(''),
       buyAmount: ref(''),
-      order: ref({ order_id: '' }),
-      cko: ref<Checkout>(
-        new Checkout(process.env.CKO_SECRET_KEY, {
-          pk: process.env.CKO_PUBLIC_KEY
-        })
-      )
+      order: ref({ order_id: '' })
+      //   cko: ref<Checkout>(
+      //     new Checkout(process.env.CKO_SECRET_KEY, {
+      //       pk: process.env.CKO_PUBLIC_KEY
+      //     })
+      //   )
     };
   },
   computed: {
@@ -47,57 +45,53 @@ export default defineComponent({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       this.order = response.data;
       console.log(response.data);
-      console.log(response.headers);
       //   return response.data;
     },
-    async goToCheckout() {
-      console.log(this.cko);
+    async goToPaygate() {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-        const payment = await this.cko.payments.get(
-          'pay_w6ktefehnck2zlguyvocdvuhry'
-        );
-        console.log(payment);
-      } catch (error) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        console.log(error.body);
-      }
+        const checkoutAPI = axios.create({
+          baseURL: process.env.DEVELOPMENT
+            ? 'https://api.sandbox.checkout.com'
+            : 'https://api.checkout.com',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: process.env.CKO_SECRET_KEY
+          }
+        });
 
-      //   try {
-      //     const hosted = await this.cko.hostedPayments.create({
-      //       amount: Number(this.spendAmount) * 100,
-      //       currency: 'GBP',
-      //       reference: this.order.order_id,
-      //       //   billing: {
-      //       //     address: {
-      //       //       address_line1: 'Checkout.com',
-      //       //       address_line2: '90 Tottenham Court Road',
-      //       //       city: 'London',
-      //       //       state: 'London',
-      //       //       zip: 'W1T 4TJ',
-      //       //       country: 'GB'
-      //       //     }
-      //       //   },
-      //       success_url: 'localhost:8080/wallet/buytokens/success',
-      //       cancel_url: 'localhost:8080/wallet/buytokens/checkout',
-      //       failure_url: 'localhost:8080/wallet/buytokens/failure'
-      //     });
-      //     console.log(hosted);
-      //     // Redirect to hosted payment page
-      //     // window.location.href = <string>hosted._links.redirect.href;
-      //   } catch (err) {
-      //     console.log(err);
-      //   }
+        let body = {
+          amount: Number(this.spendAmount) * 100,
+          currency: 'GBP',
+          reference: String(this.order.order_id),
+          billing: {
+            address: {
+              country: 'GB'
+            }
+          },
+          customer: {
+            name: 'Bruce Wayne',
+            email: 'brucewayne@gmail.com' // TODO get from store
+          },
+          success_url: 'http://localhost:8081/wallet/buytokens/success', // TODO get URL dynamically
+          failure_url: 'http://localhost:8081/wallet/buytokens/failure',
+          cancel_url: 'http://localhost:8081/wallet/buytokens/checkout'
+        };
+
+        const response = await checkoutAPI.post('/hosted-payments', body);
+        console.log(response);
+
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        let redirectUrl = response.data._links.redirect.href as string;
+        window.location.href = redirectUrl;
+      } catch (error) {
+        console.log(error);
+      }
     },
     async tryBuyTokens() {
       console.log('tryBuyTokens');
-      //   TODO if authenticated, create buy order
       if (this.isAuthenticated) {
-        // await this.createBuyOrder();
-        //   TODO go to processing payment page
-        //  TODO once order is created, redirect to checkout.com
-        await this.goToCheckout();
+        await this.createBuyOrder();
+        await this.goToPaygate();
       } else {
         this.$q.notify({
           type: 'negative',
@@ -163,13 +157,15 @@ q-page
         q-card-section
             | By continuing you agree to the terms and conditions
 
-        q-card-section(v-if="true")
-            iframe(
-                src="https://pay.sandbox.checkout.com/page/hpp_H6KwEaJhugAl"
-                width="100%"
-                height="500px"
-                frameborder="0"                
-                )
+        //- q-card-section(v-if="true")
+        //-     iframe(
+        //-         src="https://pay.sandbox.checkout.com/page/hpp_H6KwEaJhugAl"
+        //-         width="100%"
+        //-         height="500px"
+        //-         frameborder="0"                
+        //-         )
+
+    //- If payment has failed
     q-card(v-if="paymentStatus === 'failure'")
         q-card-section
             | Payment failed
@@ -181,7 +177,7 @@ q-page
                 label="Back"
                 @click="$router.push({name: 'wallet'})"
                 )
-
+    //- If payment has succeeded
     q-card(v-if="paymentStatus === 'success'")
         q-card-section
             | Payment Success
