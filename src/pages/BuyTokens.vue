@@ -13,19 +13,19 @@ export default defineComponent({
       spendAmount: ref(''),
       buyAmount: ref(''),
       order: ref({ order_id: '' }),
-      feePercent: ref(0.02)
+      processingFeePercent: ref(0.02)
     };
   },
   computed: {
     ...mapGetters({ account: 'account/cryptoAccountName' }),
-    ...mapGetters({ isAuthenticated: 'account/cryptoIsAuthenticated' })
+    ...mapGetters({ cryptoIsAuthenticated: 'account/cryptoIsAuthenticated' })
   },
   watch: {
     buyAmount(val) {
-      this.spendAmount = (val * (1 + this.feePercent)).toFixed(2);
+      this.spendAmount = (val * (1 + this.processingFeePercent)).toFixed(2);
     },
     spendAmount(val) {
-      this.buyAmount = (val / (1 + this.feePercent)).toFixed(2);
+      this.buyAmount = (val / (1 + this.processingFeePercent)).toFixed(2);
     }
   },
   methods: {
@@ -39,7 +39,7 @@ export default defineComponent({
         description: 'Fee=?',
         value: this.spendAmount,
         symbol: process.env.LC_SYMBOL,
-        precision: 4,
+        precision: 2,
         chain: !process.env.DEVELOPMENT ? 'TLOS' : 'TLOSTEST',
         account: this.account as string,
         contract: process.env.LC_CONTRACT
@@ -64,18 +64,21 @@ export default defineComponent({
           amount: Number(this.spendAmount) * 100,
           currency: 'GBP',
           reference: String(this.order.order_id),
+          metadata: {
+            description: 'Issue from LegalCoin'
+          },
           billing: {
             address: {
               country: 'GB'
             }
           },
           customer: {
-            name: 'Bruce Wayne',
-            email: 'brucewayne@gmail.com' // TODO get from store
+            name: `${this.$store.state.account.profile.name} ${this.$store.state.account.profile.surname}`,
+            email: this.$store.state.account.profile.email // TODO get from store
           },
-          success_url: 'http://localhost:8081/wallet/buytokens/success', // TODO get URL dynamically
-          failure_url: 'http://localhost:8081/wallet/buytokens/failure',
-          cancel_url: 'http://localhost:8081/wallet/buytokens/checkout'
+          success_url: `${process.env.APP_URL}wallet/buytokens/success`, // TODO get URL dynamically
+          failure_url: `${process.env.APP_URL}wallet/buytokens/failure`,
+          cancel_url: `${process.env.APP_URL}wallet/buytokens/checkout`
         };
 
         const response = await checkoutAPI.post('/hosted-payments', body);
@@ -86,6 +89,7 @@ export default defineComponent({
         this.$q.loading.hide();
         window.location.href = redirectUrl;
       } catch (error) {
+        this.$q.loading.hide();
         console.log(error);
       }
     },
@@ -94,7 +98,7 @@ export default defineComponent({
       this.$q.loading.show({
         message: 'Going to payment gateway. Hang on...'
       });
-      if (this.isAuthenticated) {
+      if (this.cryptoIsAuthenticated) {
         await this.createBuyOrder();
         await this.goToPaygate();
       } else {
@@ -107,7 +111,6 @@ export default defineComponent({
     }
   },
   mounted() {
-    console.log('mounted');
     this.paymentStatus = <string>this.$route.params.status;
   }
 });
