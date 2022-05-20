@@ -51,8 +51,8 @@ q-toolbar.row.q-py-sm.q-px-md
     q-btn(v-if='$q.screen.gt.sm' dense='' flat='' round='' size='md' icon='wallet' color='grey-6')
     div(v-if="isAuthenticated") Peanutbutter
     q-btn(clickable v-if="isAuthenticated" @click="logout") Logout
-    q-btn(clickable v-if="!isAuthenticated" to="login") Login
-    q-btn(clickable v-if="!isAuthenticated" to="register") Register
+    q-btn(clickable v-if="!isAuthenticated" :to="{name:'login'}") Login
+    q-btn(clickable v-if="!isAuthenticated" :to="{name:'register'}") Register
     //- q-btn(v-if='$q.screen.gt.sm' dense='' flat='' no-wrap='')
     //-   q-avatar(rounded='' size='30px' )
     //-     q-icon.material-icons-outlined(name='account_circle' color='grey-6')

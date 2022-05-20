@@ -3,6 +3,8 @@ import { defineComponent } from 'vue';
 import { ref } from 'vue';
 import axios from 'axios';
 import { Checkout } from 'checkout-sdk-node';
+import { mapGetters } from 'vuex';
+import fetch from 'node-fetch';
 
 export default defineComponent({
   name: 'BuyTokens',
@@ -12,13 +14,17 @@ export default defineComponent({
       paymentStatus: ref(''),
       spendAmount: ref(''),
       buyAmount: ref(''),
-      order: ref({}),
+      order: ref({ order_id: '' }),
       cko: ref<Checkout>(
         new Checkout(process.env.CKO_SECRET_KEY, {
           pk: process.env.CKO_PUBLIC_KEY
         })
       )
     };
+  },
+  computed: {
+    ...mapGetters({ account: 'account/cryptoAccountName' }),
+    ...mapGetters({ isAuthenticated: 'account/cryptoIsAuthenticated' })
   },
   methods: {
     async createBuyOrder() {
@@ -28,19 +34,20 @@ export default defineComponent({
       });
       console.log('issuerAPI', issuerAPI);
       let params = {
-        name: 'Buy Legal',
-        description: 'Oi',
+        name: 'Buy LEGAL',
+        description: 'Fee=?',
         value: this.spendAmount,
-        symbol: 'DEWIE',
+        symbol: process.env.LC_SYMBOL,
         precision: 4,
-        chain: 'TLOSTEST',
-        account: 'fuzztestnets',
-        contract: 'dewaldtokens'
+        chain: !process.env.DEVELOPMENT ? 'TLOS' : 'TLOSTEST',
+        account: this.account as string,
+        contract: process.env.LC_CONTRACT
       };
       const response = await issuerAPI.get('/order', { params: params });
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       this.order = response.data;
       console.log(response.data);
+      console.log(response.headers);
       //   return response.data;
     },
     async goToCheckout() {
@@ -50,18 +57,53 @@ export default defineComponent({
         const payment = await this.cko.payments.get(
           'pay_w6ktefehnck2zlguyvocdvuhry'
         );
-        console.log('payment', payment);
+        console.log(payment);
       } catch (error) {
-        console.log(error);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        console.log(error.body);
       }
+
+      //   try {
+      //     const hosted = await this.cko.hostedPayments.create({
+      //       amount: Number(this.spendAmount) * 100,
+      //       currency: 'GBP',
+      //       reference: this.order.order_id,
+      //       //   billing: {
+      //       //     address: {
+      //       //       address_line1: 'Checkout.com',
+      //       //       address_line2: '90 Tottenham Court Road',
+      //       //       city: 'London',
+      //       //       state: 'London',
+      //       //       zip: 'W1T 4TJ',
+      //       //       country: 'GB'
+      //       //     }
+      //       //   },
+      //       success_url: 'localhost:8080/wallet/buytokens/success',
+      //       cancel_url: 'localhost:8080/wallet/buytokens/checkout',
+      //       failure_url: 'localhost:8080/wallet/buytokens/failure'
+      //     });
+      //     console.log(hosted);
+      //     // Redirect to hosted payment page
+      //     // window.location.href = <string>hosted._links.redirect.href;
+      //   } catch (err) {
+      //     console.log(err);
+      //   }
     },
     async tryBuyTokens() {
       console.log('tryBuyTokens');
       //   TODO if authenticated, create buy order
-      //   await this.createBuyOrder();
-      //   TODO go to processing payment page
-      //  TODO once order is created, redirect to checkout.com
-      await this.goToCheckout();
+      if (this.isAuthenticated) {
+        // await this.createBuyOrder();
+        //   TODO go to processing payment page
+        //  TODO once order is created, redirect to checkout.com
+        await this.goToCheckout();
+      } else {
+        this.$q.notify({
+          type: 'negative',
+          message: 'Please log in first'
+        });
+      }
     }
   },
   mounted() {
