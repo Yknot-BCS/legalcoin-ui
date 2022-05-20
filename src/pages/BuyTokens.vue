@@ -12,17 +12,21 @@ export default defineComponent({
       paymentStatus: ref(''),
       spendAmount: ref(''),
       buyAmount: ref(''),
-      order: ref({ order_id: '' })
-      //   cko: ref<Checkout>(
-      //     new Checkout(process.env.CKO_SECRET_KEY, {
-      //       pk: process.env.CKO_PUBLIC_KEY
-      //     })
-      //   )
+      order: ref({ order_id: '' }),
+      feePercent: ref(0.02)
     };
   },
   computed: {
     ...mapGetters({ account: 'account/cryptoAccountName' }),
     ...mapGetters({ isAuthenticated: 'account/cryptoIsAuthenticated' })
+  },
+  watch: {
+    buyAmount(val) {
+      this.spendAmount = (val * (1 + this.feePercent)).toFixed(2);
+    },
+    spendAmount(val) {
+      this.buyAmount = (val / (1 + this.feePercent)).toFixed(2);
+    }
   },
   methods: {
     async createBuyOrder() {
@@ -30,7 +34,6 @@ export default defineComponent({
       const issuerAPI = axios.create({
         baseURL: process.env.ISSUER_API_ENDPOINT
       });
-      console.log('issuerAPI', issuerAPI);
       let params = {
         name: 'Buy LEGAL',
         description: 'Fee=?',
@@ -44,8 +47,6 @@ export default defineComponent({
       const response = await issuerAPI.get('/order', { params: params });
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       this.order = response.data;
-      console.log(response.data);
-      //   return response.data;
     },
     async goToPaygate() {
       try {
@@ -82,6 +83,7 @@ export default defineComponent({
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         let redirectUrl = response.data._links.redirect.href as string;
+        this.$q.loading.hide();
         window.location.href = redirectUrl;
       } catch (error) {
         console.log(error);
@@ -89,10 +91,14 @@ export default defineComponent({
     },
     async tryBuyTokens() {
       console.log('tryBuyTokens');
+      this.$q.loading.show({
+        message: 'Going to payment gateway. Hang on...'
+      });
       if (this.isAuthenticated) {
         await this.createBuyOrder();
         await this.goToPaygate();
       } else {
+        this.$q.loading.hide();
         this.$q.notify({
           type: 'negative',
           message: 'Please log in first'
@@ -102,8 +108,6 @@ export default defineComponent({
   },
   mounted() {
     console.log('mounted');
-    // TODO handle checkout, failure, success params
-    console.log(this.$route.params.status);
     this.paymentStatus = <string>this.$route.params.status;
   }
 });
@@ -156,14 +160,6 @@ q-page
                     )
         q-card-section
             | By continuing you agree to the terms and conditions
-
-        //- q-card-section(v-if="true")
-        //-     iframe(
-        //-         src="https://pay.sandbox.checkout.com/page/hpp_H6KwEaJhugAl"
-        //-         width="100%"
-        //-         height="500px"
-        //-         frameborder="0"                
-        //-         )
 
     //- If payment has failed
     q-card(v-if="paymentStatus === 'failure'")
