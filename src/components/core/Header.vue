@@ -1,15 +1,21 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'src/store';
+// import { useRouter } from 'vue-router';
 
 export default {
   setup() {
     const store = useStore();
+    // const router = useRouter();
+    const isAuthenticated = computed(
+      (): boolean => store.state.account.isAuthenticated
+    );
     return {
-      isAuthenticated: computed(
-        (): boolean => store.state.account.isAuthenticated
-      ),
+      isAuthenticated,
       logout: () => store.commit('account/setLogout')
+      // onClickAccount: async () => {
+      //   if (!isAuthenticated.value) await router.push({ name: 'login' });
+      // }
     };
   }
 };
@@ -20,7 +26,7 @@ q-toolbar.row.q-py-sm.q-px-md
   router-link(:to="{name: 'home'}").row.items-center.cursor-pointer
     img.logo.q-mr-md(src="~assets/legalcoin-full.png")
 
-  q-select.toolbar-select.q-mr-md.col(ref='search' :dense='true' :outlined='true' :stack-label='false' label='Search or jump to...' v-model='text' :options='filteredOptions' @filter='filter')
+  q-select.toolbar-select.q-mr-md.col(ref='search' dense outlined :stack-label='false' label='Search or jump to...' v-model='text' :options='filteredOptions' @filter='filter')
     template(v-slot:append)
       q-icon.text-weight-bold(name='search' size='18px')
 
@@ -49,11 +55,16 @@ q-toolbar.row.q-py-sm.q-px-md
       | Gallery
 
   .row.items-center.no-wrap
-    q-btn.q-mr-sm(v-if='$q.screen.gt.sm' dense flat round size='md' icon='wallet' color='grey-6' :to="{name: 'wallet'}")
+    q-btn.q-mr-sm(v-if='$q.screen.gt.sm && isAuthenticated' dense flat round size='md' icon='wallet' color='grey-6' :to="{name: 'wallet'}" )
     //- q-btn(v-if="isAuthenticated" @click="logout") Logout
     //- q-btn(v-if="!isAuthenticated" to="login" flat) Login
     //- q-btn(v-if="!isAuthenticated" to="register" outline) Register
-    q-btn(dense flat round size='md' no-wrap)
+    q-btn(dense outline v-if="!isAuthenticated" :to="{name: 'login'}"  )
+      q-avatar.q-mr-sm(rounded size='30px')
+        q-icon.material-icons-outlined(name='account_circle')
+      .q-mr-sm Sign In
+    q-btn(dense flat round size='md' no-wrap v-if="isAuthenticated")
+      // TODO Change avatar when logged in
       q-avatar(rounded size='30px')
         q-icon.material-icons-outlined(name='account_circle' color='grey-6')
       //- q-icon(name='arrow_drop_down' size='16px')
@@ -63,7 +74,7 @@ q-toolbar.row.q-py-sm.q-px-md
             q-item-section
               | Signed in as 
               strong Peanutbutter
-          q-separator
+          q-separator(v-if="isAuthenticated")
           // TODO add params for profile, gallery and wallet
           q-item.menu-link(clickable :to="{name: 'profile'}")
             q-item-section Your profile
@@ -79,8 +90,8 @@ q-toolbar.row.q-py-sm.q-px-md
           //- q-separator
           q-item.menu-link(clickable v-if="isAuthenticated" @click="logout()")
             q-item-section Sign out
-          q-item.menu-link(clickable v-if="!isAuthenticated" :to="{name: 'login'}")
-            q-item-section Sign in
+          //- q-item.menu-link(clickable v-if="!isAuthenticated" :to="{name: 'login'}")
+          //-   q-item-section Sign in
 
 </template>
 
