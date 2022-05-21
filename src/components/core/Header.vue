@@ -12,7 +12,9 @@ export default {
     const isAuthenticated = computed(
       (): boolean => store.state.account.isAuthenticated
     );
+    const profile = computed(() => store.state.account.profile);
     return {
+      profile,
       isAuthenticated,
       logout: () => store.commit('account/setLogout')
       // onClickAccount: async () => {
@@ -51,12 +53,12 @@ q-toolbar.row.q-py-sm.q-px-md
       q-avatar(rounded size='30px')
         q-icon.material-icons-outlined(name='account_circle' color='grey-6')
       //- q-icon(name='arrow_drop_down' size='16px')
-      q-menu(auto-close)
+      q-menu(auto-close fit)
         q-list(dense)
           q-item(v-if="isAuthenticated")
             q-item-section
               | Signed in as 
-              strong Peanutbutter
+              strong {{profile.name}} {{profile.surname}}
           q-separator(v-if="isAuthenticated")
           // TODO add params for profile, gallery and wallet
           q-item.menu-link(clickable :to="{name: 'profile'}")
@@ -95,6 +97,8 @@ q-toolbar.row.q-py-sm.q-px-md
 .menu-link:hover
   background: $primary
   color: white
+.q-list
+  min-width: 150px
 .logo
   height:40px
 </style>
