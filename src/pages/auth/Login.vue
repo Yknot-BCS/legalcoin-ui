@@ -5,7 +5,6 @@ import { ref } from 'vue';
 import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
-import UalLoginHandler from 'src/components/ual/UalLoginHandler.vue';
 
 export default {
   setup() {

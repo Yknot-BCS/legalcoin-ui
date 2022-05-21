@@ -1,9 +1,11 @@
 <script lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { useStore } from 'src/store';
 // import { useRouter } from 'vue-router';
+import SearchBar from 'src/components/core/SearchBar';
 
 export default {
+  components: { SearchBar },
   setup() {
     const store = useStore();
     // const router = useRouter();
@@ -26,28 +28,9 @@ q-toolbar.row.q-py-sm.q-px-md
   router-link(:to="{name: 'home'}").row.items-center.cursor-pointer
     img.logo.q-mr-md(src="~assets/legalcoin-full.png")
 
-  q-select.toolbar-select.q-mr-md.col(ref='search' dense outlined :stack-label='false' label='Search or jump to...' v-model='text' :options='filteredOptions' @filter='filter')
-    template(v-slot:append)
-      q-icon.text-weight-bold(name='search' size='18px')
+  .col.row.justify-center
+    search-bar.toolbar-select.q-mr-md
 
-    template(v-slot:no-option)
-      q-item
-        q-item-section
-          .text-center
-            q-spinner-pie(color='primary' size='24px')
-
-    template(v-slot:option='scope')
-      q-item(v-bind='scope.itemProps')
-        q-item-section(side)
-          q-icon(name='collections_bookmark')
-        q-item-section
-          q-item-label(v-html='scope.opt.label')
-        q-item-section(side :class="{ 'default-type': !scope.opt.type }")
-          q-btn.bg-grey-1.q-px-sm(outline dense no-caps text-color='blue-grey-5' size='12px')
-            div {{ scope.opt.type || 'Jump to' }}
-            q-icon(name='subdirectory_arrow_left' size='14px')
-  
-  
   .q-mr-md.q-gutter-x-md.row.items-center.no-wrap(v-if='$q.screen.gt.sm')
     router-link(:to="{name: 'buy'}").toolbar-link
       | Buy
@@ -98,6 +81,10 @@ q-toolbar.row.q-py-sm.q-px-md
 <style scoped lang="sass">
 .q-btn
   font-size: 20px
+.toolbar-select
+  flex-basis: 500px
+  flex-grow: 0
+  flex-shrink: 1
 .toolbar-link
   color: black
   text-decoration: none
@@ -105,10 +92,6 @@ q-toolbar.row.q-py-sm.q-px-md
   &:hover
     opacity: 0.7
     color: $primary
-.toolbar-select.q-field--focused
-  border-radius: 10px
-  .q-field__append
-    display: none
 .menu-link:hover
   background: $primary
   color: white
