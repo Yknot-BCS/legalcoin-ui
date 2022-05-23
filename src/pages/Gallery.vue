@@ -1,15 +1,19 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import Index from './Index.vue';
+import DefaultGallery from 'src/components/gallery/DefaultGallery.vue';
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export default defineComponent({
   name: 'Gallery',
-  components: {
-    Index
+  components: { DefaultGallery },
+  setup() {
+    return {};
   }
 });
 </script>
 
 <template lang="pug">
-h1 Gallery
+q-page
+  DefaultGallery
 </template>
