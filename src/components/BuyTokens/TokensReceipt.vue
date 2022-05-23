@@ -1,0 +1,120 @@
+<script lang="ts">
+import { defineComponent } from 'vue';
+import { ref } from 'vue';
+import axios from 'axios';
+import { date } from 'quasar';
+
+export default defineComponent({
+  name: 'TokensReceipt',
+  props: {
+    paymentStatus: {
+      type: String,
+      default: ''
+    },
+    paymentId: {
+      type: String,
+      default: ''
+    }
+  },
+  setup() {
+    const checkoutAPI = axios.create({
+      baseURL: process.env.DEVELOPMENT
+        ? 'https://api.sandbox.checkout.com'
+        : 'https://api.checkout.com',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: process.env.CKO_SECRET_KEY
+      }
+    });
+    return {
+      checkoutAPI: checkoutAPI,
+      amount: ref(0),
+      paymentDate: ref(new Date()),
+      approved: ref(false),
+      currency: ref(''),
+      orderRef: ref('')
+    };
+  },
+  computed: {
+    displayDate() {
+      return date.formatDate(this.paymentDate, 'DD MMM, YYYY');
+    }
+  },
+  methods: {
+    async tryGetPaymentInfo(paymentId: string) {
+      console.log('tryGetPaymentInfo');
+
+      const response = await this.checkoutAPI.get(`/payments/${paymentId}`);
+      console.log(response.data);
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      this.amount = response.data?.amount / 100;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      this.paymentDate = new Date(response.data?.requested_on as string);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      this.currency = response.data?.currency as string;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      this.orderRef = response.data?.reference as string;
+    }
+  },
+  async mounted() {
+    await this.tryGetPaymentInfo(this.paymentId);
+  }
+});
+</script>
+
+<template lang="pug">
+h5 Transaction Summary
+
+//- | Receipt for
+//-     | Buying of LEGAL
+//- If payment has succeeded
+q-card(v-if="paymentStatus === 'success'")
+    q-card-section.row
+        .col-2.text-center
+            q-icon(name="fa-solid fa-money-bill-wave")
+        .col-10
+            .col
+                | Amount
+            .col
+                | {{ amount.toFixed(2) }} {{currency}}
+    q-separator
+    q-card-section.row
+        .col-2.text-center
+            q-icon(name="fa-solid fa-calendar-days")
+        .col-10
+            .col
+                | Date
+            .col
+                | {{ displayDate }} 
+    q-separator
+    q-card-section.row
+        .col-2.text-center
+            q-icon(name="fa-solid fa-tag")
+        .col-10
+            .col
+                | Order Number
+            .col
+                | {{ orderRef }}
+    q-separator
+    .row
+        q-btn(
+        label="View Balance"
+        @click="$router.push({name: 'wallet'})"
+        ).col-12
+        //- TODO add fee and any other details
+//- If payment has failed
+q-card(v-if="paymentStatus === 'failure'")
+    q-card-section
+        | Payment failed
+    //- q-card-section
+    //-     | Reason
+    q-card-section
+        q-btn(
+            color="primary"
+            label="Back"
+            @click="$router.push({name: 'wallet'})"
+            )
+</template>
+
+<style lang="sass" scoped></style>

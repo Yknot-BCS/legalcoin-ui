@@ -7,7 +7,7 @@ export default defineComponent({
   name: 'Wallet',
   components: {},
   setup() {
-    return { balance: ref(''), nftCount: ref(0) };
+    return { balance: ref('0'), nftCount: ref(0) };
   },
   computed: {
     ...mapGetters({
@@ -53,31 +53,26 @@ q-page
         .fit.row.wrap.justify-center.q-mt-sm
             .row.col-6
                 q-btn(
-                    color="primary"
                     label="BUY LEGAL"
                     @click="$router.push({name: 'buytokens', params: {status: 'checkout'}})"
                     ).col.q-mx-sm.q-mt-sm
             .row.col-6
                 q-btn(
-                    color="primary"
                     label="WITHDRAW"
                     @click="$router.push({name: 'withdraw'})"
                     ).col.q-mx-sm.q-mt-sm
             .row.col-6
                 q-btn(
-                    color="primary"
                     label="BUY NFT"
                     @click="$router.push({name: 'buytokens'})"
                     ).col.q-mx-sm.q-mt-sm
             .row.col-6
                 q-btn(
-                    color="primary" 
                     label="SELL NFT"
                     @click="$router.push({name: 'withdraw'})"
                     ).col.q-mx-sm.q-mt-sm   
             .row.col-12
                 q-btn(
-                    color="primary"
                     label="VIEW TRANSACTION HISTORY"
                     @click="$router.push({name: 'withdraw'})"
                     ).col.q-mx-sm.q-mt-sm

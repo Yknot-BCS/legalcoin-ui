@@ -3,22 +3,37 @@ import { defineComponent } from 'vue';
 import { ref } from 'vue';
 import axios from 'axios';
 import { mapGetters } from 'vuex';
+import TokensReceipt from 'src/components/BuyTokens/TokensReceipt.vue';
 
 export default defineComponent({
   name: 'BuyTokens',
-  components: {},
+  components: { TokensReceipt },
   setup() {
+    const checkoutAPI = axios.create({
+      baseURL: process.env.DEVELOPMENT
+        ? 'https://api.sandbox.checkout.com'
+        : 'https://api.checkout.com',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: process.env.CKO_SECRET_KEY
+      }
+    });
     return {
       paymentStatus: ref(''),
       spendAmount: ref(''),
       buyAmount: ref(''),
       order: ref({ order_id: '' }),
-      processingFeePercent: ref(0.02)
+      processingFeePercent: ref(0.02),
+      checkoutAPI: checkoutAPI,
+      paymentId: ref('')
     };
   },
   computed: {
-    ...mapGetters({ account: 'account/cryptoAccountName' }),
-    ...mapGetters({ cryptoIsAuthenticated: 'account/cryptoIsAuthenticated' })
+    ...mapGetters({
+      accountName: 'account/cryptoAccountName',
+      cryptoIsAuthenticated: 'account/cryptoIsAuthenticated',
+      account: 'account/account'
+    })
   },
   watch: {
     buyAmount(val) {
@@ -41,7 +56,7 @@ export default defineComponent({
         symbol: process.env.LC_SYMBOL,
         precision: 2,
         chain: !process.env.DEVELOPMENT ? 'TLOS' : 'TLOSTEST',
-        account: this.account as string,
+        account: this.accountName as string,
         contract: process.env.LC_CONTRACT
       };
       const response = await issuerAPI.get('/order', { params: params });
@@ -50,22 +65,12 @@ export default defineComponent({
     },
     async goToPaygate() {
       try {
-        const checkoutAPI = axios.create({
-          baseURL: process.env.DEVELOPMENT
-            ? 'https://api.sandbox.checkout.com'
-            : 'https://api.checkout.com',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: process.env.CKO_SECRET_KEY
-          }
-        });
-
         let body = {
           amount: Number(this.spendAmount) * 100,
           currency: 'GBP',
           reference: String(this.order.order_id),
           metadata: {
-            description: 'Issue from LegalCoin'
+            description: this.accountName as string
           },
           billing: {
             address: {
@@ -81,7 +86,7 @@ export default defineComponent({
           cancel_url: `${process.env.APP_URL}wallet/buytokens/checkout`
         };
 
-        const response = await checkoutAPI.post('/hosted-payments', body);
+        const response = await this.checkoutAPI.post('/hosted-payments', body);
         console.log(response);
 
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -96,9 +101,10 @@ export default defineComponent({
     async tryBuyTokens() {
       console.log('tryBuyTokens');
       this.$q.loading.show({
-        message: 'Going to payment gateway. Hang on...'
+        message: 'Navigating to payment gateway. Hang on...'
       });
-      if (this.cryptoIsAuthenticated) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (this.cryptoIsAuthenticated && this.account.isAuthenticated) {
         await this.createBuyOrder();
         await this.goToPaygate();
       } else {
@@ -112,6 +118,15 @@ export default defineComponent({
   },
   mounted() {
     this.paymentStatus = <string>this.$route.params.status;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    console.log(this.account.isAuthenticated);
+    if (this.paymentStatus === 'success' || this.paymentStatus === 'failure') {
+      console.log(this.paymentStatus);
+      //   ?cko-payment-id=pay_kbffp3t5xye2lmz5hvkh6vaj7y
+      this.paymentId = <string>this.$route.query['cko-payment-id'];
+      console.log(this.paymentId);
+    }
   }
 });
 </script>
@@ -164,29 +179,9 @@ q-page
         q-card-section
             | By continuing you agree to the terms and conditions
 
-    //- If payment has failed
-    q-card(v-if="paymentStatus === 'failure'")
-        q-card-section
-            | Payment failed
-        q-card-section
-            | Reason
-        q-card-section
-            q-btn(
-                color="primary"
-                label="Back"
-                @click="$router.push({name: 'wallet'})"
-                )
-    //- If payment has succeeded
-    q-card(v-if="paymentStatus === 'success'")
-        q-card-section
-            | Payment Success
-        q-card-section
-            | Info
-        q-card-section
-            q-btn(
-                color="primary"
-                label="View Balance"
-                @click="$router.push({name: 'wallet'})"
-                )
+    
+    //- Show payment status
+    TokensReceipt(v-if="paymentStatus === 'success'" :paymentStatus="paymentStatus" :paymentId="paymentId")
+    
 
 </template>
