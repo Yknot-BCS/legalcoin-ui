@@ -6,7 +6,8 @@ import {
   Name,
   NameType,
   UInt128,
-  UInt64
+  UInt64,
+  Asset
 } from '@greymass/eosio';
 
 import { AccountDetails, Action, Token, Userres, Block } from './Actions';
@@ -43,7 +44,10 @@ export type ApiClient = {
   getTransaction: (address: string) => Promise<Action[]>;
   getChildren: (address: string) => Promise<Action[]>;
   getTableRows: (tableInput: GetTableRowsParams) => Promise<unknown>;
-  getTokenBalances: (address: string) => Promise<unknown>;
+  getTokenBalances: (
+    tokenContract: string,
+    address: string
+  ) => Promise<Asset[]>;
   getTableByScope: (address: string) => Promise<Userres[]>;
   getBlock: (block: string) => Promise<Block>;
   accounts: AccountsApi;
