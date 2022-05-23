@@ -24,6 +24,8 @@ export default defineComponent({
       );
       this.balance = tokenBal[0].value.toFixed(2);
       //   console.log(tokenBal[0].value);
+
+      //   TODO get NFT count
     }
   }
 });
@@ -59,24 +61,24 @@ q-page
                 q-btn(
                     color="primary"
                     label="WITHDRAW"
-                    @click="$router.push({name: 'withdraw', params: {status: 'checkout'}})"
+                    @click="$router.push({name: 'withdraw'})"
                     ).col.q-mx-sm.q-mt-sm
             .row.col-6
                 q-btn(
                     color="primary"
                     label="BUY NFT"
-                    @click="$router.push({name: 'buytokens', params: {status: 'checkout'}})"
+                    @click="$router.push({name: 'buytokens'})"
                     ).col.q-mx-sm.q-mt-sm
             .row.col-6
                 q-btn(
                     color="primary" 
                     label="SELL NFT"
-                    @click="$router.push({name: 'withdraw', params: {status: 'checkout'}})"
+                    @click="$router.push({name: 'withdraw'})"
                     ).col.q-mx-sm.q-mt-sm   
             .row.col-12
                 q-btn(
                     color="primary"
                     label="VIEW TRANSACTION HISTORY"
-                    @click="$router.push({name: 'withdraw', params: {status: 'checkout'}})"
+                    @click="$router.push({name: 'withdraw'})"
                     ).col.q-mx-sm.q-mt-sm
 </template>
