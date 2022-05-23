@@ -18,7 +18,6 @@ export default defineComponent({
   setup(props) {
     const cards = computed(() => props.data);
     const cardType = computed(() => props.type);
-    console.log(cards);
     return { cards, cardType };
   }
 });
@@ -29,7 +28,7 @@ export default defineComponent({
   .col-xs-12.col-sm-6.col-md-4.col-lg-3.col-xl-2(
       v-for="card in cards"
       :key="card.id")
-    q-card.asset-card(v-if="cardType === 'asset'")
+    q-card(v-if="cardType === 'asset'")
       q-card-section
         .row
           .text-h6 {{card.collection}}
@@ -43,28 +42,28 @@ export default defineComponent({
       q-separator(inset)
       q-img.asset-img(:src="card.imageUrl")
 
-    q-card.asset-card(v-else-if="cardType === 'schema'")
+    q-card(v-else-if="cardType === 'schema'")
       q-card-section
         .text-h6 {{card.name}}
         .text-subtitle2 {{card.id}}
       q-separator(inset)
       q-img.asset-img(:src="card.imageUrl")
 
-    q-card.asset-card(v-else-if="cardType === 'template'")
+    q-card(v-else-if="cardType === 'template'")
       q-card-section
         .text-h6 {{card.name}}
         .text-subtitle2 {{card.id}}
       q-separator(inset)
       q-img.asset-img(:src="card.imageUrl")
 
-    q-card.asset-card(v-else-if="cardType === 'collection'")
+    q-card(v-else-if="cardType === 'collection'")
       q-card-section
         .text-h6 {{card.name}}
         .text-subtitle2 {{card.id}}
       q-separator(inset)
       q-img.asset-img(:src="card.imageUrl")
     
-    q-card.asset-card(v-else-if="cardType === 'listing'")
+    q-card(v-else-if="cardType === 'listing'")
       q-card-section
         .text-h6 {{card.name}}
         .text-subtitle2 {{card.id}}
@@ -74,7 +73,6 @@ export default defineComponent({
 </template>
 
 <style lang="sass" scoped>
-
 .asset-img
   width: 100%
   height: 500px
