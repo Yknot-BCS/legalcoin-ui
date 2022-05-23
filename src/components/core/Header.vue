@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue';
 import { useStore } from 'src/store';
 // import { useRouter } from 'vue-router';
-import SearchBar from 'src/components/core/SearchBar';
+import SearchBar from 'src/components/core/SearchBar.vue';
 
 export default {
   components: { SearchBar },

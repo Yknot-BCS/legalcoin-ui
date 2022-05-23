@@ -8,11 +8,11 @@ export default {
     const filteredOptions = ref(stringOptions);
 
     return {
-      searchText: ref(null),
+      searchText: ref(''),
       stringOptions,
       filteredOptions,
 
-      filterFn(val, update) {
+      filterFn(val: string, update: (arg0: () => void) => void) {
         if (val === '') {
           update(() => {
             filteredOptions.value = stringOptions;
