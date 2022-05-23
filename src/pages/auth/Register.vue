@@ -29,13 +29,7 @@ export default {
       passwordMatchRule,
       onSubmit: async () => {
         try {
-          await auth.register(
-            store,
-            userName,
-            userSurname,
-            userEmail,
-            userPassword
-          );
+          await auth.register(userName, userSurname, userEmail, userPassword);
           // await auth.login(store, userEmail, userPassword);
           $q.notify({
             type: 'positive',

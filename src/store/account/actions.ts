@@ -2,6 +2,7 @@ import { Authenticator, User } from 'universal-authenticator-library';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { AccountStateInterface } from './state';
+import auth from 'src/auth';
 
 export const actions: ActionTree<AccountStateInterface, StateInterface> = {
   async login({ commit }, { account, authenticator }) {
@@ -62,5 +63,11 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
       throw e;
     }
     return transaction;
+  },
+
+  async refreshProfile({ commit }) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const profile = await auth.getProfile();
+    commit('setUserProfile', profile);
   }
 };

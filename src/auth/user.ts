@@ -4,14 +4,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { api } from 'src/api';
 import { setAccessToken, setSessionExpiry } from './sessions';
-import { Store } from 'vuex';
 import { Ref } from 'vue';
 
-export async function login(
-  store: Store<any>,
-  userEmail: Ref<string>,
-  userPassword: Ref<string>
-) {
+export async function login(userEmail: Ref<string>, userPassword: Ref<string>) {
   // Sign in
   const res = (await api.accounts.mutation(`
       {
@@ -29,15 +24,10 @@ export async function login(
   setAccessToken(res.signIn.token);
   setSessionExpiry(res.signIn.sessionLength);
 
-  // Get profile
-  const profile = getProfile();
-  store.commit('account/setUserProfile', profile);
-
   // TODO get Telos account
 }
 
 export async function register(
-  store: Store<any>,
   userName: Ref<string>,
   userSurname: Ref<string>,
   userEmail: Ref<string>,

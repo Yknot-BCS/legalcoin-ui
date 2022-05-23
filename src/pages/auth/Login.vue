@@ -20,7 +20,9 @@ export default {
       onSubmit: async () => {
         try {
           // Login
-          await auth.login(store, userEmail, userPassword);
+          await auth.login(userEmail, userPassword);
+          // Refresh profile
+          await store.dispatch('account/refreshProfile');
           $q.notify({
             type: 'positive',
             message: 'Logged in'
