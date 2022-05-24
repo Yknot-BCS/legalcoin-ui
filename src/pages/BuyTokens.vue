@@ -46,22 +46,27 @@ export default defineComponent({
   methods: {
     async createBuyOrder() {
       console.log(process.env.ISSUER_API_ENDPOINT);
-      const issuerAPI = axios.create({
-        baseURL: process.env.ISSUER_API_ENDPOINT
-      });
-      let params = {
-        name: 'Buy LEGAL',
-        description: 'Fee=?',
-        value: this.spendAmount,
-        symbol: process.env.LC_SYMBOL,
-        precision: 2,
-        chain: !process.env.DEVELOPMENT ? 'TLOS' : 'TLOSTEST',
-        account: this.accountName as string,
-        contract: process.env.LC_CONTRACT
-      };
-      const response = await issuerAPI.get('/order', { params: params });
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      this.order = response.data;
+      try {
+        const issuerAPI = axios.create({
+          baseURL: process.env.ISSUER_API_ENDPOINT
+        });
+        let params = {
+          name: 'Buy LEGAL',
+          description: 'Fee=?',
+          value: this.spendAmount,
+          symbol: process.env.LC_SYMBOL,
+          precision: 2,
+          chain: !process.env.DEVELOPMENT ? 'TLOS' : 'TLOSTEST',
+          account: this.accountName as string,
+          contract: process.env.LC_CONTRACT
+        };
+        const response = await issuerAPI.get('/order', { params: params });
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        this.order = response.data;
+      } catch (error) {
+        this.$q.loading.hide();
+        console.error(error);
+      }
     },
     async goToPaygate() {
       try {
@@ -95,7 +100,7 @@ export default defineComponent({
         window.location.href = redirectUrl;
       } catch (error) {
         this.$q.loading.hide();
-        console.log(error);
+        console.error(error);
       }
     },
     async tryBuyTokens() {
@@ -119,13 +124,9 @@ export default defineComponent({
   mounted() {
     this.paymentStatus = <string>this.$route.params.status;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    console.log(this.account.isAuthenticated);
     if (this.paymentStatus === 'success' || this.paymentStatus === 'failure') {
       console.log(this.paymentStatus);
-      //   ?cko-payment-id=pay_kbffp3t5xye2lmz5hvkh6vaj7y
       this.paymentId = <string>this.$route.query['cko-payment-id'];
-      console.log(this.paymentId);
     }
   }
 });
@@ -181,7 +182,7 @@ q-page
 
     
     //- Show payment status
-    TokensReceipt(v-if="paymentStatus === 'success'" :paymentStatus="paymentStatus" :paymentId="paymentId")
+    TokensReceipt(v-if="paymentStatus === 'success' || paymentStatus === 'failure'" :paymentStatus="paymentStatus" :paymentId="paymentId")
     
 
 </template>

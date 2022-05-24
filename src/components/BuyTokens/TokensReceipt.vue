@@ -32,7 +32,8 @@ export default defineComponent({
       paymentDate: ref(new Date()),
       approved: ref(false),
       currency: ref(''),
-      orderRef: ref('')
+      orderRef: ref(''),
+      status: ref('')
     };
   },
   computed: {
@@ -55,6 +56,8 @@ export default defineComponent({
       this.currency = response.data?.currency as string;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       this.orderRef = response.data?.reference as string;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      this.status = response.data?.status as string;
     }
   },
   async mounted() {
@@ -107,8 +110,10 @@ q-card(v-if="paymentStatus === 'success'")
 q-card(v-if="paymentStatus === 'failure'")
     q-card-section
         | Payment failed
-    //- q-card-section
-    //-     | Reason
+    q-card-section
+        | {{status}}
+    q-card-section
+        | Please review your transaction and try again.
     q-card-section
         q-btn(
             color="primary"
