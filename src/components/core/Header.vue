@@ -1,15 +1,25 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'src/store';
+// import { useRouter } from 'vue-router';
+import SearchBar from 'src/components/core/SearchBar.vue';
 
 export default {
+  components: { SearchBar },
   setup() {
     const store = useStore();
+    // const router = useRouter();
+    const isAuthenticated = computed(
+      (): boolean => store.state.account.isAuthenticated
+    );
+    const profile = computed(() => store.state.account.profile);
     return {
-      isAuthenticated: computed(
-        (): boolean => store.state.account.isAuthenticated
-      ),
+      profile,
+      isAuthenticated,
       logout: () => store.commit('account/setLogout')
+      // onClickAccount: async () => {
+      //   if (!isAuthenticated.value) await router.push({ name: 'login' });
+      // }
     };
   }
 };
@@ -17,124 +27,78 @@ export default {
 
 <template lang="pug">
 q-toolbar.row.q-py-sm.q-px-md
-  router-link(to="/").row.items-center.cursor-pointer
-    img.HL__logo.q-mr-md(src="~assets/legalcoin-full.png")
+  router-link(:to="{name: 'home'}").row.items-center.cursor-pointer
+    img.logo.q-mr-md(src="~assets/legalcoin-full.png")
 
-  .HL__toolbar-link.q-mx-md.q-gutter-md.text-h5.row.items-center.no-wrap(v-if='$q.screen.gt.sm')
-    router-link(to="/buy").text-black(href='javascript:void(0)')
+  .col.row.justify-center
+    search-bar.toolbar-select.q-mr-md
+
+  .q-mr-md.q-gutter-x-md.row.items-center.no-wrap(v-if='$q.screen.gt.sm')
+    router-link(:to="{name: 'buy'}").toolbar-link
       | Buy
-    router-link(to="gallery").text-black(href='javascript:void(0)')
+    router-link(:to="{name: 'gallery'}").toolbar-link
       | Gallery
 
-  q-select.col.HL__toolbar-select(ref='search' :dense='true' :outlined='true' :stack-label='false' label='Search or jump to...' v-model='text' :options='filteredOptions' @filter='filter')
-    template(v-slot:append='')
-      q-icon.text-weight-bold(name='search' size='18px')
+  .row.items-center.no-wrap
+    q-btn.q-mr-sm(v-if='$q.screen.gt.sm && isAuthenticated' dense flat round size='md' icon='wallet' color='grey-6' :to="{name: 'wallet'}" )
+    //- q-btn(v-if="isAuthenticated" @click="logout") Logout
+    //- q-btn(v-if="!isAuthenticated" to="login" flat) Login
+    //- q-btn(v-if="!isAuthenticated" to="register" outline) Register
+    q-btn(dense outline v-if="!isAuthenticated" :to="{name: 'login'}"  )
+      q-avatar.q-mr-sm(rounded size='30px')
+        q-icon.material-icons-outlined(name='account_circle')
+      .q-mr-sm Sign In
+    q-btn(dense flat round size='md' no-wrap v-if="isAuthenticated")
+      // TODO Change avatar when logged in
+      q-avatar(rounded size='30px')
+        q-icon.material-icons-outlined(name='account_circle' color='grey-6')
+      //- q-icon(name='arrow_drop_down' size='16px')
+      q-menu(auto-close fit)
+        q-list(dense)
+          q-item(v-if="isAuthenticated")
+            q-item-section
+              | Signed in as 
+              strong {{profile.name}} {{profile.surname}}
+          q-separator(v-if="isAuthenticated")
+          // TODO add params for profile, gallery and wallet
+          q-item.menu-link(clickable :to="{name: 'profile'}")
+            q-item-section Your profile
+          q-item.menu-link(clickable :to="{name: 'gallery'}")
+            q-item-section Your gallery
+          q-item.menu-link(clickable :to="{name: 'wallet'}")
+            q-item-section Your wallet
+          q-separator
+          //- q-item.menu-link(clickable)
+          //-   q-item-section Help
+          //- q-item.menu-link(clickable)
+          //-   q-item-section Settings
+          //- q-separator
+          q-item.menu-link(clickable v-if="isAuthenticated" @click="logout()")
+            q-item-section Sign out
+          //- q-item.menu-link(clickable v-if="!isAuthenticated" :to="{name: 'login'}")
+          //-   q-item-section Sign in
 
-    template(v-slot:no-option='')
-      q-item
-        q-item-section
-          .text-center
-            q-spinner-pie(color='primary' size='24px')
-
-    template(v-slot:option='scope')
-      q-item.HL__select-HL__menu-link(v-bind='scope.itemProps')
-        q-item-section(side='')
-          q-icon(name='collections_bookmark')
-        q-item-section
-          q-item-label(v-html='scope.opt.label')
-        q-item-section(side='' :class="{ 'default-type': !scope.opt.type }")
-          q-btn.bg-grey-1.q-px-sm(outline='' dense='' no-caps='' text-color='blue-grey-5' size='12px')
-            div {{ scope.opt.type || 'Jump to' }}
-            q-icon(name='subdirectory_arrow_left' size='14px')
-  
-  .q-pl-sm.q-gutter-sm.row.items-center.no-wrap
-    q-btn(v-if='$q.screen.gt.sm' dense='' flat='' round='' size='md' icon='wallet' color='grey-6')
-    div(v-if="isAuthenticated") Peanutbutter
-    q-btn(clickable v-if="isAuthenticated" @click="logout") Logout
-    q-btn(clickable v-if="!isAuthenticated" :to="{name:'login'}") Login
-    q-btn(clickable v-if="!isAuthenticated" :to="{name:'register'}") Register
-    //- q-btn(v-if='$q.screen.gt.sm' dense='' flat='' no-wrap='')
-    //-   q-avatar(rounded='' size='30px' )
-    //-     q-icon.material-icons-outlined(name='account_circle' color='grey-6')
-    //-   q-icon(name='arrow_drop_down' size='16px')
-    //-   q-menu(auto-close='')
-    //-     q-list(dense='')
-    //-       q-item.HL__menu-link-signed-in(v-if="isAuthenticated")
-    //-         q-item-section
-    //-           div
-    //-             | Signed in as 
-    //-             strong Peanutbutter
-    //-       q-separator
-    //-       q-item.HL__menu-link(clickable)
-    //-         q-item-section Your profile
-    //-       q-item.HL__menu-link(clickable)
-    //-         q-item-section Your assets
-    //-       q-item.HL__menu-link(clickable)
-    //-         q-item-section Your listings
-    //-       q-item.HL__menu-link(clickable)
-    //-         q-item-section Your wallet
-    //-       q-separator
-    //-       q-item.HL__menu-link(clickable)
-    //-         q-item-section Help
-    //-       q-item.HL__menu-link(clickable)
-    //-         q-item-section Settings
-    //-       q-item.HL__menu-link(clickable v-if="isAuthenticated" @click="logout()")
-    //-         q-item-section Sign out
-    //-       q-item.HL__menu-link(clickable v-if="!isAuthenticated" @click="signIn()")
-    //-         q-item-section Sign in
-
-    //- q-btn(dense='' flat='')
-    //-   .row.items-center.no-wrap
-    //-     q-icon(name='more_vert' size='20px')
-    //-   q-menu(auto-close='')
-    //-     q-list(dense='' style='min-width: 100px')
-    //-       q-item.HL__menu-link(clickable)
-    //-         q-item-section Buy
-    //-       q-item.HL__menu-link(clickable)
-    //-         q-item-section Sell
-    //-       q-item.HL__menu-link(clickable)
-    //-         q-item-section Marketplace
-    //-       q-separator
-    //-       q-item.HL__menu-link(clickable)
-    //-         q-item-section New listing
 </template>
 
 <style scoped lang="sass">
-.HL
-  &__select-HL__menu-link
-    .default-type
-      visibility: hidden
-    &:hover
-      background: $primary
-      color: black
-      .q-item__section--side
-        color: black
-      .default-type
-        visibility: visible
-  &__toolbar-link
-    a
-      color: black
-      text-decoration: none
-      &:hover
-        opacity: 0.7
-        color: $primary
-  &__menu-link:hover
-    background: $primary
-    color: white
-  &__menu-link-signed-in,
-  &__menu-link-status
-    &:hover
-      & > div
-        background: white !important
-  &__menu-link-status
-    color: $blue-grey-6
-    &:hover
-      color: $light-blue-9
-  &__toolbar-select.q-field--focused
-    // width: 450px !important
-    border-radius: 10px
-    .q-field__append
-      display: none
-  &__logo
-    height:40px
+.q-btn
+  font-size: 20px
+.toolbar-select
+  flex-basis: 500px
+  flex-grow: 0
+  flex-shrink: 1
+.toolbar-link
+  color: black
+  text-decoration: none
+  font-size: 1.2rem
+  &:hover
+    opacity: 0.7
+    color: $primary
+.menu-link:hover
+  background: $primary
+  color: white
+.q-list
+  min-width: 150px
+.logo
+  height:40px
 </style>

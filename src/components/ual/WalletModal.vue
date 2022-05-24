@@ -14,14 +14,14 @@ export default defineComponent({
     ...mapGetters({ account: 'account/cryptoAccountName' })
   },
   methods: {
-    ...mapActions({ login: 'account/login' }),
+    ...mapActions({ cryptoLogin: 'account/cryptoLogin' }),
     ...mapMutations({ setAuthenticator: 'account/setAuthenticator' }),
     async onLogin(idx: number) {
       const authenticator =
         this.$ual.getAuthenticators().availableAuthenticators[idx];
       this.error = null;
       try {
-        await this.login({
+        await this.cryptoLogin({
           account: this.account as string,
           authenticator
         });

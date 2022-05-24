@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { requiredRule } from './inputRules';
 import auth from 'src/auth';
-import { useStore } from 'src/store';
+//import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
 // import { api } from 'src/api';
 import { useQuasar } from 'quasar';
@@ -10,7 +10,7 @@ import { useQuasar } from 'quasar';
 export default {
   setup() {
     const $q = useQuasar();
-    const store = useStore();
+    //const store = useStore();
     const router = useRouter();
     const userName = ref('');
     const userSurname = ref('');
@@ -29,13 +29,7 @@ export default {
       passwordMatchRule,
       onSubmit: async () => {
         try {
-          await auth.register(
-            store,
-            userName,
-            userSurname,
-            userEmail,
-            userPassword
-          );
+          await auth.register(userName, userSurname, userEmail, userPassword);
           // await auth.login(store, userEmail, userPassword);
           $q.notify({
             type: 'positive',

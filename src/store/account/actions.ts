@@ -2,9 +2,10 @@ import { Authenticator, User } from 'universal-authenticator-library';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { AccountStateInterface } from './state';
+import auth from 'src/auth';
 
 export const actions: ActionTree<AccountStateInterface, StateInterface> = {
-  async login({ commit }, { account, authenticator }) {
+  async cryptoLogin({ commit }, { account, authenticator }) {
     commit(
       'setLoadingWallet',
       (authenticator as Authenticator).getStyle().text
@@ -63,94 +64,10 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
     }
     return transaction;
   },
-  async stake({}, { user, data }) {
-    let transaction = null;
-    const actions = [
-      {
-        account: 'eosio',
-        name: 'delegatebw',
-        authorization: [
-          {
-            actor: this.state.account.cryptoAccountName,
-            permission: 'active'
-          }
-        ],
-        data: data as unknown
-      }
-    ];
-    try {
-      transaction = await (user as User).signTransaction(
-        {
-          actions
-        },
-        {
-          blocksBehind: 3,
-          expireSeconds: 30
-        }
-      );
-    } catch (e) {
-      throw e;
-    }
-    return transaction;
-  },
-  async unstake({}, { user, data }) {
-    let transaction = null;
-    const actions = [
-      {
-        account: 'eosio',
-        name: 'undelegatebw',
-        authorization: [
-          {
-            actor: this.state.account.cryptoAccountName,
-            permission: 'active'
-          }
-        ],
-        data: data as unknown
-      }
-    ];
-    try {
-      transaction = await (user as User).signTransaction(
-        {
-          actions
-        },
-        {
-          blocksBehind: 3,
-          expireSeconds: 30
-        }
-      );
-    } catch (e) {
-      throw e;
-    }
-    return transaction;
-  },
-  async refund({}, { user, data }) {
-    let transaction = null;
-    const actions = [
-      {
-        account: 'eosio',
-        name: 'refund',
-        authorization: [
-          {
-            actor: this.state.account.cryptoAccountName,
-            permission: 'active'
-          }
-        ],
-        data: data as unknown
-      }
-    ];
-    try {
-      transaction = await (user as User).signTransaction(
-        {
-          actions
-        },
-        {
-          blocksBehind: 3,
-          expireSeconds: 30
-        }
-      );
-    } catch (e) {
-      throw e;
-    }
-    return transaction;
+
+  async refreshProfile({ commit }) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const profile = await auth.getProfile();
+    commit('setUserProfile', profile);
   }
 };
