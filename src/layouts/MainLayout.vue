@@ -4,21 +4,28 @@ import Footer from 'src/components/core/Footer.vue';
 import MobileTabsFooter from 'src/components/core/MobileTabsFooter.vue';
 import { useStore } from 'src/store';
 import { onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import auth from 'src/auth';
 import DevBanner from 'src/components/dev/DevBanner.vue';
 
 export default {
   setup() {
     const store = useStore();
+    const router = useRouter();
     let sessionTimeout: ReturnType<typeof setTimeout>;
+    async function logout(): Promise<void> {
+      store.commit('account/setLogout');
+      await router.push({ name: 'home' });
+      router.go(0); // refresh
+    }
     function refreshSession() {
       clearTimeout(sessionTimeout);
       const sessionLength = auth.getSessionExpiry() - Date.now();
       if (sessionLength > 0) {
         sessionTimeout = setTimeout(() => {
-          store.commit('account/setLogout');
+          void logout();
         }, sessionLength - 1000 * 60 * 1); // 1 min before expiry
-      } else store.commit('account/setLogout');
+      } else void logout();
     }
     onMounted(async () => {
       // Refresh profile if session is still open
