@@ -20,12 +20,15 @@ export default defineComponent({
     });
     return {
       paymentStatus: ref(''),
-      spendAmount: ref(''),
-      buyAmount: ref(''),
+      spendAmount: ref('0'),
+      buyAmount: ref('0'),
       order: ref({ order_id: '' }),
-      processingFeePercent: ref(0.02),
+      processingFee: ref(3.99),
+      ratio: ref(1.01), // GBP to LEGAL rate
       checkoutAPI: checkoutAPI,
-      paymentId: ref('')
+      paymentId: ref(''),
+      minimumAmount: ref(50),
+      changingBuyAmount: ref(false)
     };
   },
   computed: {
@@ -33,14 +36,31 @@ export default defineComponent({
       accountName: 'account/cryptoAccountName',
       cryptoIsAuthenticated: 'account/cryptoIsAuthenticated',
       account: 'account/account'
-    })
+    }),
+    totalFee(): number {
+      return this.processingFee;
+    },
+    displayBuyAmount(): string {
+      return Number(this.buyAmount).toFixed(2);
+    },
+    displayAfterFee(): string {
+      return Number(Number(this.spendAmount) - this.totalFee).toFixed(2);
+    }
   },
   watch: {
     buyAmount(val) {
-      this.spendAmount = (val * (1 + this.processingFeePercent)).toFixed(2);
+      if (this.changingBuyAmount) {
+        let spendAfterFee = Number(val) + this.totalFee;
+        let spendAfterFeeRatio = spendAfterFee * this.ratio;
+        this.spendAmount = Number(spendAfterFeeRatio).toFixed(2);
+      }
     },
     spendAmount(val) {
-      this.buyAmount = (val / (1 + this.processingFeePercent)).toFixed(2);
+      if (!this.changingBuyAmount) {
+        let buyAfterFee = Number(val) - this.totalFee;
+        let buyAfterFeeRatio = buyAfterFee / this.ratio;
+        this.buyAmount = Number(buyAfterFeeRatio).toFixed(2);
+      }
     }
   },
   methods: {
@@ -122,6 +142,7 @@ export default defineComponent({
     }
   },
   mounted() {
+    this.spendAmount = '100';
     this.paymentStatus = <string>this.$route.params.status;
 
     if (this.paymentStatus === 'success' || this.paymentStatus === 'failure') {
@@ -144,6 +165,8 @@ q-page
                 label="Amount"
                 placeholder="0.00"
                 v-model="spendAmount"
+                :rules="[ val => val >= minimumAmount || `Value must be larger than ${minimumAmount}` ]"
+                @focus="changingBuyAmount = false"
                 )
         q-card-section
             | I want to buy
@@ -153,6 +176,7 @@ q-page
                 label="Amount"
                 placeholder="0.00"
                 v-model="buyAmount"
+                @focus="changingBuyAmount = true"                
                 )
         q-card-section
             | Summary
@@ -160,16 +184,33 @@ q-page
             //- Dropdown with price, network fee and processing fee
             q-expansion-item(
                 expand-separator
-                label="You get 1 LEGAL token for 1.00 GBP")      
+                :label="`You get ${displayBuyAmount} LEGAL for £ ${this.spendAmount}`"                
+                )  
+                //- template(v-slot:header)                
+                //-     q-card-section
+                //-         p.col-12
+                //-             | You get 
+                //-             strong {{displayBuyAmount}} LEGAL
+                //-             |  for  
+                //-             strong &#163; {{spendAmount}}
+          
+  
                 q-card
-                    q-card-section
-                        | 1 LEGAL @ 1.00 GBP
+                    q-card-section.fit.row.justify-between
+                        .col
+                            | {{displayBuyAmount}} LEGAL @ &#163; {{ratio.toFixed(2)}}
+                        | &#163; {{displayAfterFee}}
+                //- q-card
+                //-     q-card-section
+                //-         | Network Fee: 0.00 GBP
                 q-card
-                    q-card-section
-                        | Network Fee: 0.00 GBP
-                q-card
-                    q-card-section
-                        | Processing Fee: 0.00 GBP
+                    q-card-section.fit.row.justify-between
+                        .col
+                            | Processing Fee: 
+                            q-icon(name="fa-solid fa-circle-info")
+                                q-tooltip(anchor="top middle" self="center middle" max-width="200px")
+                                    | This is charged by LegalCoin to cover the costs levied by payment providers such as Visa & Mastercard. This may vary based on the payment method you choose later.
+                        | as low as &#163; {{processingFee.toFixed(2)}}
         q-card-section
             div(class="fit row wrap justify-center")
                 q-btn(
