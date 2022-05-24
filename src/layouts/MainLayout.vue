@@ -10,10 +10,11 @@ import DevBanner from 'src/components/dev/DevBanner.vue';
 export default {
   setup() {
     const store = useStore();
-    onMounted(() => {
-      // Check if still authenticated on local storage
+    onMounted(async () => {
+      // Refresh profile if session is still open
       if (auth.isLoggedIn()) {
         store.commit('account/setisLoggedIn', true);
+        await store.dispatch('account/refreshProfile');
       } else {
         store.commit('account/setisLoggedIn', false);
       }
