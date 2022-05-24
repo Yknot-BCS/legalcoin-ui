@@ -43,5 +43,8 @@ export const mutations: MutationTree<AccountStateInterface> = {
   },
   setUserProfile(state: AccountStateInterface, userProfile?: User) {
     state.profile = userProfile;
+  },
+  setUseLocalSigner(state: AccountStateInterface, useLocalSigner: boolean) {
+    state.useLocalSigner = useLocalSigner;
   }
 };

@@ -5,7 +5,7 @@ import MobileTabsFooter from 'src/components/core/MobileTabsFooter.vue';
 import { useStore } from 'src/store';
 import { onMounted, computed } from 'vue';
 import auth from 'src/auth';
-import UalLoginHandler from 'src/components/ual/UalLoginHandler.vue';
+import DevBanner from 'src/components/dev/DevBanner.vue';
 
 export default {
   setup() {
@@ -24,15 +24,13 @@ export default {
       )
     };
   },
-  components: { Header, Footer, MobileTabsFooter, UalLoginHandler }
+  components: { Header, Footer, MobileTabsFooter, DevBanner }
 };
 </script>
 
 <template lang="pug">
 q-layout( view="hHh lpR fff")
-  q-toolbar( v-if="DEVELOPMENT").dev-banner 
-    .q-mr-sm.text-secondary Development
-    UalLoginHandler
+  dev-banner(v-if="DEVELOPMENT")
   Header
   q-page-container
     router-view
@@ -46,9 +44,4 @@ q-layout( view="hHh lpR fff")
 .separator
   height: 2px
   min-height: 2px
-
-.dev-banner
-  background: $primary
-  min-height: 0.2rem
-  justify-content: center
 </style>
