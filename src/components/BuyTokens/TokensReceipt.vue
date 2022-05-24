@@ -33,7 +33,9 @@ export default defineComponent({
       approved: ref(false),
       currency: ref(''),
       orderRef: ref(''),
-      status: ref('')
+      status: ref(''),
+      hasError: ref(false),
+      errorMessage: ref('')
     };
   },
   computed: {
@@ -58,10 +60,28 @@ export default defineComponent({
       this.orderRef = response.data?.reference as string;
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       this.status = response.data?.status as string;
+    },
+    async tryGetOrderInfo(pg_id: string) {
+      console.log('tryGetOrderInfo');
+
+      const issuerAPI = axios.create({
+        baseURL: process.env.ISSUER_API_ENDPOINT
+      });
+
+      const response = await issuerAPI.get(`/order/${pg_id}`);
+
+      console.log(response.data);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      if (response.data[0]?.error_code != 0) {
+        this.hasError = true;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        this.errorMessage = response.data[0]?.error_message as string;
+      }
     }
   },
   async mounted() {
     await this.tryGetPaymentInfo(this.paymentId);
+    await this.tryGetOrderInfo(this.paymentId);
   }
 });
 </script>
@@ -99,6 +119,15 @@ q-card(v-if="paymentStatus === 'success'")
                 | Order Number
             .col
                 | {{ orderRef }}
+    q-separator
+    q-card-section(v-if="hasError==true").row
+        .col-2.text-center
+            q-icon(name="fa-solid fa-bug", color="red")
+        .col-10
+            .col(style="color: red;")
+                | Order failed to issue tokens
+            .col(style="color: red;")
+                | {{ errorMessage }}
     q-separator
     .row
         q-btn(
