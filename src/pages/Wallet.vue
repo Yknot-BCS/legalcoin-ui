@@ -32,8 +32,8 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-page
-    q-card
+q-page.fit.row.wrap.justify-center
+    q-card.wallet-card
       q-card-section
         | My Balance
       q-card-section
@@ -77,3 +77,11 @@ q-page
                     @click="$router.push({name: 'withdraw'})"
                     ).col.q-mx-sm.q-mt-sm
 </template>
+
+<style lang="sass" scoped>
+.wallet-card
+  width: 100%
+  max-width: 30rem
+  height: 100%
+  max-height: 30rem
+</style>
