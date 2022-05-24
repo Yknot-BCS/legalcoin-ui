@@ -35,7 +35,9 @@ export default defineComponent({
       orderRef: ref(''),
       status: ref(''),
       hasError: ref(false),
-      errorMessage: ref('')
+      errorMessage: ref(''),
+      polling: ref(),
+      issueInProgress: ref(false)
     };
   },
   computed: {
@@ -62,7 +64,7 @@ export default defineComponent({
       this.status = response.data?.status as string;
     },
     async tryGetOrderInfo(pg_id: string) {
-      console.log('tryGetOrderInfo');
+      //   console.log('tryGetOrderInfo');
 
       const issuerAPI = axios.create({
         baseURL: process.env.ISSUER_API_ENDPOINT
@@ -70,19 +72,46 @@ export default defineComponent({
 
       const response = await issuerAPI.get(`/order/${pg_id}`);
 
-      console.log(response.data);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      if (response.data[0]?.error_code != 0) {
+      //   console.log(response.data);
+      if (
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        response.data[0]?.error_code === undefined ||
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        response.data[0]?.error_code === null
+      ) {
+        this.issueInProgress = true;
+      }
+      if (
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        response.data[0]?.error_code !== 0 &&
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        !isNaN(response.data[0]?.error_code)
+      ) {
         this.hasError = true;
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         this.errorMessage = response.data[0]?.error_message as string;
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      } else if (response.data[0]?.error_code === 0) {
+        this.hasError = false;
+        this.errorMessage = '';
+        this.issueInProgress = false;
+        clearInterval(this.polling);
       }
     }
   },
   async mounted() {
     await this.tryGetPaymentInfo(this.paymentId);
-    await new Promise((r) => setTimeout(r, 3000)); // FIXME shows error before order updated, small wait or poll needed
     await this.tryGetOrderInfo(this.paymentId);
+
+    if (this.issueInProgress) {
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      this.polling = setInterval(async () => {
+        void (await this.tryGetOrderInfo(this.paymentId));
+      }, 3000);
+    }
+  },
+  beforeUnmount() {
+    clearInterval(this.polling);
   }
 });
 </script>
@@ -120,6 +149,19 @@ q-card(v-if="paymentStatus === 'success'")
                 | Order Number
             .col
                 | {{ orderRef }}
+    q-separator
+    q-card-section.row
+        .col-2.text-center
+            q-spinner-clock(v-if="issueInProgress")
+            q-icon(v-else name="fa-solid fa-hourglass")        
+        .col-10
+            .col
+                | Payout Status
+            .col(v-if="issueInProgress")
+                | Issuing tokens in progress
+            .col(v-if="!issueInProgress")
+                | Issuing tokens completed 
+                //- TODO - add link to transaction on block explorer
     q-separator
     q-card-section(v-if="hasError==true").row
         .col-2.text-center
