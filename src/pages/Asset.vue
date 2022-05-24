@@ -3,12 +3,13 @@ import { defineComponent, onMounted, ref, computed } from 'vue';
 import { atomic_api } from 'src/api/atomic_assets';
 import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
 import { useRoute } from 'vue-router';
+import DetailsTable from 'src/components/atomicAssets/DetailsTable.vue';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export default defineComponent({
   name: 'Asset',
-  components: {},
+  components: { DetailsTable },
   setup() {
     //const data = await atomic_api.getAsset('1099511627786');
     const route = useRoute();
@@ -44,7 +45,7 @@ export default defineComponent({
       .col-xs-12.col-sm-6
         q-card.details-card
           q-img.asset-img(:src="assetData.data.img")
-      .col-12
+      .col-xs-12.col-sm-6
         q-tabs(
             v-model="tab"
             dense
@@ -55,16 +56,13 @@ export default defineComponent({
           )
             q-tab(name="description" label="Description")
             q-tab(name="details" label="Details")
-            
-        q-separator
 
         q-tab-panels(v-model="tab" animated)
           q-tab-panel(name="description")
             q-card.details-card
               q-img.asset-img(:src="assetData.data.img")
           q-tab-panel(name="details")
-            q-card.details-card
-              q-img.asset-img(:src="assetData.data.img")
+            DetailsTable
 
 </template>
 
