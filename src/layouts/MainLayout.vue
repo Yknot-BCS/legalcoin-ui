@@ -12,10 +12,10 @@ export default {
     const store = useStore();
     onMounted(() => {
       // Check if still authenticated on local storage
-      if (auth.isAuthenticated()) {
-        store.commit('account/setIsAuthenticated', true);
+      if (auth.isLoggedIn()) {
+        store.commit('account/setisLoggedIn', true);
       } else {
-        store.commit('account/setIsAuthenticated', false);
+        store.commit('account/setisLoggedIn', false);
       }
     });
     return {

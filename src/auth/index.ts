@@ -4,7 +4,7 @@ import {
   getAccessToken,
   getSessionExpiry,
   setSessionExpiry,
-  isAuthenticated
+  isLoggedIn
 } from './sessions';
 
 export default {
@@ -15,5 +15,5 @@ export default {
   getAccessToken,
   getSessionExpiry,
   setSessionExpiry,
-  isAuthenticated
+  isLoggedIn
 };

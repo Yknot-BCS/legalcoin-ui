@@ -15,5 +15,8 @@ export const getters: GetterTree<AccountStateInterface, StateInterface> = {
   },
   getAccountData(state): AccountDetails {
     return state.cryptoAccountDetails;
+  },
+  isLoggedIn({ isLoggedIn }): boolean {
+    return isLoggedIn;
   }
 };
