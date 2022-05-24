@@ -75,7 +75,7 @@ export default defineComponent({
           description: 'Fee=?',
           value: this.spendAmount,
           symbol: process.env.LC_SYMBOL,
-          precision: 2,
+          precision: process.env.LC_PRECISION,
           chain: !process.env.DEVELOPMENT ? 'TLOS' : 'TLOSTEST',
           account: this.accountName as string,
           contract: process.env.LC_CONTRACT
