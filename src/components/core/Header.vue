@@ -9,16 +9,14 @@ export default {
   setup() {
     const store = useStore();
     // const router = useRouter();
-    const isAuthenticated = computed(
-      (): boolean => store.state.account.isAuthenticated
-    );
+    const isLoggedIn = computed((): boolean => store.state.account.isLoggedIn);
     const profile = computed(() => store.state.account.profile);
     return {
       profile,
-      isAuthenticated,
+      isLoggedIn,
       logout: () => store.commit('account/setLogout')
       // onClickAccount: async () => {
-      //   if (!isAuthenticated.value) await router.push({ name: 'login' });
+      //   if (!isLoggedIn.value) await router.push({ name: 'login' });
       // }
     };
   }
@@ -40,26 +38,26 @@ q-toolbar.row.q-py-sm.q-px-md
       | Gallery
 
   .row.items-center.no-wrap
-    q-btn.q-mr-sm(v-if='$q.screen.gt.sm && isAuthenticated' dense flat round size='md' icon='wallet' color='grey-6' :to="{name: 'wallet'}" )
-    //- q-btn(v-if="isAuthenticated" @click="logout") Logout
-    //- q-btn(v-if="!isAuthenticated" to="login" flat) Login
-    //- q-btn(v-if="!isAuthenticated" to="register" outline) Register
-    q-btn(dense outline v-if="!isAuthenticated" :to="{name: 'login'}"  )
+    q-btn.q-mr-sm(v-if='$q.screen.gt.sm && isLoggedIn' dense flat round size='md' icon='wallet' color='grey-6' :to="{name: 'wallet'}" )
+    //- q-btn(v-if="isLoggedIn" @click="logout") Logout
+    //- q-btn(v-if="!isLoggedIn" to="login" flat) Login
+    //- q-btn(v-if="!isLoggedIn" to="register" outline) Register
+    q-btn(dense outline v-if="!isLoggedIn" :to="{name: 'login'}"  )
       q-avatar.q-mr-sm(rounded size='30px')
         q-icon.material-icons-outlined(name='account_circle')
       .q-mr-sm Sign In
-    q-btn(dense flat round size='md' no-wrap v-if="isAuthenticated")
+    q-btn(dense flat round size='md' no-wrap v-if="isLoggedIn")
       // TODO Change avatar when logged in
       q-avatar(rounded size='30px')
         q-icon.material-icons-outlined(name='account_circle' color='grey-6')
       //- q-icon(name='arrow_drop_down' size='16px')
       q-menu(auto-close fit)
         q-list(dense)
-          q-item(v-if="isAuthenticated")
+          q-item(v-if="isLoggedIn")
             q-item-section
               | Signed in as 
               strong {{profile.name}} {{profile.surname}}
-          q-separator(v-if="isAuthenticated")
+          q-separator(v-if="isLoggedIn")
           // TODO add params for profile, gallery and wallet
           q-item.menu-link(clickable :to="{name: 'profile'}")
             q-item-section Your profile
@@ -73,9 +71,9 @@ q-toolbar.row.q-py-sm.q-px-md
           //- q-item.menu-link(clickable)
           //-   q-item-section Settings
           //- q-separator
-          q-item.menu-link(clickable v-if="isAuthenticated" @click="logout()")
+          q-item.menu-link(clickable v-if="isLoggedIn" @click="logout()")
             q-item-section Sign out
-          //- q-item.menu-link(clickable v-if="!isAuthenticated" :to="{name: 'login'}")
+          //- q-item.menu-link(clickable v-if="!isLoggedIn" :to="{name: 'login'}")
           //-   q-item-section Sign in
 
 </template>

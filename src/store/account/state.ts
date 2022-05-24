@@ -4,17 +4,21 @@ export interface AccountStateInterface {
   loading: unknown;
   cryptoAccountName: string;
   cryptoAccountDetails: AccountDetails;
-  isAuthenticated: boolean;
+  useLocalSigner: boolean;
+  isLoggedIn: boolean;
   profile: User;
   session: Session;
 }
 
 export function state(): AccountStateInterface {
   return {
+    // Local Signer
     loading: false,
     cryptoAccountName: '',
     cryptoAccountDetails: {} as AccountDetails,
-    isAuthenticated: false,
+    useLocalSigner: false,
+    // Profile
+    isLoggedIn: false,
     profile: {
       name: '',
       surname: '',

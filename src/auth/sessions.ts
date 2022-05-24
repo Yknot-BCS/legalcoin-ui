@@ -21,6 +21,6 @@ export const sessionExpired = () => {
   return Date.now() > getSessionExpiry();
 };
 
-export const isAuthenticated = () => {
+export const isLoggedIn = () => {
   return getAccessToken() != '' && !sessionExpired();
 };
