@@ -10,11 +10,22 @@ import DevBanner from 'src/components/dev/DevBanner.vue';
 export default {
   setup() {
     const store = useStore();
+    let sessionTimeout: ReturnType<typeof setTimeout>;
+    function refreshSession() {
+      clearTimeout(sessionTimeout);
+      const sessionLength = auth.getSessionExpiry() - Date.now();
+      if (sessionLength > 0) {
+        sessionTimeout = setTimeout(() => {
+          store.commit('account/setLogout');
+        }, sessionLength - 1000 * 60 * 1); // 1 min before expiry
+      } else store.commit('account/setLogout');
+    }
     onMounted(async () => {
       // Refresh profile if session is still open
       if (auth.isLoggedIn()) {
         store.commit('account/setisLoggedIn', true);
         await store.dispatch('account/refreshProfile');
+        refreshSession();
       } else {
         store.commit('account/setisLoggedIn', false);
       }
