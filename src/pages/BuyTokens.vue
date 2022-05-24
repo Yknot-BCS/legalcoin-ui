@@ -129,7 +129,7 @@ export default defineComponent({
         message: 'Navigating to payment gateway. Hang on...'
       });
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      if (this.cryptoIsAuthenticated && this.account.isAuthenticated) {
+      if (this.cryptoIsAuthenticated && this.account.isLoggedIn) {
         await this.createBuyOrder();
         await this.goToPaygate();
       } else {

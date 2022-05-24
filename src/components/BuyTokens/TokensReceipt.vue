@@ -81,7 +81,7 @@ export default defineComponent({
   },
   async mounted() {
     await this.tryGetPaymentInfo(this.paymentId);
-    await new Promise((r) => setTimeout(r, 1000)); // FIXME shows error before order updated, small wait or poll needed
+    await new Promise((r) => setTimeout(r, 3000)); // FIXME shows error before order updated, small wait or poll needed
     await this.tryGetOrderInfo(this.paymentId);
   }
 });
