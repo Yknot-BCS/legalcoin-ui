@@ -119,12 +119,13 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-h5 Transaction Summary
 
 //- | Receipt for
 //-     | Buying of LEGAL
 //- If payment has succeeded
 q-card(v-if="paymentStatus === 'success'")
+    h5 Transaction Summary
+
     q-card-section.row
         .col-2.text-center
             q-icon(name="fa-solid fa-money-bill-wave")
