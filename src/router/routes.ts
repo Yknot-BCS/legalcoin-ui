@@ -85,17 +85,16 @@ const routes: RouteRecordRaw[] = [
     path: '/wallet',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'wallet', component: () => import('pages/Wallet.vue') }
-    ]
-  },
-  {
-    path: '/wallet/buytokens/:status',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
+      { path: '', name: 'wallet', component: () => import('pages/Wallet.vue') },
       {
-        path: '',
+        path: '/buytokens/:status',
         name: 'buytokens',
         component: () => import('pages/BuyTokens.vue')
+      },
+      {
+        path: '/txhistory',
+        name: 'txhistory',
+        component: () => import('pages/TxHistory.vue')
       }
     ]
   },

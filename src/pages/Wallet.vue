@@ -74,7 +74,7 @@ q-page.fit.row.wrap.justify-center
             .row.col-12
                 q-btn(
                     label="VIEW TRANSACTION HISTORY"
-                    @click="$router.push({name: 'withdraw'})"
+                    @click="$router.push({name: 'txhistory'})"
                     ).col.q-mx-sm.q-mt-sm
 </template>
 
