@@ -85,7 +85,9 @@ export default defineComponent({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         response.data[0]?.error_code !== 0 &&
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        !isNaN(response.data[0]?.error_code)
+        response.data[0]?.error_code !== null &&
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        response.data[0]?.error_code !== undefined
       ) {
         this.hasError = true;
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
