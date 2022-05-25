@@ -21,9 +21,10 @@ export default defineComponent({
     return {
       paymentStatus: ref(''),
       spendAmount: ref('0'),
+      spendAfterFee: ref(0),
       buyAmount: ref('0'),
       order: ref({ order_id: '' }),
-      processingFee: ref(3.99),
+      processingFeePercentage: ref(0.045),
       ratio: ref(1.01), // GBP to LEGAL rate
       checkoutAPI: checkoutAPI,
       paymentId: ref(''),
@@ -40,25 +41,28 @@ export default defineComponent({
     totalFee(): number {
       return this.processingFee;
     },
+    processingFee(): number {
+      return Number(Number(this.spendAmount) * this.processingFeePercentage);
+    },
     displayBuyAmount(): string {
       return Number(this.buyAmount).toFixed(2);
     },
     displayAfterFee(): string {
-      return Number(Number(this.spendAmount) - this.totalFee).toFixed(2);
+      return Number(this.spendAfterFee).toFixed(2);
     }
   },
   watch: {
     buyAmount(val) {
       if (this.changingBuyAmount) {
-        let spendAfterFee = Number(val) + this.totalFee;
-        let spendAfterFeeRatio = spendAfterFee * this.ratio;
+        this.spendAfterFee = val * this.ratio;
+        let spendAfterFeeRatio = Number(this.spendAfterFee) + this.totalFee;
         this.spendAmount = Number(spendAfterFeeRatio).toFixed(2);
       }
     },
     spendAmount(val) {
       if (!this.changingBuyAmount) {
-        let buyAfterFee = Number(val) - this.totalFee;
-        let buyAfterFeeRatio = buyAfterFee / this.ratio;
+        this.spendAfterFee = Number(val) - this.totalFee;
+        let buyAfterFeeRatio = Number(this.spendAfterFee) / this.ratio;
         this.buyAmount = Number(buyAfterFeeRatio).toFixed(2);
       }
     }
@@ -97,11 +101,6 @@ export default defineComponent({
             reference: String(this.order.order_id),
             metadata: {
               description: this.accountName as string
-            },
-            billing: {
-              address: {
-                country: 'GB'
-              }
             },
             customer: {
               name: `${this.$store.state.account.profile.name} ${this.$store.state.account.profile.surname}`,
@@ -163,9 +162,9 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-page 
+q-page.fit.row.wrap.justify-center
     q-form(@submit="tryBuyTokens")
-        q-card(v-if="paymentStatus === 'checkout'")
+        q-card(v-if="paymentStatus === 'checkout'").buytokens-card
             h3 Buy LEGAL
             q-card-section
                 | I want to spend
@@ -240,3 +239,11 @@ q-page
     
 
 </template>
+
+<style lang="sass" scoped>
+.buytokens-card
+  width: 100%
+  max-width: 40rem
+  height: 100%
+  max-height: 50rem
+</style>
