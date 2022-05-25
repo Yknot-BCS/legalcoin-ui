@@ -61,6 +61,12 @@ export async function getProfile() {
         email
         emailVerified
         receiveEmailNotifications
+        cryptoAccount{
+          accountName
+          publicKey
+          secret
+          linkedAccounts
+        }
       }
     }`)) as any;
   return res.profile;
