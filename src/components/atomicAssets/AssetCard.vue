@@ -18,6 +18,7 @@ export default defineComponent({
   },
   setup(props) {
     const Data = computed(() => props.assetData);
+    console.log(Data);
     return {
       Data,
       tab: ref('description')
@@ -33,7 +34,18 @@ export default defineComponent({
       .col-xs-12.col-sm-12.col-md-6
         q-card
           q-card-section
-            q-img.asset-img(:src="assetData.data.img")
+            .text-h5 {{assetData?.collection?.collection_name}}
+            .text-subtitle1.text-weight-light {{'by '+ assetData?.owner}}
+          q-card-section
+            q-img.asset-img(:src="assetData?.data?.img")
+          q-card-section
+            .row
+              .col-6
+                .row.q-py-sm.q-px-md
+                  .col-12.text-subtitle2 PRICE: 500 LegalCoin(LCP)
+              .col-6
+                q-btn.full-width(v-if="1" flat color="primary" label="Request Buyback")
+                  q-icon.flip-horizontal.q-px-md(name="reply")
           q-card-section
             .container
               Timeline(startDate="2021/04/30" maturityDate="2024/04/30" expiryDate="2027/04/30")
