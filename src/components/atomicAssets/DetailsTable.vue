@@ -11,8 +11,7 @@ export default defineComponent({
         required: true,
         label: 'Dessert (100g serving)',
         align: 'left',
-        field: (row: { name: string }) => row.name,
-        format: (val: string) => `${val}`,
+        field: 'name',
         sortable: true
       },
       {
@@ -82,6 +81,8 @@ export default defineComponent({
     hide-bottom
     class="deatails-table"
     :pagination= {rowsPerPage:10}
+    flat
+    bordered
   )
 </template>
 

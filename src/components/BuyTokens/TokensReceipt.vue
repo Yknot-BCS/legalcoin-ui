@@ -85,7 +85,9 @@ export default defineComponent({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         response.data[0]?.error_code !== 0 &&
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        !isNaN(response.data[0]?.error_code)
+        response.data[0]?.error_code !== null &&
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        response.data[0]?.error_code !== undefined
       ) {
         this.hasError = true;
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -117,12 +119,13 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-h5 Transaction Summary
 
 //- | Receipt for
 //-     | Buying of LEGAL
 //- If payment has succeeded
 q-card(v-if="paymentStatus === 'success'")
+    h5 Transaction Summary
+
     q-card-section.row
         .col-2.text-center
             q-icon(name="fa-solid fa-money-bill-wave")
