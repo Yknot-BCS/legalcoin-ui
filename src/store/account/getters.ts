@@ -15,5 +15,11 @@ export const getters: GetterTree<AccountStateInterface, StateInterface> = {
   },
   getAccountData(state): AccountDetails {
     return state.cryptoAccountDetails;
+  },
+  useLocalSigner(state): boolean {
+    return state.useLocalSigner;
+  },
+  isLoggedIn(state): boolean {
+    return state.isLoggedIn;
   }
 };

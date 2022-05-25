@@ -4,18 +4,37 @@ import Footer from 'src/components/core/Footer.vue';
 import MobileTabsFooter from 'src/components/core/MobileTabsFooter.vue';
 import { useStore } from 'src/store';
 import { onMounted, computed } from 'vue';
+import { useRouter } from 'vue-router';
 import auth from 'src/auth';
-import UalLoginHandler from 'src/components/ual/UalLoginHandler.vue';
+import DevBanner from 'src/components/dev/DevBanner.vue';
 
 export default {
   setup() {
     const store = useStore();
-    onMounted(() => {
-      // Check if still authenticated on local storage
-      if (auth.isAuthenticated()) {
-        store.commit('account/setIsAuthenticated', true);
+    const router = useRouter();
+    let sessionTimeout: ReturnType<typeof setTimeout>;
+    async function logout(): Promise<void> {
+      store.commit('account/setLogout');
+      await router.push({ name: 'home' });
+      router.go(0); // refresh
+    }
+    function refreshSession() {
+      clearTimeout(sessionTimeout);
+      const sessionLength = auth.getSessionExpiry() - Date.now();
+      if (sessionLength > 0) {
+        sessionTimeout = setTimeout(() => {
+          void logout();
+        }, sessionLength - 1000 * 60 * 1); // 1 min before expiry
+      } else void logout();
+    }
+    onMounted(async () => {
+      // Refresh profile if session is still open
+      if (auth.isLoggedIn()) {
+        store.commit('account/setisLoggedIn', true);
+        await store.dispatch('account/refreshProfile');
+        refreshSession();
       } else {
-        store.commit('account/setIsAuthenticated', false);
+        store.commit('account/setisLoggedIn', false);
       }
     });
     return {
@@ -24,15 +43,13 @@ export default {
       )
     };
   },
-  components: { Header, Footer, MobileTabsFooter, UalLoginHandler }
+  components: { Header, Footer, MobileTabsFooter, DevBanner }
 };
 </script>
 
 <template lang="pug">
 q-layout( view="hHh lpR fff")
-  q-toolbar( v-if="DEVELOPMENT").dev-banner 
-    .q-mr-sm.text-secondary Development
-    UalLoginHandler
+  dev-banner(v-if="DEVELOPMENT")
   Header
   q-page-container
     router-view
@@ -46,9 +63,4 @@ q-layout( view="hHh lpR fff")
 .separator
   height: 2px
   min-height: 2px
-
-.dev-banner
-  background: $primary
-  min-height: 0.2rem
-  justify-content: center
 </style>

@@ -30,7 +30,7 @@ export default route<StateInterface>(function (
 
   Router.beforeEach((to, _) => {
     // Route to home when already logged in
-    if (to.name === 'login' && auth.isAuthenticated()) {
+    if (to.name === 'login' && auth.isLoggedIn()) {
       return { name: 'home' };
     }
   });

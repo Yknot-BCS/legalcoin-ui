@@ -21,13 +21,13 @@ export const mutations: MutationTree<AccountStateInterface> = {
   },
   setLogin(state: AccountStateInterface, session: Session) {
     state.session = session;
-    state.isAuthenticated = true;
+    state.isLoggedIn = true;
   },
-  setIsAuthenticated(state: AccountStateInterface, isAuthenticated: boolean) {
-    state.isAuthenticated = isAuthenticated;
+  setisLoggedIn(state: AccountStateInterface, isLoggedIn: boolean) {
+    state.isLoggedIn = isLoggedIn;
   },
   setLogout(state: AccountStateInterface) {
-    state.isAuthenticated = false;
+    state.isLoggedIn = false;
     state.session = {
       token: '',
       sessionLength: 0
@@ -43,5 +43,8 @@ export const mutations: MutationTree<AccountStateInterface> = {
   },
   setUserProfile(state: AccountStateInterface, userProfile?: User) {
     state.profile = userProfile;
+  },
+  setUseLocalSigner(state: AccountStateInterface, useLocalSigner: boolean) {
+    state.useLocalSigner = useLocalSigner;
   }
 };
