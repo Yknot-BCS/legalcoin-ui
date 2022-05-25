@@ -40,7 +40,8 @@ export default defineComponent({
         .row
           .text-subtitle2 Expected yield 15%
       q-separator(inset)
-      q-img.asset-img(:src="card.imageUrl")
+      router-link(:to=" '/asset/' + card.id")
+        q-img.asset-img(:src="card.imageUrl")
 
     q-card(v-else-if="cardType === 'schema'")
       q-card-section
