@@ -1,10 +1,11 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { mapGetters } from 'vuex';
+import LinkCryptoAccount from 'src/components/auth/LinkCryptoAccount.vue';
 
 export default defineComponent({
   name: 'Template',
-  components: {},
+  components: { LinkCryptoAccount },
   computed: {
     ...mapGetters({
       account: 'account/account'
@@ -42,6 +43,12 @@ q-page
 
             | Enabled
             q-toggle(v-model="emailNotifications")
+        q-separator
+        q-card-section
+            .text-bold
+                | Link Connected Accounts
+
+            link-crypto-account
         q-separator
 
             
