@@ -98,8 +98,7 @@ q-page
         | No transaction history
 
     q-card-section.q-pa-lg.flex.flex-center
-        q-pagination(v-model="currentPage" :max="maxPages" boundary-links :max-pages="5"
-      boundary-numbers)
+        q-pagination(v-model="currentPage" :max="maxPages" direction-links :max-pages="5" boundary-numbers)
   q-card(v-else)
     h3 You must be logged in to view this page
     
