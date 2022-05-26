@@ -41,7 +41,7 @@ export default defineComponent({
 
       /* eslint-disable */
       let rawOrders = response.data[0];
-        /* eslint-enable */
+      /* eslint-enable */
 
       let buyOrders: TxCardProps[] = [];
       for (const order of rawOrders) {
@@ -72,12 +72,14 @@ export default defineComponent({
 
 <template lang="pug">
 q-page
-  q-card
+  q-card(v-if="cryptoIsAuthenticated")
     h3 Transaction History
     q-separator
 
     TxCard(v-for="(tx, index) in transactions" :key="index" :action="tx.action" :description="tx.description" :date="tx.date" :amount="tx.amount")
-
+    
+  q-card(v-else)
+    h3 You must be logged in to view this page
     
 
 </template>
