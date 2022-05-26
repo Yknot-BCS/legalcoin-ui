@@ -4,11 +4,19 @@ import axios from 'axios';
 import { mapGetters } from 'vuex';
 import TxCard from 'src/components/txhistory/TxCard.vue';
 
+// define a type with the properties of the TxCard component
+export interface TxCardProps {
+  action: string;
+  description: string;
+  date: Date;
+  amount: number;
+}
+
 export default defineComponent({
   name: 'Template',
   components: { TxCard },
   setup() {
-    return { transactions: ref([]) };
+    return { transactions: ref([]), buyOrders: ref([]) };
   },
   computed: {
     ...mapGetters({
@@ -32,8 +40,28 @@ export default defineComponent({
       console.log(response.data);
 
       /* eslint-disable */
-      this.transactions = response.data[0]; 
-      /* eslint-disable */
+      let rawOrders = response.data[0];
+        /* eslint-enable */
+
+      let buyOrders: TxCardProps[] = [];
+      for (const order of rawOrders) {
+        console.log(order);
+        buyOrders.push({
+          action: 'Buy LEGAL',
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          description: order?.item_description as string,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          date: new Date(order?.created),
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          amount: order.item_price as number
+        });
+        console.log(buyOrders);
+      }
+      // sort buyOrders by date descending
+      buyOrders.sort((a, b) => {
+        return b.date.getTime() - a.date.getTime();
+      });
+      this.transactions.push(...buyOrders);
     }
   },
   async mounted() {
@@ -47,9 +75,9 @@ q-page
   q-card
     h3 Transaction History
     q-separator
-    TxCard
-    .div
-        | {{transactions}}
+
+    TxCard(v-for="(tx, index) in transactions" :key="index" :action="tx.action" :description="tx.description" :date="tx.date" :amount="tx.amount")
+
     
 
 </template>

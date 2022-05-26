@@ -83,7 +83,7 @@ export default defineComponent({
         });
         let params = {
           name: 'Buy LEGAL',
-          description: 'Fee=?',
+          description: `Bought ${this.buyAmount} LEGAL`,
           value: this.spendAmount,
           symbol: process.env.LC_SYMBOL,
           precision: process.env.LC_PRECISION,
