@@ -23,11 +23,10 @@ q-page
             | My Account Settings
         q-card-section
             .row.justify-start.items-center.text-grey
-                .q-ml-md
-                    | {{account.profile.name}} {{account.profile.surname}} 
+                | {{account.profile.name}} {{account.profile.surname}} 
                 q-btn(:to="{name: 'editprofile'}" icon="edit" flat outline color='grey-6')
             .col
-                q-btn(:to="{name: 'profile'}" flat )
+                router-link(:to="{name: 'profile'}") 
                     | View My Profile
         q-separator
         q-card-section
