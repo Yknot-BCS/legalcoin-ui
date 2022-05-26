@@ -16,13 +16,29 @@ export default defineComponent({
   name: 'Template',
   components: { TxCard },
   setup() {
-    return { transactions: ref([]), buyOrders: ref([]) };
+    return {
+      transactions: ref([]),
+      buyOrders: ref([]),
+      currentPage: ref(1),
+      txPerPage: ref(10)
+    };
   },
   computed: {
     ...mapGetters({
       accountName: 'account/cryptoAccountName',
       cryptoIsAuthenticated: 'account/cryptoIsAuthenticated'
-    })
+    }),
+    maxPages(): number {
+      return Math.ceil(this.transactions.length / this.txPerPage);
+    },
+    pagedTransactions(): TxCardProps[] {
+      return <TxCardProps[]>(
+        this.transactions.slice(
+          (this.currentPage - 1) * this.txPerPage,
+          this.currentPage * this.txPerPage
+        )
+      );
+    }
   },
   methods: {
     async getBuyOrders() {
@@ -76,8 +92,14 @@ q-page
     h3 Transaction History
     q-separator
 
-    TxCard(v-for="(tx, index) in transactions" :key="index" :action="tx.action" :description="tx.description" :date="tx.date" :amount="tx.amount")
-    
+    q-card-section(v-if="transactions.length > 0")
+        TxCard(v-for="(tx, index) in pagedTransactions" :key="index" :action="tx.action" :description="tx.description" :date="tx.date" :amount="tx.amount")
+    q-card-section(v-else)
+        | No transaction history
+
+    q-card-section.q-pa-lg.flex.flex-center
+        q-pagination(v-model="currentPage" :max="maxPages" boundary-links :max-pages="5"
+      boundary-numbers)
   q-card(v-else)
     h3 You must be logged in to view this page
     
