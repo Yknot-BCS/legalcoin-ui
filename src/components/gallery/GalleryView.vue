@@ -42,6 +42,8 @@ export default defineComponent({
       q-separator(inset)
       router-link(:to=" '/asset/' + card.id")
         q-img.asset-img(:src="card.imageUrl")
+      q-card-actions.q-pa-md
+        q-btn.full-width(flat color="primary" :to=" '/asset/' + card.id") View Asset
 
     q-card(v-else-if="cardType === 'schema'")
       q-card-section
@@ -63,6 +65,8 @@ export default defineComponent({
         .text-subtitle2 {{card.id}}
       q-separator(inset)
       q-img.asset-img(:src="card.imageUrl")
+      q-card-actions
+        q-btn(flat) View Collection
     
     q-card(v-else-if="cardType === 'listing'")
       q-card-section
@@ -70,6 +74,8 @@ export default defineComponent({
         .text-subtitle2 {{card.id}}
       q-separator(inset)
       q-img.asset-img(:src="card.imageUrl")
+      q-card-actions
+        q-btn(flat) Action 1
   
 </template>
 

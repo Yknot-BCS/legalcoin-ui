@@ -14,6 +14,11 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-page
+q-page.page-background
   DefaultGallery
 </template>
+
+<style lang="sass" scoped>
+.page-background
+  background: #f0f0f0
+</style>
