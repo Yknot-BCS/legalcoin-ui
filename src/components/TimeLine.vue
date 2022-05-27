@@ -66,7 +66,7 @@ export default defineComponent({
       class="q-mt-md"
       v-model="model"
       color="primary"
-      left-thumb-color="white"
+      left-thumb-color="transparent"
       thumb-color="primary"
       markers
       marker-labels
