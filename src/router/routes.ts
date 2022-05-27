@@ -78,6 +78,22 @@ const routes: RouteRecordRaw[] = [
         path: '',
         name: 'profile',
         component: () => import('pages/Profile.vue')
+      },
+      {
+        path: 'edit',
+        name: 'editprofile',
+        component: () => import('pages/ProfileEdit.vue')
+      }
+    ]
+  },
+  {
+    path: '/settings/:profile',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'account-settings',
+        component: () => import('pages/ProfileSettings.vue')
       }
     ]
   },
@@ -85,17 +101,16 @@ const routes: RouteRecordRaw[] = [
     path: '/wallet',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', name: 'wallet', component: () => import('pages/Wallet.vue') }
-    ]
-  },
-  {
-    path: '/wallet/buytokens/:status',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
+      { path: '', name: 'wallet', component: () => import('pages/Wallet.vue') },
       {
-        path: '',
+        path: '/buytokens/:status',
         name: 'buytokens',
         component: () => import('pages/BuyTokens.vue')
+      },
+      {
+        path: '/txhistory',
+        name: 'txhistory',
+        component: () => import('pages/TxHistory.vue')
       }
     ]
   },

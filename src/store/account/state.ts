@@ -24,7 +24,13 @@ export function state(): AccountStateInterface {
       surname: '',
       email: '',
       emailVerified: false,
-      receiveEmailNotifications: false
+      receiveEmailNotifications: false,
+      cryptoAccount: {
+        accountName: '',
+        publicKey: '',
+        secret: '',
+        linkedAccounts: ['']
+      }
     },
     session: {
       token: '',

@@ -37,7 +37,13 @@ export const mutations: MutationTree<AccountStateInterface> = {
       surname: '',
       email: '',
       emailVerified: false,
-      receiveEmailNotifications: false
+      receiveEmailNotifications: false,
+      cryptoAccount: {
+        accountName: '',
+        publicKey: '',
+        secret: '',
+        linkedAccounts: ['']
+      }
     };
     auth.setAccessToken('');
   },
