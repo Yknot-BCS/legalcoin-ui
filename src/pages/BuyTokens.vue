@@ -100,6 +100,7 @@ export default defineComponent({
       }
     },
     async goToPaygate() {
+      // FIXME the checkout.com secret key is not secure
       // get country code from user's IP
       const ip = await axios.get('https://api.ipify.org');
       const countryCode = await axios.get(
@@ -119,14 +120,14 @@ export default defineComponent({
             billing: {
               address: {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                country: countryCode?.data // TODO get from user
+                country: countryCode?.data
               }
             },
             customer: {
               name: `${this.$store.state.account.profile.name} ${this.$store.state.account.profile.surname}`,
-              email: this.$store.state.account.profile.email // TODO get from store
+              email: this.$store.state.account.profile.email
             },
-            success_url: `${process.env.APP_URL}wallet/buytokens/success`, // TODO get URL dynamically
+            success_url: `${process.env.APP_URL}wallet/buytokens/success`,
             failure_url: `${process.env.APP_URL}wallet/buytokens/failure`,
             cancel_url: `${process.env.APP_URL}wallet/buytokens/checkout`
           };

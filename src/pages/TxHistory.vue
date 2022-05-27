@@ -3,6 +3,7 @@ import { defineComponent, ref } from 'vue';
 import axios from 'axios';
 import { mapGetters } from 'vuex';
 import TxCard from 'src/components/txhistory/TxCard.vue';
+import crypto from 'crypto';
 
 // define a type with the properties of the TxCard component
 export interface TxCardProps {
@@ -42,18 +43,23 @@ export default defineComponent({
   },
   methods: {
     async getBuyOrders() {
+      const hash = crypto
+        .createHmac('sha256', process.env.ISSUER_SECRET)
+        .update(this.accountName)
+        .digest('hex');
+
       const issuerAPI = axios.create({
         baseURL: process.env.ISSUER_API_ENDPOINT,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: this.accountName as string //FIXME this is a hack
+          Authorization: hash
         }
       });
 
       const response = await issuerAPI.get(
         `getorders/${<string>this.accountName}`
       );
-      console.log(response.data);
+      //   console.log(response.data);
 
       /* eslint-disable */
       let rawOrders = response.data[0];
@@ -61,7 +67,7 @@ export default defineComponent({
 
       let buyOrders: TxCardProps[] = [];
       for (const order of rawOrders) {
-        console.log(order);
+        // console.log(order);
         buyOrders.push({
           action: 'Buy LEGAL',
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -71,7 +77,7 @@ export default defineComponent({
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           amount: order.item_price as number
         });
-        console.log(buyOrders);
+        // console.log(buyOrders);
       }
       // sort buyOrders by date descending
       buyOrders.sort((a, b) => {
