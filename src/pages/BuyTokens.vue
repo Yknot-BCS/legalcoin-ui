@@ -10,13 +10,7 @@ export default defineComponent({
   components: { TokensReceipt },
   setup() {
     const checkoutAPI = axios.create({
-      baseURL: process.env.DEVELOPMENT
-        ? 'https://api.sandbox.checkout.com'
-        : 'https://api.checkout.com',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: process.env.CKO_SECRET_KEY
-      }
+      baseURL: process.env.ISSUER_API_ENDPOINT
     });
     return {
       paymentStatus: ref(''),
@@ -127,18 +121,18 @@ export default defineComponent({
               name: `${this.$store.state.account.profile.name} ${this.$store.state.account.profile.surname}`,
               email: this.$store.state.account.profile.email
             },
-            success_url: `${process.env.APP_URL}wallet/buytokens/success`,
-            failure_url: `${process.env.APP_URL}wallet/buytokens/failure`,
-            cancel_url: `${process.env.APP_URL}wallet/buytokens/checkout`
+            success_url: `${process.env.APP_URL}buytokens/success`,
+            failure_url: `${process.env.APP_URL}buytokens/failure`,
+            cancel_url: `${process.env.APP_URL}buytokens/checkout`
           };
+
           const response = await this.checkoutAPI.post(
-            '/hosted-payments',
+            '/hosted-payments/cko',
             body
           );
-          console.log(response);
 
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          let redirectUrl = response.data._links.redirect.href as string;
+          let redirectUrl = response.data.data._links.redirect.href as string;
           this.$q.loading.hide();
           window.location.href = redirectUrl;
         } else {
