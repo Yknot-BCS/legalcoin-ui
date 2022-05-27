@@ -65,7 +65,7 @@ q-toolbar.row.q-py-sm.q-px-md
             q-item-section Your gallery
           q-item.menu-link(clickable :to="{name: 'wallet'}")
             q-item-section Your wallet
-          q-item.menu-link(clickable :to="{name: 'account-settings'}")
+          q-item.menu-link(clickable :to="{name: 'account-settings', params: {profile: 1}}")
             q-item-section Settings
           q-separator
           //- q-item.menu-link(clickable)

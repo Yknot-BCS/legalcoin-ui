@@ -1,6 +1,7 @@
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import { mapGetters } from 'vuex';
 
 export default defineComponent({
   name: 'Profile',
@@ -8,12 +9,67 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const profileId = computed(() => route.params.profile);
-    return { profileId };
+    return { profileId, nftCount: ref(0), projectCount: ref(0) };
+  },
+  computed: {
+    ...mapGetters({
+      account: 'account/account'
+    })
   }
 });
 </script>
 
 <template lang="pug">
 q-page
-  h1 Profile {{profileId}} 
+    q-card
+        q-card-section.row.fit.items-center.content-center.justify-center
+            .text-bold
+                | MY PROFILE
+        q-separator.q-mx-md
+        q-card-section
+            //- Avatar and name
+            q-card-section.fit.row.wrap.justify-start.items-center.content-start
+                q-avatar( size="4rem")
+                    img(src="~/assets/Account_Icon.svg")
+                .q-ml-md.col
+                    .col.text-bold
+                        | {{account.profile.name}} {{account.profile.surname}} 
+                    | Some subtitle
+                q-btn(:to="{name: 'editprofile'}" icon="edit" flat outline color='grey-6')
+            //- Bio section
+            q-card-section
+                | Hi this is a very cool bio and everyone is going to like me because I am cool.
+            //- NFT, project and followers section
+            q-card-section.row.justify-center.content-center.items-center
+                .column.justify-center.content-center.items-center.info-block
+                    .col.text-subtitle1
+                        | {{nftCount}}
+                    .col.text-subtitle1
+                        | NFTS
+                q-separator( vertical color='black').q-mx-md
+                .column.justify-center.content-center.items-center.info-block
+                    .col.text-subtitle1
+                        | {{projectCount}}
+                    .col.text-subtitle1
+                        | PROJECTS
+
+    q-card(class="bg-grey-3")            
+        //- Gallery section            
+        q-card-section
+            .column.items-center.justify-center.content-center
+                .text-bold
+                    | MY GALLERY
+                q-btn(:to="{name: 'gallery'}" flat outline )
+                    .text-italic
+                        | Go to Gallery
+                
+                //- User's NFTs
+
+
 </template>
+
+<style scoped lang="sass">
+.info-block
+    width: 100%
+    max-width: 6rem
+</style>

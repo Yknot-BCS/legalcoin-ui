@@ -23,12 +23,13 @@ q-page
         q-card-section
             | My Account Settings
         q-card-section
-            .row.justify-start.items-center.text-grey
+            .row.justify-start.items-center
                 | {{account.profile.name}} {{account.profile.surname}} 
                 q-btn(:to="{name: 'editprofile'}" icon="edit" flat outline color='grey-6')
             .col
-                router-link(:to="{name: 'profile'}") 
-                    | View My Profile
+                q-btn(:to="{name: 'profile'}" flat outline padding='none' )
+                    .text-italic
+                        | View My Profile
         q-separator
         q-card-section
             .text-bold

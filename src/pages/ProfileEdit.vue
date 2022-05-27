@@ -25,11 +25,12 @@ export default defineComponent({
 q-page
     q-card
         q-card(class="bg-grey-4")
-            q-card-section
+            q-card-section.text-subtitle1
                 | Edit My Profile
-            q-card-section.row.fit.items-center.content-center
+            q-card-section.row.fit.items-center.content-center.justify-center
                 //- TODO handle file upload
-                q-avatar(icon="fa-solid fa-circle-user" size="8rem")
+                q-avatar( size="4rem")
+                    img(src="~/assets/Account_Icon.svg")
             q-card-section
                 //- Name and surname input boxes next to each other
                 .row.justify-between.items-center
