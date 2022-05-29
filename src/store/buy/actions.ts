@@ -3,14 +3,12 @@ import { StateInterface } from '../index';
 import { BuyStateInterface } from './state';
 import { atomic_api } from 'src/api/atomic_assets';
 import { GalleryCard } from 'src/types';
-import { useRouter } from 'vue-router';
 
 export const actions: ActionTree<BuyStateInterface, StateInterface> = {
   async updateFilter(
     { commit, dispatch, state },
     filter: BuyStateInterface['filter']
   ) {
-    const router = useRouter();
     commit('setFilter', filter);
     let newFilter = {};
     switch (filter) {
@@ -25,7 +23,6 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
       case 'Templates':
         newFilter = { ...state.templateFilter, limit: 48 };
         await dispatch('updateTemplateFilter', newFilter);
-        await router.push('/buy');
         break;
       default:
         newFilter = { ...state.assetFilter, limit: 6 };
@@ -34,7 +31,6 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
         await dispatch('updateCollectionFilter', newFilter);
         newFilter = { ...state.templateFilter, limit: 6 };
         await dispatch('updateTemplateFilter', newFilter);
-        await router.push('/buy');
     }
   },
   async updateAssetFilter(
@@ -62,6 +58,7 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
     await dispatch('updateAssets');
     await dispatch('updateCollections');
     await dispatch('updateTemplates');
+    await dispatch('updateAccount');
   },
 
   async updateAssets({ commit, state }) {
@@ -100,7 +97,6 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
   },
   async updateTemplates({ commit, state }) {
     const data = await atomic_api.getTemplates(state.templateFilter);
-    console.log(data);
     const gallerydata = data.map((template) => {
       return {
         name: template.contract,
@@ -116,5 +112,36 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
       } as GalleryCard;
     });
     commit('setTemplates', gallerydata);
+  },
+  async updateAccount({ commit, state }) {
+    const collectionCount = await atomic_api.countCollections(
+      state.collectionFilter
+    );
+    const templateCount = await atomic_api.countTemplates(state.templateFilter);
+    const assetCount = await atomic_api.countAssets(state.assetFilter);
+    commit('setAccountData', {
+      assets: assetCount,
+      collections: collectionCount,
+      templates: templateCount
+    });
+  },
+  async updateAssetsPaging({ commit, dispatch, state }, page: number) {
+    console.log('here');
+    commit('setAssetPaging', page);
+    const newFilter = { ...state.assetFilter, page: page };
+    await dispatch('updateAssetFilter', newFilter);
+    await dispatch('updateAssets');
+  },
+  async updateCollectionsPaging({ commit, dispatch, state }, page: number) {
+    commit('setCollectionPaging', page);
+    const newFilter = { ...state.assetFilter, page: page };
+    await dispatch('updateCollectionsFilter', newFilter);
+    await dispatch('updateCollections');
+  },
+  async updateTemplatesPaging({ commit, dispatch, state }, page: number) {
+    commit('setTemplatePaging', page);
+    const newFilter = { ...state.assetFilter, page: page };
+    await dispatch('updateTemplateFilter', newFilter);
+    await dispatch('updateTemplates');
   }
 };

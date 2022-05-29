@@ -10,9 +10,17 @@ export interface BuyStateInterface {
   assetFilter: AssetsApiParams;
   collectionFilter: CollectionApiParams;
   templateFilter: TemplateApiParams;
+  accountData: {
+    assets: number;
+    collections: number;
+    templates: number;
+  };
   assets: GalleryCard[];
   collections: GalleryCard[];
   templates: GalleryCard[];
+  assetPaging: number;
+  templatePaging: number;
+  collectionPaging: number;
 }
 
 export function state(): BuyStateInterface {
@@ -39,8 +47,16 @@ export function state(): BuyStateInterface {
       limit: 12,
       sort: 'created'
     } as unknown,
+    accountData: {
+      assets: 0,
+      collections: 0,
+      templates: 0
+    },
     assets: [],
     collections: [],
-    templates: []
+    templates: [],
+    assetPaging: 1,
+    templatePaging: 1,
+    collectionPaging: 1
   };
 }

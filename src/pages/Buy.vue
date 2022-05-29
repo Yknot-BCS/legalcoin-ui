@@ -1,7 +1,8 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, computed } from 'vue';
 import DefaultBuy from 'src/components/buy/DefaultBuy.vue';
 import { useStore } from 'src/store';
+//import { useRouter } from 'vue-router';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -9,8 +10,9 @@ export default defineComponent({
   name: 'Buy',
   components: { DefaultBuy },
   setup() {
+    //const router = useRouter();
     const store = useStore();
-    const model = ref<string>('All');
+    const model = computed(() => store.state.buy.filter);
     onMounted(async () => {
       await store.dispatch('buy/updateAll');
     });

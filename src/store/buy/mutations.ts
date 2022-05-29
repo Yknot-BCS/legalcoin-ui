@@ -32,5 +32,20 @@ export const mutations: MutationTree<BuyStateInterface> = {
     filter: BuyStateInterface['templateFilter']
   ) {
     state.templateFilter = filter;
+  },
+  setAccountData(
+    state: BuyStateInterface,
+    data: BuyStateInterface['accountData']
+  ) {
+    state.accountData = data;
+  },
+  setTemplatePaging(state: BuyStateInterface, page: number) {
+    state.templatePaging = page;
+  },
+  setAssetPaging(state: BuyStateInterface, page: number) {
+    state.assetPaging = page;
+  },
+  setCollectionPaging(state: BuyStateInterface, page: number) {
+    state.collectionPaging = page;
   }
 };
