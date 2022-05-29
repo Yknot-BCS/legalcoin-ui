@@ -31,20 +31,20 @@ q-page
                     .text-italic
                         | View My Profile
         q-separator
-        q-card-section
-            .text-bold
-                | My Gallery
+        //- q-card-section
+        //-     .text-bold
+        //-         | My Gallery
 
-            | Hide profile
-            q-toggle(v-model="hideProfile")
-        q-separator
-        q-card-section
-            .text-bold
-                | E-mail notifications
+        //-     | Hide profile
+        //-     q-toggle(v-model="hideProfile")
+        //- q-separator
+        //- q-card-section
+        //-     .text-bold
+        //-         | E-mail notifications
 
-            | Enabled
-            q-toggle(v-model="emailNotifications")
-        q-separator
+        //-     | Enabled
+        //-     q-toggle(v-model="emailNotifications")
+        //- q-separator
         q-card-section
             .text-bold
                 | Link Connected Accounts
