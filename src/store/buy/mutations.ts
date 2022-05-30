@@ -47,5 +47,11 @@ export const mutations: MutationTree<BuyStateInterface> = {
   },
   setCollectionPaging(state: BuyStateInterface, page: number) {
     state.collectionPaging = page;
+  },
+  setOrder(state: BuyStateInterface, order: string) {
+    state.order = order;
+  },
+  setSort(state: BuyStateInterface, sort: string) {
+    state.sort = sort;
   }
 };

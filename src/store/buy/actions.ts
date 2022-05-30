@@ -143,5 +143,39 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
     const newFilter = { ...state.assetFilter, page: page };
     await dispatch('updateTemplateFilter', newFilter);
     await dispatch('updateTemplates');
+  },
+  async updateSorting(
+    { dispatch, state },
+    data: { sort: string; order: string }
+  ) {
+    let newFilter = {};
+    switch (state.filter) {
+      case 'Assets':
+        newFilter = {
+          ...state.assetFilter,
+          sort: data.sort,
+          order: data.order
+        };
+        await dispatch('updateAssetFilter', newFilter);
+        break;
+      case 'Collections':
+        newFilter = {
+          ...state.collectionFilter,
+          sort: data.sort === 'name' ? 'collection_name' : data.sort,
+          order: data.order
+        };
+        await dispatch('updateCollectionFilter', newFilter);
+        break;
+      case 'Templates':
+        newFilter = {
+          ...state.templateFilter,
+          sort: data.sort,
+          order: data.order
+        };
+        await dispatch('updateTemplateFilter', newFilter);
+        break;
+      default:
+        break;
+    }
   }
 };

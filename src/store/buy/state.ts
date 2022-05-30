@@ -21,6 +21,8 @@ export interface BuyStateInterface {
   assetPaging: number;
   templatePaging: number;
   collectionPaging: number;
+  sort: string;
+  order: string;
 }
 
 export function state(): BuyStateInterface {
@@ -57,6 +59,8 @@ export function state(): BuyStateInterface {
     templates: [],
     assetPaging: 1,
     templatePaging: 1,
-    collectionPaging: 1
+    collectionPaging: 1,
+    sort: 'created',
+    order: 'desc'
   };
 }
