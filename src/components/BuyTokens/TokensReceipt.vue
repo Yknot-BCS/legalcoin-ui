@@ -3,6 +3,8 @@ import { defineComponent } from 'vue';
 import { ref } from 'vue';
 import axios from 'axios';
 import { date } from 'quasar';
+import { mapGetters } from 'vuex';
+import crypto from 'crypto';
 
 export default defineComponent({
   name: 'TokensReceipt',
@@ -17,17 +19,7 @@ export default defineComponent({
     }
   },
   setup() {
-    const checkoutAPI = axios.create({
-      baseURL: process.env.DEVELOPMENT
-        ? 'https://api.sandbox.checkout.com'
-        : 'https://api.checkout.com',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: process.env.CKO_SECRET_KEY
-      }
-    });
     return {
-      checkoutAPI: checkoutAPI,
       amount: ref(0),
       paymentDate: ref(new Date()),
       approved: ref(false),
@@ -41,59 +33,65 @@ export default defineComponent({
     };
   },
   computed: {
+    ...mapGetters({
+      accountName: 'account/cryptoAccountName',
+      cryptoIsAuthenticated: 'account/cryptoIsAuthenticated'
+    }),
     displayDate() {
       return date.formatDate(this.paymentDate, 'DD MMM, YYYY');
     }
   },
   methods: {
-    async tryGetPaymentInfo(paymentId: string) {
-      console.log('tryGetPaymentInfo');
-
-      const response = await this.checkoutAPI.get(`/payments/${paymentId}`);
-      console.log(response.data);
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      this.amount = response.data?.amount / 100;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      this.paymentDate = new Date(response.data?.requested_on as string);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      this.currency = response.data?.currency as string;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      this.orderRef = response.data?.reference as string;
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      this.status = response.data?.status as string;
-    },
     async tryGetOrderInfo(pg_id: string) {
       //   console.log('tryGetOrderInfo');
+      const hash = crypto
+        .createHmac('sha256', process.env.ISSUER_SECRET)
+        .update(this.accountName)
+        .digest('hex');
 
       const issuerAPI = axios.create({
-        baseURL: process.env.ISSUER_API_ENDPOINT
+        baseURL: process.env.ISSUER_API_ENDPOINT,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: hash
+        }
       });
 
-      const response = await issuerAPI.get(`/order/${pg_id}`);
+      const response = await issuerAPI.get(
+        `/getorders/${<string>this.accountName}`,
+        { params: { pg_id: pg_id } }
+      );
 
-      //   console.log(response.data);
+      /* eslint-disable */
+      let order = response.data[0][0];
+      this.amount = order?.item_price as number;
+      this.paymentDate = new Date(order?.created as string);
+      this.currency = 'GBP' as string;
+      this.orderRef = order?.id as string;
+      this.status = order?.pg_payment_status?.status as string;
+      /* eslint-disable */
+
       if (
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        response.data[0]?.error_code === undefined ||
+        order?.error_code === undefined ||
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        response.data[0]?.error_code === null
+        order?.error_code === null
       ) {
         this.issueInProgress = true;
       }
       if (
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        response.data[0]?.error_code !== 0 &&
+        order?.error_code !== 0 &&
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        response.data[0]?.error_code !== null &&
+        order?.error_code !== null &&
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        response.data[0]?.error_code !== undefined
+        order?.error_code !== undefined
       ) {
         this.hasError = true;
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        this.errorMessage = response.data[0]?.error_message as string;
+        this.errorMessage = order?.error_message as string;
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      } else if (response.data[0]?.error_code === 0) {
+      } else if (order?.error_code === 0) {
         this.hasError = false;
         this.errorMessage = '';
         this.issueInProgress = false;
@@ -102,7 +100,7 @@ export default defineComponent({
     }
   },
   async mounted() {
-    await this.tryGetPaymentInfo(this.paymentId);
+    // await this.tryGetPaymentInfo(this.paymentId);
     await this.tryGetOrderInfo(this.paymentId);
 
     if (this.issueInProgress) {
@@ -133,7 +131,7 @@ q-card(v-if="paymentStatus === 'success'")
             .col
                 | Amount
             .col
-                | {{ amount.toFixed(2) }} {{currency}}
+                | {{ amount }} {{currency}}
     q-separator
     q-card-section.row
         .col-2.text-center
