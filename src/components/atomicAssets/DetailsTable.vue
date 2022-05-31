@@ -1,15 +1,23 @@
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed, PropType } from 'vue';
+import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export default defineComponent({
   name: 'DetailsTable',
+  props: {
+    assetData: {
+      type: Object as PropType<IAsset>,
+      required: true
+    }
+  },
   components: {},
-  setup() {
+  setup(props) {
     const columns = [
       {
         name: 'desc',
         required: true,
-        label: 'Dessert (100g serving)',
+        label: 'Field',
         align: 'left',
         field: 'name',
         sortable: true
@@ -24,64 +32,38 @@ export default defineComponent({
       }
     ];
 
-    const rows = [
-      {
-        name: 'Issuer',
-        value: 'Legal Coin'
-      },
-      {
-        name: 'Case',
-        value: 'Volkswagen Gas'
-      },
-      {
-        name: 'Batch #',
-        value: '#2'
-      },
-      {
-        name: 'Bond Class',
-        value: 'Gold'
-      },
-      {
-        name: 'Yield',
-        value: '15%'
-      },
-      {
-        name: 'ID',
-        value: '1099531506400'
-      },
-      {
-        name: 'Price',
-        value: 'GBP 500'
-      },
-      {
-        name: 'Maturity Date',
-        value: '24 April 2024'
-      },
-      {
-        name: 'Days to maturity',
-        value: 200
-      },
-      {
-        name: 'Artwork',
-        value: 'Only the best'
+    const Data = computed(() => props.assetData);
+    const data = computed(() => Data?.value?.data);
+
+    let parseRows = (data: { [key: string]: any }) => {
+      let rows = [];
+      for (let key in data) {
+        if (data.hasOwnProperty(key)) {
+          rows.push({
+            name: key,
+            value: data[key] as string
+          });
+        }
       }
-    ];
-    return { columns, rows };
+      return rows;
+    };
+
+    const rows = computed(() => parseRows(data.value));
+
+    return { columns, rows, data };
   }
 });
 </script>
 
 <template lang="pug">
 .q-pa-md
-  q-table(
-    :rows="rows"
-    :columns="columns"
-    row-key="name"
-    hide-header
-    hide-bottom
-    class="deatails-table"
-    :pagination= {rowsPerPage:10}
-    flat
+  q-table.deatails-table(
+    :rows='rows',
+    row-key='name',
+    hide-header,
+    hide-bottom,
+    :pagination='{ rowsPerPage: 10 }',
+    flat,
     bordered
   )
 </template>
