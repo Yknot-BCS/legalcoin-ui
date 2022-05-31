@@ -2402,13 +2402,20 @@ atob@^2.1.2:
   resolved "https://registry.npmjs.org/atob/-/atob-2.1.2.tgz"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-atomicassets@^1.4.2:
+atomicassets@^1.4.0, atomicassets@^1.4.2:
   version "1.4.2"
   resolved "https://registry.npmjs.org/atomicassets/-/atomicassets-1.4.2.tgz"
   integrity sha512-YfqXMGQLI4WAFPU76RySI8xHv/UdXnb/Pinn5nG3koQCCo620C+Ac4gTNNDiHPQEvd5m5xDGdPXkA8NTkFYX0w==
   dependencies:
     big-integer "^1.6.48"
     pure-cache "^1.0.5"
+
+atomicmarket@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/atomicmarket/-/atomicmarket-1.1.6.tgz#3ff181da894ca6e1dc92f8929f243780c876dda7"
+  integrity sha512-ezAvtni8Io/ZkxXQCFpDp3TFX53d6zQqNexRbyw88EsZIcvEbWwC4Hu01ShcHc4N+N/2eMTSSLonvpVteYRKpg==
+  dependencies:
+    atomicassets "^1.4.0"
 
 autoprefixer@10.4.4:
   version "10.4.4"

@@ -1,7 +1,9 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
 import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
+import { IMarketPrice, ISale } from 'atomicmarket/build/API/Explorer/Objects';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
+import { mapGetters } from 'vuex';
 
 export default defineComponent({
   name: 'AssetActionCard',
@@ -10,12 +12,36 @@ export default defineComponent({
     assetData: {
       type: Object as PropType<IAsset>,
       required: true
+    },
+    saleData: {
+      type: Object as PropType<ISale>,
+      required: true
     }
   },
   setup() {
     return { quantity: ref(1), price: ref(500) };
   },
+
+  computed: {
+    ...mapGetters({
+      accountName: 'account/cryptoAccountName'
+    }),
+    isOwned() {
+      // Check if the current user is the owner of the asset
+      if (this.accountName === this.assetData.owner) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    salePrice(): IMarketPrice {
+      return this.saleData.price;
+    }
+  },
   mounted() {
+    // Check if asset is being offered
+
     console.log(this.assetData);
   },
   methods: {
@@ -73,6 +99,8 @@ q-card
     //- when owning, show price, days to maturity, with sell button
 
     //- when mature, show claim button
+
+    | owned: {{ isOwned }}
 </template>
 
 <style lang="sass"></style>
