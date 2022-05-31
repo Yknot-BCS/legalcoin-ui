@@ -94,19 +94,30 @@ export default defineComponent({
 
 <template lang="pug">
 q-page
-  q-card(v-if="cryptoIsAuthenticated")
+  q-card(v-if='cryptoIsAuthenticated')
     h3 Transaction History
     q-separator
 
-    q-card-section(v-if="transactions.length > 0")
-        TxCard(v-for="(tx, index) in pagedTransactions" :key="index" :action="tx.action" :description="tx.description" :date="tx.date" :amount="tx.amount")
+    q-card-section(v-if='transactions.length > 0')
+      TxCard(
+        v-for='(tx, index) in pagedTransactions',
+        :key='index',
+        :action='tx.action',
+        :description='tx.description',
+        :date='tx.date',
+        :amount='tx.amount'
+      )
     q-card-section(v-else)
-        | No transaction history
+      | No transaction history
 
     q-card-section.q-pa-lg.flex.flex-center
-        q-pagination(v-model="currentPage" :max="maxPages" direction-links :max-pages="5" boundary-numbers)
+      q-pagination(
+        v-model='currentPage',
+        :max='maxPages',
+        direction-links,
+        :max-pages='5',
+        boundary-numbers
+      )
   q-card(v-else)
     h3 You must be logged in to view this page
-    
-
 </template>

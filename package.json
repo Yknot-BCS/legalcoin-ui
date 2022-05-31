@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",
+    "@prettier/plugin-pug": "^2.0.0",
     "@quasar/app-webpack": "^3.4.6",
     "@quasar/quasar-app-extension-testing-unit-jest": "^3.0.0-alpha.10",
     "@types/jest": "^27.4.0",
@@ -46,7 +47,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-vue": "^7.0.0",
     "node-polyfill-webpack-plugin": "^1.1.4",
-    "prettier": "^2.5.1",
+    "prettier": "^2.6.2",
     "pug": "^3.0.2",
     "pug-plain-loader": "^1.1.0",
     "vue-property-decorator": "^9.1.2"

@@ -178,82 +178,82 @@ export default defineComponent({
 
 <template lang="pug">
 q-page
-    q-form(@submit="tryBuyTokens")
-        .fit.row.wrap.justify-center
-            q-card(v-if="paymentStatus === 'checkout'").buytokens-card
-                h3 Buy LEGAL
-                q-card-section
-                    | I want to spend
-                q-card-section
-                    q-input(
-                        label="Amount"
-                        placeholder="0.00"
-                        v-model="spendAmount"
-                        :rules="[ val => val >= minimumAmount || `Value must be larger than ${minimumAmount}`, val => val >= 0 || 'Value must be positive']"
-                        @focus="changingBuyAmount = false"
-                        )
-                        template(v-slot:append)
-                        | GBP
-                q-card-section
-                    | I want to buy
-                q-card-section
-                    q-input(
-                        label="Amount"
-                        placeholder="0.00"
-                        v-model="buyAmount"
-                        @focus="changingBuyAmount = true"   
-                        :rules="[ val => val >= minimumAmount || `Value must be larger than ${minimumAmount}`, val => val >= 0 || 'Value must be positive']"
-                        )
-                        template(v-slot:append)
-                        | LEGAL
-                q-card-section
-                    | Summary
-                q-card-section
-                    //- Dropdown with price, network fee and processing fee
-                    q-expansion-item(
-                        expand-separator
-                        :label="`You get ${displayBuyAmount} LEGAL for £ ${this.spendAmount}`"                
-                        )  
-                        //- template(v-slot:header)                
-                        //-     q-card-section
-                        //-         p.col-12
-                        //-             | You get 
-                        //-             strong {{displayBuyAmount}} LEGAL
-                        //-             |  for  
-                        //-             strong &#163; {{spendAmount}}
-                
-        
-                        q-card
-                            q-card-section.fit.row.justify-between
-                                .col
-                                    | {{displayBuyAmount}} LEGAL @ &#163; {{ratio.toFixed(2)}}
-                                | &#163; {{displayAfterFee}}
-                        //- q-card
-                        //-     q-card-section
-                        //-         | Network Fee: 0.00 GBP
-                        q-card
-                            q-card-section.fit.row.justify-between
-                                .col
-                                    | Processing Fee: 
-                                    q-icon(name="fa-solid fa-circle-info")
-                                        q-tooltip(anchor="top middle" self="center middle" max-width="200px")
-                                            | This is charged by LegalCoin to cover the costs levied by payment providers such as Visa & Mastercard. This may vary based on the payment method you choose later.
-                                | as low as &#163; {{processingFee.toFixed(2)}}
-                q-card-section
-                    div(class="fit row wrap justify-center")
-                        q-btn(
-                            color="primary"
-                            label="Continue"
-                            type="submit"
-                            )
-                q-card-section
-                    | By continuing you agree to the terms and conditions
+  q-form(@submit='tryBuyTokens')
+    .fit.row.wrap.justify-center
+      q-card.buytokens-card(v-if='paymentStatus === "checkout"')
+        h3 Buy LEGAL
+        q-card-section
+          | I want to spend
+        q-card-section
+          q-input(
+            label='Amount',
+            placeholder='0.00',
+            v-model='spendAmount',
+            :rules='[(val) => val >= minimumAmount || `Value must be larger than ${minimumAmount}`, (val) => val >= 0 || "Value must be positive"]',
+            @focus='changingBuyAmount = false'
+          )
+            template(v-slot:append)
+            | GBP
+        q-card-section
+          | I want to buy
+        q-card-section
+          q-input(
+            label='Amount',
+            placeholder='0.00',
+            v-model='buyAmount',
+            @focus='changingBuyAmount = true',
+            :rules='[(val) => val >= minimumAmount || `Value must be larger than ${minimumAmount}`, (val) => val >= 0 || "Value must be positive"]'
+          )
+            template(v-slot:append)
+            | LEGAL
+        q-card-section
+          | Summary
+        q-card-section
+          //- Dropdown with price, network fee and processing fee
+          q-expansion-item(
+            expand-separator,
+            :label='`You get ${displayBuyAmount} LEGAL for £ ${this.spendAmount}`'
+          ) 
+            //- template(v-slot:header)                
+            //-     q-card-section
+            //-         p.col-12
+            //-             | You get 
+            //-             strong {{displayBuyAmount}} LEGAL
+            //-             |  for  
+            //-             strong &#163; {{spendAmount}}
 
-    
-    //- Show payment status
-    TokensReceipt(v-if="paymentStatus === 'success' || paymentStatus === 'failure'" :paymentStatus="paymentStatus" :paymentId="paymentId")
-    
+            q-card
+              q-card-section.fit.row.justify-between
+                .col
+                  | {{ displayBuyAmount }} LEGAL @ &#163; {{ ratio.toFixed(2) }}
+                | &#163; {{ displayAfterFee }}
+            //- q-card
+            //-     q-card-section
+            //-         | Network Fee: 0.00 GBP
+            q-card
+              q-card-section.fit.row.justify-between
+                .col
+                  | Processing Fee:
+                  q-icon(name='fa-solid fa-circle-info')
+                    q-tooltip(
+                      anchor='top middle',
+                      self='center middle',
+                      max-width='200px'
+                    )
+                      | This is charged by LegalCoin to cover the costs levied by payment providers such as Visa & Mastercard. This may vary based on the payment method you choose later.
+                | as low as &#163; {{ processingFee.toFixed(2) }}
+        q-card-section
+          .fit.row.wrap.justify-center
+            q-btn(color='primary', label='Continue', type='submit')
+        q-card-section
+          | By continuing you agree to the terms and conditions
 
+  //- Show payment status
+  TokensReceipt(
+    v-if='paymentStatus === "success" || paymentStatus === "failure"',
+    :paymentStatus='paymentStatus',
+    :paymentId='paymentId'
+  )
 </template>
 
 <style lang="sass" scoped>

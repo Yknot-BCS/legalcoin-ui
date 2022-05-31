@@ -33,49 +33,40 @@ export default defineComponent({
 
 <template lang="pug">
 q-page.fit.row.wrap.justify-center
-    q-card.wallet-card
-      q-card-section
-        | My Balance
-      q-card-section
-        .text-bold    
-            | {{balance}} LEGAL
-        .text
-            | {{balance}} (GBP)
-      q-separator.q-mx-md
-      q-card-section
-        .text-bold  
-            | {{nftCount}} NFTS
-        .text
-            | xxx (LEGAL)
-      q-separator.q-mx-md
-      q-card-section
-        | Options
-        .fit.row.wrap.justify-center.q-mt-sm
-            .row.col-6
-                q-btn(
-                    label="BUY LEGAL"
-                    @click="$router.push({name: 'buytokens', params: {status: 'checkout'}})"
-                    ).col.q-mx-sm.q-mt-sm
-            .row.col-6
-                q-btn(
-                    label="WITHDRAW"
-                    @click="$router.push({name: 'withdraw'})"
-                    ).col.q-mx-sm.q-mt-sm
-            .row.col-6
-                q-btn(
-                    label="BUY NFT"
-                    @click="$router.push({name: 'buytokens'})"
-                    ).col.q-mx-sm.q-mt-sm
-            .row.col-6
-                q-btn(
-                    label="SELL NFT"
-                    @click="$router.push({name: 'withdraw'})"
-                    ).col.q-mx-sm.q-mt-sm   
-            .row.col-12
-                q-btn(
-                    label="VIEW TRANSACTION HISTORY"
-                    @click="$router.push({name: 'txhistory'})"
-                    ).col.q-mx-sm.q-mt-sm
+  q-card.wallet-card
+    q-card-section
+      | My Balance
+    q-card-section
+      .text-bold 
+        | {{ balance }} LEGAL
+      .text
+        | {{ balance }} (GBP)
+    q-separator.q-mx-md
+    q-card-section
+      .text-bold 
+        | {{ nftCount }} NFTS
+      .text
+        | xxx (LEGAL)
+    q-separator.q-mx-md
+    q-card-section
+      | Options
+      .fit.row.wrap.justify-center.q-mt-sm
+        .row.col-6
+          q-btn.col.q-mx-sm.q-mt-sm(
+            label='BUY LEGAL',
+            @click='$router.push({ name: "buytokens", params: { status: "checkout" } })'
+          )
+        .row.col-6
+          q-btn.col.q-mx-sm.q-mt-sm(label='WITHDRAW', @click='$router.push({ name: "withdraw" })')
+        .row.col-6
+          q-btn.col.q-mx-sm.q-mt-sm(label='BUY NFT', @click='$router.push({ name: "buytokens" })')
+        .row.col-6
+          q-btn.col.q-mx-sm.q-mt-sm(label='SELL NFT', @click='$router.push({ name: "withdraw" })') 
+        .row.col-12
+          q-btn.col.q-mx-sm.q-mt-sm(
+            label='VIEW TRANSACTION HISTORY',
+            @click='$router.push({ name: "txhistory" })'
+          )
 </template>
 
 <style lang="sass" scoped>
