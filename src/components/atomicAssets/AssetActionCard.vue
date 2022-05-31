@@ -33,13 +33,13 @@ q-card
     .text-bold
       | {{ assetData?.data?.name }}
     //- by
-    .row.justify-between.content-center.items-center
+    .row.justify-between.items-center.fit.wrap
       .col-10.text-italic.text-subtitle1
-      | by
-      | {{ assetData?.collection?.author }}
+        | by
+        | {{ assetData?.collection?.author }}
       //- expected yield?
       //- share icon
-      .col-2
+      .col-2.row.justify-center
         q-icon(name='share', size='sm')
     //- timeline
     Timeline(
