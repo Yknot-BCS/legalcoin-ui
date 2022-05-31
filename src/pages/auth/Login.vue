@@ -45,34 +45,32 @@ export default {
 .page-wrapper
   .row.q-pa-md.bg-grey-3
     .text-h5.col-12 Login
-    q-form(@submit="onSubmit").col-12.row.q-mb-sm.q-gutter-y-lg
-      q-input(
-          v-model="userEmail"
-          label="Email"
-          lazy-rules
-          :rules="[ requiredRule ]"
-          autocomplete="email"
-      ).col-12
-      q-input(
-          v-model="userPassword"
-          type="password"
-          label="Password"
-          lazy-rules
-          :rules="[ requiredRule ]"
-          autocomplete="current-password"
-      ).col-12
-      q-btn(type="submit" color="primary").col-12 Login
+    q-form.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
+      q-input.col-12(
+        v-model='userEmail',
+        label='Email',
+        lazy-rules,
+        :rules='[requiredRule]',
+        autocomplete='email'
+      )
+      q-input.col-12(
+        v-model='userPassword',
+        type='password',
+        label='Password',
+        lazy-rules,
+        :rules='[requiredRule]',
+        autocomplete='current-password'
+      )
+      q-btn.col-12(type='submit', color='primary') Login
 
     .col-12.text-center
       span.q-mr-xs Forgot your password?
-      router-link(to="resetpassword") Reset Password
+      router-link(to='resetpassword') Reset Password
     .col-12.text-center
       span.q-mr-xs Need an account?
-      router-link(to="register") Register
+      router-link(to='register') Register
   .row.justify-center.align-center.q-my-lg
-    router-link(:to="{name:'home'}").skip-link Skip this step
-      
-
+    router-link.skip-link(:to='{ name: "home" }') Skip this step
 </template>
 
 <style lang="sass" scoped>

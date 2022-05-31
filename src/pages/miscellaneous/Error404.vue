@@ -8,24 +8,24 @@ export default defineComponent({
 
 <template lang="pug">
 .row.q-pt-lg.q-pl-lg
-  router-link(to="/").row.items-center.cursor-pointer
-    img.logo.q-mr-md(src="~assets/legalcoin-full.png")
+  router-link.row.items-center.cursor-pointer(to='/')
+    img.logo.q-mr-md(src='~assets/legalcoin-full.png')
 
-div.fullscreen.text-white.text-center.q-pa-md.flex.flex-center
+.fullscreen.text-white.text-center.q-pa-md.flex.flex-center
   .div.q-pt-lg
-    div.text-black.text-h4.q-pb-lg( style="opacity:.8") Page Not Found 🕵🏻‍♀️
-    div.text-black.text-h5.text-grey-7 Oops! 😖 The requested URL was not found on this server.
+    .text-black.text-h4.q-pb-lg(style='opacity: 0.8') Page Not Found 🕵🏻‍♀️
+    .text-black.text-h5.text-grey-7 Oops! 😖 The requested URL was not found on this server.
     q-btn.q-mt-lg.q-mb-md(
-      color="primary"
-      text-color="white"
-      unelevated
-      to="/"
-      label="Back to Home"
+      color='primary',
+      text-color='white',
+      unelevated,
+      to='/',
+      label='Back to Home',
       no-caps
     )
     .row.justify-center
-      q-card(class="my-card" flat )
-        img.auth-image.q-mr-md(src="~assets/error.svg")
+      q-card.my-card(flat)
+        img.auth-image.q-mr-md(src='~assets/error.svg')
 </template>
 
 <style scoped lang="sass">

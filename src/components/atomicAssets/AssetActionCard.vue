@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref } from 'vue';
+import { defineComponent, PropType, ref } from 'vue';
 import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
 

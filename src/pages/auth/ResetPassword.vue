@@ -24,25 +24,24 @@ export default {
 <template lang="pug">
 .form-wrapper.row.q-pa-md.bg-grey-3
   .text-h5.col-12 Reset Password
-  q-form(@submit="onSubmit").col-12.row.q-mb-sm.q-gutter-y-lg
-    q-input(
-        v-model="userPassword"
-        type="password"
-        label="Password"
-        lazy-rules
-        :rules="[ requiredRule ]"
-        autocomplete="new-password"
-    ).col-12
-    q-input(
-        v-model="userRetypePassword"
-        type="password"
-        label="Retype Password"
-        lazy-rules
-        :rules="[ requiredRule, passwordMatchRule ]"
-        autocomplete="new-password"
-    ).col-12
-    q-btn(type="submit" color="primary").col-12 Reset Password
-
+  q-form.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
+    q-input.col-12(
+      v-model='userPassword',
+      type='password',
+      label='Password',
+      lazy-rules,
+      :rules='[requiredRule]',
+      autocomplete='new-password'
+    )
+    q-input.col-12(
+      v-model='userRetypePassword',
+      type='password',
+      label='Retype Password',
+      lazy-rules,
+      :rules='[requiredRule, passwordMatchRule]',
+      autocomplete='new-password'
+    )
+    q-btn.col-12(type='submit', color='primary') Reset Password
 </template>
 
 <style lang="sass" scoped>

@@ -52,49 +52,48 @@ export default {
 <template lang="pug">
 .form-wrapper.row.q-pa-md.bg-grey-3
   .text-h5.col-12 Register
-  q-form(@submit="onSubmit").col-12.row.q-mb-sm.q-gutter-y-lg
-    q-input(
-        v-model="userName"
-        label="Name"
-        lazy-rules
-        :rules="[ requiredRule ]"
-        autocomplete="given-name"
-    ).col-6.q-pr-md
-    q-input(
-        v-model="userSurname"
-        label="Surname"
-        lazy-rules
-        :rules="[ requiredRule ]"
-        autocomplete="family-name"
-    ).col-6
-    q-input(
-        v-model="userEmail"
-        label="Email"
-        lazy-rules
-        :rules="[ requiredRule ]"
-        autocomplete="email"
-    ).col-12
-    q-input(
-        v-model="userPassword"
-        type="password"
-        label="Password"
-        lazy-rules
-        :rules="[ requiredRule ]"
-        autocomplete="new-password"
-    ).col-12
-    q-input(
-        v-model="userRetypePassword"
-        type="password"
-        label="Retype Password"
-        lazy-rules
-        :rules="[ requiredRule, passwordMatchRule ]"
-        autocomplete="new-password"
-    ).col-12
-    q-btn(type="submit" color="primary").col-12 Create an account
+  q-form.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
+    q-input.col-6.q-pr-md(
+      v-model='userName',
+      label='Name',
+      lazy-rules,
+      :rules='[requiredRule]',
+      autocomplete='given-name'
+    )
+    q-input.col-6(
+      v-model='userSurname',
+      label='Surname',
+      lazy-rules,
+      :rules='[requiredRule]',
+      autocomplete='family-name'
+    )
+    q-input.col-12(
+      v-model='userEmail',
+      label='Email',
+      lazy-rules,
+      :rules='[requiredRule]',
+      autocomplete='email'
+    )
+    q-input.col-12(
+      v-model='userPassword',
+      type='password',
+      label='Password',
+      lazy-rules,
+      :rules='[requiredRule]',
+      autocomplete='new-password'
+    )
+    q-input.col-12(
+      v-model='userRetypePassword',
+      type='password',
+      label='Retype Password',
+      lazy-rules,
+      :rules='[requiredRule, passwordMatchRule]',
+      autocomplete='new-password'
+    )
+    q-btn.col-12(type='submit', color='primary') Create an account
   .col-12.text-center
     span.q-mr-xs Already have an account?
-    router-link(to="login") Login
-
+    router-link(to='login') Login
 </template>
 
 <style lang="sass" scoped>

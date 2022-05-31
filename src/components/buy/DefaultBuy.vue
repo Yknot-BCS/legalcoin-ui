@@ -85,34 +85,40 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-.row.q-px-md.q-py-lg()
+.row.q-px-md.q-py-lg
   .col-12
     .row
       .col-12.q-pt-md
         .q-px-md.text-h6.text-grey-8.text-weight-bold.text-center Primary Retail Portal
   .col-12
-    div(v-if="ok") toggled content
-  .col-12(v-for="section in sections")
-    .row(v-if="filter === 'All' || filter === section.name")
-
+    div(v-if='ok') toggled content
+  .col-12(v-for='section in sections')
+    .row(v-if='filter === "All" || filter === section.name')
       .col-12.q-pt-lg.q-px-sm
         .row
           .col-6.px
-            .q-px-md.text-h6.text-grey-8 {{section.name}}
+            .q-px-md.text-h6.text-grey-8 {{ section.name }}
           .col-6
-            q-btn.q-px-md.float-right.text-grey-8(@click="changeFilter(section.name)" label="view all" flat v-if="filter === 'All'")
-            .text-subtitle1.q-px-md.float-right.text-grey-8(v-if="filter === section.name") {{section.results + ' results'}}
+            q-btn.q-px-md.float-right.text-grey-8(
+              @click='changeFilter(section.name)',
+              label='view all',
+              flat,
+              v-if='filter === "All"'
+            )
+            .text-subtitle1.q-px-md.float-right.text-grey-8(
+              v-if='filter === section.name'
+            ) {{ section.results + ' results' }}
 
       .col-12.q-px-sm
-        GalleryView(:data="section.data" :type="section.type")
-        
+        GalleryView(:data='section.data', :type='section.type')
+
       .col-12 
         .row.justify-center
           q-pagination(
-            v-if="filter === section.name"
-            v-model="section.page"
-            :max="section.pages"
-            input
-            @update:model-value ="(e: string) => {changePaging( e ,section.name)}"
+            v-if='filter === section.name',
+            v-model='section.page',
+            :max='section.pages',
+            input,
+            @update:model-value='(e: string) => { changePaging(e, section.name); }'
           )
 </template>

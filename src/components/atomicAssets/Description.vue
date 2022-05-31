@@ -19,7 +19,7 @@ export default defineComponent({
 <template lang="pug">
 .row
   .col-12
-    .text-body1 {{text}}
+    .text-body1 {{ text }}
 </template>
 
 <style lang="sass"></style>

@@ -101,9 +101,21 @@ q-page
       .col-12
         .row.q-col-gutter-md.justify-center
           .col-lg-2
-            q-select.filters-selection(outlined v-model="filterModel" :options="options" @update:model-value="filter" color="primary" )
+            q-select.filters-selection(
+              outlined,
+              v-model='filterModel',
+              :options='options',
+              @update:model-value='filter',
+              color='primary'
+            )
           .col-lg-2
-            q-select.filters-selection(outlined v-model="sortModel" :options="sortOptions" @update:model-value="sorting" color="primary" )
+            q-select.filters-selection(
+              outlined,
+              v-model='sortModel',
+              :options='sortOptions',
+              @update:model-value='sorting',
+              color='primary'
+            )
     DefaultBuy
 </template>
 

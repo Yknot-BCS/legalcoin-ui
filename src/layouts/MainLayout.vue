@@ -48,8 +48,8 @@ export default {
 </script>
 
 <template lang="pug">
-q-layout( view="hHh lpR fff")
-  dev-banner(v-if="DEVELOPMENT")
+q-layout(view='hHh lpR fff')
+  dev-banner(v-if='DEVELOPMENT')
   Header
   q-page-container
     router-view

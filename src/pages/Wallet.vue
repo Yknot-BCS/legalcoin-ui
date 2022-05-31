@@ -57,11 +57,20 @@ q-page.fit.row.wrap.justify-center
             @click='$router.push({ name: "buytokens", params: { status: "checkout" } })'
           )
         .row.col-6
-          q-btn.col.q-mx-sm.q-mt-sm(label='WITHDRAW', @click='$router.push({ name: "withdraw" })')
+          q-btn.col.q-mx-sm.q-mt-sm(
+            label='WITHDRAW',
+            @click='$router.push({ name: "withdraw" })'
+          )
         .row.col-6
-          q-btn.col.q-mx-sm.q-mt-sm(label='BUY NFT', @click='$router.push({ name: "buytokens" })')
+          q-btn.col.q-mx-sm.q-mt-sm(
+            label='BUY NFT',
+            @click='$router.push({ name: "buytokens" })'
+          )
         .row.col-6
-          q-btn.col.q-mx-sm.q-mt-sm(label='SELL NFT', @click='$router.push({ name: "withdraw" })') 
+          q-btn.col.q-mx-sm.q-mt-sm(
+            label='SELL NFT',
+            @click='$router.push({ name: "withdraw" })'
+          ) 
         .row.col-12
           q-btn.col.q-mx-sm.q-mt-sm(
             label='VIEW TRANSACTION HISTORY',

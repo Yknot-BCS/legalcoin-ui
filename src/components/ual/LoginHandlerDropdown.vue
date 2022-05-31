@@ -50,9 +50,13 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-btn-dropdown.row( color='secondary' :label='account' dense outline)
+q-btn-dropdown.row(color='secondary', :label='account', dense, outline)
   .row
-    q-btn.account-button.col(@click='onLogout' color='primary' :label='disconnectLabel')
+    q-btn.account-button.col(
+      @click='onLogout',
+      color='primary',
+      :label='disconnectLabel'
+    )
 </template>
 
 <style lang="sass" scoped></style>

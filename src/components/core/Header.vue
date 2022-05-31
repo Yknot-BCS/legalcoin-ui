@@ -25,47 +25,62 @@ export default {
 
 <template lang="pug">
 q-toolbar.row.q-py-sm.q-px-md
-  router-link(:to="{name: 'home'}").row.items-center.cursor-pointer
-    img.logo.q-mr-md(src="~assets/legalcoin-full.png")
+  router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
+    img.logo.q-mr-md(src='~assets/legalcoin-full.png')
 
   .col.row.justify-center
     search-bar.toolbar-select.q-mr-md
 
   .q-mr-md.q-gutter-x-md.row.items-center.no-wrap(v-if='$q.screen.gt.sm')
-    router-link(:to="{name: 'buy'}").toolbar-link
+    router-link.toolbar-link(:to='{ name: "buy" }')
       | Buy
-    router-link(:to="{name: 'gallery'}").toolbar-link
+    router-link.toolbar-link(:to='{ name: "gallery" }')
       | Gallery
 
   .row.items-center.no-wrap
-    q-btn.q-mr-sm(v-if='$q.screen.gt.sm && isLoggedIn' dense flat round size='md' icon='wallet' color='grey-6' :to="{name: 'wallet'}" )
+    q-btn.q-mr-sm(
+      v-if='$q.screen.gt.sm && isLoggedIn',
+      dense,
+      flat,
+      round,
+      size='md',
+      icon='wallet',
+      color='grey-6',
+      :to='{ name: "wallet" }'
+    )
     //- q-btn(v-if="isLoggedIn" @click="logout") Logout
     //- q-btn(v-if="!isLoggedIn" to="login" flat) Login
     //- q-btn(v-if="!isLoggedIn" to="register" outline) Register
-    q-btn(dense outline v-if="!isLoggedIn" :to="{name: 'login'}"  )
-      q-avatar.q-mr-sm(rounded size='30px')
+    q-btn(dense, outline, v-if='!isLoggedIn', :to='{ name: "login" }')
+      q-avatar.q-mr-sm(rounded, size='30px')
         q-icon.material-icons-outlined(name='account_circle')
       .q-mr-sm Sign In
-    q-btn(dense flat round size='md' no-wrap v-if="isLoggedIn")
+    q-btn(dense, flat, round, size='md', no-wrap, v-if='isLoggedIn')
       // TODO Change avatar when logged in
-      q-avatar(rounded size='30px')
-        q-icon.material-icons-outlined(name='account_circle' color='grey-6')
+      q-avatar(rounded, size='30px')
+        q-icon.material-icons-outlined(name='account_circle', color='grey-6')
       //- q-icon(name='arrow_drop_down' size='16px')
-      q-menu(auto-close fit)
+      q-menu(auto-close, fit)
         q-list(dense)
-          q-item(v-if="isLoggedIn")
+          q-item(v-if='isLoggedIn')
             q-item-section
-              | Signed in as 
-              strong {{profile.name}} {{profile.surname}}
-          q-separator(v-if="isLoggedIn")
+              | Signed in as
+              strong {{ profile.name }} {{ profile.surname }}
+          q-separator(v-if='isLoggedIn')
           // TODO add params for profile, gallery and wallet
-          q-item.menu-link(clickable :to="{name: 'profile', params: {profile: 1}}")
+          q-item.menu-link(
+            clickable,
+            :to='{ name: "profile", params: { profile: 1 } }'
+          )
             q-item-section Your profile
-          q-item.menu-link(clickable :to="{name: 'gallery'}")
+          q-item.menu-link(clickable, :to='{ name: "gallery" }')
             q-item-section Your gallery
-          q-item.menu-link(clickable :to="{name: 'wallet'}")
+          q-item.menu-link(clickable, :to='{ name: "wallet" }')
             q-item-section Your wallet
-          q-item.menu-link(clickable :to="{name: 'account-settings', params: {profile: 1}}")
+          q-item.menu-link(
+            clickable,
+            :to='{ name: "account-settings", params: { profile: 1 } }'
+          )
             q-item-section Settings
           q-separator
           //- q-item.menu-link(clickable)
@@ -73,11 +88,10 @@ q-toolbar.row.q-py-sm.q-px-md
           //- q-item.menu-link(clickable)
           //-   q-item-section Settings
           //- q-separator
-          q-item.menu-link(clickable v-if="isLoggedIn" @click="logout()")
+          q-item.menu-link(clickable, v-if='isLoggedIn', @click='logout()')
             q-item-section Sign out
           //- q-item.menu-link(clickable v-if="!isLoggedIn" :to="{name: 'login'}")
           //-   q-item-section Sign in
-
 </template>
 
 <style scoped lang="sass">

@@ -7,10 +7,10 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-layout( view="hHh lpR fFf")
-  div.logo-wrapper.row.justify-center.items-center
-    router-link(to="/").cursor-pointer
-      img.logo(src="~assets/legalcoin-full.png")
+q-layout(view='hHh lpR fFf')
+  .logo-wrapper.row.justify-center.items-center
+    router-link.cursor-pointer(to='/')
+      img.logo(src='~assets/legalcoin-full.png')
   q-page-container.row.justify-center
     router-view
 </template>

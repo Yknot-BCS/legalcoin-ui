@@ -30,8 +30,7 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-AssetCard(:assetData="assetData")
-
+AssetCard(:assetData='assetData')
 </template>
 
 <style lang="sass" scoped></style>
