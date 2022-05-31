@@ -29,21 +29,21 @@ export function state(): BuyStateInterface {
   return {
     filter: 'All',
     assetFilter: {
-      owner: 'alpacaworlds',
+      owner: 'fuzzytestnet',
       page: 1,
       order: 'desc',
       limit: 6,
       sort: 'created'
     } as unknown,
     collectionFilter: {
-      author: 'alpacaworlds',
+      author: 'thelawisgood',
       page: 1,
       order: 'desc',
       limit: 12,
       sort: 'created'
     } as unknown,
     templateFilter: {
-      authorized_account: 'alpacaworlds',
+      authorized_account: 'fuzzytestnet',
       page: 1,
       order: 'desc',
       limit: 12,

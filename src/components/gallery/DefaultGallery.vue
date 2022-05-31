@@ -17,29 +17,28 @@ export default defineComponent({
     const templateData = ref<GalleryCard[]>([]);
     async function getData() {
       const myGalleryOptions = {
-        owner: 'waxgamewax12',
+        owner: 'fuzzytestnet',
         page: 1,
         order: 'desc',
         limit: 6,
         sort: 'created'
       };
       const DiscoverOptions = {
-        collection_blacklist:
-          'bridgebridge,testkogs2222,testkogs3333,testkogstest,mutantwarrio,mutantstest2,33testuplift,44testuplift,series2heros,horrorhorror,horrorstest2,horrorstest3,horrorstest4,horrorstest5,horrorstestx,btcotest2222,btcotest3333,btcotest1234,shynies5test,shynies4test,shyniestest2,shyniestest1,btco22222222,artvndngtst1,elementals11,mteora111111',
+        collection_blacklist: 'fuzzytestnet',
         page: 1,
         order: 'desc',
         limit: 12,
         sort: 'created'
       };
       const CollectionOptions = {
-        author: 'pokemontest1',
+        author: 'thelawisgood',
         page: 1,
         order: 'desc',
         limit: 12,
         sort: 'created'
       };
       const TemplateOptions = {
-        authorized_account: 'waxgamewax12',
+        authorized_account: 'fuzzytestnet',
         page: 1,
         order: 'desc',
         limit: 12,
