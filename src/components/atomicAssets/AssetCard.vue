@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, computed, PropType, ref } from 'vue';
+import { defineComponent, PropType, ref } from 'vue';
 import DetailsTable from 'src/components/atomicAssets/DetailsTable.vue';
 import Description from 'src/components/atomicAssets/Description.vue';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
@@ -17,13 +17,15 @@ export default defineComponent({
       required: true
     }
   },
-  setup(props) {
-    const Data = computed(() => props.assetData);
-    console.log(Data);
+  setup() {
     return {
-      Data,
       tab: ref('description')
     };
+  },
+  computed: {
+    assetImg(): string {
+      return `https://ipfs.io/ipfs/${<string>this.assetData.data.img}`;
+    }
   }
 });
 </script>
@@ -87,7 +89,7 @@ export default defineComponent({
     .row.q-pa-sm
       //- Image
       q-card.col-12.q-my-sm
-        q-img.asset-img(:src='"https://loremflickr.com/640/360"')
+        q-img.asset-img(:src='assetImg')
 
       //- Actions
       AssetActionCard.col-12.q-my-sm(:assetData='assetData')

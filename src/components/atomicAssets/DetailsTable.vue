@@ -62,7 +62,7 @@ export default defineComponent({
     row-key='name',
     hide-header,
     hide-bottom,
-    :pagination='{ rowsPerPage: 10 }',
+    :pagination='{ rowsPerPage: 20 }',
     flat,
     bordered
   )
