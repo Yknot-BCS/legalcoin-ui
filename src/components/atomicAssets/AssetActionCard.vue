@@ -4,6 +4,7 @@ import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
 import { IMarketPrice, ISale } from 'atomicmarket/build/API/Explorer/Objects';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
 import { mapGetters, mapActions } from 'vuex';
+import { Asset, Int64 } from '@greymass/eosio';
 
 export default defineComponent({
   name: 'AssetActionCard',
@@ -23,7 +24,8 @@ export default defineComponent({
       quantity: ref(1),
       price: ref(500),
       transactionId: ref<string>(null),
-      transactionError: null
+      transactionError: null,
+      transaction: null
     };
   },
 
@@ -32,6 +34,8 @@ export default defineComponent({
       accountName: 'account/cryptoAccountName'
     }),
     isOwned() {
+      console.log(this.assetData);
+      console.log(this.saleData);
       // Check if the current user is the owner of the asset
       if (this.accountName === this.assetData.owner) {
         return true;
@@ -46,97 +50,46 @@ export default defineComponent({
   },
   mounted() {
     // Check if asset is being offered
-
-    console.log(this.assetData);
-    console.log(this.saleData);
   },
   methods: {
     ...mapActions({ sendTransaction: 'account/sendTransaction' }),
-    buyOffer() {
-      console.log('buyOffer');
 
-      //   {"expiration": "2022-05-31T15:00:28",
-      //   "ref_block_num": 32172,
-      //   "ref_block_prefix": 4133901082,
-      //   "max_net_usage_words": 0,
-      //   "max_cpu_usage_ms": 0,
-      //   "delay_sec": 0,
-      //   "context_free_actions": [],
-      // "actions": [
-      //   {
-      //     "account": "atomicmarket",
-      //     "name": "assertsale",
-      //     "authorization": [
-      //       {
-      //         "actor": "dewiteleport",
-      //         "permission": "active"
-      //       }
-      //     ],
-      //     "data": {
-      //       "sale_id": 32186,
-      //       "asset_ids_to_assert": [
-      //         "1099532301071"
-      //       ],
-      //       "listing_price_to_assert": "5.00000000 WAX",
-      //       "settlement_symbol_to_assert": "8,WAX"
-      //     }
-      //   },
-      //   {
-      //     "account": "eosio.token",
-      //     "name": "transfer",
-      //     "authorization": [
-      //       {
-      //         "actor": "dewiteleport",
-      //         "permission": "active"
-      //       }
-      //     ],
-      //     "data": {
-      //       "from": "dewiteleport",
-      //       "to": "atomicmarket",
-      //       "quantity": "5.00000000 WAX",
-      //       "memo": "deposit"
-      //     }
-      //   },
-      //   {
-      //     "account": "atomicmarket",
-      //     "name": "purchasesale",
-      //     "authorization": [
-      //       {
-      //         "actor": "dewiteleport",
-      //         "permission": "active"
-      //       }
-      //     ],
-      //     "data": {
-      //       "buyer": "dewiteleport",
-      //       "sale_id": 32186,
-      //       "intended_delphi_median": 0,
-      //       "taker_marketplace": ""
-      //     }
-      //   }
-      // ],
-      //   "transaction_extensions": []
-      // }
-    },
-    async tryBuySale() {
+    async buySale() {
       console.log('tryBuySale');
+      console.log(
+        Asset.Symbol.fromParts(
+          this.saleData.price.token_symbol,
+          this.saleData.price.token_precision
+        ).toString()
+      );
+      let amountStr = Asset.fromUnits(
+        Int64.from(this.saleData.price.amount),
+        Asset.Symbol.fromParts(
+          this.saleData.price.token_symbol,
+          this.saleData.price.token_precision
+        )
+      ).toString();
       let actions = [
         {
           account: 'atomicmarket',
           name: 'assertsale',
           data: {
-            sale_id: 32186,
-            asset_ids_to_assert: ['1099532301071'],
-            listing_price_to_assert: '5.00000000 WAX',
-            settlement_symbol_to_assert: '8,WAX'
+            sale_id: this.saleData.sale_id,
+            asset_ids_to_assert: this.saleData.assets.map((a) => a.asset_id), // ['123412341234']
+            listing_price_to_assert: amountStr, //'5.00000000 WAX'
+            settlement_symbol_to_assert: Asset.Symbol.fromParts(
+              this.saleData.price.token_symbol,
+              this.saleData.price.token_precision
+            ).toString() //'8,WAX'
           }
         },
         {
-          account: 'eosio.token',
+          account: this.saleData.price.token_contract,
           name: 'transfer',
           data: {
-            from: 'dewiteleport',
+            from: this.accountName as string,
             to: 'atomicmarket',
-            quantity: '5.00000000 WAX',
+            quantity: amountStr,
             memo: 'deposit'
           }
         },
@@ -144,14 +97,37 @@ export default defineComponent({
           account: 'atomicmarket',
           name: 'purchasesale',
           data: {
-            buyer: 'dewiteleport',
-            sale_id: 32186,
+            buyer: this.accountName as string,
+            sale_id: this.saleData.sale_id,
             intended_delphi_median: 0,
             taker_marketplace: ''
           }
         }
       ];
-      await this.sendTransaction({ actions });
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      this.transaction = await this.sendTransaction({ actions });
+    },
+
+    async tryBuySale() {
+      try {
+        await this.buySale();
+        this.$q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          message: 'Complete'
+        });
+      } catch (e: unknown) {
+        if (typeof e === 'string') {
+          e.toUpperCase(); // works, `e` narrowed to string
+        } else if (e instanceof Error) {
+          this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            message: e.message,
+            timeout: 5000
+          });
+        }
+      }
     }
   }
 });
