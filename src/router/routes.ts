@@ -154,7 +154,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'template',
-        component: () => import('pages/Template.vue')
+        component: () => import('pages/Asset.vue')
       }
     ]
   },
