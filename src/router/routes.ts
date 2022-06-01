@@ -148,7 +148,7 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: '/template/:collection/:template',
+    path: '/template/:collection_name/:template_id',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {

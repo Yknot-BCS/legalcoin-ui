@@ -44,8 +44,27 @@ export default defineComponent({
       }
     },
 
-    salePrice(): IMarketPrice {
-      return this.saleData.price;
+    isForSale() {
+      return !!this.saleData || this.saleData?.price !== undefined;
+    },
+
+    salePrice(): number {
+      console.log(this.saleData?.price);
+      return Number(this.saleData?.price) || 0;
+    },
+
+    priceStr(): string {
+      if (this.saleData?.price !== undefined) {
+        return Asset.fromUnits(
+          Int64.from(this.saleData?.price?.amount),
+          Asset.Symbol.fromParts(
+            this.saleData?.price?.token_symbol,
+            this.saleData?.price?.token_precision
+          )
+        ).toString();
+      } else {
+        return 'loading';
+      }
     }
   },
   mounted() {
@@ -56,12 +75,6 @@ export default defineComponent({
 
     async buySale() {
       console.log('tryBuySale');
-      console.log(
-        Asset.Symbol.fromParts(
-          this.saleData.price.token_symbol,
-          this.saleData.price.token_precision
-        ).toString()
-      );
       let amountStr = Asset.fromUnits(
         Int64.from(this.saleData.price.amount),
         Asset.Symbol.fromParts(
@@ -69,6 +82,7 @@ export default defineComponent({
           this.saleData.price.token_precision
         )
       ).toString();
+      console.log(amountStr);
       let actions = [
         {
           account: 'atomicmarket',
@@ -141,9 +155,10 @@ q-card
       | {{ assetData?.data?.name }}
     //- by
     .row.justify-between.items-center.fit.wrap
-      .col-10.text-italic.text-subtitle1
-        | by
-        | {{ assetData?.collection?.author }}
+      .col-10.text-italic.text-subtitle1.column
+        .col 
+          | Owner: {{ assetData?.owner }}
+
       //- expected yield?
       //- share icon
       .col-2.row.justify-center
@@ -155,37 +170,44 @@ q-card
       expiryDate='2027/04/30'
     )
     //- when buying, show price, days to maturity, quantity, and total cost, with buy button
-    .row.justify-between.q-mt-lg
-      .col-6
-        .column.content-start 
-          | Purchase Price
-          .text-subtitle1
-            | {{ price }} LEGAL
-      .col-6
-        .column.content-end.items-end
-          | Days to Maturity
-          .text-subtitle1
-            | 30 days
-    .row.justify-between.q-mt-lg
-      .col-3
-        q-input(v-model='quantity', type='number', label='Quantity', outlined)
-      .col-6
-        .column.content-end.items-end
-          | Total
-          .text-subtitle1
-            | {{ quantity * price }} LEGAL
+    .div(v-if='isForSale')
+      .row.justify-between.q-mt-lg
+        .col-6
+          .column.content-start 
+            | Purchase Price
+            .text-subtitle1
+              | {{ priceStr }}
+        .col-6
+          .column.content-end.items-end
+            | Days to Maturity
+            .text-subtitle1
+              | 30 days
+      .row.justify-between.q-mt-lg
+        .col-3
+          q-input(
+            v-model='quantity',
+            type='number',
+            label='Quantity',
+            outlined
+          )
+        .col-6
+          .column.content-end.items-end
+            | Total
+            .text-subtitle1
+              | {{ quantity * price }} LEGAL
 
-    q-btn.full-width.q-mt-lg(
-      @click='tryBuySale()',
-      label='BUY',
-      color='primary'
-    )
+      q-btn.full-width.q-mt-lg(
+        @click='tryBuySale()',
+        label='BUY',
+        color='primary'
+      )
 
     //- when owning, show price, days to maturity, with sell button
 
     //- when mature, show claim button
 
     | owned: {{ isOwned }}
+    | for sale: {{ isForSale }}
 </template>
 
 <style lang="sass"></style>

@@ -36,6 +36,7 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
+//- Desktop view
 .row.justify-center.page-background(v-if='$q.screen.gt.md')
   .col-12.page-view.q-py-lg
     .row.q-pa-md.justify-center
@@ -94,7 +95,10 @@ export default defineComponent({
     .row.q-pa-sm
       //- Image
       q-card.col-12.q-my-sm
-        q-img.asset-img(:src='assetImg')
+        q-img.asset-img(
+          :src='assetImg',
+          placeholder-src='https://placeimg.com/500/300/nature'
+        )
 
       //- Actions
       AssetActionCard.col-12.q-my-sm(

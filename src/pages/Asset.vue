@@ -36,13 +36,13 @@ export default defineComponent({
         order: 'asc',
         limit: 6,
         collection_name:
-          this.$route.params.collection === undefined
+          this.$route.params.collection_name === undefined
             ? ''
-            : (this.$route.params.collection as string),
+            : (this.$route.params.collection_name as string),
         template_id:
-          this.$route.params.template === undefined
+          this.$route.params.template_id === undefined
             ? ''
-            : this.$route.params.template,
+            : this.$route.params.template_id,
         state: 1,
         seller:
           this.$route.query.seller === undefined ? '' : this.$route.query.seller
