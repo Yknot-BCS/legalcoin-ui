@@ -3,6 +3,7 @@ import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { AccountStateInterface } from './state';
 import auth from 'src/auth';
+import { ual } from 'src/boot/ual';
 
 export const actions: ActionTree<AccountStateInterface, StateInterface> = {
   async cryptoLogin({ commit }, { account, authenticator }) {
@@ -34,23 +35,29 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
       commit('setLoadingWallet');
     }
   },
-  async sendTransaction({}, { user, account, data }) {
-    let transaction = null;
-    const actions = [
-      {
-        account: account as string,
-        name: 'transfer',
-        authorization: [
+  async sendTransaction({}, { actions }) {
+    console.log(actions);
+    /* eslint-disable */
+    actions.forEach((action: { authorization: string | any[]; }) => {
+      if (!action.authorization || !action.authorization.length) {
+        action.authorization = [
           {
             actor: this.state.account.cryptoAccountName,
             permission: 'active'
           }
-        ],
-        data: data as unknown
+        ];
       }
-    ];
+    });
+    console.log(actions)
+    /* eslint-enable */
+    let transaction = null;
     try {
-      transaction = await (user as User).signTransaction(
+      /* eslint-disable */
+      const authenticators = ual.getAuthenticators().availableAuthenticators;
+      const users = await authenticators[0].login();
+      console.log(users);
+      /* eslint-disable */
+      transaction = await(users[0] as User).signTransaction(
         {
           actions
         },
@@ -60,6 +67,7 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
         }
       );
     } catch (e) {
+      console.error(actions, e);
       throw e;
     }
     return transaction;

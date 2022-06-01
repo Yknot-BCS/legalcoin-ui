@@ -3,7 +3,7 @@ import { defineComponent, PropType, ref } from 'vue';
 import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
 import { IMarketPrice, ISale } from 'atomicmarket/build/API/Explorer/Objects';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 
 export default defineComponent({
   name: 'AssetActionCard',
@@ -19,7 +19,12 @@ export default defineComponent({
     }
   },
   setup() {
-    return { quantity: ref(1), price: ref(500) };
+    return {
+      quantity: ref(1),
+      price: ref(500),
+      transactionId: ref<string>(null),
+      transactionError: null
+    };
   },
 
   computed: {
@@ -43,10 +48,110 @@ export default defineComponent({
     // Check if asset is being offered
 
     console.log(this.assetData);
+    console.log(this.saleData);
   },
   methods: {
+    ...mapActions({ sendTransaction: 'account/sendTransaction' }),
     buyOffer() {
       console.log('buyOffer');
+
+      //   {"expiration": "2022-05-31T15:00:28",
+      //   "ref_block_num": 32172,
+      //   "ref_block_prefix": 4133901082,
+      //   "max_net_usage_words": 0,
+      //   "max_cpu_usage_ms": 0,
+      //   "delay_sec": 0,
+      //   "context_free_actions": [],
+      // "actions": [
+      //   {
+      //     "account": "atomicmarket",
+      //     "name": "assertsale",
+      //     "authorization": [
+      //       {
+      //         "actor": "dewiteleport",
+      //         "permission": "active"
+      //       }
+      //     ],
+      //     "data": {
+      //       "sale_id": 32186,
+      //       "asset_ids_to_assert": [
+      //         "1099532301071"
+      //       ],
+      //       "listing_price_to_assert": "5.00000000 WAX",
+      //       "settlement_symbol_to_assert": "8,WAX"
+      //     }
+      //   },
+      //   {
+      //     "account": "eosio.token",
+      //     "name": "transfer",
+      //     "authorization": [
+      //       {
+      //         "actor": "dewiteleport",
+      //         "permission": "active"
+      //       }
+      //     ],
+      //     "data": {
+      //       "from": "dewiteleport",
+      //       "to": "atomicmarket",
+      //       "quantity": "5.00000000 WAX",
+      //       "memo": "deposit"
+      //     }
+      //   },
+      //   {
+      //     "account": "atomicmarket",
+      //     "name": "purchasesale",
+      //     "authorization": [
+      //       {
+      //         "actor": "dewiteleport",
+      //         "permission": "active"
+      //       }
+      //     ],
+      //     "data": {
+      //       "buyer": "dewiteleport",
+      //       "sale_id": 32186,
+      //       "intended_delphi_median": 0,
+      //       "taker_marketplace": ""
+      //     }
+      //   }
+      // ],
+      //   "transaction_extensions": []
+      // }
+    },
+    async tryBuySale() {
+      console.log('tryBuySale');
+      let actions = [
+        {
+          account: 'atomicmarket',
+          name: 'assertsale',
+          data: {
+            sale_id: 32186,
+            asset_ids_to_assert: ['1099532301071'],
+            listing_price_to_assert: '5.00000000 WAX',
+            settlement_symbol_to_assert: '8,WAX'
+          }
+        },
+        {
+          account: 'eosio.token',
+          name: 'transfer',
+          data: {
+            from: 'dewiteleport',
+            to: 'atomicmarket',
+            quantity: '5.00000000 WAX',
+            memo: 'deposit'
+          }
+        },
+        {
+          account: 'atomicmarket',
+          name: 'purchasesale',
+          data: {
+            buyer: 'dewiteleport',
+            sale_id: 32186,
+            intended_delphi_median: 0,
+            taker_marketplace: ''
+          }
+        }
+      ];
+      await this.sendTransaction({ actions });
     }
   }
 });
@@ -94,7 +199,11 @@ q-card
           .text-subtitle1
             | {{ quantity * price }} LEGAL
 
-    q-btn.full-width.q-mt-lg(@click='buyOffer()', label='BUY', color='primary')
+    q-btn.full-width.q-mt-lg(
+      @click='tryBuySale()',
+      label='BUY',
+      color='primary'
+    )
 
     //- when owning, show price, days to maturity, with sell button
 
