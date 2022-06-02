@@ -1,8 +1,9 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, ref, computed } from 'vue';
 import { atomic_api } from 'src/api/atomic_assets';
 import { GalleryCard } from 'src/types';
 import GalleryView from 'src/components/gallery/GalleryView.vue';
+import { useStore } from 'src/store';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -15,9 +16,18 @@ export default defineComponent({
     const discoverData = ref<GalleryCard[]>([]);
     const collectionData = ref<GalleryCard[]>([]);
     const templateData = ref<GalleryCard[]>([]);
+    const store = useStore();
+
+    const accountName = computed(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      () => store.getters['account/cryptoAccountName'] as string
+    );
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    console.log(accountName);
     async function getData() {
       const myGalleryOptions = {
-        owner: 'fuzzytestnet',
+        owner: accountName.value,
         page: 1,
         order: 'desc',
         limit: 6,
