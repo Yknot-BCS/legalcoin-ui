@@ -19,6 +19,16 @@ export default defineComponent({
       saleData
     };
   },
+  computed: {
+    isLegalCoin() {
+      // Check if the asset is from legalcoin
+      if (this.assetData?.collection?.author === process.env.AA_ACCOUNT) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  },
   methods: {
     async getAssetData() {
       this.assetData = await atomic_api.getAsset(
@@ -69,7 +79,10 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-AssetCard(:assetData='assetData', :saleData='saleData')
+.div(v-if='isLegalCoin')
+  AssetCard(:assetData='assetData', :saleData='saleData')
+q-card(v-else)
+  | This is not a LegalCoin asset
 </template>
 
 <style lang="sass" scoped></style>

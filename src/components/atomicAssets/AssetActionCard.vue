@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
 import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
-import { IMarketPrice, ISale } from 'atomicmarket/build/API/Explorer/Objects';
+import { ISale } from 'atomicmarket/build/API/Explorer/Objects';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
 import { mapGetters, mapActions } from 'vuex';
 import { Asset, Int64 } from '@greymass/eosio';
@@ -23,8 +23,6 @@ export default defineComponent({
     return {
       quantity: ref(1),
       price: ref(500),
-      transactionId: ref<string>(null),
-      transactionError: null,
       transaction: null
     };
   },
@@ -46,6 +44,15 @@ export default defineComponent({
 
     isForSale() {
       return !!this.saleData || this.saleData?.price !== undefined;
+    },
+
+    isOwnedByLC() {
+      return this.assetData.owner === process.env.AA_ACCOUNT;
+    },
+
+    isBuybackNFT() {
+      // TODO update with new field names
+      return !!this.assetData?.data['expiry date'];
     },
 
     salePrice(): number {
@@ -164,7 +171,7 @@ q-card
       .col-2.row.justify-center
         q-icon(name='share', size='sm')
     //- timeline
-    Timeline(
+    Timeline.div(v-if='isBuybackNFT')(
       startDate='2021/04/30',
       maturityDate='2024/04/30',
       expiryDate='2027/04/30'
@@ -206,8 +213,10 @@ q-card
 
     //- when mature, show claim button
 
-    | owned: {{ isOwned }}
-    | for sale: {{ isForSale }}
+    | owned: {{ isOwned }},
+    | for sale: {{ isForSale }},
+    | is buybacknft: {{ isBuybackNFT }},
+    | is owned by LC: {{ isOwnedByLC }}
 </template>
 
 <style lang="sass"></style>
