@@ -23,7 +23,6 @@ export default defineComponent({
   setup() {
     return {
       quantity: ref(1),
-      price: ref(500),
       transaction: null
     };
   },
@@ -56,12 +55,13 @@ export default defineComponent({
       return !!this.assetData?.data['saleopen'];
     },
 
+    saleopenDate() {
+      return new Date(Number(this.assetData.data.saleopen) * 1000);
+    },
+
     maturityDate() {
       if (this.isBuybackNFT) {
-        let saleopenDate = new Date(
-          Number(this.assetData.data.saleopen) * 1000
-        );
-        let maturityDate = date.addToDate(saleopenDate, {
+        let maturityDate = date.addToDate(this.saleopenDate, {
           days: this.assetData?.data?.term as number
         });
         return maturityDate;
@@ -74,6 +74,21 @@ export default defineComponent({
           days: this.assetData?.data?.expiry as number
         });
         return expiryDate;
+      } else return undefined;
+    },
+
+    daysToMaturity() {
+      if (this.isBuybackNFT) {
+        let daysToMaturity = date.getDateDiff(
+          this.maturityDate,
+          Date.now(),
+          'days'
+        );
+        if (daysToMaturity > 0) {
+          return `${daysToMaturity} days`;
+        } else {
+          return 'Matured';
+        }
       } else return undefined;
     },
 
@@ -203,7 +218,7 @@ q-card
     //- timeline
     Timeline(
       v-if='isBuybackNFT',
-      :startDate='new Date(Number(assetData.data.saleopen) * 1000)',
+      :startDate='saleopenDate',
       :maturityDate='maturityDate',
       :expiryDate='expiryDate'
     )
@@ -219,7 +234,7 @@ q-card
           .column.content-end.items-end
             | Days to Maturity
             .text-subtitle1
-              | 30 days
+              | {{ daysToMaturity }}
       .row.justify-between.q-mt-lg
         .col-3
           q-input(
@@ -234,14 +249,13 @@ q-card
           .column.content-end.items-end
             | Total
             .text-subtitle1
-              | {{ quantity * salePrice }} LEGAL
+              | {{ priceStr }}
 
       q-btn.full-width.q-mt-lg(
         @click='tryBuySale()',
         label='BUY',
         color='primary'
       )
-
     //- when owning, show price, days to maturity, with sell button
 
     //- when mature, show claim button

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, onMounted, computed, ref } from 'vue';
+import { onMounted, computed } from 'vue';
 import SingleGalleryView from 'src/components/gallery/SingleGalleryView.vue';
 import { useStore } from 'src/store';
 export default {
