@@ -181,7 +181,10 @@ q-page.fit.row.wrap.justify-center
   q-form(@submit='tryBuyTokens')
     .fit.row.wrap.justify-center
       q-card.buytokens-card(v-if='paymentStatus === "checkout"')
-        h3.text-grey-8 Buy LEGAL
+        q-card-section 
+          .text-h3.text-grey-8
+            | Buy LEGAL
+
         q-card-section
           | I want to spend
         q-card-section
@@ -261,7 +264,7 @@ q-page.fit.row.wrap.justify-center
 <style lang="sass" scoped>
 .buytokens-card
   width: 100%
-  max-width: 30rem
+  max-width: 40rem
   height: 100%
-  max-height: 60rem
+  max-height: 50rem
 </style>
