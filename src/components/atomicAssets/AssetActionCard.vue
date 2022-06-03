@@ -55,20 +55,28 @@ export default defineComponent({
       return !!this.assetData?.data['expiry date'];
     },
 
-    salePrice(): number {
-      console.log(this.saleData?.price);
-      return Number(this.saleData?.price) || 0;
-    },
-
-    priceStr(): string {
-      if (this.saleData?.price !== undefined) {
+    priceAsset() {
+      if (this.saleData?.price) {
         return Asset.fromUnits(
           Int64.from(this.saleData?.price?.amount),
           Asset.Symbol.fromParts(
             this.saleData?.price?.token_symbol,
             this.saleData?.price?.token_precision
           )
-        ).toString();
+        );
+      } else {
+        return Asset.from('0.00 LEGAL');
+      }
+    },
+
+    salePrice(): number {
+      console.log('price', this.saleData?.price);
+      return this.priceAsset.value || 0;
+    },
+
+    priceStr(): string {
+      if (this.saleData?.price !== undefined) {
+        return this.priceAsset.toString();
       } else {
         return 'loading';
       }
@@ -158,7 +166,7 @@ export default defineComponent({
 q-card 
   q-card-section
     //- name
-    .text-bold
+    .text-bold.text-h6
       | {{ assetData?.data?.name }}
     //- by
     .row.justify-between.items-center.fit.wrap
@@ -195,13 +203,15 @@ q-card
             v-model='quantity',
             type='number',
             label='Quantity',
+            disable,
+            readonly,
             outlined
           )
         .col-6
           .column.content-end.items-end
             | Total
             .text-subtitle1
-              | {{ quantity * price }} LEGAL
+              | {{ quantity * salePrice }} LEGAL
 
       q-btn.full-width.q-mt-lg(
         @click='tryBuySale()',
@@ -213,10 +223,10 @@ q-card
 
     //- when mature, show claim button
 
-    | owned: {{ isOwned }},
-    | for sale: {{ isForSale }},
-    | is buybacknft: {{ isBuybackNFT }},
-    | is owned by LC: {{ isOwnedByLC }}
+    //- | owned: {{ isOwned }},
+    //- | for sale: {{ isForSale }},
+    //- | is buybacknft: {{ isBuybackNFT }},
+    //- | is owned by LC: {{ isOwnedByLC }}
 </template>
 
 <style lang="sass"></style>

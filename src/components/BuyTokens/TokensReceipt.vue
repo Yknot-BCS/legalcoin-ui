@@ -120,8 +120,11 @@ export default defineComponent({
 //- | Receipt for
 //-     | Buying of LEGAL
 //- If payment has succeeded
-q-card(v-if='paymentStatus === "success"')
-  h5 Transaction Summary
+q-card(v-if='paymentStatus === "success"').receipt-card
+
+  q-card-section 
+    .text-h5.text-grey-8 
+      | Transaction Summary
 
   q-card-section.row
     .col-2.text-center
@@ -191,4 +194,10 @@ q-card(v-if='paymentStatus === "failure"')
     )
 </template>
 
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+.receipt-card
+  width: 100%
+  max-width: 30rem
+  height: 100%
+  max-height: 30rem
+</style>

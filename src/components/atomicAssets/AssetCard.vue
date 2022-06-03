@@ -37,57 +37,37 @@ export default defineComponent({
 
 <template lang="pug">
 //- Desktop view
-.row.justify-center.page-background(v-if='$q.screen.gt.md')
-  .col-12.page-view.q-py-lg
-    .row.q-pa-md.justify-center
-      .col-xs-12.col-sm-12.col-md-6
-        q-card
-          q-card-section
-            .text-h5 {{ assetData?.collection?.collection_name }}
-            .text-subtitle1.text-weight-light {{ 'by ' + assetData?.owner }}
-          q-card-section
-            q-img.asset-img(:src='assetData?.data?.img')
-          q-card-section
-            .row
-              .col-6
-                .row.q-py-sm.q-px-md
-                  .col-12.text-subtitle2 PRICE: 500 LegalCoin(LCP)
-              .col-6
-                q-btn.full-width(
-                  v-if='1',
-                  flat,
-                  color='primary',
-                  label='Request Buyback'
-                )
-                  q-icon.flip-horizontal.q-px-md(name='reply')
-          q-card-section
-            .container
-              Timeline(
-                startDate='2021/04/30',
-                maturityDate='2024/04/30',
-                expiryDate='2027/04/30'
-              )
-          q-card-section
-            q-tabs.text-grey-8(
-              v-model='tab',
-              dense,
-              align='left',
-              active-color='primary',
-              :breakpoint='0'
-            )
-              q-tab(name='description', label='Description')
-              q-tab(name='details', label='Details')
-
-            q-tab-panels(v-model='tab', animated)
-              q-tab-panel(name='description')
-                q-card(flat)
-                  q-card-section
-                    .text-h6 Description:
-                  q-separator(inset)
-                q-card-section
-                  Description(description='Some description here')
-              q-tab-panel(name='details')
-                DetailsTable(:assetData='assetData')
+.row.justify-center(v-if='$q.screen.gt.md')
+  .col-12.page-view.q-py-lg.asset-container
+    .row.q-pa-sm
+      //- Image
+      q-card.col-12.q-my-sm
+        //- TODO replace with placeholder
+        q-img.asset-img(
+          :src='assetImg',
+          placeholder-src='https://placeimg.com/500/300/nature'
+        )
+      //- Actions
+      AssetActionCard.col-12.q-my-sm(
+        :assetData='assetData',
+        :saleData='saleData'
+      )
+      //- Details and Description
+      q-card.col-12.q-my-sm
+        q-tabs.text-grey-8(
+          v-model='tab',
+          dense,
+          align='left',
+          active-color='primary',
+          :breakpoint='0'
+        )
+          q-tab(name='description', label='Description')
+          q-tab(name='details', label='Details')
+        q-tab-panels(v-model='tab', animated)
+          q-tab-panel(name='description')
+            Description(:description='assetData.data.description')
+          q-tab-panel(name='details')
+            DetailsTable(:assetData='assetData')
 
 //- Mobile view
 .row.justify-center(v-else)
@@ -120,7 +100,7 @@ export default defineComponent({
 
         q-tab-panels(v-model='tab', animated)
           q-tab-panel(name='description')
-            Description(description='Some description here')
+            Description(:description='assetData?.data?.description')
           q-tab-panel(name='details')
             DetailsTable(:assetData='assetData')
 </template>
@@ -137,4 +117,7 @@ export default defineComponent({
 // .container
 //   border: 1px solid $grey-6
 //   border-radius: 13px
+.asset-container
+  width: 100%
+  max-width: 30rem
 </style>

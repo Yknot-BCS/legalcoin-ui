@@ -93,9 +93,10 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-page
-  q-card(v-if='cryptoIsAuthenticated')
-    h3 Transaction History
+q-page.fit.row.wrap.justify-center
+  q-card.history-card(v-if='cryptoIsAuthenticated')
+    .text-h4.text-grey-8
+      | Transaction History
     q-separator
 
     q-card-section(v-if='transactions.length > 0')
@@ -121,3 +122,11 @@ q-page
   q-card(v-else)
     h3 You must be logged in to view this page
 </template>
+
+<style lang="sass" scoped>
+.history-card
+  width: 100%
+  max-width: 30rem
+  height: 100%
+  max-height: 30rem
+</style>

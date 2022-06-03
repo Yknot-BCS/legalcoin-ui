@@ -177,15 +177,16 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-page
+q-page.fit.row.wrap.justify-center
   q-form(@submit='tryBuyTokens')
     .fit.row.wrap.justify-center
       q-card.buytokens-card(v-if='paymentStatus === "checkout"')
-        h3 Buy LEGAL
+        h3.text-grey-8 Buy LEGAL
         q-card-section
           | I want to spend
         q-card-section
           q-input(
+            outlined,
             label='Amount',
             placeholder='0.00',
             v-model='spendAmount',
@@ -198,6 +199,7 @@ q-page
           | I want to buy
         q-card-section
           q-input(
+            outlined,
             label='Amount',
             placeholder='0.00',
             v-model='buyAmount',
@@ -212,7 +214,7 @@ q-page
           //- Dropdown with price, network fee and processing fee
           q-expansion-item(
             expand-separator,
-            :label='`You get ${displayBuyAmount} LEGAL for £ ${this.spendAmount}`'
+            :label='`You get ${displayBuyAmount} LEGAL for £ ${spendAmount}`'
           ) 
             //- template(v-slot:header)                
             //-     q-card-section
@@ -259,7 +261,7 @@ q-page
 <style lang="sass" scoped>
 .buytokens-card
   width: 100%
-  max-width: 40rem
+  max-width: 30rem
   height: 100%
   max-height: 60rem
 </style>
