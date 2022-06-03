@@ -65,7 +65,7 @@ export default {
 
     .col-12.text-center
       span.q-mr-xs Forgot your password?
-      router-link(to='resetpassword') Reset Password
+      router-link(to='resetpasswordrequest') Reset Password
     .col-12.text-center
       span.q-mr-xs Need an account?
       router-link(to='register') Register
