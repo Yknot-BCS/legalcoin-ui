@@ -22,7 +22,10 @@ export default defineComponent({
   computed: {
     isLegalCoin() {
       // Check if the asset is from legalcoin
-      if (this.assetData?.collection?.author === process.env.AA_ACCOUNT) {
+      if (
+        this.assetData?.collection?.authorized_accounts[0] ===
+        process.env.AA_ACCOUNT
+      ) {
         return true;
       } else {
         return false;

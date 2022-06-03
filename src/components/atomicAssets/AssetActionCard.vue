@@ -5,6 +5,7 @@ import { ISale } from 'atomicmarket/build/API/Explorer/Objects';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
 import { mapGetters, mapActions } from 'vuex';
 import { Asset, Int64 } from '@greymass/eosio';
+import { date } from 'quasar';
 
 export default defineComponent({
   name: 'AssetActionCard',
@@ -52,7 +53,28 @@ export default defineComponent({
 
     isBuybackNFT() {
       // TODO update with new field names
-      return !!this.assetData?.data['expiry date'];
+      return !!this.assetData?.data['saleopen'];
+    },
+
+    maturityDate() {
+      if (this.isBuybackNFT) {
+        let saleopenDate = new Date(
+          Number(this.assetData.data.saleopen) * 1000
+        );
+        let maturityDate = date.addToDate(saleopenDate, {
+          days: this.assetData?.data?.term as number
+        });
+        return maturityDate;
+      } else return undefined;
+    },
+
+    expiryDate() {
+      if (this.isBuybackNFT) {
+        let expiryDate = date.addToDate(this.maturityDate, {
+          days: this.assetData?.data?.expiry as number
+        });
+        return expiryDate;
+      } else return undefined;
     },
 
     priceAsset() {
@@ -179,10 +201,11 @@ q-card
       .col-2.row.justify-center
         q-icon(name='share', size='sm')
     //- timeline
-    Timeline.div(v-if='isBuybackNFT')(
-      startDate='2021/04/30',
-      maturityDate='2024/04/30',
-      expiryDate='2027/04/30'
+    Timeline(
+      v-if='isBuybackNFT',
+      :startDate='new Date(Number(assetData.data.saleopen) * 1000)',
+      :maturityDate='maturityDate',
+      :expiryDate='expiryDate'
     )
     //- when buying, show price, days to maturity, quantity, and total cost, with buy button
     .div(v-if='isForSale')
@@ -223,10 +246,10 @@ q-card
 
     //- when mature, show claim button
 
-    //- | owned: {{ isOwned }},
-    //- | for sale: {{ isForSale }},
-    //- | is buybacknft: {{ isBuybackNFT }},
-    //- | is owned by LC: {{ isOwnedByLC }}
+    | owned: {{ isOwned }},
+    | for sale: {{ isForSale }},
+    | is buybacknft: {{ isBuybackNFT }},
+    | is owned by LC: {{ isOwnedByLC }}
 </template>
 
 <style lang="sass"></style>
