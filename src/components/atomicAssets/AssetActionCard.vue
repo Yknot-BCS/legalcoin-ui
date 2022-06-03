@@ -6,6 +6,7 @@ import Timeline from 'src/components/atomicAssets/TimeLine.vue';
 import { mapGetters, mapActions } from 'vuex';
 import { Asset, Int64 } from '@greymass/eosio';
 import { date } from 'quasar';
+import { copyToClipboard } from 'quasar';
 
 export default defineComponent({
   name: 'AssetActionCard',
@@ -194,6 +195,17 @@ export default defineComponent({
           });
         }
       }
+    },
+
+    shareURL() {
+      void copyToClipboard(window.location.origin + this.$route.path).then(
+        () => {
+          this.$q.notify({
+            color: 'positive',
+            message: 'Copied URL to clipboard'
+          });
+        }
+      );
     }
   }
 });
@@ -214,7 +226,7 @@ q-card
       //- expected yield?
       //- share icon
       .col-2.row.justify-center
-        q-icon(name='share', size='sm')
+        q-icon(name='share', size='sm', @click='shareURL')
     //- timeline
     Timeline(
       v-if='isBuybackNFT',
