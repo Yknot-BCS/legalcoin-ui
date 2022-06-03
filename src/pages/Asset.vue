@@ -84,8 +84,14 @@ export default defineComponent({
 <template lang="pug">
 .div(v-if='isLegalCoin')
   AssetCard(:assetData='assetData', :saleData='saleData')
-q-card(v-else)
-  | This is not a LegalCoin asset
+q-page.row.fit.wrap.justify-center(v-else)
+  q-card.warn-card.row.justify-center
+    | This is not a LegalCoin asset
 </template>
 
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+.warn-card
+  width: 100%
+  max-width: 300px
+  height: 100%
+</style>
