@@ -18,10 +18,11 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-page
-  q-card
+q-page.fit.row.wrap.justify-center
+  q-card.settings-card
     q-card-section
-      | My Account Settings
+      .text-h6.text-grey-8
+        | My Account Settings
     q-card-section
       .row.justify-start.items-center
         | {{ account.profile.name }} {{ account.profile.surname }}
@@ -58,3 +59,11 @@ q-page
       link-crypto-account
     q-separator
 </template>
+
+<style lang="sass" scoped>
+.settings-card
+  width: 100%
+  max-width: 30rem
+  height: 100%
+  max-height: 30rem
+</style>
