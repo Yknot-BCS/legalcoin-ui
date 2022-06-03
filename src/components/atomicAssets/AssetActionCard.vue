@@ -87,8 +87,13 @@ export default defineComponent({
         );
         if (daysToMaturity > 0) {
           return `${daysToMaturity} days`;
-        } else {
+        } else if (
+          Date.now() > this.maturityDate.getTime() &&
+          Date.now() < this.expiryDate.getTime()
+        ) {
           return 'Matured';
+        } else {
+          return 'Expired';
         }
       } else return undefined;
     },
