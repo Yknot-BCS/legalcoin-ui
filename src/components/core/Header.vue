@@ -51,10 +51,14 @@ q-toolbar.row.q-py-sm.q-px-md
     //- q-btn(v-if="isLoggedIn" @click="logout") Logout
     //- q-btn(v-if="!isLoggedIn" to="login" flat) Login
     //- q-btn(v-if="!isLoggedIn" to="register" outline) Register
-    q-btn(dense, outline, v-if='!isLoggedIn', :to='{ name: "login" }')
-      q-avatar.q-mr-sm(rounded, size='30px')
+    div(v-if='$q.screen.lt.md')
+      q-btn(flat, round, v-if='!isLoggedIn', dense, :to='{ name: "login" }')
         q-icon.material-icons-outlined(name='account_circle')
-      .q-mr-sm Sign In
+    div(v-if='$q.screen.gt.sm')
+      q-btn(dense, outline, v-if='!isLoggedIn', :to='{ name: "login" }')
+        q-avatar.q-mr-sm(rounded, size='30px')
+          q-icon.material-icons-outlined(name='account_circle')
+        .q-mr-sm Sign In
     q-btn(dense, flat, round, size='md', no-wrap, v-if='isLoggedIn')
       // TODO Change avatar when logged in
       q-avatar(rounded, size='30px')

@@ -33,6 +33,10 @@ export default {
 </script>
 
 <template lang="pug">
+//- Mobile
+//- q-btn(flat, round, dense, icon='search', v-if='$q.screen.lt.md')
+
+//- Desktop
 q-select.toolbar-select(
   ref='search',
   dense,
