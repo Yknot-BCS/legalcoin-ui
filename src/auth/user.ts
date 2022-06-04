@@ -84,7 +84,6 @@ export async function getProfile() {
 }
 
 export async function passwordResetRequest(userEmail: Ref<string>) {
-  // Sign in
   await api.accounts.mutation(`
     {
       passwordResetRequest(
@@ -93,5 +92,21 @@ export async function passwordResetRequest(userEmail: Ref<string>) {
         }
       )
     }
+  `);
+}
+
+export async function passwordResetNew(
+  resetToken: string,
+  newPassword: string
+) {
+  await api.accounts.mutation(`
+  {
+    passwordResetNew(
+      input:{
+        resetToken: "${resetToken}"
+        newPassword: "${newPassword}"
+      }
+    )
+  }
   `);
 }

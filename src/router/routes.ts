@@ -31,13 +31,35 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: '/resetpasswordrequest',
+    path: '/passwordresetrequest',
     component: () => import('layouts/Auth.vue'),
     children: [
       {
         path: '',
-        name: 'resetpasswordrequest',
+        name: 'passwordresetrequest',
         component: () => import('pages/auth/PasswordResetRequest.vue')
+      }
+    ]
+  },
+  {
+    path: '/passwordresetsent',
+    component: () => import('layouts/Auth.vue'),
+    children: [
+      {
+        path: '',
+        name: 'passwordresetsent',
+        component: () => import('pages/auth/PasswordResetSent.vue')
+      }
+    ]
+  },
+  {
+    path: '/passwordresetnew',
+    component: () => import('layouts/Auth.vue'),
+    children: [
+      {
+        path: '',
+        name: 'passwordresetnew',
+        component: () => import('pages/auth/PasswordResetNew.vue')
       }
     ]
   },
