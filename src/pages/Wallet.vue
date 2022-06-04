@@ -35,7 +35,8 @@ export default defineComponent({
 q-page.fit.row.wrap.justify-center
   q-card.wallet-card
     q-card-section
-      | My Balance
+      .text-h6.text-grey-8
+        | My Balance
     q-card-section
       .text-bold 
         | {{ balance }} LEGAL
@@ -49,7 +50,8 @@ q-page.fit.row.wrap.justify-center
         | xxx (LEGAL)
     q-separator.q-mx-md
     q-card-section
-      | Options
+      .text-h6.text-grey-8
+        | Options
       .fit.row.wrap.justify-center.q-mt-sm
         .row.col-6
           q-btn.col.q-mx-sm.q-mt-sm(

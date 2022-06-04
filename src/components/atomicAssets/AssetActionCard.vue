@@ -5,6 +5,8 @@ import { ISale } from 'atomicmarket/build/API/Explorer/Objects';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
 import { mapGetters, mapActions } from 'vuex';
 import { Asset, Int64 } from '@greymass/eosio';
+import { date } from 'quasar';
+import { copyToClipboard } from 'quasar';
 
 export default defineComponent({
   name: 'AssetActionCard',
@@ -22,7 +24,6 @@ export default defineComponent({
   setup() {
     return {
       quantity: ref(1),
-      price: ref(500),
       transaction: null
     };
   },
@@ -52,7 +53,49 @@ export default defineComponent({
 
     isBuybackNFT() {
       // TODO update with new field names
-      return !!this.assetData?.data['expiry date'];
+      return !!this.assetData?.data['saleopen'];
+    },
+
+    saleopenDate() {
+      return new Date(Number(this.assetData.data.saleopen) * 1000);
+    },
+
+    maturityDate() {
+      if (this.isBuybackNFT) {
+        let maturityDate = date.addToDate(this.saleopenDate, {
+          days: this.assetData?.data?.term as number
+        });
+        return maturityDate;
+      } else return undefined;
+    },
+
+    expiryDate() {
+      if (this.isBuybackNFT) {
+        let expiryDate = date.addToDate(this.maturityDate, {
+          days: this.assetData?.data?.expiry as number
+        });
+        return expiryDate;
+      } else return undefined;
+    },
+
+    daysToMaturity() {
+      if (this.isBuybackNFT) {
+        let daysToMaturity = date.getDateDiff(
+          this.maturityDate,
+          Date.now(),
+          'days'
+        );
+        if (daysToMaturity > 0) {
+          return `${daysToMaturity} days`;
+        } else if (
+          Date.now() > this.maturityDate.getTime() &&
+          Date.now() < this.expiryDate.getTime()
+        ) {
+          return 'Matured';
+        } else {
+          return 'Expired';
+        }
+      } else return undefined;
     },
 
     priceAsset() {
@@ -157,6 +200,17 @@ export default defineComponent({
           });
         }
       }
+    },
+
+    shareURL() {
+      void copyToClipboard(window.location.origin + this.$route.path).then(
+        () => {
+          this.$q.notify({
+            color: 'positive',
+            message: 'Copied URL to clipboard'
+          });
+        }
+      );
     }
   }
 });
@@ -177,12 +231,13 @@ q-card
       //- expected yield?
       //- share icon
       .col-2.row.justify-center
-        q-icon(name='share', size='sm')
+        q-icon(name='share', size='sm', @click='shareURL')
     //- timeline
-    Timeline.div(v-if='isBuybackNFT')(
-      startDate='2021/04/30',
-      maturityDate='2024/04/30',
-      expiryDate='2027/04/30'
+    Timeline(
+      v-if='isBuybackNFT',
+      :startDate='saleopenDate',
+      :maturityDate='maturityDate',
+      :expiryDate='expiryDate'
     )
     //- when buying, show price, days to maturity, quantity, and total cost, with buy button
     .div(v-if='isForSale')
@@ -196,7 +251,7 @@ q-card
           .column.content-end.items-end
             | Days to Maturity
             .text-subtitle1
-              | 30 days
+              | {{ daysToMaturity }}
       .row.justify-between.q-mt-lg
         .col-3
           q-input(
@@ -211,22 +266,21 @@ q-card
           .column.content-end.items-end
             | Total
             .text-subtitle1
-              | {{ quantity * salePrice }} LEGAL
+              | {{ priceStr }}
 
       q-btn.full-width.q-mt-lg(
         @click='tryBuySale()',
         label='BUY',
         color='primary'
       )
-
     //- when owning, show price, days to maturity, with sell button
 
     //- when mature, show claim button
 
-    //- | owned: {{ isOwned }},
-    //- | for sale: {{ isForSale }},
-    //- | is buybacknft: {{ isBuybackNFT }},
-    //- | is owned by LC: {{ isOwnedByLC }}
+    | owned: {{ isOwned }},
+    | for sale: {{ isForSale }},
+    | is buybacknft: {{ isBuybackNFT }},
+    | is owned by LC: {{ isOwnedByLC }}
 </template>
 
 <style lang="sass"></style>

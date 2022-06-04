@@ -29,21 +29,21 @@ export function state(): BuyStateInterface {
   return {
     filter: 'All',
     assetFilter: {
-      owner: 'fuzzytestnet',
+      owner: process.env.AA_ACCOUNT,
       page: 1,
       order: 'desc',
       limit: 6,
       sort: 'created'
     } as unknown,
     collectionFilter: {
-      author: 'thelawisgood',
+      authorized_account: process.env.AA_ACCOUNT,
       page: 1,
       order: 'desc',
       limit: 12,
       sort: 'created'
     } as unknown,
     templateFilter: {
-      authorized_account: 'fuzzytestnet',
+      authorized_account: process.env.AA_ACCOUNT,
       page: 1,
       order: 'desc',
       limit: 12,

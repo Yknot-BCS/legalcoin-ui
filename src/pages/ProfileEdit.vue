@@ -22,8 +22,8 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-page
-  q-card
+q-page.fit.row.wrap.justify-center
+  q-card.edit-card
     q-card.bg-grey-4
       q-card-section.text-subtitle1
         | Edit My Profile
@@ -74,3 +74,11 @@ q-page
       .row.justify-center.items-center
         q-btn(@click='saveProfile', color='primary', label='Save')
 </template>
+
+<style lang="sass" scoped>
+.edit-card
+  width: 100%
+  max-width: 30rem
+  height: 100%
+  max-height: 40rem
+</style>

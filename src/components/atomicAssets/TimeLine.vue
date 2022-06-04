@@ -1,19 +1,21 @@
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue';
+import { date } from 'quasar';
+
 export default defineComponent({
   name: 'Timeline',
   components: {},
   props: {
     startDate: {
-      type: String,
+      type: Date,
       required: true
     },
     maturityDate: {
-      type: String,
+      type: Date,
       required: true
     },
     expiryDate: {
-      type: String,
+      type: Date,
       required: true
     }
   },
@@ -54,6 +56,17 @@ export default defineComponent({
       fnMarkerLabel: (val: number) =>
         val < 2 ? `${50 * val}%` : `${200 - 50 * val}%`
     };
+  },
+  computed: {
+    startDateDisplay() {
+      return date.formatDate(this.startDate, 'DD MMM YYYY');
+    },
+    maturityDateDisplay() {
+      return date.formatDate(this.maturityDate, 'DD MMM YYYY');
+    },
+    expiryDateDisplay() {
+      return date.formatDate(this.expiryDate, 'DD MMM YYYY');
+    }
   }
 });
 </script>
@@ -80,7 +93,7 @@ export default defineComponent({
           :class='markerMap[val].classes',
           :style='markerMap[val].style'
         ) {{ fnMarkerLabel(val) }}
-        .row.items-center(
+        .row.fit.items-center(
           v-for='val in [0, 2, 4]',
           :key='val',
           :class='markerMap[val].classes',
@@ -91,9 +104,9 @@ export default defineComponent({
           .col-12.text-center(v-else-if='val == 2') Maturity
           .col-12.text-center(v-else-if='val == 4') Expiry
 
-          .col-12.text-center(v-if='val == 0') {{ start }}
-          .col-12.text-center(v-else-if='val == 2') {{ maturity }}
-          .col-12.text-center(v-else-if='val == 4') {{ expiry }}
+          .col-12.text-center(v-if='val == 0') {{ startDateDisplay }}
+          .col-12.text-center(v-else-if='val == 2') {{ maturityDateDisplay }}
+          .col-12.text-center(v-else-if='val == 4') {{ expiryDateDisplay }}
 </template>
 
 <style lang="sass" scoped></style>
