@@ -1,8 +1,9 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, ref, computed } from 'vue';
 import { atomic_api } from 'src/api/atomic_assets';
 import { GalleryCard } from 'src/types';
 import GalleryView from 'src/components/gallery/GalleryView.vue';
+import { useStore } from 'src/store';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -15,31 +16,39 @@ export default defineComponent({
     const discoverData = ref<GalleryCard[]>([]);
     const collectionData = ref<GalleryCard[]>([]);
     const templateData = ref<GalleryCard[]>([]);
+    const store = useStore();
+
+    const accountName = computed(
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      () => store.getters['account/cryptoAccountName'] as string
+    );
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    console.log(accountName);
     async function getData() {
       const myGalleryOptions = {
-        owner: 'waxgamewax12',
+        owner: accountName.value,
         page: 1,
         order: 'desc',
         limit: 6,
         sort: 'created'
       };
       const DiscoverOptions = {
-        collection_blacklist:
-          'bridgebridge,testkogs2222,testkogs3333,testkogstest,mutantwarrio,mutantstest2,33testuplift,44testuplift,series2heros,horrorhorror,horrorstest2,horrorstest3,horrorstest4,horrorstest5,horrorstestx,btcotest2222,btcotest3333,btcotest1234,shynies5test,shynies4test,shyniestest2,shyniestest1,btco22222222,artvndngtst1,elementals11,mteora111111',
+        collection_blacklist: 'fuzzytestnet',
         page: 1,
         order: 'desc',
         limit: 12,
         sort: 'created'
       };
       const CollectionOptions = {
-        author: 'pokemontest1',
+        author: 'thelawisgood',
         page: 1,
         order: 'desc',
         limit: 12,
         sort: 'created'
       };
       const TemplateOptions = {
-        authorized_account: 'waxgamewax12',
+        authorized_account: 'fuzzytestnet',
         page: 1,
         order: 'desc',
         limit: 12,
@@ -126,12 +135,12 @@ export default defineComponent({
   .col-12
     .text-h3.text-weight-bold.q-pa-lg Gallery
   .col-6
-    .q-px-md.text-h6.text-grey-8 My Gallery 
+    .q-px-md.text-h6.text-grey-8 My Gallery
 
   .col-6
-    q-btn.q-px-md.float-right.text-grey-8(label="view all" flat)
+    q-btn.q-px-md.float-right.text-grey-8(label='view all', flat)
   .col-12
-    GalleryView(:data="myGalleryData" type="asset")
+    GalleryView(:data='myGalleryData', type='asset')
 
 .row.q-pa-md
   .col-12
@@ -140,17 +149,15 @@ export default defineComponent({
   .col-6.px.q-pt-md
     .q-px-md.text-h6.text-grey-8 NFT's
   .col-6
-    q-btn.q-px-md.float-right.text-grey-8(label="view all" flat)
+    q-btn.q-px-md.float-right.text-grey-8(label='view all', flat)
   q-seperator
   .col-12.q-px-sm
-    GalleryView(:data="discoverData" type="asset")
+    GalleryView(:data='discoverData', type='asset')
 
   .col-6.px.q-pt-md
     .q-px-md.text-h6.text-grey-8 Collections
   .col-6
-    q-btn.q-px-md.float-right.text-grey-8(label="view all" flat)
+    q-btn.q-px-md.float-right.text-grey-8(label='view all', flat)
   .col-12.q-px-sm
-    GalleryView(:data="collectionData" type="collection")
-    
-
+    GalleryView(:data='collectionData', type='collection')
 </template>

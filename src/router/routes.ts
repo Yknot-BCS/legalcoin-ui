@@ -31,13 +31,35 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: '/resetpassword',
+    path: '/passwordresetrequest',
     component: () => import('layouts/Auth.vue'),
     children: [
       {
         path: '',
-        name: 'resetpassword',
-        component: () => import('pages/auth/ResetPassword.vue')
+        name: 'passwordresetrequest',
+        component: () => import('pages/auth/PasswordResetRequest.vue')
+      }
+    ]
+  },
+  {
+    path: '/passwordresetsent',
+    component: () => import('layouts/Auth.vue'),
+    children: [
+      {
+        path: '',
+        name: 'passwordresetsent',
+        component: () => import('pages/auth/PasswordResetSent.vue')
+      }
+    ]
+  },
+  {
+    path: '/passwordresetnew',
+    component: () => import('layouts/Auth.vue'),
+    children: [
+      {
+        path: '',
+        name: 'passwordresetnew',
+        component: () => import('pages/auth/PasswordResetNew.vue')
       }
     ]
   },
@@ -46,6 +68,17 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', name: 'buy', component: () => import('pages/Buy.vue') }
+    ]
+  },
+  {
+    path: '/buy/collections',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'buyCollections',
+        component: () => import('pages/Collection.vue')
+      }
     ]
   },
   {
@@ -78,6 +111,22 @@ const routes: RouteRecordRaw[] = [
         path: '',
         name: 'profile',
         component: () => import('pages/Profile.vue')
+      },
+      {
+        path: 'edit',
+        name: 'editprofile',
+        component: () => import('pages/ProfileEdit.vue')
+      }
+    ]
+  },
+  {
+    path: '/settings/:profile',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'account-settings',
+        component: () => import('pages/ProfileSettings.vue')
       }
     ]
   },
@@ -121,13 +170,13 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: '/template/:collection/:template',
+    path: '/template/:collection_name/:template_id',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
         path: '',
         name: 'template',
-        component: () => import('pages/Template.vue')
+        component: () => import('pages/Asset.vue')
       }
     ]
   },

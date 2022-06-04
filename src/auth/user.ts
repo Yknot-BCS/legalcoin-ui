@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -34,22 +35,32 @@ export async function register(
   userPassword: Ref<string>
 ) {
   // Sign Up
-  const res = (await api.accounts.mutation(`
-      {
-        signUp(input: {
-          email: "${userEmail.value}",
+  await api.accounts.mutation(`
+    {
+      signUp(input: {
+        email: "${userEmail.value}",
+        password: "${userPassword.value}"
+        name: "${userName.value}"
+        surname: "${userSurname.value}"
+        receiveEmailNotifications: false
+      })
+      signIn(
+        input: {
+          email: "${userEmail.value}"
           password: "${userPassword.value}"
-          name: "${userName.value}"
-          surname: "${userSurname.value}"
-          receiveEmailNotifications: false
-        }) 
+        }
+      ) {
+        sessionLength
       }
-    `)) as any;
+    }
+  `);
 
   // Send Email Verification
-
-  // Sing In
-  console.log(res);
+  await api.accounts.mutation(`
+    mutation {
+      emailVerifyRequest
+    }
+  `);
 }
 
 export async function getProfile() {
@@ -70,4 +81,32 @@ export async function getProfile() {
       }
     }`)) as any;
   return res.profile;
+}
+
+export async function passwordResetRequest(userEmail: Ref<string>) {
+  await api.accounts.mutation(`
+    {
+      passwordResetRequest(
+        input: {
+          email: "${userEmail.value}"
+        }
+      )
+    }
+  `);
+}
+
+export async function passwordResetNew(
+  resetToken: string,
+  newPassword: string
+) {
+  await api.accounts.mutation(`
+  {
+    passwordResetNew(
+      input:{
+        resetToken: "${resetToken}"
+        newPassword: "${newPassword}"
+      }
+    )
+  }
+  `);
 }

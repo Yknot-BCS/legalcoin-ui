@@ -16,5 +16,5 @@ export default defineComponent({
 
 <template lang="pug">
 q-page
-  h1 Template {{collectionId+' / '+templateId}}
+  h1 Template {{ collectionId + ' / ' + templateId }}
 </template>

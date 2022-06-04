@@ -33,15 +33,27 @@ export default {
 </script>
 
 <template lang="pug">
-q-select.toolbar-select(ref='search' dense outlined label='Search items, collections and people...' v-model='searchText' :options='filteredOptions' @filter='filterFn')
+//- Mobile
+//- q-btn(flat, round, dense, icon='search', v-if='$q.screen.lt.md')
+
+//- Desktop
+q-select.toolbar-select(
+  ref='search',
+  dense,
+  outlined,
+  label='Search items, collections and people...',
+  v-model='searchText',
+  :options='filteredOptions',
+  @filter='filterFn'
+)
   template(v-slot:append)
-    q-icon.text-weight-bold(name='search' size='18px')
+    q-icon.text-weight-bold(name='search', size='18px')
 
   template(v-slot:no-option)
     q-item
       q-item-section
         .text-center
-          q-spinner-pie(color='primary' size='24px')
+          q-spinner-pie(color='primary', size='24px')
 
   //- template(v-slot:option='scope')
   //-   q-item(v-bind='scope.itemProps')

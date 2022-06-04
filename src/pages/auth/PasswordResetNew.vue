@@ -1,20 +1,26 @@
 <script lang="ts">
+import auth from 'src/auth';
 import { ref } from 'vue';
 import { requiredRule } from './inputRules';
+import { useRoute } from 'vue-router';
 
 export default {
   setup() {
+    const route = useRoute();
     const userPassword = ref('');
     function passwordMatchRule(val: string): string | boolean {
       return val === userPassword.value || 'Passwords do not match';
     }
     return {
-      userPassword: ref(''),
-      userRetypePassword: ref(''),
+      userPassword,
+      userPasswordConfirm: ref(''),
       requiredRule,
       passwordMatchRule,
-      onSubmit: () => {
-        console.log('submit');
+      onSubmit: async () => {
+        await auth.passwordResetNew(
+          route.query['resetToken'] as string,
+          userPassword.value
+        );
       }
     };
   }
@@ -34,7 +40,7 @@ export default {
       autocomplete='new-password'
     )
     q-input.col-12(
-      v-model='userRetypePassword',
+      v-model='userPasswordConfirm',
       type='password',
       label='Retype Password',
       lazy-rules,

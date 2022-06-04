@@ -63,5 +63,5 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-btn(v-if="cryptoIsAuthenticated" @click="linkConnectedAccount()") Link Connected Account
+q-btn(v-if='cryptoIsAuthenticated', @click='linkConnectedAccount()') Link Connected Account
 </template>

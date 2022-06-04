@@ -10,13 +10,7 @@ export default defineComponent({
   components: { TokensReceipt },
   setup() {
     const checkoutAPI = axios.create({
-      baseURL: process.env.DEVELOPMENT
-        ? 'https://api.sandbox.checkout.com'
-        : 'https://api.checkout.com',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: process.env.CKO_SECRET_KEY
-      }
+      baseURL: process.env.ISSUER_API_ENDPOINT
     });
     return {
       paymentStatus: ref(''),
@@ -87,7 +81,7 @@ export default defineComponent({
           value: this.spendAmount,
           symbol: process.env.LC_SYMBOL,
           precision: process.env.LC_PRECISION,
-          chain: !process.env.DEVELOPMENT ? 'TLOS' : 'TLOSTEST',
+          chain: !process.env.DEVELOPMENT ? 'TLOS' : 'WAXTEST',
           account: this.accountName as string,
           contract: process.env.LC_CONTRACT
         };
@@ -100,6 +94,7 @@ export default defineComponent({
       }
     },
     async goToPaygate() {
+      // FIXME the checkout.com secret key is not secure
       // get country code from user's IP
       const ip = await axios.get('https://api.ipify.org');
       const countryCode = await axios.get(
@@ -119,25 +114,25 @@ export default defineComponent({
             billing: {
               address: {
                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                country: countryCode?.data // TODO get from user
+                country: countryCode?.data
               }
             },
             customer: {
               name: `${this.$store.state.account.profile.name} ${this.$store.state.account.profile.surname}`,
-              email: this.$store.state.account.profile.email // TODO get from store
+              email: this.$store.state.account.profile.email
             },
-            success_url: `${process.env.APP_URL}wallet/buytokens/success`, // TODO get URL dynamically
-            failure_url: `${process.env.APP_URL}wallet/buytokens/failure`,
-            cancel_url: `${process.env.APP_URL}wallet/buytokens/checkout`
+            success_url: `${process.env.APP_URL}buytokens/success`,
+            failure_url: `${process.env.APP_URL}buytokens/failure`,
+            cancel_url: `${process.env.APP_URL}buytokens/checkout`
           };
+
           const response = await this.checkoutAPI.post(
-            '/hosted-payments',
+            '/hosted-payments/cko',
             body
           );
-          console.log(response);
 
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          let redirectUrl = response.data._links.redirect.href as string;
+          let redirectUrl = response.data.data._links.redirect.href as string;
           this.$q.loading.hide();
           window.location.href = redirectUrl;
         } else {
@@ -182,83 +177,88 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-page
-    q-form(@submit="tryBuyTokens")
-        .fit.row.wrap.justify-center
-            q-card(v-if="paymentStatus === 'checkout'").buytokens-card
-                h3 Buy LEGAL
-                q-card-section
-                    | I want to spend
-                q-card-section
-                    q-input(
-                        label="Amount"
-                        placeholder="0.00"
-                        v-model="spendAmount"
-                        :rules="[ val => val >= minimumAmount || `Value must be larger than ${minimumAmount}`, val => val >= 0 || 'Value must be positive']"
-                        @focus="changingBuyAmount = false"
-                        )
-                        template(v-slot:append)
-                        | GBP
-                q-card-section
-                    | I want to buy
-                q-card-section
-                    q-input(
-                        label="Amount"
-                        placeholder="0.00"
-                        v-model="buyAmount"
-                        @focus="changingBuyAmount = true"   
-                        :rules="[ val => val >= minimumAmount || `Value must be larger than ${minimumAmount}`, val => val >= 0 || 'Value must be positive']"
-                        )
-                        template(v-slot:append)
-                        | LEGAL
-                q-card-section
-                    | Summary
-                q-card-section
-                    //- Dropdown with price, network fee and processing fee
-                    q-expansion-item(
-                        expand-separator
-                        :label="`You get ${displayBuyAmount} LEGAL for £ ${this.spendAmount}`"                
-                        )  
-                        //- template(v-slot:header)                
-                        //-     q-card-section
-                        //-         p.col-12
-                        //-             | You get 
-                        //-             strong {{displayBuyAmount}} LEGAL
-                        //-             |  for  
-                        //-             strong &#163; {{spendAmount}}
-                
-        
-                        q-card
-                            q-card-section.fit.row.justify-between
-                                .col
-                                    | {{displayBuyAmount}} LEGAL @ &#163; {{ratio.toFixed(2)}}
-                                | &#163; {{displayAfterFee}}
-                        //- q-card
-                        //-     q-card-section
-                        //-         | Network Fee: 0.00 GBP
-                        q-card
-                            q-card-section.fit.row.justify-between
-                                .col
-                                    | Processing Fee: 
-                                    q-icon(name="fa-solid fa-circle-info")
-                                        q-tooltip(anchor="top middle" self="center middle" max-width="200px")
-                                            | This is charged by LegalCoin to cover the costs levied by payment providers such as Visa & Mastercard. This may vary based on the payment method you choose later.
-                                | as low as &#163; {{processingFee.toFixed(2)}}
-                q-card-section
-                    div(class="fit row wrap justify-center")
-                        q-btn(
-                            color="primary"
-                            label="Continue"
-                            type="submit"
-                            )
-                q-card-section
-                    | By continuing you agree to the terms and conditions
+q-page.fit.row.wrap.justify-center
+  q-form(@submit='tryBuyTokens')
+    .fit.row.wrap.justify-center
+      q-card.buytokens-card(v-if='paymentStatus === "checkout"')
+        q-card-section 
+          .text-h3.text-grey-8
+            | Buy LEGAL
 
-    
-    //- Show payment status
-    TokensReceipt(v-if="paymentStatus === 'success' || paymentStatus === 'failure'" :paymentStatus="paymentStatus" :paymentId="paymentId")
-    
+        q-card-section
+          | I want to spend
+        q-card-section
+          q-input(
+            outlined,
+            label='Amount',
+            placeholder='0.00',
+            v-model='spendAmount',
+            :rules='[(val) => val >= minimumAmount || `Value must be larger than ${minimumAmount}`, (val) => val >= 0 || "Value must be positive"]',
+            @focus='changingBuyAmount = false'
+          )
+            template(v-slot:append)
+            | GBP
+        q-card-section
+          | I want to buy
+        q-card-section
+          q-input(
+            outlined,
+            label='Amount',
+            placeholder='0.00',
+            v-model='buyAmount',
+            @focus='changingBuyAmount = true',
+            :rules='[(val) => val >= minimumAmount || `Value must be larger than ${minimumAmount}`, (val) => val >= 0 || "Value must be positive"]'
+          )
+            template(v-slot:append)
+            | LEGAL
+        q-card-section
+          | Summary
+        q-card-section
+          //- Dropdown with price, network fee and processing fee
+          q-expansion-item(
+            expand-separator,
+            :label='`You get ${displayBuyAmount} LEGAL for £ ${spendAmount}`'
+          ) 
+            //- template(v-slot:header)                
+            //-     q-card-section
+            //-         p.col-12
+            //-             | You get 
+            //-             strong {{displayBuyAmount}} LEGAL
+            //-             |  for  
+            //-             strong &#163; {{spendAmount}}
 
+            q-card
+              q-card-section.fit.row.justify-between
+                .col
+                  | {{ displayBuyAmount }} LEGAL @ &#163; {{ ratio.toFixed(2) }}
+                | &#163; {{ displayAfterFee }}
+            //- q-card
+            //-     q-card-section
+            //-         | Network Fee: 0.00 GBP
+            q-card
+              q-card-section.fit.row.justify-between
+                .col
+                  | Processing Fee:
+                  q-icon(name='fa-solid fa-circle-info')
+                    q-tooltip(
+                      anchor='top middle',
+                      self='center middle',
+                      max-width='200px'
+                    )
+                      | This is charged by LegalCoin to cover the costs levied by payment providers such as Visa & Mastercard. This may vary based on the payment method you choose later.
+                | as low as &#163; {{ processingFee.toFixed(2) }}
+        q-card-section
+          .fit.row.wrap.justify-center
+            q-btn(color='primary', label='Continue', type='submit')
+        q-card-section
+          | By continuing you agree to the terms and conditions
+
+  //- Show payment status
+  TokensReceipt(
+    v-if='paymentStatus === "success" || paymentStatus === "failure"',
+    :paymentStatus='paymentStatus',
+    :paymentId='paymentId'
+  )
 </template>
 
 <style lang="sass" scoped>
@@ -266,5 +266,5 @@ q-page
   width: 100%
   max-width: 40rem
   height: 100%
-  max-height: 60rem
+  max-height: 50rem
 </style>

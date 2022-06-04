@@ -25,8 +25,8 @@ q-page
     .col-12
       .text-h3.text-weight-bold.q-pa-lg Gallery
     .col-6
-      .q-px-md.text-h6.text-grey-8 My Gallery 
+      .q-px-md.text-h6.text-grey-8 My Gallery
 
     .col-6
-      q-btn.q-px-md.float-right.text-grey-8(label="view all" flat)
+      q-btn.q-px-md.float-right.text-grey-8(label='view all', flat)
 </template>

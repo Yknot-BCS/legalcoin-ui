@@ -36,18 +36,18 @@ export default defineComponent({
 
 <template lang="pug">
 q-card-section.row
-        .col-1
-            q-icon(name="fa-solid fa-credit-card")
-        .col-7
-            .col.text-bold
-                | {{action}} 
-            .col
-                .col
-                    | {{description}}
-                .col
-                    | {{displayDate}}
-        .col-4.text-bold
-            | {{amount}} LEGAL
+  .col-1
+    q-icon(name='fa-solid fa-credit-card')
+  .col-7
+    .col.text-bold
+      | {{ action }}
+    .col
+      .col
+        | {{ description }}
+      .col
+        | {{ displayDate }}
+  .col-4.text-bold
+    | {{ amount }} LEGAL
 q-separator
 </template>
 

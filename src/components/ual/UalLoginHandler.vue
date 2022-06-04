@@ -31,9 +31,15 @@ export default defineComponent({
 
 <template lang="pug">
 .text-white.q-my-xs
-  LoginHandlerDropdown(v-if='account' :account='account')
-  q-btn(v-else @click='showModal = true' label='Connect Wallet' outline dense)
-  WalletModal( v-model='showModal')
+  LoginHandlerDropdown(v-if='account', :account='account')
+  q-btn(
+    v-else,
+    @click='showModal = true',
+    label='Connect Wallet',
+    outline,
+    dense
+  )
+  WalletModal(v-model='showModal')
 </template>
 
 <style scoped lang="sass"></style>

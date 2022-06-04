@@ -48,15 +48,18 @@ export default {
 </script>
 
 <template lang="pug">
-q-layout( view="hHh lpR fff")
-  dev-banner(v-if="DEVELOPMENT")
+q-layout(view='hHh lpR fff')
+  dev-banner(v-if='DEVELOPMENT')
   Header
   q-page-container
     router-view
     q-separator
-  q-footer
-    Footer(v-if='$q.screen.gt.sm')
-    MobileTabsFooter(v-if='$q.screen.lt.md')
+  q-footer(v-if='$q.screen.gt.sm')
+    Footer
+  q-footer(reveal, v-if='$q.screen.lt.md')
+    MobileTabsFooter
+  q-page-scroller(position='bottom-right', :scroll-offset='150')
+    q-btn(fab, color='primary', icon='arrow_upward')
 </template>
 
 <style lang="sass" scoped>

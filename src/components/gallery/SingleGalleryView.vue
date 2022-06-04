@@ -3,7 +3,7 @@ import { defineComponent, PropType, computed } from 'vue';
 import { GalleryCard } from 'src/types';
 
 export default defineComponent({
-  name: 'GalleryView',
+  name: 'SingleGalleryView',
   components: {},
   props: {
     data: {
@@ -25,10 +25,7 @@ export default defineComponent({
 
 <template lang="pug">
 .row.q-col-gutter-md.q-pa-md
-  .col-xs-12.col-sm-6.col-md-4.col-lg-3.col-xl-2(
-    v-for='card in cards',
-    :key='card.id'
-  )
+  .col(v-for='card in cards', :key='card.id')
     q-card(v-if='cardType === "asset"')
       q-card-section
         .row

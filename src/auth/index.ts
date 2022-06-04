@@ -1,4 +1,10 @@
-import { login, register, getProfile } from './user';
+import {
+  login,
+  register,
+  getProfile,
+  passwordResetRequest,
+  passwordResetNew
+} from './user';
 import {
   setAccessToken,
   getAccessToken,
@@ -15,5 +21,7 @@ export default {
   getAccessToken,
   getSessionExpiry,
   setSessionExpiry,
-  isLoggedIn
+  isLoggedIn,
+  passwordResetRequest,
+  passwordResetNew
 };

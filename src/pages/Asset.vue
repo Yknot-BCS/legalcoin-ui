@@ -1,8 +1,8 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref, computed } from 'vue';
-import { atomic_api } from 'src/api/atomic_assets';
+import { defineComponent, ref } from 'vue';
+import { atomic_api, atomic_market_api } from 'src/api/atomic_assets';
 import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
-import { useRoute } from 'vue-router';
+import { ISale } from 'atomicmarket/build/API/Explorer/Objects';
 import AssetCard from 'src/components/atomicAssets/AssetCard.vue';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -11,27 +11,87 @@ export default defineComponent({
   name: 'Asset',
   components: { AssetCard },
   setup() {
-    //const data = await atomic_api.getAsset('1099511627786');
-    const route = useRoute();
-    const assetId = computed(() => route.params.asset);
     const assetData = ref<IAsset>(new Object({ data: { img: '' } }) as IAsset);
-    async function getAssetData() {
-      assetData.value = await atomic_api.getAsset(assetId.value as string);
-    }
-    onMounted(async () => {
-      void (await getAssetData());
-    });
+    const saleData = ref<ISale>(new Object({}) as ISale);
+
     return {
       assetData,
-      assetId
+      saleData
     };
+  },
+  computed: {
+    isLegalCoin() {
+      // Check if the asset is from legalcoin
+      if (
+        this.assetData?.collection?.authorized_accounts[0] ===
+        process.env.AA_ACCOUNT
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  },
+  methods: {
+    async getAssetData() {
+      this.assetData = await atomic_api.getAsset(
+        this.$route.params.asset as string
+      );
+    },
+
+    async getSaleData() {
+      let saleFilter = {
+        asset_id:
+          this.$route.params.asset === undefined
+            ? ''
+            : this.$route.params.asset,
+        page: 1,
+        order: 'asc',
+        limit: 6,
+        collection_name:
+          this.$route.params.collection_name === undefined
+            ? ''
+            : (this.$route.params.collection_name as string),
+        template_id:
+          this.$route.params.template_id === undefined
+            ? ''
+            : this.$route.params.template_id,
+        state: 1,
+        seller:
+          this.$route.query.seller === undefined ? '' : this.$route.query.seller
+      } as unknown;
+      this.saleData = (await atomic_market_api.getSales(saleFilter))[0];
+    }
+  },
+  async mounted() {
+    console.log('Asset mounted');
+    // check if asset of template
+    if (this.$route.params.asset) {
+      console.log('Is Asset');
+      await this.getAssetData();
+      await this.getSaleData();
+    }
+
+    // TODO figure out how to handle templates
+    if (this.$route.params.template) {
+      console.log('Is Template');
+      await this.getSaleData();
+    }
   }
 });
 </script>
 
 <template lang="pug">
-AssetCard(:assetData="assetData")
-
+.div(v-if='isLegalCoin')
+  AssetCard(:assetData='assetData', :saleData='saleData')
+q-page.row.fit.wrap.justify-center(v-else)
+  q-card.warn-card.row.justify-center
+    | This is not a LegalCoin asset
 </template>
 
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+.warn-card
+  width: 100%
+  max-width: 300px
+  height: 100%
+</style>

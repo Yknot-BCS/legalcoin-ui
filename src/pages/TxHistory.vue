@@ -3,6 +3,7 @@ import { defineComponent, ref } from 'vue';
 import axios from 'axios';
 import { mapGetters } from 'vuex';
 import TxCard from 'src/components/txhistory/TxCard.vue';
+import crypto from 'crypto';
 
 // define a type with the properties of the TxCard component
 export interface TxCardProps {
@@ -42,18 +43,23 @@ export default defineComponent({
   },
   methods: {
     async getBuyOrders() {
+      const hash = crypto
+        .createHmac('sha256', process.env.ISSUER_SECRET)
+        .update(this.accountName)
+        .digest('hex');
+
       const issuerAPI = axios.create({
         baseURL: process.env.ISSUER_API_ENDPOINT,
         headers: {
           'Content-Type': 'application/json',
-          Authorization: this.accountName as string //FIXME this is a hack
+          Authorization: hash
         }
       });
 
       const response = await issuerAPI.get(
         `getorders/${<string>this.accountName}`
       );
-      console.log(response.data);
+      //   console.log(response.data);
 
       /* eslint-disable */
       let rawOrders = response.data[0];
@@ -61,7 +67,7 @@ export default defineComponent({
 
       let buyOrders: TxCardProps[] = [];
       for (const order of rawOrders) {
-        console.log(order);
+        // console.log(order);
         buyOrders.push({
           action: 'Buy LEGAL',
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -71,7 +77,7 @@ export default defineComponent({
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           amount: order.item_price as number
         });
-        console.log(buyOrders);
+        // console.log(buyOrders);
       }
       // sort buyOrders by date descending
       buyOrders.sort((a, b) => {
@@ -87,20 +93,40 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-page
-  q-card(v-if="cryptoIsAuthenticated")
-    h3 Transaction History
+q-page.fit.row.wrap.justify-center
+  q-card.history-card(v-if='cryptoIsAuthenticated')
+    .text-h4.text-grey-8
+      | Transaction History
     q-separator
 
-    q-card-section(v-if="transactions.length > 0")
-        TxCard(v-for="(tx, index) in pagedTransactions" :key="index" :action="tx.action" :description="tx.description" :date="tx.date" :amount="tx.amount")
+    q-card-section(v-if='transactions.length > 0')
+      TxCard(
+        v-for='(tx, index) in pagedTransactions',
+        :key='index',
+        :action='tx.action',
+        :description='tx.description',
+        :date='tx.date',
+        :amount='tx.amount'
+      )
     q-card-section(v-else)
-        | No transaction history
+      | No transaction history
 
     q-card-section.q-pa-lg.flex.flex-center
-        q-pagination(v-model="currentPage" :max="maxPages" direction-links :max-pages="5" boundary-numbers)
+      q-pagination(
+        v-model='currentPage',
+        :max='maxPages',
+        direction-links,
+        :max-pages='5',
+        boundary-numbers
+      )
   q-card(v-else)
     h3 You must be logged in to view this page
-    
-
 </template>
+
+<style lang="sass" scoped>
+.history-card
+  width: 100%
+  max-width: 30rem
+  height: 100%
+  max-height: 30rem
+</style>
