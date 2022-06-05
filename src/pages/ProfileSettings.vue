@@ -23,7 +23,7 @@ export default defineComponent({
     const cryptoAccountName = computed(
       () => store.state.account.profile.cryptoAccount.accountName
     );
-    async function showSignModal() {
+    async function send() {
       const action = {
         account: 'eosio.token',
         name: 'transfer',
@@ -47,6 +47,10 @@ export default defineComponent({
           type: 'positive',
           message: 'Transaction signed'
         });
+        $q.dialog({
+          title: 'Transaction signed',
+          message: `Transaction ID: ${res.transactionId}`
+        });
       } catch (error) {
         $q.notify({
           type: 'negative',
@@ -57,7 +61,8 @@ export default defineComponent({
     return {
       hideProfile: ref(false),
       emailNotifications: ref(false),
-      showSignModal
+      send,
+      SYS
     };
   }
 });
@@ -108,7 +113,9 @@ q-page.fit.row.wrap.justify-center
       NewCryptoAccount
     q-separator 
     q-card-section 
-      q-btn(@click='showSignModal()') Show Profile Signer
+      .text-bold Transfer example
+      div Transfer 1.0000 {{ SYS }} to zzzzzzzzb.ya
+      q-btn(@click='send()') Send
 </template>
 
 <style lang="sass" scoped>
