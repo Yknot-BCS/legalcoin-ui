@@ -1,22 +1,20 @@
 <script lang="ts">
 import { useStore } from 'src/store';
-import { useQuasar } from 'quasar';
+import { useQuasar, useDialogPluginComponent } from 'quasar';
 import { defineComponent, computed, ref } from 'vue';
 import { api } from 'src/api';
 import { requiredRule } from '../../pages/auth/inputRules';
 export default defineComponent({
+  emits: [...useDialogPluginComponent.emits],
   setup() {
+    const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
+      useDialogPluginComponent();
     const store = useStore();
     const $q = useQuasar();
-    const showSignModal = computed(
-      () => store.state.account.platformSigner.showModal
-    );
     const cryptoAccount = computed(
       () => store.state.account.profile.cryptoAccount
     );
     const userPassword = ref('');
-    const closeModal = () =>
-      store.commit('account/setShowPlatformSigner', false);
     const getPrivateKey = async (): Promise<string> => {
       try {
         type CryptoPrivateKeyResponse = {
@@ -37,22 +35,24 @@ export default defineComponent({
     };
     const sendTransaction = async () => {
       const privateKey = await getPrivateKey();
+      onDialogOK();
     };
     return {
-      showSignModal,
       cryptoAccount,
       userPassword,
-      closeModal,
       getPrivateKey,
       sendTransaction,
-      requiredRule
+      requiredRule,
+      dialogRef,
+      onDialogHide,
+      onDialogCancel
     };
   }
 });
 </script>
 
 <template lang="pug">
-q-dialog(v-model='showSignModal')
+q-dialog(ref='dialogRef', @hide='onDialogHide')
   q-card
     q-card-section
       .text-h5 Confirm Transaction
@@ -69,8 +69,8 @@ q-dialog(v-model='showSignModal')
         autocomplete='current-password'
       )
     q-card-actions(align='right')
-      q-btn(@click='closeModal()') Cancel
-      q-btn(@click='sendTransaction()', color='primary') Confirm
+      q-btn(@click='onDialogCancel') Cancel
+      q-btn(@click='sendTransaction', color='primary') Confirm
 </template>
 
 <style lang="sass">

@@ -2,7 +2,6 @@ import { AnyAction } from '@greymass/eosio';
 import { AccountDetails, User, Session } from 'src/types';
 
 type PlatformSigner = {
-  showModal: boolean;
   actions: AnyAction[];
 };
 
@@ -26,7 +25,6 @@ export function state(): AccountStateInterface {
     useLocalSigner: false,
     // Platform Signer
     platformSigner: {
-      showModal: false,
       actions: []
     },
     // Profile

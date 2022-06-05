@@ -15,8 +15,9 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
-    function showSignModal() {
-      store.commit('account/setShowPlatformSigner', true);
+    async function showSignModal() {
+      const res = (await store.dispatch('account/showPlatformModal')) as string;
+      console.log(res);
     }
     return {
       hideProfile: ref(false),

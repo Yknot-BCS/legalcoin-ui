@@ -7,7 +7,6 @@ import { onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import auth from 'src/auth';
 import DevBanner from 'src/components/dev/DevBanner.vue';
-import PlatformSigner from 'src/components/auth/PlatformSigner.vue';
 
 export default {
   setup() {
@@ -44,13 +43,12 @@ export default {
       )
     };
   },
-  components: { Header, Footer, MobileTabsFooter, DevBanner, PlatformSigner }
+  components: { Header, Footer, MobileTabsFooter, DevBanner }
 };
 </script>
 
 <template lang="pug">
 q-layout(view='hHh lpR fff')
-  PlatformSigner
   dev-banner(v-if='DEVELOPMENT')
   Header
   q-page-container

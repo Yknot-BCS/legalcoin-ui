@@ -4,6 +4,8 @@ import { StateInterface } from '../index';
 import { AccountStateInterface } from './state';
 import auth from 'src/auth';
 import { ual } from 'src/boot/ual';
+import { Dialog } from 'quasar';
+import PlatformSigner from 'src/components/auth/PlatformSigner.vue';
 
 export const actions: ActionTree<AccountStateInterface, StateInterface> = {
   async cryptoLogin({ commit }, { account, authenticator }) {
@@ -70,6 +72,17 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
       throw e;
     }
     return transaction;
+  },
+
+  async showPlatformModal(): Promise<string> {
+    if (await new Promise(resolve => Dialog.create({
+      component: PlatformSigner
+    })
+      .onOk(() => { resolve(true) })
+      .onCancel(() => { resolve(false) })
+      .onDismiss(() => { resolve(true); }))
+    ) return 'yep'
+    else return 'nope'
   },
 
   async refreshProfile({ commit }) {

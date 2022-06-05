@@ -52,8 +52,5 @@ export const mutations: MutationTree<AccountStateInterface> = {
   },
   setUseLocalSigner(state: AccountStateInterface, useLocalSigner: boolean) {
     state.useLocalSigner = useLocalSigner;
-  },
-  setShowPlatformSigner(state: AccountStateInterface, showModal: boolean) {
-    state.platformSigner.showModal = showModal;
   }
 };
