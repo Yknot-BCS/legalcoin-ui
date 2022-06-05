@@ -5,6 +5,7 @@ export interface AccountStateInterface {
   cryptoAccountName: string;
   cryptoAccountDetails: AccountDetails;
   useLocalSigner: boolean;
+  showPlatformSigner: boolean;
   isLoggedIn: boolean;
   profile: User;
   session: Session;
@@ -17,6 +18,7 @@ export function state(): AccountStateInterface {
     cryptoAccountName: '',
     cryptoAccountDetails: {} as AccountDetails,
     useLocalSigner: false,
+    showPlatformSigner: false,
     // Profile
     isLoggedIn: false,
     profile: {

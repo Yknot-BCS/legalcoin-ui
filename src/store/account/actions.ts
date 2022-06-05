@@ -35,8 +35,8 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
       commit('setLoadingWallet');
     }
   },
-  async sendTransaction({}, { actions }) {
-    console.log(actions);
+  // eslint-disable-next-line prettier/prettier
+  async sendTransaction({ }, { actions }) {
     /* eslint-disable */
     actions.forEach((action: { authorization: string | any[]; }) => {
       if (!action.authorization || !action.authorization.length) {
@@ -48,7 +48,6 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
         ];
       }
     });
-    console.log(actions)
     /* eslint-enable */
     let transaction = null;
     try {
@@ -57,7 +56,7 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
       const users = await authenticators[0].login();
       console.log(users);
       /* eslint-disable */
-      transaction = await(users[0] as User).signTransaction(
+      transaction = await (users[0] as User).signTransaction(
         {
           actions
         },

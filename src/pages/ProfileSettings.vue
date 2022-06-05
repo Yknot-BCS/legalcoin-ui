@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { mapGetters } from 'vuex';
+import { useStore } from 'src/store';
 import LinkCryptoAccount from 'src/components/auth/LinkCryptoAccount.vue';
 import NewCryptoAccount from 'src/components/auth/NewCryptoAccount.vue';
 
@@ -13,7 +14,15 @@ export default defineComponent({
     })
   },
   setup() {
-    return { hideProfile: ref(false), emailNotifications: ref(false) };
+    const store = useStore();
+    function showSignModal() {
+      store.commit('account/setShowPlatformSigner', true);
+    }
+    return {
+      hideProfile: ref(false),
+      emailNotifications: ref(false),
+      showSignModal
+    };
   }
 });
 </script>
@@ -61,6 +70,9 @@ q-page.fit.row.wrap.justify-center
     q-separator
     q-card-section
       NewCryptoAccount
+    q-separator 
+    q-card-section 
+      q-btn(@click='showSignModal()') Show Profile Signer
 </template>
 
 <style lang="sass" scoped>
