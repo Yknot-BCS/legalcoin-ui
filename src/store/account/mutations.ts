@@ -52,5 +52,10 @@ export const mutations: MutationTree<AccountStateInterface> = {
   },
   setUseLocalSigner(state: AccountStateInterface, useLocalSigner: boolean) {
     state.useLocalSigner = useLocalSigner;
+  },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  setSignedTransaction(state: AccountStateInterface, transaction: any) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    state.platformSigner.signedTransaction = transaction; // TODO check types
   }
 };

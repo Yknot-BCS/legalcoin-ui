@@ -3,6 +3,8 @@ import { AccountDetails, User, Session } from 'src/types';
 
 type PlatformSigner = {
   actions: AnyAction[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  signedTransaction: any;
 };
 
 export interface AccountStateInterface {
@@ -25,7 +27,8 @@ export function state(): AccountStateInterface {
     useLocalSigner: false,
     // Platform Signer
     platformSigner: {
-      actions: []
+      actions: [],
+      signedTransaction: null
     },
     // Profile
     isLoggedIn: false,

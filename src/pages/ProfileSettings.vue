@@ -1,7 +1,10 @@
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { mapGetters } from 'vuex';
+import { defineComponent, ref, computed } from 'vue';
+import { Computed, mapGetters } from 'vuex';
 import { useStore } from 'src/store';
+import { useQuasar } from 'quasar';
+import { AnyAction } from '@greymass/eosio';
+import { SignTransactionResponse } from 'universal-authenticator-library';
 import LinkCryptoAccount from 'src/components/auth/LinkCryptoAccount.vue';
 import NewCryptoAccount from 'src/components/auth/NewCryptoAccount.vue';
 
@@ -14,10 +17,42 @@ export default defineComponent({
     })
   },
   setup() {
+    const SYS = computed(() => process.env.NETWORK_TOKEN);
     const store = useStore();
+    const $q = useQuasar();
+    const cryptoAccountName = computed(
+      () => store.state.account.profile.cryptoAccount.accountName
+    );
     async function showSignModal() {
-      const res = (await store.dispatch('account/showPlatformModal')) as string;
-      console.log(res);
+      const action = {
+        account: 'eosio.token',
+        name: 'transfer',
+        authorization: [
+          { actor: cryptoAccountName.value, permission: 'active' }
+        ],
+        data: {
+          from: cryptoAccountName.value,
+          to: 'zzzzzzzzb.ya',
+          quantity: `1.0000 ${SYS.value}`,
+          memo: 'Test platform signer'
+        }
+      } as AnyAction; // TODO cast to modified AnyAction (create new type) (auth not needed)
+
+      try {
+        const res = (await store.dispatch('account/sendTransaction', {
+          actions: [action]
+        })) as SignTransactionResponse;
+        console.log(res.transactionId);
+        $q.notify({
+          type: 'positive',
+          message: 'Transaction signed'
+        });
+      } catch (error) {
+        $q.notify({
+          type: 'negative',
+          message: (error as Error).message
+        });
+      }
     }
     return {
       hideProfile: ref(false),

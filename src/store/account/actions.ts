@@ -4,6 +4,8 @@ import { StateInterface } from '../index';
 import { AccountStateInterface } from './state';
 import auth from 'src/auth';
 import { ual } from 'src/boot/ual';
+// import { PushTransactionResponse } from '@greymass/eosio';
+import { SignTransactionResponse } from 'universal-authenticator-library';
 import { Dialog } from 'quasar';
 import PlatformSigner from 'src/components/auth/PlatformSigner.vue';
 
@@ -37,52 +39,69 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
       commit('setLoadingWallet');
     }
   },
-  // eslint-disable-next-line prettier/prettier
-  async sendTransaction({ }, { actions }) {
-    /* eslint-disable */
-    actions.forEach((action: { authorization: string | any[]; }) => {
-      if (!action.authorization || !action.authorization.length) {
-        action.authorization = [
-          {
-            actor: this.state.account.cryptoAccountName,
-            permission: 'active'
-          }
-        ];
-      }
-    });
-    /* eslint-enable */
+  async sendTransaction({ dispatch }, { actions }) {
+    /* eslint-disable */  // TODO enable eslint and fix types
     let transaction = null;
-    try {
-      /* eslint-disable */
+    if (this.state.account.useLocalSigner) {
+      actions.forEach((action: { authorization: string | any[]; }) => {
+        if (!action.authorization || !action.authorization.length) {
+          action.authorization = [
+            {
+              actor: this.state.account.cryptoAccountName,
+              permission: 'active'
+            }
+          ];
+        }
+      });
       const authenticators = ual.getAuthenticators().availableAuthenticators;
       const users = await authenticators[0].login();
-      console.log(users);
-      /* eslint-disable */
-      transaction = await (users[0] as User).signTransaction(
-        {
-          actions
-        },
-        {
-          blocksBehind: 3,
-          expireSeconds: 30
-        }
-      );
-    } catch (e) {
-      console.error(actions, e);
-      throw e;
+      console.log(actions);
+      try {
+        transaction = await (users[0] as User).signTransaction(
+          {
+            actions
+          },
+          {
+            blocksBehind: 3,
+            expireSeconds: 30
+          }
+        );
+      }
+      catch (error) {
+        console.error(actions, error);
+        throw error;
+      }
+    }
+    else {
+      try {
+        transaction = await dispatch('showPlatformModal', { actions });
+      }
+      catch (error) {
+        console.error(actions, error);
+        throw error;
+      }
     }
     return transaction;
   },
 
-  async showPlatformModal(): Promise<string> {
-    if (await new Promise(resolve => Dialog.create({
-      component: PlatformSigner
+  async showPlatformModal({ state, commit }, { actions }): Promise<SignTransactionResponse> {
+    commit('setSignedTransaction', null);
+    if (!await new Promise(resolve => Dialog.create({
+      component: PlatformSigner,
+      componentProps: { actions }
     })
       .onOk(() => { resolve(true) })
       .onCancel(() => { resolve(false) })
       .onDismiss(() => { resolve(true); }))
-    ) return 'yep'
-    else return 'nope'
+    ) throw new Error('Transaction cancelled by user');
+    else {  // TODO improve error handling
+      const transaction = state.platformSigner.signedTransaction;
+      if (!transaction) throw new Error('Transaction signing failed');
+      else if (transaction.error) {
+        throw new Error(transaction.error.name);
+      }
+      else return transaction
+    }
   },
 
   async refreshProfile({ commit }) {
