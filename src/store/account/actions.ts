@@ -74,7 +74,7 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
     }
     else {
       try {
-        transaction = await dispatch('showPlatformModal', { actions });
+        transaction = await dispatch('platformSign', { actions });
       }
       catch (error) {
         console.error(actions, error);
@@ -84,7 +84,7 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
     return transaction;
   },
 
-  async showPlatformModal({ state, commit }, { actions }): Promise<SignTransactionResponse> {
+  async platformSign({ state, commit }, { actions }): Promise<SignTransactionResponse> {
     commit('setSignedTransaction', null);
     if (!await new Promise(resolve => Dialog.create({
       component: PlatformSigner,
