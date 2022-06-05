@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { boot } from 'quasar/wrappers';
 import { UAL } from 'universal-authenticator-library';
+import { YknotAuthenticator } from 'ual-ya';
 import { Anchor } from 'ual-anchor';
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -22,7 +24,8 @@ export default boot(({ app }) => {
   };
 
   const authenticators = [
-    new Anchor([mainChain], { appName: process.env.APP_NAME })
+    new Anchor([mainChain], { appName: process.env.APP_NAME }),
+    new YknotAuthenticator([mainChain], { appName: process.env.APP_NAME })
   ];
 
   ual = new UAL([mainChain], 'ual', authenticators);
