@@ -14,6 +14,8 @@ import { account } from './account';
 import { AccountStateInterface } from './account/state';
 import { buy } from './buy';
 import { BuyStateInterface } from './buy/state';
+import { general } from './general';
+import { GeneralStateInterface } from './general/state';
 
 /*
  * If not building with SSR mode, you can
@@ -30,6 +32,7 @@ export interface StateInterface {
   chain: ChainStateInterface;
   account: AccountStateInterface;
   buy: BuyStateInterface;
+  general: GeneralStateInterface;
 }
 
 // provide typings for `this.$store`
@@ -49,7 +52,8 @@ export default store(function () {
       contract,
       chain,
       account,
-      buy
+      buy,
+      general
     },
 
     // enable strict mode (adds overhead!)

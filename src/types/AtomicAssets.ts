@@ -1,3 +1,5 @@
+import { ITemplate } from 'atomicassets/build/API/Explorer/Objects';
+
 export interface Asset {
   contract: string;
   asset_id: string;
@@ -66,18 +68,8 @@ export interface Schema {
   collection: CollectionData;
 }
 
-export interface Template {
-  contract: string;
-  template_id: string;
-  max_supply: string;
-  issued_supply: string;
-  is_transferable: true;
-  is_burnable: true;
-  immutable_data: unknown;
-  created_at_time: string;
-  created_at_block: string;
-  scheme: SchemaData;
-  collection: CollectionData;
+export interface Template extends ITemplate {
+  name: string;
 }
 
 export interface TemplateData {
