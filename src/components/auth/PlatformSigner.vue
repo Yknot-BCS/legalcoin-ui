@@ -9,7 +9,7 @@ export default defineComponent({
     const store = useStore();
     const $q = useQuasar();
     const showSignModal = computed(
-      () => store.state.account.showPlatformSigner
+      () => store.state.account.platformSigner.showModal
     );
     const cryptoAccount = computed(
       () => store.state.account.profile.cryptoAccount

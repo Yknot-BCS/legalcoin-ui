@@ -1,11 +1,17 @@
+import { AnyAction } from '@greymass/eosio';
 import { AccountDetails, User, Session } from 'src/types';
+
+type PlatformSigner = {
+  showModal: boolean;
+  actions: AnyAction[];
+};
 
 export interface AccountStateInterface {
   loading: unknown;
   cryptoAccountName: string;
   cryptoAccountDetails: AccountDetails;
   useLocalSigner: boolean;
-  showPlatformSigner: boolean;
+  platformSigner: PlatformSigner;
   isLoggedIn: boolean;
   profile: User;
   session: Session;
@@ -18,7 +24,11 @@ export function state(): AccountStateInterface {
     cryptoAccountName: '',
     cryptoAccountDetails: {} as AccountDetails,
     useLocalSigner: false,
-    showPlatformSigner: false,
+    // Platform Signer
+    platformSigner: {
+      showModal: false,
+      actions: []
+    },
     // Profile
     isLoggedIn: false,
     profile: {
