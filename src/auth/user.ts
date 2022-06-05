@@ -80,7 +80,23 @@ export async function getProfile() {
         }
       }
     }`)) as any;
-  return res.profile;
+  const profile = res.profile;
+  if (profile.cryptoAccount === null) {
+    profile.cryptoAccount = {
+      accountName: '',
+      publicKey: '',
+      secret: '',
+      linkedAccounts: []
+    };
+  } else if (profile.cryptoAccount.accountName === null) {
+    profile.cryptoAccount = {
+      accountName: '',
+      publicKey: '',
+      secret: '',
+      linkedAccounts: profile.cryptoAccount.linkedAccounts
+    };
+  }
+  return profile;
 }
 
 export async function passwordResetRequest(userEmail: Ref<string>) {
