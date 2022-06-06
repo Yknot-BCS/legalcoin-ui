@@ -35,7 +35,7 @@ export async function register(
   userPassword: Ref<string>
 ) {
   // Sign Up
-  await api.accounts.mutation(`
+  const res = (await api.accounts.mutation(`
     {
       signUp(input: {
         email: "${userEmail.value}",
@@ -53,7 +53,10 @@ export async function register(
         sessionLength
       }
     }
-  `);
+  `)) as any;
+
+  setAccessToken(res.signIn.token);
+  setSessionExpiry(res.signIn.sessionLength);
 
   // Send Email Verification
   await api.accounts.mutation(`
