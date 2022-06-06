@@ -58,13 +58,7 @@ export async function register(
 
   setAccessToken(res.signIn.token);
   setSessionExpiry(res.signIn.sessionLength);
-
-  // Send Email Verification
-  await api.accounts.mutation(`
-    mutation {
-      emailVerifyRequest
-    }
-  `);
+  await emailVerificationRequest();
 }
 
 export async function getProfile() {
@@ -112,5 +106,13 @@ export async function passwordResetNew(
       }
     )
   }
+  `);
+}
+
+export async function emailVerificationRequest() {
+  await api.accounts.mutation(`
+    mutation {
+      emailVerifyRequest
+    }
   `);
 }
