@@ -63,11 +63,15 @@ export default defineComponent({
     q-card(v-else-if='cardType === "collection"')
       q-card-section
         .text-h6 {{ card.name }}
-        .text-subtitle2 {{ card.id }}
+        .text-subtitle2 {{ card.collection }}
       q-separator(inset)
       q-img.asset-img(:src='card.imageUrl')
       q-card-actions
-        q-btn(flat) View Collection
+        q-btn.full-width(
+          flat,
+          color='primary',
+          :to='"/collection/" + card.collection'
+        ) View Collection
 
     q-card(v-else-if='cardType === "listing"')
       q-card-section

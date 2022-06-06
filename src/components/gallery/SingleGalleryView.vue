@@ -64,7 +64,11 @@ export default defineComponent({
       q-separator(inset)
       q-img.asset-img(:src='card.imageUrl')
       q-card-actions
-        q-btn(flat) View Collection
+        q-btn.full-width(
+          flat,
+          color='primary',
+          :to='"/collection/" + card.collection_name'
+        ) View Collection
 
     q-card(v-else-if='cardType === "listing"')
       q-card-section
