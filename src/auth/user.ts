@@ -50,6 +50,7 @@ export async function register(
           password: "${userPassword.value}"
         }
       ) {
+        token
         sessionLength
       }
     }
