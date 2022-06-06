@@ -44,7 +44,8 @@ export default defineComponent({
 
     async getOfferData() {
       let offerFilter = {
-        asset_id: this.$route.params.asset as string
+        asset_id: this.$route.params.asset as string,
+        state: 0
       } as unknown;
 
       this.buyofferData = (

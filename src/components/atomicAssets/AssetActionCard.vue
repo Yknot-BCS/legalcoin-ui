@@ -176,7 +176,7 @@ export default defineComponent({
           this.saleData.price.token_precision
         )
       ).toString();
-      console.log(amountStr);
+
       let actions = [
         {
           account: 'atomicmarket',
@@ -244,9 +244,9 @@ export default defineComponent({
           account: 'atomicassets',
           name: 'createoffer',
           data: {
-            sender: 'dewiteleport',
+            sender: this.accountName as string,
             recipient: 'atomicmarket',
-            sender_asset_ids: ['1099532319555'],
+            sender_asset_ids: [this.buyofferData.assets[0].asset_id],
             recipient_asset_ids: [],
             memo: 'buyoffer'
           }
@@ -255,9 +255,15 @@ export default defineComponent({
           account: 'atomicmarket',
           name: 'acceptbuyo',
           data: {
-            buyoffer_id: 190,
-            expected_asset_ids: ['1099532319555'],
-            expected_price: '2.00000000 WAX',
+            buyoffer_id: this.buyofferData.buyoffer_id,
+            expected_asset_ids: [this.buyofferData.assets[0].asset_id],
+            expected_price: Asset.fromUnits(
+              Int64.from(this.buyofferData.price.amount),
+              Asset.Symbol.fromParts(
+                this.buyofferData.price.token_symbol,
+                this.buyofferData.price.token_precision
+              )
+            ).toString(),
             taker_marketplace: ''
           }
         }
