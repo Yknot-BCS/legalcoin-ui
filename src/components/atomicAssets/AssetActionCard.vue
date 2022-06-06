@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
 import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
-import { ISale } from 'atomicmarket/build/API/Explorer/Objects';
+import { ISale, IBuyoffer } from 'atomicmarket/build/API/Explorer/Objects';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
 import { mapGetters, mapActions } from 'vuex';
 import { Asset, Int64 } from '@greymass/eosio';
@@ -19,6 +19,10 @@ export default defineComponent({
     saleData: {
       type: Object as PropType<ISale>,
       required: true
+    },
+    buyofferData: {
+      type: Object as PropType<IBuyoffer>,
+      required: true
     }
   },
   setup() {
@@ -33,8 +37,6 @@ export default defineComponent({
       accountName: 'account/cryptoAccountName'
     }),
     isOwned() {
-      console.log(this.assetData);
-      console.log(this.saleData);
       // Check if the current user is the owner of the asset
       if (this.accountName === this.assetData.owner) {
         return true;
@@ -52,8 +54,42 @@ export default defineComponent({
     },
 
     isBuybackNFT() {
-      // TODO update with new field names
       return !!this.assetData?.data['saleopen'];
+    },
+
+    isMatured() {
+      if (
+        Date.now() > this.maturityDate.getTime() &&
+        Date.now() < this.expiryDate.getTime()
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    isExpired() {
+      if (Date.now() > this.expiryDate.getTime()) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    hasBuyOrder() {
+      return !!this.buyofferData;
+    },
+
+    isClaimable() {
+      if (this.hasBuyOrder) {
+        if (this.buyofferData.buyer === process.env.AA_ACCOUNT) {
+          return true;
+        } else {
+          return false;
+        }
+      } else {
+        return false;
+      }
     },
 
     saleopenDate() {
@@ -202,6 +238,57 @@ export default defineComponent({
       }
     },
 
+    async claim() {
+      let actions: any = [
+        {
+          account: 'atomicassets',
+          name: 'createoffer',
+          data: {
+            sender: 'dewiteleport',
+            recipient: 'atomicmarket',
+            sender_asset_ids: ['1099532319555'],
+            recipient_asset_ids: [],
+            memo: 'buyoffer'
+          }
+        },
+        {
+          account: 'atomicmarket',
+          name: 'acceptbuyo',
+          data: {
+            buyoffer_id: 190,
+            expected_asset_ids: ['1099532319555'],
+            expected_price: '2.00000000 WAX',
+            taker_marketplace: ''
+          }
+        }
+      ];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      this.transaction = await this.sendTransaction({ actions });
+    },
+
+    async tryClaim() {
+      console.log('try claim');
+      try {
+        await this.claim();
+        this.$q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          message: 'Complete'
+        });
+      } catch (e: unknown) {
+        if (typeof e === 'string') {
+          e.toUpperCase(); // works, `e` narrowed to string
+        } else if (e instanceof Error) {
+          this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            message: e.message,
+            timeout: 5000
+          });
+        }
+      }
+    },
+
     shareURL() {
       void copyToClipboard(window.location.origin + this.$route.path).then(
         () => {
@@ -276,11 +363,19 @@ q-card
     //- when owning, show price, days to maturity, with sell button
 
     //- when mature, show claim button
+    .div(v-if='isClaimable')
+      q-btn.full-width.q-mt-lg(
+        @click='tryClaim()',
+        label='CLAIM',
+        color='primary'
+      )
 
     | owned: {{ isOwned }},
     | for sale: {{ isForSale }},
     | is buybacknft: {{ isBuybackNFT }},
-    | is owned by LC: {{ isOwnedByLC }}
+    | is owned by LC: {{ isOwnedByLC }},
+    | has buy order: {{ hasBuyOrder }},
+    | can claim: {{ isClaimable }}
 </template>
 
 <style lang="sass"></style>

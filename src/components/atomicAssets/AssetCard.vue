@@ -4,7 +4,7 @@ import DetailsTable from 'src/components/atomicAssets/DetailsTable.vue';
 import Description from 'src/components/atomicAssets/Description.vue';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
 import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
-import { ISale } from 'atomicmarket/build/API/Explorer/Objects';
+import { ISale, IBuyoffer } from 'atomicmarket/build/API/Explorer/Objects';
 import AssetActionCard from 'src/components/atomicAssets/AssetActionCard.vue';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -19,6 +19,10 @@ export default defineComponent({
     },
     saleData: {
       type: Object as PropType<ISale>,
+      required: true
+    },
+    buyofferData: {
+      type: Object as PropType<IBuyoffer>,
       required: true
     }
   },
@@ -50,7 +54,8 @@ export default defineComponent({
       //- Actions
       AssetActionCard.col-12.q-my-sm(
         :assetData='assetData',
-        :saleData='saleData'
+        :saleData='saleData',
+        :buyofferData='buyofferData'
       )
       //- Details and Description
       q-card.col-12.q-my-sm
@@ -83,7 +88,8 @@ export default defineComponent({
       //- Actions
       AssetActionCard.col-12.q-my-sm(
         :assetData='assetData',
-        :saleData='saleData'
+        :saleData='saleData',
+        :buyofferData='buyofferData'
       )
 
       //- Details and Description
