@@ -2,16 +2,19 @@
 import auth from 'src/auth';
 import { ref } from 'vue';
 import { requiredRule } from './inputRules';
+import { useRouter } from 'vue-router';
 
 export default {
   setup() {
     const userEmail = ref('');
+    const router = useRouter();
     return {
       userEmail,
       requiredRule,
       onSubmit: async () => {
         try {
           await auth.passwordResetRequest(userEmail);
+          await router.push({ name: 'passwordresetsent' });
         } catch (error) {}
       }
     };
