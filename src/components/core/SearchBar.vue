@@ -1,30 +1,29 @@
 <script lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import { useStore } from 'src/store';
 
 const stringOptions = ['Buy', 'Gallery', 'People'];
 
 export default {
   setup() {
+    const store = useStore();
+    const options = computed(() => store.state.general.options);
     const filteredOptions = ref(stringOptions);
+    onMounted(() => {
+      void store.dispatch('general/updateOptions');
+    });
 
     return {
       searchText: ref(''),
       stringOptions,
       filteredOptions,
+      options,
 
       filterFn(val: string, update: (arg0: () => void) => void) {
-        if (val === '') {
-          update(() => {
-            filteredOptions.value = stringOptions;
-          });
-          return;
-        }
-
+        console.log(val);
+        void store.dispatch('general/updateSearch', val.toLowerCase());
         update(() => {
-          const needle = val.toLowerCase();
-          filteredOptions.value = stringOptions.filter(
-            (v) => v.toLowerCase().indexOf(needle) > -1
-          );
+          void store.dispatch('general/updateSearch', val.toLowerCase());
         });
       }
     };
@@ -41,9 +40,10 @@ q-select.toolbar-select(
   ref='search',
   dense,
   outlined,
+  use-input,
   label='Search items, collections and people...',
   v-model='searchText',
-  :options='filteredOptions',
+  :options='options',
   @filter='filterFn'
 )
   template(v-slot:append)
@@ -55,16 +55,22 @@ q-select.toolbar-select(
         .text-center
           q-spinner-pie(color='primary', size='24px')
 
-  //- template(v-slot:option='scope')
-  //-   q-item(v-bind='scope.itemProps')
-  //-     q-item-section(side)
-  //-       q-icon(name='collections_bookmark')
-  //-     q-item-section
-  //-       q-item-label(v-html='scope.opt.label')
-  //-     q-item-section(side :class="{ 'default-type': !scope.opt.type }")
-  //-       q-btn.bg-grey-1.q-px-sm(outline dense no-caps text-color='blue-grey-5' size='12px')
-  //-       div {{ scope.opt.type || 'Jump to' }}
-  //-         q-icon(name='subdirectory_arrow_left' size='14px')
+  template(v-slot:option='scope')
+    q-item(
+      v-if='scope.opt.groupLabel',
+      v-bind='scope.itemProps',
+      v-on='scope.itemEvents',
+      :disable='true'
+    )
+      q-item-label(header) {{ scope.opt.label }}
+    q-item(
+      v-else,
+      v-bind='scope.itemProps',
+      v-on='scope.itemEvents',
+      :to='"/asset/" + scope.opt.id'
+    )
+      q-item-section
+        q-item-label(v-html='scope.opt.label')
 </template>
 
 <style scoped lang="sass">

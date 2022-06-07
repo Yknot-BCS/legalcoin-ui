@@ -1,9 +1,9 @@
 <script lang="ts">
 import { onMounted, computed } from 'vue';
-import SingleGalleryView from 'src/components/gallery/SingleGalleryView.vue';
+import Cards from 'src/components/gallery/cards/index.vue';
 import { useStore } from 'src/store';
 export default {
-  components: { SingleGalleryView },
+  components: { Cards },
   setup() {
     const store = useStore();
     const assets = computed(() => store.state.buy.assets);
@@ -23,7 +23,7 @@ q-page.q-py-md
     .col-6.row.justify-end.items-center.q-px-lg
       h2 Bringing the legal industry into the digital world
     .main-asset.col-6.q-pa-lg(v-if='assets.length > 0')
-      SingleGalleryView(:data='[assets[0]]', type='asset')
+      Cards(:data='assets[0]', type='asset')
 </template>
 
 <style lang="sass" scoped>

@@ -128,5 +128,5 @@ q-page.fit.row.wrap.justify-center
   width: 100%
   max-width: 30rem
   height: 100%
-  max-height: 30rem
+  max-height: 50rem
 </style>

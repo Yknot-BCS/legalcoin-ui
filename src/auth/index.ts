@@ -3,7 +3,8 @@ import {
   register,
   getProfile,
   passwordResetRequest,
-  passwordResetNew
+  passwordResetNew,
+  emailVerificationRequest
 } from './user';
 import {
   setAccessToken,
@@ -23,5 +24,6 @@ export default {
   setSessionExpiry,
   isLoggedIn,
   passwordResetRequest,
-  passwordResetNew
+  passwordResetNew,
+  emailVerificationRequest
 };

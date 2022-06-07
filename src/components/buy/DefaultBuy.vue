@@ -90,8 +90,6 @@ export default defineComponent({
     .row
       .col-12.q-pt-md
         .q-px-md.text-h6.text-grey-8.text-weight-bold.text-center Primary Retail Portal
-  .col-12
-    div(v-if='ok') toggled content
   .col-12(v-for='section in sections')
     .row(v-if='filter === "All" || filter === section.name')
       .col-12.q-pt-lg.q-px-sm

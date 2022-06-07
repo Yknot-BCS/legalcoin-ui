@@ -50,7 +50,20 @@ export default defineComponent({
 
     const rows = computed(() => parseRows(data.value));
 
-    return { columns, rows, data };
+    // Sort according to original schema order
+    let sortingArr = props.assetData.schema.format.map((n) => n.name);
+    const arrayMap = rows.value.reduce(
+      (accumulator, currentValue) => ({
+        ...accumulator,
+        [currentValue.name]: currentValue
+      }),
+      {}
+    );
+    const sortedRows = sortingArr.map(
+      (name) => arrayMap[name as keyof typeof arrayMap]
+    );
+
+    return { columns, rows: sortedRows, data };
   }
 });
 </script>
