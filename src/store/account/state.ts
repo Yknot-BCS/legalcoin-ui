@@ -1,11 +1,9 @@
-import { AnyAction } from '@greymass/eosio';
 import { AccountDetails, User, Session } from 'src/types';
 import { SignTransactionResponse } from 'universal-authenticator-library';
 import { UALPlatformSignerError } from 'src/components/auth/UALPlatformSignerError';
 
 // Mimics return transaction or error for platform signer
 type PlatformSigner = {
-  actions: AnyAction[];
   signedTransactionResponse: SignTransactionResponse | null;
   error: UALPlatformSignerError | null;
 };
@@ -30,7 +28,6 @@ export function state(): AccountStateInterface {
     useLocalSigner: false,
     // Platform Signer
     platformSigner: {
-      actions: [],
       signedTransactionResponse: null,
       error: null
     },

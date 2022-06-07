@@ -1,6 +1,7 @@
 import { MutationTree } from 'vuex';
 import { AccountStateInterface } from './state';
 import { AccountDetails, User, Session } from 'src/types';
+import { SignTransactionResponse } from 'universal-authenticator-library';
 import auth from 'src/auth';
 import { UALPlatformSignerError } from 'src/components/auth/UALPlatformSignerError';
 
@@ -54,10 +55,11 @@ export const mutations: MutationTree<AccountStateInterface> = {
   setUseLocalSigner(state: AccountStateInterface, useLocalSigner: boolean) {
     state.useLocalSigner = useLocalSigner;
   },
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  setSignedTransaction(state: AccountStateInterface, transaction: any) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    state.platformSigner.signedTransactionResponse = transaction; // TODO check types
+  setSignedTransaction(
+    state: AccountStateInterface,
+    transaction: SignTransactionResponse | null
+  ) {
+    state.platformSigner.signedTransactionResponse = transaction;
   },
   setSingedTransactionError(
     state: AccountStateInterface,

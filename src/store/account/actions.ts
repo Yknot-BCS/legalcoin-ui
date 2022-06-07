@@ -42,17 +42,17 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
   async sendTransaction({ dispatch }, { actions }) {
     /* eslint-disable */  // TODO enable eslint and fix types
     let transaction = null;
+    actions.forEach((action: { authorization: string | any[]; }) => {
+      if (!action.authorization || !action.authorization.length) {
+        action.authorization = [
+          {
+            actor: this.state.account.cryptoAccountName,
+            permission: 'active'
+          }
+        ];
+      }
+    });
     if (this.state.account.useLocalSigner) {
-      actions.forEach((action: { authorization: string | any[]; }) => {
-        if (!action.authorization || !action.authorization.length) {
-          action.authorization = [
-            {
-              actor: this.state.account.cryptoAccountName,
-              permission: 'active'
-            }
-          ];
-        }
-      });
       const authenticators = ual.getAuthenticators().availableAuthenticators;
       const users = await authenticators[0].login();
       console.log(actions);
