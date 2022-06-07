@@ -4,6 +4,28 @@ import { BuyStateInterface } from './state';
 import { atomic_api } from 'src/api/atomic_assets';
 import { GalleryCard } from 'src/types';
 
+function assetToAmount(asset: string, decimals = -1): number {
+  try {
+    let qty: string = asset.split(' ')[0];
+    const val: number = parseFloat(qty);
+    if (decimals > -1) qty = val.toFixed(decimals);
+    return val;
+  } catch (error) {
+    return 0;
+  }
+}
+
+function getYield(cost: string, profit: string): string {
+  try {
+    const val =
+      ((assetToAmount(profit) - assetToAmount(cost)) / assetToAmount(cost)) *
+      100;
+    return val.toFixed(0).toString() + '%';
+  } catch (error) {
+    return '0%';
+  }
+}
+
 export const actions: ActionTree<BuyStateInterface, StateInterface> = {
   async updateFilter(
     { commit, dispatch, state },
@@ -65,6 +87,9 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
     const data = await atomic_api.getAssets(state.assetFilter);
     const gallerydata = data.map((asset) => {
       return {
+        ...asset.data,
+        to: '/asset/' + asset.asset_id,
+        yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
         name: asset.data.name as string,
         imageUrl:
           asset.data.img && (asset.data.img as string).includes('http')
@@ -99,6 +124,12 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
     const data = await atomic_api.getTemplates(state.templateFilter);
     const gallerydata = data.map((template) => {
       return {
+        ...template.immutable_data,
+        to: '/template/' + template.template_id,
+        yield: getYield(
+          template.immutable_data.mintprice,
+          template.immutable_data.maturedvalue
+        ),
         name: template.contract,
         imageUrl:
           template.immutable_data.img &&

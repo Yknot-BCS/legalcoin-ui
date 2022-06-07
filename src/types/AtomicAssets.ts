@@ -1,29 +1,26 @@
-import { ITemplate } from 'atomicassets/build/API/Explorer/Objects';
+import { ITemplate, IAsset } from 'atomicassets/build/API/Explorer/Objects';
 
-export interface Asset {
-  contract: string;
-  asset_id: string;
-  owner: string;
-  name: string;
-  is_transferable: true;
-  is_burnable: true;
-  template_mint: string;
-  collection: CollectionData;
-  schema: SchemaData;
-  template: TemplateData;
-  backed_tokens: BackedTokens[];
-  immutable_data: unknown;
-  mutable_data: unknown;
-  data: unknown;
-  burned_by_account: string;
-  burned_at_block: string;
-  burned_at_time: string;
-  updated_at_block: string;
-  updated_at_time: string;
-  transferred_at_block: string;
-  transferred_at_time: string;
-  minted_at_block: string;
-  minted_at_time: string;
+export interface Asset extends IAsset {
+  data: {
+    caseref: string;
+    img: string;
+    eula: string;
+    name: string;
+    term: number;
+    tier: string;
+    legal: string;
+    round: number;
+    tandc: string;
+    expiry: number;
+    saleopen: number;
+    expirystr: string;
+    mintprice: string;
+    saleclose: number;
+    maturedstr: string;
+    description: string;
+    maturedvalue: string;
+    saleclosestr: string;
+  };
 }
 
 export interface Collection {
