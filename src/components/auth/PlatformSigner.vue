@@ -31,7 +31,7 @@ export default defineComponent({
     const cryptoAccount = computed(
       () => store.state.account.profile.cryptoAccount
     );
-    const userPassword = ref('asdf');
+    const userPassword = ref('');
     const getPrivateKey = async (): Promise<PrivateKey> => {
       try {
         type CryptoPrivateKeyResponse = {
@@ -133,25 +133,26 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-dialog(ref='dialogRef', @hide='onDialogHide')
+q-dialog(ref='dialogRef', @hide='onDialogHide', persistent)
   q-card
-    q-card-section
-      .text-h5 Confirm Transaction
-    q-card-section
-      div Signing with {{ cryptoAccount.accountName }}
-      div Please enter your password to confirm the transaction.
-    q-card-section
-      q-input(
-        v-model='userPassword',
-        type='password',
-        label='Password',
-        lazy-rules,
-        :rules='[requiredRule]',
-        autocomplete='current-password'
-      )
-    q-card-actions(align='right')
-      q-btn(@click='onDialogCancel') Cancel
-      q-btn(@click='signTransaction', color='primary') Confirm
+    q-form(@submit='signTransaction')
+      q-card-section
+        .text-h5 Confirm Transaction
+      q-card-section
+        div Signing with {{ cryptoAccount.accountName }}
+        div Please enter your password to confirm the transaction.
+      q-card-section
+        q-input(
+          v-model='userPassword',
+          type='password',
+          label='Password',
+          lazy-rules,
+          :rules='[requiredRule]',
+          autocomplete='current-password'
+        )
+      q-card-actions(align='right')
+        q-btn(@click='onDialogCancel') Cancel
+        q-btn(type='submit', color='primary') Confirm
 </template>
 
 <style lang="sass">
