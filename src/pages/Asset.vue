@@ -77,6 +77,12 @@ export default defineComponent({
       } as unknown;
       this.saleData = (await atomic_market_api.getSales(saleFilter))[0];
       console.log(this.saleData);
+    },
+
+    async updateAssetInfo() {
+      await this.getAssetData();
+      await this.getSaleData();
+      await this.getOfferData();
     }
   },
   async mounted() {
@@ -84,9 +90,7 @@ export default defineComponent({
     // check if asset of template
     if (this.$route.params.asset) {
       console.log('Is Asset');
-      await this.getAssetData();
-      await this.getSaleData();
-      await this.getOfferData();
+      await this.updateAssetInfo();
     }
 
     // TODO figure out how to handle templates
@@ -103,7 +107,8 @@ export default defineComponent({
   AssetCard(
     :assetData='assetData',
     :saleData='saleData',
-    :buyofferData='buyofferData'
+    :buyofferData='buyofferData',
+    @update-asset-info='updateAssetInfo()'
   )
 q-page.row.fit.wrap.justify-center(v-else)
   q-card.warn-card.row.justify-center

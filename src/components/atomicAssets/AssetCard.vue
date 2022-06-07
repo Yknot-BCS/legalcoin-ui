@@ -55,7 +55,8 @@ export default defineComponent({
       AssetActionCard.col-12.q-my-sm(
         :assetData='assetData',
         :saleData='saleData',
-        :buyofferData='buyofferData'
+        :buyofferData='buyofferData',
+        @update-asset-info='$emit("updateAssetInfo", $event)'
       )
       //- Details and Description
       q-card.col-12.q-my-sm
@@ -89,7 +90,8 @@ export default defineComponent({
       AssetActionCard.col-12.q-my-sm(
         :assetData='assetData',
         :saleData='saleData',
-        :buyofferData='buyofferData'
+        :buyofferData='buyofferData',
+        @update-asset-info='$emit("updateAssetInfo", $event)'
       )
 
       //- Details and Description
