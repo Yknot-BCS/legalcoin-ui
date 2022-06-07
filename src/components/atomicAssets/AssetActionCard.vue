@@ -30,7 +30,8 @@ export default defineComponent({
       quantity: ref(1),
       transaction: null,
       pollAsset: null,
-      listPrice: ref(0)
+      listPrice: ref(0),
+      showListingDialog: ref(false)
     };
   },
 
@@ -307,6 +308,10 @@ export default defineComponent({
     },
 
     async listNFT() {
+      let amountStr = Asset.from(
+        Number(this.listPrice),
+        Asset.Symbol.fromParts('WAX', 8) // FIXME input LEGAL price
+      ).toString(); //'2.00000000 WAX'
       let actions: any = [
         {
           account: 'atomicmarket',
@@ -314,7 +319,7 @@ export default defineComponent({
           data: {
             seller: this.accountName as string,
             asset_ids: [this.assetData.asset_id],
-            listing_price: '2.00000000 WAX', // FIXME input LEGAL price
+            listing_price: amountStr,
             settlement_symbol: '8,WAX', // FIXME input LEGAL symbol
             maker_marketplace: ''
           }
@@ -344,6 +349,7 @@ export default defineComponent({
           textColor: 'white',
           message: 'Complete'
         });
+        this.showListingDialog = false;
         this.$emit('updateAssetInfo');
       } catch (e: unknown) {
         if (typeof e === 'string') {
@@ -471,7 +477,7 @@ q-card
     //- when owning, with list on market button
     .div(v-if='isOwned && !isForSale')
       q-btn.full-width.q-mt-lg(
-        @click='tryListNFT()',
+        @click='showListingDialog = true',
         label='LIST ON MARKET',
         color='primary'
       )
@@ -499,6 +505,30 @@ q-card
     | is owned by LC: {{ isOwnedByLC }},
     | has buy order: {{ hasBuyOrder }},
     | can claim: {{ isClaimable }}
+
+    //- list on market dialog
+    q-dialog(v-model='showListingDialog')
+      q-card
+        q-card-section
+          .text-bold
+            | Listing Price
+          q-input(
+            v-model='listPrice',
+            type='number',
+            label='Price (LEGAL)',
+            outlined
+          )
+        q-card-section
+          q-btn.q-mr-sm(
+            @click='tryListNFT()',
+            label='LIST ON MARKET',
+            color='primary'
+          )
+          q-btn(
+            @click='showListingDialog = false',
+            label='CANCEL',
+            color='primary'
+          )
 </template>
 
 <style lang="sass"></style>
