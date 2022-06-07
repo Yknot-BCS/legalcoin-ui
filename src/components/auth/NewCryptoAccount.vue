@@ -79,6 +79,8 @@ export default defineComponent({
   .col-12.text-italic With this account you can sign transactions on the blockchain without connecting an independant wallet (like Anchor).
   .col-12(v-if='profileCryptoAccount.accountName !== ""') Profile account name: &nbsp;
     span.text-bold {{ profileCryptoAccount.accountName }}
+  .col-12(v-if='profileCryptoAccount.accountName !== ""') Profile public key: &nbsp;
+    span.text-bold {{ profileCryptoAccount.publicKey }}
   q-card(flat, bordered)(v-else)
     q-item.bg-info You still need to create a crypto account for your profile. Connect an existing account or create a new one below.
     q-card-section
