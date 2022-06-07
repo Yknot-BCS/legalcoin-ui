@@ -3,8 +3,8 @@ import { defineComponent, PropType, ref } from 'vue';
 import DetailsTable from 'src/components/atomicAssets/DetailsTable.vue';
 import Description from 'src/components/atomicAssets/Description.vue';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
-import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
-import { ISale, IBuyoffer } from 'atomicmarket/build/API/Explorer/Objects';
+import { ITemplate } from 'atomicassets/build/API/Explorer/Objects';
+import { ISale } from 'atomicmarket/build/API/Explorer/Objects';
 import TemplateActionCard from 'src/components/atomicAssets/TemplateActionCard.vue';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -14,7 +14,7 @@ export default defineComponent({
   components: { DetailsTable, Description, Timeline, TemplateActionCard },
   props: {
     templateData: {
-      type: Object as PropType<IAsset>,
+      type: Object as PropType<ITemplate>,
       required: true
     },
     saleData: {
@@ -85,12 +85,11 @@ export default defineComponent({
         )
 
       //- Actions
-      //- AssetActionCard.col-12.q-my-sm(
-      //-   :assetData='assetData',
-      //-   :saleData='saleData',
-      //-   :buyofferData='buyofferData',
-      //-   @update-asset-info='$emit("updateAssetInfo", $event)'
-      //- )
+      TemplateActionCard.col-12.q-my-sm(
+        :templateData='templateData',
+        :saleData='saleData',
+        @update-asset-info='$emit("updateAssetInfo", $event)'
+      )
 
       //- Details and Description
       q-card.col-12.q-my-sm
@@ -106,9 +105,14 @@ export default defineComponent({
 
         q-tab-panels(v-model='tab', animated)
           q-tab-panel(name='description')
-            //- Description(:description='assetData?.data?.description')
+            Description(
+              :description='templateData?.immutable_data?.description'
+            )
           q-tab-panel(name='details')
-            //- DetailsTable(:assetData='assetData')
+            DetailsTable(
+              :data='templateData?.immutable_data',
+              :schema='templateData?.schema'
+            )
 </template>
 
 <style lang="sass" scoped>
