@@ -16,7 +16,6 @@ export default defineComponent({
     })
   },
   async mounted() {
-    console.log(this.account);
     if (this.cryptoIsAuthenticated) {
       const tokenBal: Asset[] = await this.$api.getTokenBalances(
         process.env.LC_CONTRACT,

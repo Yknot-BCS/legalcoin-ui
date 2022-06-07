@@ -1,6 +1,7 @@
 {
   "vetur.validation.template": false,
   "vetur.format.enable": false,
+  "editor.tabSize": 2,
   "eslint.validate": ["javascript", "typescript", "vue"],
   "typescript.tsdk": "node_modules/typescript/lib",
   "vetur.experimental.templateInterpolationService": false,

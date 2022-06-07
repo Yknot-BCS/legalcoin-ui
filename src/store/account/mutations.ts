@@ -1,7 +1,9 @@
 import { MutationTree } from 'vuex';
 import { AccountStateInterface } from './state';
 import { AccountDetails, User, Session } from 'src/types';
+import { SignTransactionResponse } from 'universal-authenticator-library';
 import auth from 'src/auth';
+import { UALPlatformSignerError } from 'src/components/auth/UALPlatformSignerError';
 
 export const mutations: MutationTree<AccountStateInterface> = {
   setLoadingWallet(state: AccountStateInterface, wallet: string) {
@@ -52,5 +54,17 @@ export const mutations: MutationTree<AccountStateInterface> = {
   },
   setUseLocalSigner(state: AccountStateInterface, useLocalSigner: boolean) {
     state.useLocalSigner = useLocalSigner;
+  },
+  setSignedTransaction(
+    state: AccountStateInterface,
+    transaction: SignTransactionResponse | null
+  ) {
+    state.platformSigner.signedTransactionResponse = transaction;
+  },
+  setSingedTransactionError(
+    state: AccountStateInterface,
+    error: UALPlatformSignerError
+  ) {
+    state.platformSigner.error = error;
   }
 };

@@ -5,7 +5,7 @@
 import { APIClient, Asset } from '@greymass/eosio';
 import { GetTableRowsParams } from 'src/types';
 
-const eosioCore = new APIClient({
+export const eosioCore = new APIClient({
   url: `${process.env.NETWORK_PROTOCOL}://${process.env.NETWORK_HOST}`
 });
 

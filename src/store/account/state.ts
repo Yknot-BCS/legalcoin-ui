@@ -1,10 +1,19 @@
 import { AccountDetails, User, Session } from 'src/types';
+import { SignTransactionResponse } from 'universal-authenticator-library';
+import { UALPlatformSignerError } from 'src/components/auth/UALPlatformSignerError';
+
+// Mimics return transaction or error for platform signer
+type PlatformSigner = {
+  signedTransactionResponse: SignTransactionResponse | null;
+  error: UALPlatformSignerError | null;
+};
 
 export interface AccountStateInterface {
   loading: unknown;
   cryptoAccountName: string;
   cryptoAccountDetails: AccountDetails;
   useLocalSigner: boolean;
+  platformSigner: PlatformSigner;
   isLoggedIn: boolean;
   profile: User;
   session: Session;
@@ -17,6 +26,11 @@ export function state(): AccountStateInterface {
     cryptoAccountName: '',
     cryptoAccountDetails: {} as AccountDetails,
     useLocalSigner: false,
+    // Platform Signer
+    platformSigner: {
+      signedTransactionResponse: null,
+      error: null
+    },
     // Profile
     isLoggedIn: false,
     profile: {

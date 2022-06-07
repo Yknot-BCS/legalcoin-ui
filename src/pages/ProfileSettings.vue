@@ -1,18 +1,25 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { mapGetters } from 'vuex';
+// import { useStore } from 'src/store';
+// import { useQuasar } from 'quasar';
 import LinkCryptoAccount from 'src/components/auth/LinkCryptoAccount.vue';
+import NewCryptoAccount from 'src/components/auth/NewCryptoAccount.vue';
+import TransferTokensForm from 'src/components/auth/TransferTokensForm.vue';
 
 export default defineComponent({
   name: 'Template',
-  components: { LinkCryptoAccount },
+  components: { LinkCryptoAccount, NewCryptoAccount, TransferTokensForm },
   computed: {
     ...mapGetters({
       account: 'account/account'
     })
   },
   setup() {
-    return { hideProfile: ref(false), emailNotifications: ref(false) };
+    return {
+      hideProfile: ref(false),
+      emailNotifications: ref(false)
+    };
   }
 });
 </script>
@@ -58,6 +65,11 @@ q-page.fit.row.wrap.justify-center
 
       link-crypto-account
     q-separator
+    q-card-section
+      NewCryptoAccount
+    q-separator
+    q-card-section
+      TransferTokensForm
 </template>
 
 <style lang="sass" scoped>
@@ -65,5 +77,4 @@ q-page.fit.row.wrap.justify-center
   width: 100%
   max-width: 30rem
   height: 100%
-  max-height: 30rem
 </style>
