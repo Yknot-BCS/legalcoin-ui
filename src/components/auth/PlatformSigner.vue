@@ -4,15 +4,14 @@ import { useQuasar, useDialogPluginComponent } from 'quasar';
 import { SignTransactionResponse } from 'universal-authenticator-library';
 import { defineComponent, computed, ref } from 'vue';
 import {
-  APIClient,
-  Asset,
   Action,
   AnyAction,
   Transaction,
   PrivateKey,
-  SignedTransaction,
-  APIError
+  SignedTransaction
 } from '@greymass/eosio';
+import { UALErrorType } from 'universal-authenticator-library';
+import { UALPlatformSignerError } from 'src/components/auth/UALPlatformSignerError';
 import { api } from 'src/api';
 import { requiredRule } from '../../pages/auth/inputRules';
 export default defineComponent({
@@ -66,7 +65,6 @@ export default defineComponent({
         if (!abi) {
           throw new Error(`ABI for ${action.account.toString()} not found`);
         }
-        // console.log(cryptoAccount.value.accountName);
         if (!action.authorization || !action.authorization.length) {
           action.authorization = [
             { actor: cryptoAccount.value.accountName, permission: 'active' }
@@ -94,6 +92,7 @@ export default defineComponent({
       try {
         await api.eosioCore.v1.chain.push_transaction(signedTransaction);
 
+        // TODO Review this conversion from PushTransactionResponse to SignTransactionResponse
         signedTransactionResponse = {
           wasBroadcast: true,
           transactionId: transaction.id.toString(),
@@ -102,18 +101,14 @@ export default defineComponent({
 
         store.commit('account/setSignedTransaction', signedTransactionResponse);
       } catch (error) {
-        signedTransactionResponse = {
-          wasBroadcast: false,
-          transaction: transaction
-        };
-        if (error instanceof APIError) {
-          signedTransactionResponse.error = {
-            code: error.code.toString(),
-            message: error.message,
-            name: error.name
-          };
-        }
-        store.commit('account/setSignedTransaction', signedTransactionResponse);
+        const message = 'Unable to sign transaction';
+        const type = UALErrorType.Signing;
+        const cause = error;
+        const ualError = new UALPlatformSignerError(message, type, cause);
+
+        // State can be used by downstream tasks to get a return value from the signer
+        store.commit('account/setSignedTransaction', null);
+        store.commit('account/setSingedTransactionError', ualError);
       } finally {
         onDialogOK();
       }
@@ -150,11 +145,7 @@ q-dialog(ref='dialogRef', @hide='onDialogHide', persistent)
           autocomplete='current-password'
         )
         q-card(bordered, flat)
-          q-expansion-item(
-            expand-separator,
-            label='Transaction Details',
-            default-opened
-          )
+          q-expansion-item(expand-separator, label='Transaction Details')
             q-card
               q-card-section {{ actions }}
       //- q-separator

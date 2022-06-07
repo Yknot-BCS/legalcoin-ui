@@ -2,6 +2,7 @@ import { MutationTree } from 'vuex';
 import { AccountStateInterface } from './state';
 import { AccountDetails, User, Session } from 'src/types';
 import auth from 'src/auth';
+import { UALPlatformSignerError } from 'src/components/auth/UALPlatformSignerError';
 
 export const mutations: MutationTree<AccountStateInterface> = {
   setLoadingWallet(state: AccountStateInterface, wallet: string) {
@@ -56,6 +57,12 @@ export const mutations: MutationTree<AccountStateInterface> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setSignedTransaction(state: AccountStateInterface, transaction: any) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    state.platformSigner.signedTransaction = transaction; // TODO check types
+    state.platformSigner.signedTransactionResponse = transaction; // TODO check types
+  },
+  setSingedTransactionError(
+    state: AccountStateInterface,
+    error: UALPlatformSignerError
+  ) {
+    state.platformSigner.error = error;
   }
 };

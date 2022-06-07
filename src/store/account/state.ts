@@ -1,10 +1,13 @@
 import { AnyAction } from '@greymass/eosio';
 import { AccountDetails, User, Session } from 'src/types';
+import { SignTransactionResponse } from 'universal-authenticator-library';
+import { UALPlatformSignerError } from 'src/components/auth/UALPlatformSignerError';
 
+// Mimics return transaction or error for platform signer
 type PlatformSigner = {
   actions: AnyAction[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  signedTransaction: any;
+  signedTransactionResponse: SignTransactionResponse | null;
+  error: UALPlatformSignerError | null;
 };
 
 export interface AccountStateInterface {
@@ -28,7 +31,8 @@ export function state(): AccountStateInterface {
     // Platform Signer
     platformSigner: {
       actions: [],
-      signedTransaction: null
+      signedTransactionResponse: null,
+      error: null
     },
     // Profile
     isLoggedIn: false,

@@ -85,7 +85,9 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
   },
 
   async platformSign({ state, commit }, { actions }): Promise<SignTransactionResponse> {
+    // State mimics return value for platform signer
     commit('setSignedTransaction', null);
+    commit('setSingedTransactionError', null);
     if (!await new Promise(resolve => Dialog.create({
       component: PlatformSigner,
       componentProps: { actions }
@@ -94,13 +96,10 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
       .onCancel(() => { resolve(false) })
       .onDismiss(() => { resolve(true); }))
     ) throw new Error('Transaction cancelled by user');
-    else {  // TODO improve error handling
-      const transaction = state.platformSigner.signedTransaction;
-      if (!transaction) throw new Error('Transaction signing failed');
-      else if (transaction.error) {
-        throw new Error(transaction.error.name);
-      }
-      else return transaction
+    else {
+      const error = state.platformSigner.error;
+      if (error) throw error;
+      else return state.platformSigner.signedTransactionResponse;
     }
   },
 
