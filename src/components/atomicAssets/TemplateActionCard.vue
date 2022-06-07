@@ -9,7 +9,7 @@ import { date } from 'quasar';
 import { copyToClipboard } from 'quasar';
 
 export default defineComponent({
-  name: 'AssetActionCard',
+  name: 'TemplateActionCard',
   components: { Timeline },
   props: {
     assetData: {
