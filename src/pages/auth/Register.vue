@@ -30,7 +30,6 @@ export default {
       onSubmit: async () => {
         try {
           await auth.register(userName, userSurname, userEmail, userPassword);
-          // await auth.login(store, userEmail, userPassword);
           $q.notify({
             type: 'positive',
             message: 'Registered'

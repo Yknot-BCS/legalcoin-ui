@@ -31,6 +31,28 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: '/emailverify-success',
+    component: () => import('layouts/Auth.vue'),
+    children: [
+      {
+        path: '',
+        name: 'emailverify-success',
+        component: () => import('pages/auth/EmailVerifySuccess.vue')
+      }
+    ]
+  },
+  {
+    path: '/emailverify-failed',
+    component: () => import('layouts/Auth.vue'),
+    children: [
+      {
+        path: '',
+        name: 'emailverify-failed',
+        component: () => import('pages/auth/EmailVerifyFailure.vue')
+      }
+    ]
+  },
+  {
     path: '/passwordresetrequest',
     component: () => import('layouts/Auth.vue'),
     children: [

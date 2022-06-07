@@ -35,7 +35,7 @@ export async function register(
   userPassword: Ref<string>
 ) {
   // Sign Up
-  await api.accounts.mutation(`
+  const res = (await api.accounts.mutation(`
     {
       signUp(input: {
         email: "${userEmail.value}",
@@ -50,17 +50,15 @@ export async function register(
           password: "${userPassword.value}"
         }
       ) {
+        token
         sessionLength
       }
     }
-  `);
+  `)) as any;
 
-  // Send Email Verification
-  await api.accounts.mutation(`
-    mutation {
-      emailVerifyRequest
-    }
-  `);
+  setAccessToken(res.signIn.token);
+  setSessionExpiry(res.signIn.sessionLength);
+  await emailVerificationRequest();
 }
 
 export async function getProfile() {
@@ -108,5 +106,13 @@ export async function passwordResetNew(
       }
     )
   }
+  `);
+}
+
+export async function emailVerificationRequest() {
+  await api.accounts.mutation(`
+    mutation {
+      emailVerifyRequest
+    }
   `);
 }
