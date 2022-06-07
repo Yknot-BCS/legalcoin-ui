@@ -138,11 +138,10 @@ q-dialog(ref='dialogRef', @hide='onDialogHide', persistent)
     q-form(@submit='signTransaction')
       q-card-section
         .text-h5 Confirm Transaction
+      q-separator
       q-card-section
-        div Signing with {{ cryptoAccount.accountName }}
-        div Please enter your password to confirm the transaction.
-      q-card-section
-        q-input(
+        .text-italic Please enter your password to confirm the transaction
+        q-input.q-my-sm(
           v-model='userPassword',
           type='password',
           label='Password',
@@ -150,6 +149,17 @@ q-dialog(ref='dialogRef', @hide='onDialogHide', persistent)
           :rules='[requiredRule]',
           autocomplete='current-password'
         )
+        q-card(bordered, flat)
+          q-expansion-item(
+            expand-separator,
+            label='Transaction Details',
+            default-opened
+          )
+            q-card
+              q-card-section {{ actions }}
+      //- q-separator
+      //- q-card-section
+        //- .text-italic You are about to sign a transaction on the blockchain
       q-card-actions(align='right')
         q-btn(@click='onDialogCancel') Cancel
         q-btn(type='submit', color='primary') Confirm
@@ -157,5 +167,5 @@ q-dialog(ref='dialogRef', @hide='onDialogHide', persistent)
 
 <style lang="sass">
 .q-card
-  flex-basis: 400px
+  flex-basis: 500px
 </style>
