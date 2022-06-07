@@ -475,12 +475,12 @@ q-card
         color='primary'
       )
     //- when owning, with list on market button
-    .div(v-if='isOwned && !isForSale')
-      q-btn.full-width.q-mt-lg(
-        @click='showListingDialog = true',
-        label='LIST ON MARKET',
-        color='primary'
-      )
+    //- .div(v-if='isOwned && !isForSale')
+    //-   q-btn.full-width.q-mt-lg(
+    //-     @click='showListingDialog = true',
+    //-     label='LIST ON MARKET',
+    //-     color='primary'
+    //-   )
     //- when selling, show price card, with cancel listing button
     .div(v-if='isForSale && isOwned')
       q-card.bg-grey-4.row.justify-center.q-mt-lg
