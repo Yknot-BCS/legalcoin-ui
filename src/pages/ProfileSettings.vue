@@ -1,6 +1,6 @@
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
-import { Computed, mapGetters } from 'vuex';
+import { defineComponent, ref } from 'vue';
+import { mapGetters } from 'vuex';
 // import { useStore } from 'src/store';
 // import { useQuasar } from 'quasar';
 import LinkCryptoAccount from 'src/components/auth/LinkCryptoAccount.vue';
