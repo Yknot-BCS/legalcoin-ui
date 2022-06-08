@@ -3,26 +3,22 @@ import { defineComponent, PropType, ref } from 'vue';
 import DetailsTable from 'src/components/atomicAssets/DetailsTable.vue';
 import Description from 'src/components/atomicAssets/Description.vue';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
-import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
-import { ISale, IBuyoffer } from 'atomicmarket/build/API/Explorer/Objects';
-import AssetActionCard from 'src/components/atomicAssets/AssetActionCard.vue';
+import { ITemplate } from 'atomicassets/build/API/Explorer/Objects';
+import { ISale } from 'atomicmarket/build/API/Explorer/Objects';
+import TemplateActionCard from 'src/components/atomicAssets/TemplateActionCard.vue';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export default defineComponent({
-  name: 'Asset',
-  components: { DetailsTable, Description, Timeline, AssetActionCard },
+  name: 'TemplateCardView',
+  components: { DetailsTable, Description, Timeline, TemplateActionCard },
   props: {
-    assetData: {
-      type: Object as PropType<IAsset>,
+    templateData: {
+      type: Object as PropType<ITemplate>,
       required: true
     },
     saleData: {
       type: Object as PropType<ISale>,
-      required: true
-    },
-    buyofferData: {
-      type: Object as PropType<IBuyoffer>,
       required: true
     }
   },
@@ -33,7 +29,9 @@ export default defineComponent({
   },
   computed: {
     assetImg(): string {
-      return `https://ipfs.io/ipfs/${<string>this.assetData.data.img}`;
+      return `https://ipfs.io/ipfs/${<string>(
+        this.templateData.immutable_data?.img
+      )}`;
     }
   }
 });
@@ -46,18 +44,18 @@ export default defineComponent({
     .row.q-pa-sm
       //- Image
       q-card.col-12.q-my-sm
-        //- TODO replace with placeholder
         q-img.asset-img(
           :src='assetImg',
           placeholder-src='https://placeimg.com/500/300/nature'
         )
+
       //- Actions
-      AssetActionCard.col-12.q-my-sm(
-        :assetData='assetData',
+      TemplateActionCard.col-12.q-my-sm(
+        :templateData='templateData',
         :saleData='saleData',
-        :buyofferData='buyofferData',
         @update-asset-info='$emit("updateAssetInfo", $event)'
       )
+
       //- Details and Description
       q-card.col-12.q-my-sm
         q-tabs.text-grey-8(
@@ -69,12 +67,17 @@ export default defineComponent({
         )
           q-tab(name='description', label='Description')
           q-tab(name='details', label='Details')
+
         q-tab-panels(v-model='tab', animated)
           q-tab-panel(name='description')
-            Description(:description='assetData.data.description')
+            Description(
+              :description='templateData?.immutable_data?.description'
+            )
           q-tab-panel(name='details')
-            DetailsTable(:data='assetData?.data', :schema='assetData.schema')
-
+            DetailsTable(
+              :data='templateData?.immutable_data',
+              :schema='templateData?.schema'
+            )
 //- Mobile view
 .row.justify-center(v-else)
   .col-12.page-view.q-py-lg.asset-container
@@ -87,10 +90,9 @@ export default defineComponent({
         )
 
       //- Actions
-      AssetActionCard.col-12.q-my-sm(
-        :assetData='assetData',
+      TemplateActionCard.col-12.q-my-sm(
+        :templateData='templateData',
         :saleData='saleData',
-        :buyofferData='buyofferData',
         @update-asset-info='$emit("updateAssetInfo", $event)'
       )
 
@@ -108,9 +110,14 @@ export default defineComponent({
 
         q-tab-panels(v-model='tab', animated)
           q-tab-panel(name='description')
-            Description(:description='assetData?.data?.description')
+            Description(
+              :description='templateData?.immutable_data?.description'
+            )
           q-tab-panel(name='details')
-            DetailsTable(:data='assetData?.data', :schema='assetData.schema')
+            DetailsTable(
+              :data='templateData?.immutable_data',
+              :schema='templateData?.schema'
+            )
 </template>
 
 <style lang="sass" scoped>

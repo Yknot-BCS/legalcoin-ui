@@ -86,6 +86,17 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: '/passwordresetsuccess',
+    component: () => import('layouts/Auth.vue'),
+    children: [
+      {
+        path: '',
+        name: 'passwordresetsuccess',
+        component: () => import('pages/auth/PasswordResetSuccess.vue')
+      }
+    ]
+  },
+  {
     path: '/buy',
     component: () => import('layouts/MainLayout.vue'),
     children: [
@@ -198,7 +209,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'template',
-        component: () => import('pages/Asset.vue')
+        component: () => import('pages/Template.vue')
       }
     ]
   },

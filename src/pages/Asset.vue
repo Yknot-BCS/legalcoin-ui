@@ -62,7 +62,7 @@ export default defineComponent({
             : this.$route.params.asset,
         page: 1,
         order: 'asc',
-        limit: 6,
+        limit: 100,
         collection_name:
           this.$route.params.collection_name === undefined
             ? ''
@@ -91,12 +91,6 @@ export default defineComponent({
     if (this.$route.params.asset) {
       console.log('Is Asset');
       await this.updateAssetInfo();
-    }
-
-    // TODO figure out how to handle templates
-    if (this.$route.params.template) {
-      console.log('Is Template');
-      await this.getSaleData();
     }
   }
 });

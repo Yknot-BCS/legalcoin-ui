@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
-import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
-import { ISale, IBuyoffer } from 'atomicmarket/build/API/Explorer/Objects';
+import { ITemplate } from 'atomicassets/build/API/Explorer/Objects';
+import { ISale } from 'atomicmarket/build/API/Explorer/Objects';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
 import { mapGetters, mapActions } from 'vuex';
 import { Asset, Int64 } from '@greymass/eosio';
@@ -9,19 +9,15 @@ import { date } from 'quasar';
 import { copyToClipboard } from 'quasar';
 
 export default defineComponent({
-  name: 'AssetActionCard',
+  name: 'TemplateActionCard',
   components: { Timeline },
   props: {
-    assetData: {
-      type: Object as PropType<IAsset>,
+    templateData: {
+      type: Object as PropType<ITemplate>,
       required: true
     },
     saleData: {
       type: Object as PropType<ISale>,
-      required: true
-    },
-    buyofferData: {
-      type: Object as PropType<IBuyoffer>,
       required: true
     }
   },
@@ -39,25 +35,13 @@ export default defineComponent({
     ...mapGetters({
       accountName: 'account/cryptoAccountName'
     }),
-    isOwned() {
-      // Check if the current user is the owner of the asset
-      if (this.accountName === this.assetData.owner) {
-        return true;
-      } else {
-        return false;
-      }
-    },
 
     isForSale() {
       return !!this.saleData || this.saleData?.price !== undefined;
     },
 
-    isOwnedByLC() {
-      return this.assetData.owner === process.env.AA_ACCOUNT;
-    },
-
     isBuybackNFT() {
-      return !!this.assetData?.data['saleopen'];
+      return !!this.templateData?.immutable_data['saleopen'];
     },
 
     isMatured() {
@@ -79,30 +63,16 @@ export default defineComponent({
       }
     },
 
-    hasBuyOrder() {
-      return !!this.buyofferData;
-    },
-
-    isClaimable() {
-      if (this.hasBuyOrder) {
-        if (this.buyofferData.buyer === process.env.AA_ACCOUNT) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return false;
-      }
-    },
-
     saleopenDate() {
-      return new Date(Number(this.assetData.data.saleopen) * 1000);
+      return new Date(
+        Number(this.templateData?.immutable_data.saleopen) * 1000
+      );
     },
 
     maturityDate() {
       if (this.isBuybackNFT) {
         let maturityDate = date.addToDate(this.saleopenDate, {
-          days: this.assetData?.data?.term as number
+          days: this.templateData?.immutable_data?.term as number
         });
         return maturityDate;
       } else return undefined;
@@ -111,7 +81,7 @@ export default defineComponent({
     expiryDate() {
       if (this.isBuybackNFT) {
         let expiryDate = date.addToDate(this.maturityDate, {
-          days: this.assetData?.data?.expiry as number
+          days: this.templateData?.immutable_data?.expiry as number
         });
         return expiryDate;
       } else return undefined;
@@ -165,12 +135,12 @@ export default defineComponent({
     }
   },
   mounted() {
-    if (this.assetData.asset_id) {
-      // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      this.pollAsset = setInterval(() => {
-        void this.$emit('updateAssetInfo');
-      }, 10000);
-    }
+    // if (this.assetData.asset_id) {
+    //   // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    //   this.pollAsset = setInterval(() => {
+    //     void this.$emit('updateAssetInfo');
+    //   }, 10000);
+    // }
   },
   beforeUnmount() {
     clearInterval(this.pollAsset);
@@ -251,160 +221,6 @@ export default defineComponent({
       }
     },
 
-    async claim() {
-      let actions: unknown = [
-        {
-          account: 'atomicassets',
-          name: 'createoffer',
-          data: {
-            sender: this.accountName as string,
-            recipient: 'atomicmarket',
-            sender_asset_ids: [this.buyofferData.assets[0].asset_id],
-            recipient_asset_ids: [],
-            memo: 'buyoffer'
-          }
-        },
-        {
-          account: 'atomicmarket',
-          name: 'acceptbuyo',
-          data: {
-            buyoffer_id: this.buyofferData.buyoffer_id,
-            expected_asset_ids: [this.buyofferData.assets[0].asset_id],
-            expected_price: Asset.fromUnits(
-              Int64.from(this.buyofferData.price.amount),
-              Asset.Symbol.fromParts(
-                this.buyofferData.price.token_symbol,
-                this.buyofferData.price.token_precision
-              )
-            ).toString(),
-            taker_marketplace: ''
-          }
-        }
-      ];
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      this.transaction = await this.sendTransaction({ actions });
-    },
-
-    async tryClaim() {
-      console.log('try claim');
-      try {
-        await this.claim();
-        this.$q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          message: 'Complete'
-        });
-        this.$emit('updateAssetInfo');
-      } catch (e: unknown) {
-        if (typeof e === 'string') {
-          e.toUpperCase(); // works, `e` narrowed to string
-        } else if (e instanceof Error) {
-          this.$q.notify({
-            color: 'red-4',
-            textColor: 'white',
-            message: e.message,
-            timeout: 5000
-          });
-        }
-      }
-    },
-
-    async listNFT() {
-      let amountStr = Asset.from(
-        Number(this.listPrice),
-        Asset.Symbol.fromParts('WAX', 8) // FIXME input LEGAL price
-      ).toString(); //'2.00000000 WAX'
-      let actions: unknown = [
-        {
-          account: 'atomicmarket',
-          name: 'announcesale',
-          data: {
-            seller: this.accountName as string,
-            asset_ids: [this.assetData.asset_id],
-            listing_price: amountStr,
-            settlement_symbol: '8,WAX', // FIXME input LEGAL symbol
-            maker_marketplace: ''
-          }
-        },
-        {
-          account: 'atomicassets',
-          name: 'createoffer',
-          data: {
-            sender: this.accountName as string,
-            recipient: 'atomicmarket',
-            sender_asset_ids: [this.assetData.asset_id],
-            recipient_asset_ids: [],
-            memo: 'sale'
-          }
-        }
-      ];
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      this.transaction = await this.sendTransaction({ actions });
-    },
-
-    async tryListNFT() {
-      console.log('try listing');
-      try {
-        await this.listNFT();
-        this.$q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          message: 'Complete'
-        });
-        this.showListingDialog = false;
-        this.$emit('updateAssetInfo');
-      } catch (e: unknown) {
-        if (typeof e === 'string') {
-          e.toUpperCase(); // works, `e` narrowed to string
-        } else if (e instanceof Error) {
-          this.$q.notify({
-            color: 'red-4',
-            textColor: 'white',
-            message: e.message,
-            timeout: 5000
-          });
-        }
-      }
-    },
-
-    async cancelListing() {
-      let actions: unknown = [
-        {
-          account: 'atomicmarket',
-          name: 'cancelsale',
-          data: {
-            sale_id: this.saleData.sale_id
-          }
-        }
-      ];
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      this.transaction = await this.sendTransaction({ actions });
-    },
-
-    async tryCancelListing() {
-      console.log('try listing');
-      try {
-        await this.cancelListing();
-        this.$q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          message: 'Complete'
-        });
-        this.$emit('updateAssetInfo');
-      } catch (e: unknown) {
-        if (typeof e === 'string') {
-          e.toUpperCase(); // works, `e` narrowed to string
-        } else if (e instanceof Error) {
-          this.$q.notify({
-            color: 'red-4',
-            textColor: 'white',
-            message: e.message,
-            timeout: 5000
-          });
-        }
-      }
-    },
-
     shareURL() {
       void copyToClipboard(window.location.origin + this.$route.path).then(
         () => {
@@ -424,12 +240,12 @@ q-card
   q-card-section
     //- name
     .text-bold.text-h6
-      | {{ assetData?.data?.name }}
+      | {{ templateData?.immutable_data?.name }}
     //- by
     .row.justify-between.items-center.fit.wrap
       .col-10.text-italic.text-subtitle1.column
         .col 
-          | Owner: {{ assetData?.owner }}
+          //- | Owner: {{ assetData?.owner }}
 
       //- expected yield?
       //- share icon
@@ -443,7 +259,7 @@ q-card
       :expiryDate='expiryDate'
     )
     //- when buying, show price, days to maturity, quantity, and total cost, with buy button
-    .div(v-if='isForSale && !isOwned')
+    .div(v-if='isForSale')
       .row.justify-between.q-mt-lg
         .col-6
           .column.content-start 
@@ -483,23 +299,6 @@ q-card
     //-     label='LIST ON MARKET',
     //-     color='primary'
     //-   )
-    //- when selling, show price card, with cancel listing button
-    .div(v-if='isForSale && isOwned')
-      q-card.bg-grey-4.row.justify-center.q-mt-lg
-        .text-subtitle1
-          | Listed for: {{ priceStr }}
-      q-btn.full-width.q-mt-lg(
-        @click='tryCancelListing()',
-        label='CANCEL LISTING',
-        color='primary'
-      )
-    //- when mature, show claim button
-    .div(v-if='isClaimable')
-      q-btn.full-width.q-mt-lg(
-        @click='tryClaim()',
-        label='CLAIM',
-        color='primary'
-      )
 
     | owned: {{ isOwned }},
     | for sale: {{ isForSale }},
@@ -507,30 +306,6 @@ q-card
     | is owned by LC: {{ isOwnedByLC }},
     | has buy order: {{ hasBuyOrder }},
     | can claim: {{ isClaimable }}
-
-    //- list on market dialog
-    q-dialog(v-model='showListingDialog')
-      q-card
-        q-card-section
-          .text-bold
-            | Listing Price
-          q-input(
-            v-model='listPrice',
-            type='number',
-            label='Price (LEGAL)',
-            outlined
-          )
-        q-card-section
-          q-btn.q-mr-sm(
-            @click='tryListNFT()',
-            label='LIST ON MARKET',
-            color='primary'
-          )
-          q-btn(
-            @click='showListingDialog = false',
-            label='CANCEL',
-            color='primary'
-          )
 </template>
 
 <style lang="sass"></style>
