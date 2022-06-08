@@ -2,11 +2,14 @@
 import auth from 'src/auth';
 import { ref } from 'vue';
 import { requiredRule } from './inputRules';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+import { useQuasar } from 'quasar';
 
 export default {
   setup() {
     const route = useRoute();
+    const router = useRouter();
+    const quasar = useQuasar();
     const userPassword = ref('');
     function passwordMatchRule(val: string): string | boolean {
       return val === userPassword.value || 'Passwords do not match';
@@ -17,10 +20,25 @@ export default {
       requiredRule,
       passwordMatchRule,
       onSubmit: async () => {
-        await auth.passwordResetNew(
-          route.query['resetToken'] as string,
-          userPassword.value
-        );
+        try {
+          await auth.passwordResetNew(
+            route.query['resetToken'] as string,
+            userPassword.value
+          );
+          await router.push('/passwordresetsuccess');
+        } catch (error) {
+          if (error instanceof Error) {
+            quasar.notify({
+              color: 'red-4',
+              textColor: 'white',
+              message: error.message,
+              timeout: 5000
+            });
+          }
+        }
+      },
+      onContinue: async () => {
+        await router.replace('/');
       }
     };
   }

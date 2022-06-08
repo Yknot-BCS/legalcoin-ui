@@ -3,11 +3,13 @@ import auth from 'src/auth';
 import { ref } from 'vue';
 import { requiredRule } from './inputRules';
 import { useRouter } from 'vue-router';
+import { useQuasar } from 'quasar';
 
 export default {
   setup() {
     const userEmail = ref('');
     const router = useRouter();
+    const quasar = useQuasar();
     return {
       userEmail,
       requiredRule,
@@ -15,7 +17,16 @@ export default {
         try {
           await auth.passwordResetRequest(userEmail);
           await router.push({ name: 'passwordresetsent' });
-        } catch (error) {}
+        } catch (error) {
+          if (error instanceof Error) {
+            quasar.notify({
+              color: 'red-4',
+              textColor: 'white',
+              message: error.message,
+              timeout: 5000
+            });
+          }
+        }
       }
     };
   }
