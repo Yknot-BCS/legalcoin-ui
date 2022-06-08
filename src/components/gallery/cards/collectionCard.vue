@@ -23,9 +23,15 @@ q-card
   q-card-section
     .text-h6 {{ card.name }}
   q-separator(inset)
-  q-img.asset-img(:src='card.imageUrl')
+  router-link(
+    :to='{ name: "collection", params: { collection: card.collection } }'
+  )
+    q-img.asset-img(:src='card.imageUrl')
   q-card-actions
-    q-btn(flat) View Collection
+    q-btn(
+      flat,
+      :to='{ name: "collection", params: { collection: card.collection } }'
+    ) View Collection
 </template>
 
 <style lang="sass" scoped>
