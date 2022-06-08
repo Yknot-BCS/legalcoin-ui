@@ -27,9 +27,10 @@ q-card
     :to='{ name: "collection", params: { collection: card.collection } }'
   )
     q-img.asset-img(:src='card.imageUrl')
-  q-card-actions
-    q-btn(
+  q-card-actions.q-pa-md
+    q-btn.full-width(
       flat,
+      color='primary',
       :to='{ name: "collection", params: { collection: card.collection } }'
     ) View Collection
 </template>
