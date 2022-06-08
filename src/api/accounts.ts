@@ -43,8 +43,11 @@ const mutation = async function (query: string): Promise<unknown> {
         }
       }
     );
-    if (res.data.errors) throw res.data.errors[0];
-    else return res.data.data;
+    if (res.data.errors) {
+      throw new Error(res.data.errors[0].message);
+    }
+
+    return res.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response.data.errors[0]);
