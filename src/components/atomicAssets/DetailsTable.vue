@@ -1,13 +1,19 @@
 <script lang="ts">
 import { defineComponent, computed, PropType } from 'vue';
-import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
+import { ILightSchema } from 'atomicassets/build/API/Explorer/Objects';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export default defineComponent({
   name: 'DetailsTable',
   props: {
-    assetData: {
-      type: Object as PropType<IAsset>,
+    data: {
+      type: Object as PropType<{
+        [key: string]: any;
+      }>,
+      required: true
+    },
+    schema: {
+      type: Object as PropType<ILightSchema>,
       required: true
     }
   },
@@ -32,8 +38,8 @@ export default defineComponent({
       }
     ];
 
-    const Data = computed(() => props.assetData);
-    const data = computed(() => Data?.value?.data);
+    const data = computed(() => props.data);
+    const schema = computed(() => props.schema);
 
     let parseRows = (data: { [key: string]: any }) => {
       let rows = [];
@@ -51,7 +57,7 @@ export default defineComponent({
     const rows = computed(() => parseRows(data.value));
 
     // Sort according to original schema order
-    let sortingArr = props.assetData.schema.format.map((n) => n.name);
+    let sortingArr = schema.value.format.map((n) => n.name);
     const arrayMap = rows.value.reduce(
       (accumulator, currentValue) => ({
         ...accumulator,
@@ -63,7 +69,7 @@ export default defineComponent({
       (name) => arrayMap[name as keyof typeof arrayMap]
     );
 
-    return { columns, rows: sortedRows, data };
+    return { columns, rows: sortedRows };
   }
 });
 </script>
