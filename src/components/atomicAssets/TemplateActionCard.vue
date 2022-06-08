@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
-import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
+import { ITemplate } from 'atomicassets/build/API/Explorer/Objects';
 import { ISale } from 'atomicmarket/build/API/Explorer/Objects';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
 import { mapGetters, mapActions } from 'vuex';
@@ -13,7 +13,7 @@ export default defineComponent({
   components: { Timeline },
   props: {
     templateData: {
-      type: Object as PropType<IAsset>,
+      type: Object as PropType<ITemplate>,
       required: true
     },
     saleData: {
@@ -259,7 +259,7 @@ q-card
       :expiryDate='expiryDate'
     )
     //- when buying, show price, days to maturity, quantity, and total cost, with buy button
-    .div(v-if='isForSale && !isOwned')
+    .div(v-if='isForSale')
       .row.justify-between.q-mt-lg
         .col-6
           .column.content-start 
@@ -299,23 +299,6 @@ q-card
     //-     label='LIST ON MARKET',
     //-     color='primary'
     //-   )
-    //- when selling, show price card, with cancel listing button
-    .div(v-if='isForSale && isOwned')
-      q-card.bg-grey-4.row.justify-center.q-mt-lg
-        .text-subtitle1
-          | Listed for: {{ priceStr }}
-      q-btn.full-width.q-mt-lg(
-        @click='tryCancelListing()',
-        label='CANCEL LISTING',
-        color='primary'
-      )
-    //- when mature, show claim button
-    .div(v-if='isClaimable')
-      q-btn.full-width.q-mt-lg(
-        @click='tryClaim()',
-        label='CLAIM',
-        color='primary'
-      )
 
     | owned: {{ isOwned }},
     | for sale: {{ isForSale }},
@@ -323,30 +306,6 @@ q-card
     | is owned by LC: {{ isOwnedByLC }},
     | has buy order: {{ hasBuyOrder }},
     | can claim: {{ isClaimable }}
-
-    //- list on market dialog
-    q-dialog(v-model='showListingDialog')
-      q-card
-        q-card-section
-          .text-bold
-            | Listing Price
-          q-input(
-            v-model='listPrice',
-            type='number',
-            label='Price (LEGAL)',
-            outlined
-          )
-        q-card-section
-          q-btn.q-mr-sm(
-            @click='tryListNFT()',
-            label='LIST ON MARKET',
-            color='primary'
-          )
-          q-btn(
-            @click='showListingDialog = false',
-            label='CANCEL',
-            color='primary'
-          )
 </template>
 
 <style lang="sass"></style>

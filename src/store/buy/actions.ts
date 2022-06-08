@@ -125,7 +125,7 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
     const gallerydata = data.map((template) => {
       return {
         ...template.immutable_data,
-        to: '/template/' + template.template_id,
+        to: `/template/${template.collection.collection_name}/${template.template_id}`,
         yield: getYield(
           template.immutable_data.mintprice,
           template.immutable_data.maturedvalue

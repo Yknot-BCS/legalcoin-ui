@@ -252,7 +252,7 @@ export default defineComponent({
     },
 
     async claim() {
-      let actions: any = [
+      let actions: unknown = [
         {
           account: 'atomicassets',
           name: 'createoffer',
@@ -314,7 +314,7 @@ export default defineComponent({
         Number(this.listPrice),
         Asset.Symbol.fromParts('WAX', 8) // FIXME input LEGAL price
       ).toString(); //'2.00000000 WAX'
-      let actions: any = [
+      let actions: unknown = [
         {
           account: 'atomicmarket',
           name: 'announcesale',
@@ -368,7 +368,7 @@ export default defineComponent({
     },
 
     async cancelListing() {
-      let actions: any = [
+      let actions: unknown = [
         {
           account: 'atomicmarket',
           name: 'cancelsale',

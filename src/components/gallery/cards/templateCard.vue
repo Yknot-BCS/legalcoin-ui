@@ -31,10 +31,16 @@ q-card
     .row
       .text-subtitle2 Expected yield {{ card.yield }}
   q-separator(inset)
-  router-link(:to='"/asset/" + card.id')
+  router-link(
+    :to='{ name: "template", params: { collection_name: card.collection, template_id: card.id } }'
+  )
     q-img.asset-img(:src='card.imageUrl')
   q-card-actions.q-pa-md
-    q-btn.full-width(flat, color='primary', :to='card.to') View Template
+    q-btn.full-width(
+      flat,
+      color='primary',
+      :to='{ name: "template", params: { collection_name: card.collection, template_id: card.id } }'
+    ) View Template
 </template>
 
 <style lang="sass" scoped>

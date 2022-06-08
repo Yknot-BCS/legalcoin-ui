@@ -42,42 +42,42 @@ export default defineComponent({
 <template lang="pug">
 //- Desktop view
 .row.justify-center(v-if='$q.screen.gt.md')
-  //- .col-12.page-view.q-py-lg.asset-container
-  //-   .row.q-pa-sm
-  //-     //- Image
-  //-     q-card.col-12.q-my-sm
-  //-       //- TODO replace with placeholder
-  //-       q-img.asset-img(
-  //-         :src='assetImg',
-  //-         placeholder-src='https://placeimg.com/500/300/nature'
-  //-       )
-  //-     //- Actions
-  //-     AssetActionCard.col-12.q-my-sm(
-  //-       :assetData='assetData',
-  //-       :saleData='saleData',
-  //-       :buyofferData='buyofferData',
-  //-       @update-asset-info='$emit("updateAssetInfo", $event)'
-  //-     )
-  //-     //- Details and Description
-  //-     q-card.col-12.q-my-sm
-  //-       q-tabs.text-grey-8(
-  //-         v-model='tab',
-  //-         dense,
-  //-         align='left',
-  //-         active-color='primary',
-  //-         :breakpoint='0'
-  //-       )
-  //-         q-tab(name='description', label='Description')
-  //-         q-tab(name='details', label='Details')
-  //-       q-tab-panels(v-model='tab', animated)
-  //-         q-tab-panel(name='description')
-  //-           Description(:description='assetData.data.description')
-  //-         q-tab-panel(name='details')
-  //-           DetailsTable(:data='assetData?.data', :schema='assetData.schema')
+  .col-12.page-view.q-py-lg.asset-container
+    .row.q-pa-sm
+      //- Image
+      q-card.col-12.q-my-sm
+        //- TODO replace with placeholder
+        q-img.asset-img(
+          :src='assetImg',
+          placeholder-src='https://placeimg.com/500/300/nature'
+        )
+      //- Actions
+      AssetActionCard.col-12.q-my-sm(
+        :assetData='assetData',
+        :saleData='saleData',
+        :buyofferData='buyofferData',
+        @update-asset-info='$emit("updateAssetInfo", $event)'
+      )
+      //- Details and Description
+      q-card.col-12.q-my-sm
+        q-tabs.text-grey-8(
+          v-model='tab',
+          dense,
+          align='left',
+          active-color='primary',
+          :breakpoint='0'
+        )
+          q-tab(name='description', label='Description')
+          q-tab(name='details', label='Details')
+        q-tab-panels(v-model='tab', animated)
+          q-tab-panel(name='description')
+            Description(:description='assetData.data.description')
+          q-tab-panel(name='details')
+            DetailsTable(:data='assetData?.data', :schema='assetData.schema')
 
 //- Mobile view
 .row.justify-center(v-else)
-  .col-12.page-view.q-py-lg
+  .col-12.page-view.q-py-lg.asset-container
     .row.q-pa-sm
       //- Image
       q-card.col-12.q-my-sm
