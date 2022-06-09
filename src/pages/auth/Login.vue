@@ -35,6 +35,9 @@ export default {
             message: (error as Error).message
           });
         }
+      },
+      navigate: async (name: string) => {
+        await router.push({ name: name });
       }
     };
   }
@@ -43,8 +46,11 @@ export default {
 
 <template lang="pug">
 .page-wrapper
-  .row.q-pa-md.bg-grey-3
-    .text-h5.col-12 Login
+  q-card.q-pa-lg.bg-grey-1.shadow-10.animated.bounceInLeft
+    img.q-my-lg(src='~assets/legalcoin-full.png', style='width: 12rem')
+    .text-h5.col-12.text-weight-bold Sign In
+    p.col-12 to continue to LegalCoin
+
     q-form.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
       q-input.col-12(
         v-model='userEmail',
@@ -62,15 +68,18 @@ export default {
         autocomplete='current-password'
       )
       q-btn.col-12(type='submit', color='primary') Login
-
-    .col-12.text-center
-      span.q-mr-xs Forgot your password?
-      router-link(to='passwordresetrequest') Reset Password
+      q-btn.col-12(
+        flat,
+        color='primary',
+        @click='navigate("passwordresetrequest")'
+      ) Forgot your password?
     .col-12.text-center
       span.q-mr-xs Need an account?
       router-link(to='register') Register
-  .row.justify-center.align-center.q-my-lg
-    router-link.skip-link(:to='{ name: "home" }') Skip this step
+    // TODO: Fix quasar seperator
+    .q-mt-lg(style='border: 1px solid #ddd')
+    .row.justify-center.align-center.q-my-lg
+      router-link.skip-link(:to='{ name: "home" }') Skip this step
 </template>
 
 <style lang="sass" scoped>
