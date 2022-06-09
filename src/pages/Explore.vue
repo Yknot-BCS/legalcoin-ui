@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
-import { atomic_api } from 'src/api/atomic_assets';
+import { atomic_market_api } from 'src/api/atomic_assets';
 
 export default defineComponent({
   name: 'Gallery',
@@ -9,7 +9,7 @@ export default defineComponent({
     //const data = await atomic_api.getAsset('1099511627786');
     async function getData() {
       const options = { owner: 'pokemontest1', page: 1, limit: 10 };
-      return await atomic_api.getAssets(options);
+      return await atomic_market_api.getAssets(options);
     }
     onMounted(async () => {
       console.log(await getData());

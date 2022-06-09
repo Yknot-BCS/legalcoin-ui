@@ -1,7 +1,7 @@
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { BuyStateInterface } from './state';
-import { atomic_api } from 'src/api/atomic_assets';
+import { atomic_api, atomic_market_api } from 'src/api/atomic_assets';
 import { GalleryCard } from 'src/types';
 
 function assetToAmount(asset: string, decimals = -1): number {
@@ -84,7 +84,7 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
   },
 
   async updateAssets({ commit, state }) {
-    const data = await atomic_api.getAssets(state.assetFilter);
+    const data = await atomic_market_api.getAssets(state.assetFilter);
     const gallerydata = data.map((asset) => {
       return {
         ...asset.data,

@@ -2,29 +2,57 @@
 import { defineComponent, ref } from 'vue';
 import { Asset } from '@greymass/eosio';
 import { mapGetters } from 'vuex';
+import { atomic_market_api } from 'src/api/atomic_assets';
 
 export default defineComponent({
   name: 'Wallet',
   components: {},
   setup() {
-    return { balance: ref('0'), nftCount: ref(0) };
+    return {
+      balance: ref('0'),
+      nftCount: ref(0),
+      nftValue: ref(0),
+      valueRatio: ref(1.01)
+    };
   },
   computed: {
     ...mapGetters({
-      account: 'account/cryptoAccountName',
+      accountName: 'account/cryptoAccountName',
       cryptoIsAuthenticated: 'account/cryptoIsAuthenticated'
-    })
+    }),
+
+    gbpValue(): string {
+      return (Number(this.balance) * (1 / this.valueRatio)).toFixed(2);
+    }
   },
   async mounted() {
     if (this.cryptoIsAuthenticated) {
       const tokenBal: Asset[] = await this.$api.getTokenBalances(
         process.env.LC_CONTRACT,
-        this.account
+        this.accountName
       );
-      this.balance = tokenBal[0].value.toFixed(2);
-      //   console.log(tokenBal[0].value);
+      if (tokenBal.length > 0) {
+        this.balance = tokenBal[0].value.toFixed(2);
+      }
 
-      //   TODO get NFT count
+      //  get NFT count
+      const myGalleryOptions = {
+        owner: this.accountName as string,
+        page: 1,
+        order: 'desc',
+        limit: 6,
+        sort: 'created',
+        authorized_account: [process.env.AA_ACCOUNT]
+      };
+      let data = await atomic_market_api.getAssets(myGalleryOptions as unknown);
+      // console.log(data);
+      this.nftCount = data.length;
+      // TODO get NFT worth in LEGAL
+      for (const asset of data) {
+        if (asset?.data?.mintprice) {
+          this.nftValue += Asset.from(asset.data.mintprice).value;
+        }
+      }
     }
   }
 });
@@ -40,13 +68,14 @@ q-page.fit.row.wrap.justify-center
       .text-bold 
         | {{ balance }} LEGAL
       .text
-        | {{ balance }} (GBP)
+        | {{ gbpValue }} (GBP)
+        //- TODO get GBP value
     q-separator.q-mx-md
     q-card-section
       .text-bold 
         | {{ nftCount }} NFTS
       .text
-        | xxx (LEGAL)
+        | {{ nftValue.toFixed(2) }} (LEGAL)
     q-separator.q-mx-md
     q-card-section
       .text-h6.text-grey-8
@@ -60,18 +89,10 @@ q-page.fit.row.wrap.justify-center
         .row.col-6
           q-btn.col.q-mx-sm.q-mt-sm(
             label='WITHDRAW',
+            disable,
             @click='$router.push({ name: "withdraw" })'
           )
-        .row.col-6
-          q-btn.col.q-mx-sm.q-mt-sm(
-            label='BUY NFT',
-            @click='$router.push({ name: "buytokens" })'
-          )
-        .row.col-6
-          q-btn.col.q-mx-sm.q-mt-sm(
-            label='SELL NFT',
-            @click='$router.push({ name: "withdraw" })'
-          ) 
+          q-tooltip Coming soon!
         .row.col-12
           q-btn.col.q-mx-sm.q-mt-sm(
             label='VIEW TRANSACTION HISTORY',

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, computed } from 'vue';
-import { atomic_api } from 'src/api/atomic_assets';
+import { atomic_api, atomic_market_api } from 'src/api/atomic_assets';
 import { GalleryCard } from 'src/types';
 import GalleryView from 'src/components/gallery/GalleryView.vue';
 import { useStore } from 'src/store';
@@ -54,7 +54,7 @@ export default defineComponent({
         limit: 12,
         sort: 'created'
       };
-      let data = await atomic_api.getAssets(myGalleryOptions as any);
+      let data = await atomic_market_api.getAssets(myGalleryOptions as any);
       console.log(data);
       myGalleryData.value = data.map((asset) => {
         return {
@@ -69,7 +69,7 @@ export default defineComponent({
           id: asset.asset_id
         } as GalleryCard;
       });
-      data = await atomic_api.getAssets(DiscoverOptions as any);
+      data = await atomic_market_api.getAssets(DiscoverOptions as any);
       discoverData.value = data.map((asset) => {
         return {
           name: asset.data.name as string,
