@@ -5,13 +5,12 @@ import {
 } from 'atomicassets/build/API/Explorer/Objects';
 import { defineComponent, ref } from 'vue';
 import { atomic_api } from 'src/api/atomic_assets';
-import AssetCard from 'src/components/atomicAssets/AssetCard.vue';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export default defineComponent({
   name: 'Collection',
-  components: { AssetCard },
+  components: {},
   setup() {
     const collectionData = ref<ICollection>(
       new Object({ data: { img: '' } }) as ICollection

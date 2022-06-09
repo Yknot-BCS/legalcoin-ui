@@ -3,13 +3,13 @@ import { defineComponent, ref } from 'vue';
 import { atomic_api, atomic_market_api } from 'src/api/atomic_assets';
 import { ITemplate } from 'atomicassets/build/API/Explorer/Objects';
 import { ISale } from 'atomicmarket/build/API/Explorer/Objects';
-import TemplateCard from 'src/components/atomicAssets/TemplateCard.vue';
+import TemplateViewer from 'src/components/atomicAssets/TemplateViewer.vue';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export default defineComponent({
   name: 'Template',
-  components: { TemplateCard },
+  components: { TemplateViewer },
   setup() {
     const saleData = ref<ISale>(new Object({}) as ISale);
     const templateData = ref<ITemplate>(new Object({}) as ITemplate);
@@ -82,7 +82,7 @@ export default defineComponent({
 
 <template lang="pug">
 .div(v-if='isLegalCoin')
-  TemplateCard(
+  TemplateViewer(
     :templateData='templateData',
     :saleData='saleData',
     @update-asset-info='updateTemplateInfo()'

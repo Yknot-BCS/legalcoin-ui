@@ -1,7 +1,11 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
 import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
-import { ISale, IBuyoffer } from 'atomicmarket/build/API/Explorer/Objects';
+import {
+  ISale,
+  IBuyoffer,
+  IMarketOffer
+} from 'atomicmarket/build/API/Explorer/Objects';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
 import { mapGetters, mapActions } from 'vuex';
 import { Asset, Int64 } from '@greymass/eosio';
@@ -22,6 +26,10 @@ export default defineComponent({
     },
     buyofferData: {
       type: Object as PropType<IBuyoffer>,
+      required: true
+    },
+    offerData: {
+      type: Object as PropType<IMarketOffer>,
       required: true
     }
   },
@@ -83,9 +91,13 @@ export default defineComponent({
       return !!this.buyofferData;
     },
 
+    hasOffer() {
+      return !!this.offerData;
+    },
+
     isClaimable() {
-      if (this.hasBuyOrder) {
-        if (this.buyofferData.buyer === process.env.AA_ACCOUNT) {
+      if (this.hasOffer) {
+        if (this.offerData.sender_name === process.env.AA_BUYBACK_ACCOUNT) {
           return true;
         } else {
           return false;
@@ -251,7 +263,7 @@ export default defineComponent({
       }
     },
 
-    async claim() {
+    async acceptBuyOffer() {
       let actions: unknown = [
         {
           account: 'atomicassets',
@@ -285,10 +297,48 @@ export default defineComponent({
       this.transaction = await this.sendTransaction({ actions });
     },
 
-    async tryClaim() {
+    async tryAcceptBuyOffer() {
+      console.log('try acceptBuyOffer');
+      try {
+        await this.acceptBuyOffer();
+        this.$q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          message: 'Complete'
+        });
+        this.$emit('updateAssetInfo');
+      } catch (e: unknown) {
+        if (typeof e === 'string') {
+          e.toUpperCase(); // works, `e` narrowed to string
+        } else if (e instanceof Error) {
+          this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            message: e.message,
+            timeout: 5000
+          });
+        }
+      }
+    },
+
+    async acceptOffer() {
+      let actions: unknown = [
+        {
+          account: 'atomicassets',
+          name: 'acceptoffer',
+          data: {
+            offer_id: this.offerData.offer_id
+          }
+        }
+      ];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      this.transaction = await this.sendTransaction({ actions });
+    },
+
+    async tryAcceptOffer() {
       console.log('try claim');
       try {
-        await this.claim();
+        await this.acceptOffer();
         this.$q.notify({
           color: 'green-4',
           textColor: 'white',
@@ -493,10 +543,10 @@ q-card
         label='CANCEL LISTING',
         color='primary'
       )
-    //- when mature, show claim button
+    //- when mature, show acceptBuyOffer button
     .div(v-if='isClaimable')
       q-btn.full-width.q-mt-lg(
-        @click='tryClaim()',
+        @click='tryAcceptOffer()',
         label='CLAIM',
         color='primary'
       )
@@ -505,7 +555,8 @@ q-card
     | for sale: {{ isForSale }},
     | is buybacknft: {{ isBuybackNFT }},
     | is owned by LC: {{ isOwnedByLC }},
-    | has buy order: {{ hasBuyOrder }},
+    | has buy offer: {{ hasBuyOrder }},
+    | has offer: {{ hasOffer }},
     | can claim: {{ isClaimable }}
 
     //- list on market dialog
