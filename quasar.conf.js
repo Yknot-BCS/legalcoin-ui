@@ -116,7 +116,6 @@ module.exports = configure(function (ctx) {
       },
       
       cssAddon:true,
-      animations: 'all',
 
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
@@ -134,7 +133,10 @@ module.exports = configure(function (ctx) {
 
     // animations: 'all', // --- includes all animations
     // https://quasar.dev/options/animations
-    animations: ['fadeOut', 'fadeIn', 'bounceInLeft', 'bounceOutRight'],
+    
+    // TODO: Only bundle required animations
+    animations: 'all',
+    // animations: ['fadeOut', 'fadeIn', 'bounceInLeft', 'bounceOutRight'],
 
     // https://quasar.dev/quasar-cli/developing-ssr/configuring-ssr
     ssr: {
