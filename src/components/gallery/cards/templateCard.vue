@@ -22,7 +22,7 @@ export default defineComponent({
 q-card
   q-card-section
     .row
-      .text-h6 {{ card.collection }}
+      .text-h6 {{ card.name }}
     .row
       .col-6
         .text-subtitle2 {{ card.mintprice }}
