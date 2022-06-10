@@ -136,7 +136,7 @@ export default defineComponent({
           Date.now(),
           'days'
         );
-        if (daysToMaturity > 0) {
+        if (daysToMaturity >= 0) {
           return `${daysToMaturity} days`;
         } else if (
           Date.now() > this.maturityDate.getTime() &&
