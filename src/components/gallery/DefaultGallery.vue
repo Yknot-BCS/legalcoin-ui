@@ -31,10 +31,11 @@ export default defineComponent({
         page: 1,
         order: 'desc',
         limit: 6,
-        sort: 'created'
+        sort: 'created',
+        authorized_account: process.env.AA_ACCOUNT
       };
       const DiscoverOptions = {
-        collection_blacklist: 'fuzzytestnet',
+        collection_blacklist: accountName.value,
         page: 1,
         order: 'desc',
         limit: 12,
