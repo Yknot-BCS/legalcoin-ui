@@ -74,7 +74,7 @@ q-toolbar.row.q-py-sm.q-px-md
           // TODO add params for profile, gallery and wallet
           q-item.menu-link(
             clickable,
-            :to='{ name: "profile", params: { profile: 1 } }'
+            :to='"/profile/" + profile.cryptoAccount.accountName'
           )
             q-item-section Your profile
           q-item.menu-link(clickable, :to='{ name: "gallery" }')
