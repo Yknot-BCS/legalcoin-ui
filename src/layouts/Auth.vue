@@ -7,12 +7,20 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-layout(view='hHh lpR fFf')
-  .logo-wrapper.row.justify-center.items-center
-    router-link.cursor-pointer(to='/')
-      img.logo(src='~assets/legalcoin-full.png')
-  q-page-container.row.justify-center
-    router-view
+.bg.img
+.container
+  img.polygon.tr.animated.fadeInRight.slower(src='~assets/polygons/pg1.svg')
+  img.polygon.tr.animated.fadeInRight.slow(src='~assets/polygons/pg2.svg')
+  img.polygon.tr(src='~assets/polygons/pg3.svg')
+  img.polygon.br.animated.fadeInLeft.slow(src='~assets/polygons/pg4.svg')
+  img.polygon.br.animated.fadeInLeft.slower(src='~assets/polygons/pg5.svg')
+  img.polygon.br(src='~assets/polygons/pg6.svg')
+
+  q-layout(view='hHh lpR fFf')
+    .row.justify-center.items-center
+      router-link.cursor-pointer(to='/')
+    q-page-container.row.justify-center.q-mt-sm-xl
+      router-view.q-mt-md-xl
 </template>
 
 <style lang="sass" scoped>
@@ -21,4 +29,30 @@ q-layout(view='hHh lpR fFf')
   margin-bottom: 2vh
   .logo
     width: clamp(15rem, 60vw, 25rem)
+
+.container
+  position: absolute
+  width: 100%
+  overflow: hidden
+
+.bg.img
+  position: absolute
+  z-index: -2
+  top: 0px
+  left: 0px
+  width: 100%
+  height: 100%
+  background-image: url("~assets/polygons/bg.svg")
+  background-repeat: repeat-xy
+  opacity: 0.4
+
+.polygon
+  position: absolute
+  z-index: -1
+  &.tr
+    right: 0rem
+    top: 0rem
+  &.br
+    left: 0rem
+    bottom: 0rem
 </style>

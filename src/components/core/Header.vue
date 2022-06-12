@@ -24,7 +24,7 @@ export default {
 </script>
 
 <template lang="pug">
-q-toolbar.row.q-py-sm.q-px-md
+q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
   router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
     img.logo.q-mr-md(src='~assets/legalcoin-full.png')
 

@@ -1,12 +1,18 @@
 <script lang="ts">
-import { requiredRule } from './inputRules';
 import auth from 'src/auth';
+import AuthCard from '../../components/auth/AuthCard.vue';
+
 import { ref } from 'vue';
+import { defineComponent } from 'vue';
+import { requiredRule } from './inputRules';
 import { useStore } from 'src/store';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 
-export default {
+export default defineComponent({
+  components: {
+    AuthCard
+  },
   setup() {
     const userEmail = ref('');
     const userPassword = ref('');
@@ -35,51 +41,48 @@ export default {
             message: (error as Error).message
           });
         }
+      },
+      navigate: async (name: string) => {
+        await router.push({ name: name });
       }
     };
   }
-};
+});
 </script>
 
 <template lang="pug">
-.page-wrapper
-  .row.q-pa-md.bg-grey-3
-    .text-h5.col-12 Login
-    q-form.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
-      q-input.col-12(
-        v-model='userEmail',
-        label='Email',
-        lazy-rules,
-        :rules='[requiredRule]',
-        autocomplete='email'
-      )
-      q-input.col-12(
-        v-model='userPassword',
-        type='password',
-        label='Password',
-        lazy-rules,
-        :rules='[requiredRule]',
-        autocomplete='current-password'
-      )
-      q-btn.col-12(type='submit', color='primary') Login
-
-    .col-12.text-center
-      span.q-mr-xs Forgot your password?
-      router-link(to='passwordresetrequest') Reset Password
-    .col-12.text-center
-      span.q-mr-xs Need an account?
-      router-link(to='register') Register
-  .row.justify-center.align-center.q-my-lg
+AuthCard
+  .text-h5.col-12.text-weight-bold Sign In
+  p.col-12 to continue to LegalCoin
+  q-form.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
+    q-input.col-12(
+      v-model='userEmail',
+      label='Email',
+      lazy-rules,
+      :rules='[requiredRule]',
+      autocomplete='email'
+    )
+    q-input.col-12(
+      v-model='userPassword',
+      type='password',
+      label='Password',
+      lazy-rules,
+      :rules='[requiredRule]',
+      autocomplete='current-password'
+    )
+    q-btn.col-12(type='submit', color='primary') Sign In
+    q-btn.col-12(
+      flat,
+      color='primary',
+      @click='navigate("passwordresetrequest")'
+    ) Forgot your password?
+  .col-12.text-center
+    span.q-mr-xs Need an account?
+    router-link(to='register') Sign Up
+  // TODO: Fix quasar seperator
+  .q-mt-lg(style='border: 1px solid #ddd')
+  .row.justify-center.align-center.q-mt-lg
     router-link.skip-link(:to='{ name: "home" }') Skip this step
 </template>
 
-<style lang="sass" scoped>
-.page-wrapper
-  flex-basis: 600px
-  flex-grow: 0
-  flex-shrink: 1
-.skip-link
-  text-decoration: none
-  font-style: italic
-  color: black
-</style>
+<style lang="sass" scoped></style>

@@ -1,16 +1,19 @@
 <script lang="ts">
-import { ref } from 'vue';
-import { requiredRule } from './inputRules';
 import auth from 'src/auth';
-//import { useStore } from 'src/store';
+import AuthCard from '../../components/auth/AuthCard.vue';
+
+import { ref } from 'vue';
+import { defineComponent } from 'vue';
+import { requiredRule } from './inputRules';
 import { useRouter } from 'vue-router';
-// import { api } from 'src/api';
 import { useQuasar } from 'quasar';
 
-export default {
+export default defineComponent({
+  components: {
+    AuthCard
+  },
   setup() {
     const $q = useQuasar();
-    //const store = useStore();
     const router = useRouter();
     const userName = ref('');
     const userSurname = ref('');
@@ -45,12 +48,13 @@ export default {
       }
     };
   }
-};
+});
 </script>
 
 <template lang="pug">
-.form-wrapper.row.q-pa-md.bg-grey-3
-  .text-h5.col-12 Register
+AuthCard
+  .text-h5.col-12.text-weight-bold Sign Up
+  p.col-12 for a brand new LegalCoin account
   q-form.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
     q-input.col-6.q-pr-md(
       v-model='userName',
@@ -90,14 +94,9 @@ export default {
       autocomplete='new-password'
     )
     q-btn.col-12(type='submit', color='primary') Create an account
-  .col-12.text-center
+  .col-12.text-center.q-mt-md
     span.q-mr-xs Already have an account?
-    router-link(to='login') Login
+    router-link(to='login') Sign In
 </template>
 
-<style lang="sass" scoped>
-.form-wrapper
-  flex-basis: 600px
-  flex-grow: 0
-  flex-shrink: 1
-</style>
+<style lang="sass" scoped></style>

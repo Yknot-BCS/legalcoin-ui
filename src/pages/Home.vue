@@ -18,12 +18,14 @@ export default {
 </script>
 
 <template lang="pug">
+img.bg.tr.animated.fadeInLeft.slower(src='~assets/polygons/v1.svg')
+img.bg-polygon.tr.animated.fadeInLeft.slower(src='~assets/polygons/v2.svg')
 q-page.q-py-md
   .row
-    .col-6.row.justify-end.items-center.q-px-lg
-      h2 Bringing the legal industry into the digital world
-    .main-asset.col-6.q-pa-lg(v-if='assets.length > 0')
-      Cards(:data='assets[0]', type='asset')
+    .col-md-6.row.justify-end.items-center.q-px-lg
+      h2.text-grey-1 Bringing the legal industry into the digital world
+    .main-asset.col-md-6.q-pa-lg(v-if='assets.length > 0')
+      Cards.rounded.shadow-10(:data='assets[0]', type='asset')
 </template>
 
 <style lang="sass" scoped>
@@ -31,4 +33,25 @@ h2
   max-width: 21ch
 .main-asset
   flex-basis: 600px
+
+.rounded
+  border-radius: 1rem
+  overflow: hidden
+
+.bg
+  position: absolute
+  height: 100%
+  left: 0rem
+  z-index: -1
+  &.tr
+    right: 0rem
+    top: 0rem
+  &.br
+    left: 0rem
+    bottom: 0rem
+
+.bg-polygon
+  position: absolute
+  left: 3rem
+  bottom: 10rem
 </style>

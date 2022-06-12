@@ -121,9 +121,9 @@ export default defineComponent({
               name: `${this.$store.state.account.profile.name} ${this.$store.state.account.profile.surname}`,
               email: this.$store.state.account.profile.email
             },
-            success_url: `${process.env.APP_URL}buytokens/success`,
-            failure_url: `${process.env.APP_URL}buytokens/failure`,
-            cancel_url: `${process.env.APP_URL}buytokens/checkout`
+            success_url: `${window.location.origin}/buytokens/success`,
+            failure_url: `${window.location.origin}/buytokens/failure`,
+            cancel_url: `${window.location.origin}/buytokens/checkout`
           };
 
           const response = await this.checkoutAPI.post(

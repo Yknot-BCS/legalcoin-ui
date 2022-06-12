@@ -1,7 +1,7 @@
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { BuyStateInterface } from './state';
-import { atomic_api } from 'src/api/atomic_assets';
+import { atomic_api, atomic_market_api } from 'src/api/atomic_assets';
 import { GalleryCard } from 'src/types';
 
 function assetToAmount(asset: string, decimals = -1): number {
@@ -17,6 +17,9 @@ function assetToAmount(asset: string, decimals = -1): number {
 
 function getYield(cost: string, profit: string): string {
   try {
+    if (cost === undefined || profit === undefined) {
+      return '0%';
+    }
     const val =
       ((assetToAmount(profit) - assetToAmount(cost)) / assetToAmount(cost)) *
       100;
@@ -84,7 +87,7 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
   },
 
   async updateAssets({ commit, state }) {
-    const data = await atomic_api.getAssets(state.assetFilter);
+    const data = await atomic_market_api.getAssets(state.assetFilter);
     const gallerydata = data.map((asset) => {
       return {
         ...asset.data,
@@ -130,7 +133,7 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
           template.immutable_data.mintprice,
           template.immutable_data.maturedvalue
         ),
-        name: template.contract,
+        name: template.collection.name,
         imageUrl:
           template.immutable_data.img &&
           (template.immutable_data.img as string).includes('http')
