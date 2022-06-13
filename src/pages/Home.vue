@@ -46,7 +46,8 @@ export default {
         search: collection.collection_name
       } as unknown;
 
-      let templateStats = await atomic_market_api.getTemplatePriceStats(
+      let templateStats = await atomic_market_api.fetchEndpoint(
+        '/v1/stats/templates',
         templateStatsFilter
       );
       console.log(templateStats);
