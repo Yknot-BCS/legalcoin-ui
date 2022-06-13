@@ -26,16 +26,28 @@ export default {
 <template lang="pug">
 q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
   router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
-    img.logo.q-mr-md(src='~assets/legalcoin-full.png')
+    img.logo.q-mr-md.gt-md(src='~assets/legalcoin-full.png')
+    img.mobile-logo.q-mr-md.lt-md(src='~assets/legalcoin-full.png')
 
   .col.row.justify-center
-    search-bar.toolbar-select.q-mr-md
+    search-bar.toolbar-select.q-mr-md.gt-md
 
   .q-mr-md.q-gutter-x-md.row.items-center.no-wrap(v-if='$q.screen.gt.sm')
-    router-link.toolbar-link(:to='{ name: "buy" }')
-      | Buy
-    router-link.toolbar-link(:to='{ name: "gallery" }')
-      | Gallery
+    q-btn(
+      flat,
+      icon='grid_view',
+      label='Discover',
+      dense,
+      :to='{ name: "buy" }'
+    )
+    q-btn(
+      flat,
+      icon='account_circle',
+      label='Account',
+      v-if='!isLoggedIn',
+      dense,
+      :to='{ name: "login" }'
+    )
 
   .row.items-center.no-wrap
     q-btn.q-mr-sm(
@@ -52,13 +64,17 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
     //- q-btn(v-if="!isLoggedIn" to="login" flat) Login
     //- q-btn(v-if="!isLoggedIn" to="register" outline) Register
     div(v-if='$q.screen.lt.md')
-      q-btn(flat, round, v-if='!isLoggedIn', dense, :to='{ name: "login" }')
+      q-btn(flat, round, dense, :to='{ name: "buy" }')
+        q-icon.material-icons-outlined(name='search')
+      q-btn(flat, round, dense, :to='{ name: "buy" }')
+        q-icon.material-icons-outlined(name='grid_view')
+      q-btn(flat, round, dense, v-if='!isLoggedIn', :to='{ name: "login" }')
         q-icon.material-icons-outlined(name='account_circle')
     div(v-if='$q.screen.gt.sm')
-      q-btn(dense, outline, v-if='!isLoggedIn', :to='{ name: "login" }')
-        q-avatar.q-mr-sm(rounded, size='30px')
-          q-icon.material-icons-outlined(name='account_circle')
-        .q-mr-sm Sign In
+      //- q-btn(dense, outline, v-if='!isLoggedIn', :to='{ name: "login" }')
+      //-   q-avatar.q-mr-sm(rounded, size='30px')
+      //-     q-icon.material-icons-outlined(name='account_circle')
+      //-   .q-mr-sm Account
     q-btn(dense, flat, round, size='md', no-wrap, v-if='isLoggedIn')
       // TODO Change avatar when logged in
       q-avatar(rounded, size='30px')
@@ -118,5 +134,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
 .q-list
   min-width: 150px
 .logo
+  height:40px
+.mobile-logo
   height:40px
 </style>

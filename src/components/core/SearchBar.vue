@@ -41,7 +41,8 @@ q-select.toolbar-select(
   dense,
   outlined,
   use-input,
-  label='Search items, collections and people...',
+  size='100',
+  label='Search...',
   v-model='searchText',
   :options='options',
   @filter='filterFn'
