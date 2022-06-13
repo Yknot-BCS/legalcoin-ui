@@ -1,7 +1,9 @@
 <script lang="ts">
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, ref } from 'vue';
 import Cards from 'src/components/gallery/cards/index.vue';
 import { useStore } from 'src/store';
+import { atomic_api, atomic_market_api } from 'src/api/atomic_assets';
+
 export default {
   components: { Cards },
   setup() {
@@ -11,8 +13,44 @@ export default {
       await store.dispatch('buy/updateAll');
     });
     return {
-      assets
+      assets,
+      collections: ref([])
     };
+  },
+
+  methods: {
+    async getAllCollections() {
+      let collectionsfilter = {
+        authorized_account: process.env.AA_ACCOUNT
+      } as unknown;
+
+      let collections = await atomic_api.getCollections(collectionsfilter);
+      console.log(collections);
+    }
+  },
+  async mounted() {
+    console.log('Home mounted');
+    let collectionsfilter = {
+      authorized_account: process.env.AA_ACCOUNT,
+      limit: 100
+    } as unknown;
+
+    let collections = await atomic_api.getCollections(collectionsfilter);
+    console.log(collections);
+
+    let trending = [];
+    for (const collection of collections) {
+      console.log(collection.collection_name);
+      let templateStatsFilter = {
+        symbol: 'WAX',
+        search: collection.collection_name
+      } as unknown;
+
+      let templateStats = await atomic_market_api.getTemplatePriceStats(
+        templateStatsFilter
+      );
+      console.log(templateStats);
+    }
   }
 };
 </script>
@@ -26,6 +64,30 @@ q-page.q-py-md
       h2.text-grey-1 Bringing the legal industry into the digital world
     .main-asset.col-md-6.q-pa-lg(v-if='assets.length > 0')
       Cards.rounded.shadow-10(:data='assets[0]', type='asset')
+
+  .div
+    .row.justify-center
+      h2.text-grey-1 Featured Collections
+
+    .row.justify-center
+      .col-3.q-pa-lg(v-if='assets.length > 0')
+        Cards.rounded.shadow-10(:data='assets[0]', type='collection')
+      .col-3.q-pa-lg(v-if='assets.length > 0')
+        Cards.rounded.shadow-10(:data='assets[0]', type='collection')
+      .col-3.q-pa-lg(v-if='assets.length > 0')
+        Cards.rounded.shadow-10(:data='assets[0]', type='collection')
+
+  .div
+    .row.justify-center
+      h2.text-grey-1 Trending NFTs
+
+    .row.justify-center
+      .col-3.q-pa-lg(v-if='assets.length > 0')
+        Cards.rounded.shadow-10(:data='assets[0]', type='template')
+      .col-3.q-pa-lg(v-if='assets.length > 0')
+        Cards.rounded.shadow-10(:data='assets[0]', type='template')
+      .col-3.q-pa-lg(v-if='assets.length > 0')
+        Cards.rounded.shadow-10(:data='assets[0]', type='template')
 </template>
 
 <style lang="sass" scoped>
@@ -55,3 +117,5 @@ h2
   left: 3rem
   bottom: 10rem
 </style>
+
+function getCollections() { throw new Error('Function not implemented.'); }
