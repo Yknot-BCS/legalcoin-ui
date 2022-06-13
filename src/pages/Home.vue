@@ -46,12 +46,15 @@ export default {
         search: collection.collection_name
       } as unknown;
 
-      let templateStats = await atomic_market_api.fetchEndpoint(
+      let templateStats: any = await atomic_market_api.fetchEndpoint(
         '/v1/stats/templates',
         templateStatsFilter
       );
       console.log(templateStats);
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      trending.push(...templateStats?.results);
     }
+    console.log(trending);
   }
 };
 </script>
