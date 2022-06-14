@@ -9,10 +9,13 @@ import {
 } from 'atomicassets/build/API/Explorer/Objects';
 import { GalleryCard } from 'src/types';
 import { getYield } from 'src/store/buy/actions';
+import { useQuasar } from 'quasar';
 
 export default defineComponent({
   components: { Cards },
   setup() {
+    const $q = useQuasar();
+    const screenWidth = computed(() => $q.screen.width);
     const store = useStore();
     const assets = computed(() => store.state.buy.assets);
     const storecollections = computed(() => store.state.buy.collections);
@@ -23,8 +26,20 @@ export default defineComponent({
       assets,
       storecollections,
       collections: ref<ICollection[]>(new Object({}) as ICollection[]),
-      trendingTemplates: ref<GalleryCard[]>([] as GalleryCard[])
+      trendingTemplates: ref<GalleryCard[]>([] as GalleryCard[]),
+      screenWidth
     };
+  },
+  computed: {
+    numberOfCards(): number {
+      let numberOfCards = Math.floor(this.$q.screen.width / 375);
+      if (numberOfCards > 3) {
+        numberOfCards = 3;
+      } else {
+        numberOfCards = numberOfCards;
+      }
+      return numberOfCards;
+    }
   },
 
   methods: {
@@ -96,32 +111,63 @@ img.bg.tr.animated.fadeInLeft.slower(src='~assets/polygons/v1.svg')
 img.bg-polygon.tr.animated.fadeInLeft.slower(src='~assets/polygons/v2.svg')
 q-page.q-py-md
   .row
-    .col-md-6.row.justify-end.items-center.q-px-lg
-      h2.text-grey-1 Bringing the legal industry into the digital world
+    .col-md-6.row.justify-start.items-center.q-px-lg
+      .column
+        h2.text-grey-1 Bringing the legal industry into the digital world
+        .row.justify-start
+          q-btn(
+            :to='{ name: "discover" }',
+            label='Explore Now',
+            color='primary',
+            size='lg'
+          )
+          q-btn.q-ml-sm(
+            :to='{ name: "login" }',
+            label='Sign In',
+            size='lg',
+            outline,
+            color='secondary'
+          )
     .main-asset.col-md-6.q-pa-lg(v-if='assets.length > 0')
       Cards.rounded.shadow-10(:data='assets[0]', type='asset')
 
   .div
     .row.justify-center
-      h2.text-grey-1 Featured Collections
+      h2.text-grey-1.text-center Featured Collections
 
     .row.justify-center
-      .col-3.q-pa-sm(
-        v-for='collection in storecollections.slice(0, 3)',
+      .featured-card.q-pa-sm(
+        v-for='collection in storecollections.slice(0, numberOfCards)',
         v-if='storecollections.length > 0'
       )
         Cards.rounded.shadow-10(:data='collection', type='collection')
 
+    .row.justify-center.q-mt-md
+      q-btn(
+        :to='{ name: "discover" }',
+        label='Explore More',
+        color='primary',
+        size='lg'
+      )
+
   .div
     .row.justify-center
-      h2.text-grey-1 Trending NFTs
+      h2.text-grey-1.text-center Trending NFTs
 
     .row.justify-center
-      .col-3.q-pa-sm(
-        v-for='template in trendingTemplates.slice(0, 3)',
+      .featured-card.q-pa-sm(
+        v-for='template in trendingTemplates.slice(0, numberOfCards)',
         v-if='trendingTemplates.length > 0'
       )
         Cards.rounded.shadow-10(:data='template', type='template')
+
+    .row.justify-center.q-mt-md
+      q-btn(
+        :to='{ name: "discover" }',
+        label='Explore More',
+        color='primary',
+        size='lg'
+      )
 </template>
 
 <style lang="sass" scoped>
@@ -129,6 +175,9 @@ h2
   max-width: 21ch
 .main-asset
   flex-basis: 600px
+
+.featured-card
+  width: 375px
 
 .rounded
   border-radius: 1rem
