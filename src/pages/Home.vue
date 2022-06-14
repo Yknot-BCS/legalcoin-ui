@@ -8,7 +8,6 @@ import {
   ITemplate
 } from 'atomicassets/build/API/Explorer/Objects';
 import { GalleryCard } from 'src/types';
-import { mapActions } from 'vuex';
 import { getYield } from 'src/store/buy/actions';
 
 export default defineComponent({
@@ -16,11 +15,13 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const assets = computed(() => store.state.buy.assets);
+    const storecollections = computed(() => store.state.buy.collections);
     onMounted(async () => {
       await store.dispatch('buy/updateAll');
     });
     return {
       assets,
+      storecollections,
       collections: ref<ICollection[]>(new Object({}) as ICollection[]),
       trendingTemplates: ref<GalleryCard[]>([] as GalleryCard[])
     };
@@ -55,9 +56,6 @@ export default defineComponent({
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         trending.push(...templateStats?.results);
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      console.log(trending.map((t) => t.template as ITemplate));
-
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       let data = trending.map((t) => t.template as ITemplate);
 
@@ -108,24 +106,22 @@ q-page.q-py-md
       h2.text-grey-1 Featured Collections
 
     .row.justify-center
-      .col-3.q-pa-sm(v-if='assets.length > 0')
-        Cards.rounded.shadow-10(:data='assets[0]', type='collection')
-      .col-3.q-pa-sm(v-if='assets.length > 0')
-        Cards.rounded.shadow-10(:data='assets[0]', type='collection')
-      .col-3.q-pa-sm(v-if='assets.length > 0')
-        Cards.rounded.shadow-10(:data='assets[0]', type='collection')
+      .col-3.q-pa-sm(
+        v-for='collection in storecollections.slice(0, 3)',
+        v-if='storecollections.length > 0'
+      )
+        Cards.rounded.shadow-10(:data='collection', type='collection')
 
   .div
     .row.justify-center
       h2.text-grey-1 Trending NFTs
 
     .row.justify-center
-      .col-3.q-pa-sm(v-if='trendingTemplates.length > 0')
-        Cards.rounded.shadow-10(:data='trendingTemplates[0]', type='template')
-      .col-3.q-pa-sm(v-if='trendingTemplates.length > 0')
-        Cards.rounded.shadow-10(:data='trendingTemplates[1]', type='template')
-      .col-3.q-pa-sm(v-if='trendingTemplates.length > 0')
-        Cards.rounded.shadow-10(:data='trendingTemplates[2]', type='template')
+      .col-3.q-pa-sm(
+        v-for='template in trendingTemplates.slice(0, 3)',
+        v-if='trendingTemplates.length > 0'
+      )
+        Cards.rounded.shadow-10(:data='template', type='template')
 </template>
 
 <style lang="sass" scoped>
