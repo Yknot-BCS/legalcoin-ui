@@ -1,12 +1,14 @@
 @font-face {
   font-family: 'ralewayregular';
-  src: url('Raleway-Regular.ttf') format('truetype');
+  src: url('raleway-regular.woff') format('woff');
+  src: url('raleway-regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'ralewayitalic';
+  /* src: url('raleway-italic.woff') format('woff'); */
   src: url('Raleway-Italic.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
@@ -14,7 +16,8 @@
 
 @font-face {
   font-family: 'ralewaybold';
-  src: url('Raleway-Bold.ttf') format('truetype');
+  src: url('raleway-bold.woff') format('woff');
+  src: url('raleway-bold.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
