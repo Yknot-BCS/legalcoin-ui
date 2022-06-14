@@ -17,6 +17,9 @@ function assetToAmount(asset: string, decimals = -1): number {
 
 function getYield(cost: string, profit: string): string {
   try {
+    if (cost === undefined || profit === undefined) {
+      return '0%';
+    }
     const val =
       ((assetToAmount(profit) - assetToAmount(cost)) / assetToAmount(cost)) *
       100;
@@ -130,7 +133,7 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
           template.immutable_data.mintprice,
           template.immutable_data.maturedvalue
         ),
-        name: template.contract,
+        name: template.collection.name,
         imageUrl:
           template.immutable_data.img &&
           (template.immutable_data.img as string).includes('http')
