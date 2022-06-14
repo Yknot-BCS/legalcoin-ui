@@ -64,11 +64,17 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
     //- q-btn(v-if="!isLoggedIn" to="login" flat) Login
     //- q-btn(v-if="!isLoggedIn" to="register" outline) Register
     div(v-if='$q.screen.lt.md')
-      q-btn(flat, round, dense, :to='{ name: "buy" }')
-        q-icon.material-icons-outlined(name='search')
-      q-btn(flat, round, dense, :to='{ name: "buy" }')
+      //- q-btn(flat, round, dense, :to='{ name: "buy" }')
+      //-   q-icon.material-icons-outlined(name='search')
+      q-btn.q-ml-sm(flat, round, dense, :to='{ name: "buy" }')
         q-icon.material-icons-outlined(name='grid_view')
-      q-btn(flat, round, dense, v-if='!isLoggedIn', :to='{ name: "login" }')
+      q-btn.q-ml-xs(
+        flat,
+        round,
+        dense,
+        v-if='!isLoggedIn',
+        :to='{ name: "login" }'
+      )
         q-icon.material-icons-outlined(name='account_circle')
     div(v-if='$q.screen.gt.sm')
       //- q-btn(dense, outline, v-if='!isLoggedIn', :to='{ name: "login" }')
@@ -137,4 +143,5 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
   height:40px
 .mobile-logo
   height:40px
+  width: 150px
 </style>

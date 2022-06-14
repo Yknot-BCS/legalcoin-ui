@@ -34,11 +34,24 @@ export default {
 <template lang="pug">
 //- Mobile
 //- q-btn(flat, round, dense, icon='search', v-if='$q.screen.lt.md')
+q-select.toolbar-select(
+  ref='search',
+  dense,
+  v-if='$q.screen.lt.md',
+  outlined,
+  use-input,
+  size='10',
+  label='Search...',
+  v-model='searchText',
+  :options='options',
+  @filter='filterFn'
+)
 
 //- Desktop
 q-select.toolbar-select(
   ref='search',
   dense,
+  v-if='$q.screen.gt.sm',
   outlined,
   use-input,
   size='100',
