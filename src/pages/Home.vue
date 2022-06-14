@@ -110,7 +110,7 @@ export default defineComponent({
 img.bg.tr.animated.fadeInLeft.slower(src='~assets/polygons/v1.svg')
 img.bg-polygon.tr.animated.fadeInLeft.slower(src='~assets/polygons/v2.svg')
 q-page.q-py-md
-  .row
+  .row.justify-center
     .col-md-6.row.justify-start.items-center.q-px-lg
       .column
         h2.text-grey-1 Bringing the legal industry into the digital world
@@ -200,5 +200,3 @@ h2
   left: 3rem
   bottom: 10rem
 </style>
-
-function getCollections() { throw new Error('Function not implemented.'); }
