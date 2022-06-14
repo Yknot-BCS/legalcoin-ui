@@ -57,7 +57,6 @@ export default defineComponent({
     async getTrendingNFTs() {
       let trending = [];
       for (const collection of this.collections) {
-        console.log(collection.collection_name);
         let templateStatsFilter = {
           symbol: 'WAX',
           search: collection.collection_name
@@ -67,7 +66,6 @@ export default defineComponent({
           '/v1/stats/templates',
           templateStatsFilter
         );
-        // console.log(templateStats);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         trending.push(...templateStats?.results);
       }
@@ -95,7 +93,6 @@ export default defineComponent({
           id: template.template_id
         } as GalleryCard;
       });
-      console.log('trending', this.trendingTemplates);
     }
   },
   async mounted() {
