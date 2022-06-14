@@ -12,6 +12,7 @@ import { useStore } from 'src/store';
 import { atomic_api } from 'src/api/atomic_assets';
 import { GalleryCard } from 'src/types';
 import GalleryView from 'src/components/gallery/GalleryView.vue';
+import { useQuasar } from 'quasar';
 
 export default defineComponent({
   name: 'AtomicAssetView',
@@ -37,8 +38,10 @@ export default defineComponent({
   setup(props) {
     const store = useStore();
     const route = useRoute();
+    const $q = useQuasar();
     const myGalleryData = ref<GalleryCard[]>([]);
     const showFilter = ref<boolean>(false);
+    const showFilterDialog = ref<boolean>(false);
     const search = ref<string>('');
     const { ApiParams, Page, ItemsPerPage, DataParams } = toRefs(props);
     const tier = ref<{ label: string; value: string }>({
@@ -130,6 +133,13 @@ export default defineComponent({
         return '0%';
       }
     }
+    function Filter() {
+      if ($q.screen.lt.md) {
+        showFilterDialog.value = !showFilterDialog.value;
+      } else {
+        showFilter.value = !showFilter.value;
+      }
+    }
     async function getData() {
       assetCount.value = await atomic_api.countAssets(
         ApiParams.value,
@@ -174,7 +184,9 @@ export default defineComponent({
       limit,
       sort,
       sortOptions,
+      showFilterDialog,
       getData,
+      Filter,
       search,
       tier,
       tierOptions,
@@ -193,9 +205,24 @@ page
     q-card(flat)
       q-card-section
         .row.justify-between.q-col-gutter-md
-          .col-1
-            q-btn(flat, icon='filter_list', @click='showFilter = !showFilter')
-          .col-9
+          .col-md-1.col-sm-6.col-xs-6
+            .filter-container.full-width(
+              text-color='black',
+              :class='$q.screen.lt.md ? "" : "no-border"',
+              :label='$q.screen.lt.md ? "Filters" : ""'
+            )
+              q-btn.full-width.btn--no-hover(
+                color='grey-5',
+                flat,
+                size='15px',
+                icon='filter_list',
+                @click='Filter',
+                text-color='black',
+                :label='$q.screen.lt.md ? "Filters" : ""'
+              )
+          .col-md-8.col-sm-12.col-xs-12(
+            :class='$q.screen.lt.md ? "order-last" : ""'
+          )
             q-input(
               dense,
               outlined,
@@ -210,7 +237,7 @@ page
                   name='clear',
                   @click='search = ""'
                 )
-          .col-2
+          .col-md-3.col-sm-6.col-xs-6
             q-select.filters-selection(
               outlined,
               dense,
@@ -220,8 +247,8 @@ page
               color='primary'
             )
       q-card-section
-        .row
-          .col-12(v-if='showFilter')
+        .row.justify-evenly
+          .col-lg-2.col-md-3.q-pt-md(v-if='showFilter')
             q-card.q-pa-md(bordered, flat)
               q-card-section
                 .text-h5 Filters
@@ -236,7 +263,7 @@ page
                       v-model='tier'
                     )
 
-          .col-12
+          div(:class='showFilter ? "col-lg-10 col-md-9" : "col-12"')
             GalleryView(:data='myGalleryData', type='asset')
           .col-12 
             .row.justify-center
@@ -255,6 +282,45 @@ page
                 input,
                 @update:model-value='() => { getData(); }'
               )
+    q-dialog(v-model='showFilterDialog', maximized)
+      .row.full-height.full-width.filter-dialog
+        .col-12
+          q-card.q-pa-md(flat)
+            q-btn.absolute-top-right(
+              size='20px',
+              flat,
+              dense,
+              round,
+              icon='clear',
+              v-close-popup,
+              style='z-index: 1'
+            )
+            q-card-section
+              .text-h5 Filters
+            q-separator(inset)
+            q-card-section
+              .text-h6 Tier
+              q-option-group(
+                :options='tierOptions',
+                type='radio',
+                v-model='tier'
+              )
 </template>
 
-<style scoped lang="sass"></style>
+<style scoped lang="sass">
+.filter-dialog
+  background-color: white
+.filter-view
+  max-width: 400px
+
+.filter-container
+  border: 1px solid $grey-5
+  border-radius: 5px
+  height: 40px
+
+.filter-container:hover
+  border: 1px solid black
+
+:deep(.q-btn.btn--no-hover .q-focus-helper)
+  display: none
+</style>
