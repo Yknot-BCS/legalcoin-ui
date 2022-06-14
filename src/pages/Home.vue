@@ -1,10 +1,17 @@
 <script lang="ts">
-import { onMounted, computed, ref } from 'vue';
+import { defineComponent, onMounted, computed, ref } from 'vue';
 import Cards from 'src/components/gallery/cards/index.vue';
 import { useStore } from 'src/store';
 import { atomic_api, atomic_market_api } from 'src/api/atomic_assets';
+import {
+  ICollection,
+  ITemplate
+} from 'atomicassets/build/API/Explorer/Objects';
+import { GalleryCard } from 'src/types';
+import { mapActions } from 'vuex';
+import { getYield } from 'src/store/buy/actions';
 
-export default {
+export default defineComponent({
   components: { Cards },
   setup() {
     const store = useStore();
@@ -14,49 +21,76 @@ export default {
     });
     return {
       assets,
-      collections: ref([])
+      collections: ref<ICollection[]>(new Object({}) as ICollection[]),
+      trendingTemplates: ref<GalleryCard[]>([] as GalleryCard[])
     };
   },
 
   methods: {
     async getAllCollections() {
       let collectionsfilter = {
-        authorized_account: process.env.AA_ACCOUNT
+        authorized_account: process.env.AA_ACCOUNT,
+        limit: 100,
+        order: 'desc',
+        sort: 'created'
       } as unknown;
 
-      let collections = await atomic_api.getCollections(collectionsfilter);
-      console.log(collections);
+      this.collections = await atomic_api.getCollections(collectionsfilter);
+      console.log('col', this.collections);
+    },
+    async getTrendingNFTs() {
+      let trending = [];
+      for (const collection of this.collections) {
+        console.log(collection.collection_name);
+        let templateStatsFilter = {
+          symbol: 'WAX',
+          search: collection.collection_name
+        } as unknown;
+
+        let templateStats: any = await atomic_market_api.fetchEndpoint(
+          '/v1/stats/templates',
+          templateStatsFilter
+        );
+        // console.log(templateStats);
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        trending.push(...templateStats?.results);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      console.log(trending.map((t) => t.template as ITemplate));
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      let data = trending.map((t) => t.template as ITemplate);
+
+      this.trendingTemplates = data.map((template) => {
+        return {
+          ...template.immutable_data,
+          to: `/template/${template.collection.collection_name}/${template.template_id}`,
+          yield: getYield(
+            template.immutable_data.mintprice,
+            template.immutable_data.maturedvalue
+          ),
+          name: template.collection.name,
+          imageUrl:
+            template.immutable_data.img &&
+            (template.immutable_data.img as string).includes('http')
+              ? (template.immutable_data.img as string)
+              : 'https://ipfs.io/ipfs/' +
+                (template.immutable_data.img as string),
+          collection: template.collection.collection_name,
+          template: '',
+          schema: '',
+          id: template.template_id
+        } as GalleryCard;
+      });
+      console.log('trending', this.trendingTemplates);
     }
   },
   async mounted() {
     console.log('Home mounted');
-    let collectionsfilter = {
-      authorized_account: process.env.AA_ACCOUNT,
-      limit: 100
-    } as unknown;
-
-    let collections = await atomic_api.getCollections(collectionsfilter);
-    console.log(collections);
-
-    let trending = [];
-    for (const collection of collections) {
-      console.log(collection.collection_name);
-      let templateStatsFilter = {
-        symbol: 'WAX',
-        search: collection.collection_name
-      } as unknown;
-
-      let templateStats: any = await atomic_market_api.fetchEndpoint(
-        '/v1/stats/templates',
-        templateStatsFilter
-      );
-      console.log(templateStats);
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      trending.push(...templateStats?.results);
-    }
-    console.log(trending);
+    await this.getAllCollections();
+    await this.getTrendingNFTs();
   }
-};
+});
 </script>
 
 <template lang="pug">
@@ -74,11 +108,11 @@ q-page.q-py-md
       h2.text-grey-1 Featured Collections
 
     .row.justify-center
-      .col-3.q-pa-lg(v-if='assets.length > 0')
+      .col-3.q-pa-sm(v-if='assets.length > 0')
         Cards.rounded.shadow-10(:data='assets[0]', type='collection')
-      .col-3.q-pa-lg(v-if='assets.length > 0')
+      .col-3.q-pa-sm(v-if='assets.length > 0')
         Cards.rounded.shadow-10(:data='assets[0]', type='collection')
-      .col-3.q-pa-lg(v-if='assets.length > 0')
+      .col-3.q-pa-sm(v-if='assets.length > 0')
         Cards.rounded.shadow-10(:data='assets[0]', type='collection')
 
   .div
@@ -86,12 +120,12 @@ q-page.q-py-md
       h2.text-grey-1 Trending NFTs
 
     .row.justify-center
-      .col-3.q-pa-lg(v-if='assets.length > 0')
-        Cards.rounded.shadow-10(:data='assets[0]', type='template')
-      .col-3.q-pa-lg(v-if='assets.length > 0')
-        Cards.rounded.shadow-10(:data='assets[0]', type='template')
-      .col-3.q-pa-lg(v-if='assets.length > 0')
-        Cards.rounded.shadow-10(:data='assets[0]', type='template')
+      .col-3.q-pa-sm(v-if='trendingTemplates.length > 0')
+        Cards.rounded.shadow-10(:data='trendingTemplates[0]', type='template')
+      .col-3.q-pa-sm(v-if='trendingTemplates.length > 0')
+        Cards.rounded.shadow-10(:data='trendingTemplates[1]', type='template')
+      .col-3.q-pa-sm(v-if='trendingTemplates.length > 0')
+        Cards.rounded.shadow-10(:data='trendingTemplates[2]', type='template')
 </template>
 
 <style lang="sass" scoped>
