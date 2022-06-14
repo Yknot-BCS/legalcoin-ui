@@ -5,14 +5,19 @@ import {
   ref,
   onMounted,
   PropType,
-  toRefs
+  toRefs,
+  watch
 } from 'vue';
-import { useRoute } from 'vue-router';
-import { useStore } from 'src/store';
-import { atomic_api } from 'src/api/atomic_assets';
 import { GalleryCard } from 'src/types';
 import GalleryView from 'src/components/gallery/GalleryView.vue';
 import { useQuasar } from 'quasar';
+import {
+  get_assets,
+  get_collections,
+  get_templates
+} from 'src/api/atomic_assets';
+import { AssetsApiParams } from 'atomicassets/build/API/Explorer/Params';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
   name: 'AtomicAssetView',
@@ -33,41 +38,42 @@ export default defineComponent({
     DataParams: {
       type: Object as PropType<{ key: string; value: string }[]>,
       required: true
+    },
+    Type: {
+      type: String,
+      required: true
     }
   },
   setup(props) {
-    const store = useStore();
-    const route = useRoute();
+    const router = useRouter();
     const $q = useQuasar();
-    const myGalleryData = ref<GalleryCard[]>([]);
+    const GalleryData = ref<GalleryCard[]>([]);
     const showFilter = ref<boolean>(false);
     const showFilterDialog = ref<boolean>(false);
-    const search = ref<string>('');
-    const { ApiParams, Page, ItemsPerPage, DataParams } = toRefs(props);
-    const tier = ref<{ label: string; value: string }>({
-      label: 'All',
-      value: 'all'
-    });
+    const DataParams = computed(() => props.DataParams);
+    const { ApiParams, Page, ItemsPerPage, Type } = toRefs(props);
+    const search =
+      ref<string>((ApiParams.value as AssetsApiParams).search as string) ||
+      ref('');
+    const tier = ref<string>(
+      DataParams.value.find((v) => v.key === 'tier')
+        ? DataParams.value.find((v) => v.key === 'tier').value
+        : 'All'
+    );
+    console.log(tier.value);
+
     const tierOptions = ref([
       { label: 'Diamond', value: 'Diamond' },
       { label: 'Gold', value: 'Gold' },
-      { label: 'Silver', value: 'upload' },
-      { label: 'Bronze', value: 'friend' },
-      { label: 'All', value: 'all' }
+      { label: 'Silver', value: 'Silver' },
+      { label: 'Bronze', value: 'Bronze' },
+      { label: 'All', value: 'All' }
     ]);
-    const sort = ref({
-      label: 'Created (Newest)',
-      value: 'created-desc',
-      sort: 'created',
-      order: 'desc'
-    });
     const page = ref<number>(1);
     const pageOptions = [6, 12, 24, 48];
     const limit = ref<number>(6);
     const assetCount = ref<number>(1);
-    const profileId = computed(() => route.params.profile);
-    const profile = computed(() => store.state.account.profile);
-    const sortOptions = computed(() => [
+    const sortOptions = ref([
       {
         label: 'Alphabetical A-Z',
         value: 'alphabetical-asc',
@@ -106,33 +112,16 @@ export default defineComponent({
         order: 'desc'
       }
     ]);
-    const assetPages = computed((): number =>
+    const sort = ref(
+      sortOptions.value.find(
+        (v) =>
+          v.sort === (ApiParams.value as AssetsApiParams).sort &&
+          v.order === (ApiParams.value as AssetsApiParams).order
+      )
+    );
+    const Pages = computed((): number =>
       Math.ceil(assetCount.value / limit.value)
     );
-    const isMyAccount = computed(
-      () => profileId.value === profile.value.cryptoAccount.accountName
-    );
-    function assetToAmount(asset: string, decimals = -1): number {
-      try {
-        let qty: string = asset.split(' ')[0];
-        const val: number = parseFloat(qty);
-        if (decimals > -1) qty = val.toFixed(decimals);
-        return val;
-      } catch (error) {
-        return 0;
-      }
-    }
-    function getYield(cost: string, profit: string): string {
-      try {
-        const val =
-          ((assetToAmount(profit) - assetToAmount(cost)) /
-            assetToAmount(cost)) *
-          100;
-        return val.toFixed(0).toString() + '%';
-      } catch (error) {
-        return '0%';
-      }
-    }
     function Filter() {
       if ($q.screen.lt.md) {
         showFilterDialog.value = !showFilterDialog.value;
@@ -141,52 +130,105 @@ export default defineComponent({
       }
     }
     async function getData() {
-      assetCount.value = await atomic_api.countAssets(
-        ApiParams.value,
-        DataParams.value
-      );
-      let data = await atomic_api.getAssets(
-        ApiParams.value,
-        Page.value,
-        ItemsPerPage.value,
-        DataParams.value
-      );
-      myGalleryData.value = data.map((asset) => {
-        return {
-          ...asset.data,
-          to: '/asset/' + asset.asset_id,
-          yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
-          name: asset.data.name as string,
-          imageUrl:
-            asset.data.img && (asset.data.img as string).includes('http')
-              ? (asset.data.img as string)
-              : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
-          collection: asset.collection.collection_name,
-          template: asset.template.template_id,
-          schema: asset.schema.schema_name,
-          id: asset.asset_id
-        } as GalleryCard;
-      });
-      console.log(myGalleryData.value);
+      let response: {
+        data: GalleryCard[];
+        count: number;
+      };
+      switch (Type.value) {
+        case 'Assets':
+          DataParams.value;
+          response = await get_assets(
+            ApiParams.value,
+            Page.value,
+            ItemsPerPage.value,
+            DataParams.value
+          );
+
+          GalleryData.value = response.data;
+          assetCount.value = response.count;
+
+          break;
+        case 'Collections':
+          response = await get_collections(
+            ApiParams.value,
+            Page.value,
+            ItemsPerPage.value
+          );
+
+          GalleryData.value = response.data;
+          assetCount.value = response.count;
+
+          break;
+        case 'Templates':
+          response = await get_templates(
+            ApiParams.value,
+            Page.value,
+            ItemsPerPage.value,
+            DataParams.value
+          );
+
+          GalleryData.value = response.data;
+          assetCount.value = response.count;
+
+          break;
+        default:
+          response = await get_assets(
+            ApiParams.value,
+            Page.value,
+            ItemsPerPage.value,
+            DataParams.value
+          );
+
+          GalleryData.value = response.data;
+          assetCount.value = response.count;
+
+          break;
+      }
     }
+    async function updateTier(val: string) {
+      await router.push({
+        path: router.currentRoute.value.path,
+        query: {
+          search: search.value,
+          'filter[tier]': val,
+          sort: sort.value.sort,
+          order: sort.value.order
+        }
+      });
+      //void router.go(0);
+    }
+    function applyFilters() {
+      void router.push({
+        path: router.currentRoute.value.path,
+        query: {
+          search: search.value,
+          'filter[tier]': tier.value,
+          sort: sort.value.sort,
+          order: sort.value.order
+        }
+      });
+    }
+    watch([DataParams, ApiParams], () => {
+      void getData();
+    });
     onMounted(async () => {
       void (await getData());
+      console.log(router.currentRoute.value.path);
     });
 
     return {
-      profileId,
-      profile,
-      myGalleryData,
+      GalleryData,
       pageOptions,
       page,
-      assetPages,
-      isMyAccount,
+      Pages,
       limit,
       sort,
       sortOptions,
       showFilterDialog,
       getData,
       Filter,
+      applyFilters,
+      updateTier,
       search,
       tier,
       tierOptions,
@@ -228,14 +270,14 @@ page
               outlined,
               v-model='search',
               placeholder='Search',
-              @update:model-value='() => { getData(); }'
+              @update:model-value='() => { applyFilters(); }'
             )
               template(v-slot:prepend)
                 q-icon(v-if='search === ""', name='search')
                 q-icon.cursor-pointer(
                   v-else,
                   name='clear',
-                  @click='search = ""'
+                  @click='() => { search = ""; applyFilters(); }'
                 )
           .col-md-3.col-sm-6.col-xs-6
             q-select.filters-selection(
@@ -243,7 +285,7 @@ page
               dense,
               v-model='sort',
               :options='sortOptions',
-              @update:model-value='() => { getData(); }',
+              @update:model-value='() => { applyFilters(); }',
               color='primary'
             )
       q-card-section
@@ -260,11 +302,12 @@ page
                     q-option-group(
                       :options='tierOptions',
                       type='radio',
-                      v-model='tier'
+                      v-model='tier',
+                      @update:model-value='(v) => { updateTier(v); }'
                     )
 
           div(:class='showFilter ? "col-lg-10 col-md-9" : "col-12"')
-            GalleryView(:data='myGalleryData', type='asset')
+            GalleryView(:data='GalleryData', type='asset')
           .col-12 
             .row.justify-center
               q-select.q-px-sm(
@@ -278,11 +321,11 @@ page
               )
               q-pagination(
                 v-model='page',
-                :max='assetPages',
+                :max='Pages',
                 input,
                 @update:model-value='() => { getData(); }'
               )
-    q-dialog(v-model='showFilterDialog', maximized)
+    q-dialog(v-model='showFilterDialog', maximized, no-route-dismiss)
       .row.full-height.full-width.filter-dialog
         .col-12
           q-card.q-pa-md(flat)
@@ -303,7 +346,8 @@ page
               q-option-group(
                 :options='tierOptions',
                 type='radio',
-                v-model='tier'
+                v-model='tier',
+                @update:model-value='(v) => { updateTier(v); }'
               )
 </template>
 

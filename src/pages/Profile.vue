@@ -2,7 +2,7 @@
 import { defineComponent, computed, ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'src/store';
-import { atomic_api } from 'src/api/atomic_assets';
+import { getQueryDataOptions, getQueryApiOptions } from 'src/api/atomic_assets';
 import { GalleryCard } from 'src/types';
 import GalleryView from 'src/components/gallery/GalleryView.vue';
 import AtomicAssetsView from 'src/components/atomicAssets/AtomicAssetView.vue';
@@ -16,6 +16,7 @@ export default defineComponent({
     const myGalleryData = ref<GalleryCard[]>([]);
     const showFilter = ref<boolean>(false);
     const search = ref<string>('');
+    const dataOptions = computed(() => getQueryDataOptions(route.query));
     const tier = ref<{ label: string; value: string }>({
       label: 'All',
       value: 'all'
@@ -39,6 +40,18 @@ export default defineComponent({
     const assetCount = ref<number>(1);
     const profileId = computed(() => route.params.profile);
     const profile = computed(() => store.state.account.profile);
+    const myGalleryOptions = computed(() => {
+      return {
+        owner: profileId.value,
+        order: sort.value.order,
+        sort: sort.value.sort,
+        search: search.value,
+        min_template_mint: '1',
+        max_template_mint: '7000',
+        ...getQueryApiOptions(route.query)
+      } as unknown;
+    });
+    console.log(myGalleryOptions.value);
     const sortOptions = computed(() => [
       {
         label: 'Alphabetical A-Z',
@@ -105,47 +118,6 @@ export default defineComponent({
         return '0%';
       }
     }
-    const myGalleryOptions = {
-      owner: profileId.value,
-      order: sort.value.order,
-      sort: sort.value.sort,
-      search: search.value,
-      min_template_mint: '1',
-      max_template_mint: '7000'
-    };
-    async function getData() {
-      const datOptions: any[] = [];
-      assetCount.value = await atomic_api.countAssets(
-        myGalleryOptions as any,
-        datOptions
-      );
-      let data = await atomic_api.getAssets(
-        myGalleryOptions as any,
-        page.value,
-        limit.value,
-        datOptions
-      );
-      myGalleryData.value = data.map((asset) => {
-        return {
-          ...asset.data,
-          to: '/asset/' + asset.asset_id,
-          yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
-          name: asset.data.name as string,
-          imageUrl:
-            asset.data.img && (asset.data.img as string).includes('http')
-              ? (asset.data.img as string)
-              : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
-          collection: asset.collection.collection_name,
-          template: asset.template.template_id,
-          schema: asset.schema.schema_name,
-          id: asset.asset_id
-        } as GalleryCard;
-      });
-      console.log(myGalleryData.value);
-    }
-    onMounted(async () => {
-      void (await getData());
-    });
 
     return {
       profileId,
@@ -155,11 +127,11 @@ export default defineComponent({
       pageOptions,
       page,
       assetPages,
+      dataOptions,
       isMyAccount,
       limit,
       sort,
       sortOptions,
-      getData,
       search,
       tier,
       tierOptions,
@@ -206,7 +178,8 @@ page
         :ApiParams='myGalleryOptions',
         :Page='page',
         :ItemsPerPage='limit',
-        :DataParams='[]'
+        :DataParams='dataOptions',
+        Type='Aseets'
       )
 </template>
 
