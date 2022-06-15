@@ -104,8 +104,9 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-img.bg.tr.animated.fadeInLeft.slower(src='~assets/polygons/v1.svg')
-img.bg-polygon.tr.animated.fadeInLeft.slower(src='~assets/polygons/v2.svg')
+.bg-container
+  .bg-container-bg
+  img.bg.tr.animated.fadeInLeft.slower(src='~assets/polygons/v1.svg')
 q-page.q-py-md
   .row.justify-center
     .col-md-6.row.justify-start.items-center.q-px-lg
@@ -177,24 +178,28 @@ h2
 .featured-card
   width: 375px
 
-.rounded
-  border-radius: 1rem
+.bg-container
+  position: absolute
+  left: 0
+  right: 0
+  top: 0
+  bottom: 0
   overflow: hidden
+  z-index: -1
+
+.bg-container-bg
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  background: #303030
+  z-index: -2
 
 .bg
   position: absolute
-  height: 100%
   left: 0rem
+  width: 100%
   z-index: -1
-  &.tr
-    right: 0rem
-    top: 0rem
-  &.br
-    left: 0rem
-    bottom: 0rem
-
-.bg-polygon
-  position: absolute
-  left: 3rem
-  bottom: 10rem
+  background: #fff
 </style>
