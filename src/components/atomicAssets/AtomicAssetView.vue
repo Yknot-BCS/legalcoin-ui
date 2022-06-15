@@ -221,7 +221,7 @@ export default defineComponent({
           search: search.value,
           'filter[tier]': val,
           sort: sort.value.sort,
-          page: Page.value,
+          page: 1,
           limit: limit.value,
           order: sort.value.order
         }
@@ -236,7 +236,7 @@ export default defineComponent({
           'filter[tier]': tier.value,
           sort: sort.value.sort,
           order: sort.value.order,
-          page: page.value,
+          page: 1,
           limit: ItemsPerPage.value
         }
       });

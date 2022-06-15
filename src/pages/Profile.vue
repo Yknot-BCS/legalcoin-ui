@@ -1,8 +1,9 @@
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, computed, ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'src/store';
 import {
+  atomic_api,
   getQueryDataOptions,
   getQueryApiOptions,
   getQueryPage,
@@ -26,6 +27,11 @@ export default defineComponent({
     const dataOptions = computed(() => getQueryDataOptions(route.query));
     const page = computed(() => getQueryPage(route.query));
     const limit = computed(() => getQueryLimit(route.query));
+    const options = {
+      owner: profileId.value
+    } as unknown;
+    const assetCount = ref<number>(1);
+    const collectionCount = ref<number>(1);
     const myGalleryOptions = computed(() => {
       return {
         owner: profileId.value,
@@ -40,6 +46,12 @@ export default defineComponent({
     const isMyAccount = computed(
       () => profileId.value === profile.value.cryptoAccount.accountName
     );
+
+    onMounted(async () => {
+      let data = await atomic_api.getAccount(profileId.value as string);
+      assetCount.value = Number(data.assets);
+      collectionCount.value = data.collections.length;
+    });
     return {
       profileId,
       profile,
@@ -50,8 +62,8 @@ export default defineComponent({
       limit,
       search,
       showFilter,
-      nftCount: ref(0),
-      projectCount: ref(0)
+      assetCount,
+      collectionCount
     };
   }
 });
@@ -79,13 +91,13 @@ page
       q-card-section.row.justify-center.content-center.items-center
         .column.justify-center.content-center.items-center.info-block
           .col.text-subtitle1
-            | {{ nftCount }}
+            | {{ assetCount }}
           .col.text-subtitle1
             | NFTS
         q-separator.q-mx-md(vertical, color='black')
         .column.justify-center.content-center.items-center.info-block
           .col.text-subtitle1
-            | {{ projectCount }}
+            | {{ collectionCount }}
           .col.text-subtitle1
             | PROJECTS
       AtomicAssetsView(
