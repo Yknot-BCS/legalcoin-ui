@@ -19,12 +19,13 @@ export default defineComponent({
     const route = useRoute();
     const showFilter = ref<boolean>(false);
     const search = ref<string>('');
-    const dataOptions = computed(() => getQueryDataOptions(route.query));
-    const page = computed(() => getQueryPage(route.query));
-    const pageOptions = [6, 12, 24, 48];
-    const limit = computed(() => getQueryLimit(route.query));
     const profileId = computed(() => route.params.profile);
     const profile = computed(() => store.state.account.profile);
+
+    // - Gallery view
+    const dataOptions = computed(() => getQueryDataOptions(route.query));
+    const page = computed(() => getQueryPage(route.query));
+    const limit = computed(() => getQueryLimit(route.query));
     const myGalleryOptions = computed(() => {
       return {
         owner: profileId.value,
@@ -34,6 +35,8 @@ export default defineComponent({
         ...getQueryApiOptions(route.query)
       } as unknown;
     });
+    // - Gallery view
+
     const isMyAccount = computed(
       () => profileId.value === profile.value.cryptoAccount.accountName
     );
@@ -41,7 +44,6 @@ export default defineComponent({
       profileId,
       profile,
       myGalleryOptions,
-      pageOptions,
       page,
       dataOptions,
       isMyAccount,
