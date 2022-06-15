@@ -59,51 +59,46 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-page.fit.row.wrap.justify-center
-  q-card.wallet-card
-    q-card-section
-      .text-h6.text-grey-8
-        | My Balance
-    q-card-section
-      .text-bold 
-        | {{ balance }} LEGAL
-      .text
-        | {{ gbpValue }} (GBP)
-        //- TODO get GBP value
-    q-separator.q-mx-md
-    q-card-section
-      .text-bold 
-        | {{ nftCount }} NFTS
-      .text
-        | {{ nftValue.toFixed(2) }} (LEGAL)
-    q-separator.q-mx-md
-    q-card-section
-      .text-h6.text-grey-8
-        | Options
-      .fit.row.wrap.justify-center.q-mt-sm
-        .row.col-6
-          q-btn.col.q-mx-sm.q-mt-sm(
-            label='BUY LEGAL',
-            @click='$router.push({ name: "buytokens", params: { status: "checkout" } })'
-          )
-        .row.col-6
-          q-btn.col.q-mx-sm.q-mt-sm(
-            label='WITHDRAW',
-            disable,
-            @click='$router.push({ name: "withdraw" })'
-          )
-          q-tooltip Coming soon!
-        .row.col-12
-          q-btn.col.q-mx-sm.q-mt-sm(
-            label='VIEW TRANSACTION HISTORY',
-            @click='$router.push({ name: "txhistory" })'
-          )
+q-page
+  .row.justify-center
+    q-card
+      q-card-section
+        .text-h6.text-grey-8
+          | My Balance
+      q-card-section
+        .text-bold 
+          | {{ balance }} LEGAL
+        .text
+          | {{ gbpValue }} (GBP)
+          //- TODO get GBP value
+      q-separator.q-mx-md
+      q-card-section
+        .text-bold 
+          | {{ nftCount }} NFTS
+        .text
+          | {{ nftValue.toFixed(2) }} (LEGAL)
+      q-separator.q-mx-md
+      q-card-section
+        .text-h6.text-grey-8
+          | Options
+        .row.justify-center.q-mt-sm
+          .row.col-6
+            q-btn.col.q-mx-sm.q-mt-sm(
+              label='BUY LEGAL',
+              @click='$router.push({ name: "buytokens", params: { status: "checkout" } })'
+            )
+          .row.col-6
+            q-btn.col.q-mx-sm.q-mt-sm(
+              label='WITHDRAW',
+              disable,
+              @click='$router.push({ name: "withdraw" })'
+            )
+            q-tooltip Coming soon!
+          .row.col-12
+            q-btn.col.q-mx-sm.q-mt-sm(
+              label='VIEW TRANSACTION HISTORY',
+              @click='$router.push({ name: "txhistory" })'
+            )
 </template>
 
-<style lang="sass" scoped>
-.wallet-card
-  width: 100%
-  max-width: 30rem
-  height: 100%
-  max-height: 30rem
-</style>
+<style lang="sass" scoped></style>
