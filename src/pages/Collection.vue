@@ -3,23 +3,46 @@ import {
   ICollection,
   ITemplate
 } from 'atomicassets/build/API/Explorer/Objects';
-import { defineComponent, ref } from 'vue';
-import { atomic_api } from 'src/api/atomic_assets';
+import { defineComponent, ref, computed } from 'vue';
+import {
+  atomic_api,
+  getQueryApiOptions,
+  getQueryPage,
+  getQueryLimit
+} from 'src/api/atomic_assets';
+import { useRoute } from 'vue-router';
+import AtomicAssetsView from 'src/components/atomicAssets/AtomicAssetView.vue';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export default defineComponent({
   name: 'Collection',
-  components: {},
+  components: { AtomicAssetsView },
   setup() {
+    const route = useRoute();
     const collectionData = ref<ICollection>(
       new Object({ data: { img: '' } }) as ICollection
     );
     const templatesData = ref<ITemplate[]>();
 
+    // - Gallery view
+    const page = computed(() => getQueryPage(route.query));
+    const limit = computed(() => getQueryLimit(route.query));
+    const templateOptions = computed(() => {
+      return {
+        owner: process.env.AA_ACCOUNT,
+        collection_name: route.params.collection as string,
+        ...getQueryApiOptions(route.query)
+      } as unknown;
+    });
+    // - Gallery view
+
     return {
       templatesData,
-      collectionData
+      collectionData,
+      templateOptions,
+      page,
+      limit
     };
   },
   computed: {
@@ -107,4 +130,13 @@ q-page.q-pa-md.row
   //-           color='primary',
   //-           :to='"/asset/" + asset.asset_id'
   //-         ) View Asset
+  .col-12
+    q-card(flat)
+      AtomicAssetsView(
+        :ApiParams='templateOptions',
+        :Page='page',
+        :ItemsPerPage='limit',
+        :DataParams='[]',
+        Type='Templates'
+      )
 </template>
