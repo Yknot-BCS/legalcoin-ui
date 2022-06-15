@@ -41,7 +41,7 @@ export default defineComponent({
     },
     Type: {
       type: String,
-      required: true
+      required: false
     }
   },
   setup(props) {
@@ -52,6 +52,7 @@ export default defineComponent({
     const showFilterDialog = ref<boolean>(false);
     const DataParams = computed(() => props.DataParams);
     const { ApiParams, Page, ItemsPerPage, Type } = toRefs(props);
+    const page = ref(Page);
     const search =
       ref<string>((ApiParams.value as AssetsApiParams).search as string) ||
       ref('');
@@ -69,9 +70,8 @@ export default defineComponent({
       { label: 'Bronze', value: 'Bronze' },
       { label: 'All', value: 'All' }
     ]);
-    const page = ref<number>(1);
     const pageOptions = [6, 12, 24, 48];
-    const limit = ref<number>(6);
+    const limit = ref(ItemsPerPage);
     const assetCount = ref<number>(1);
     const sortOptions = ref([
       {
@@ -185,6 +185,32 @@ export default defineComponent({
           break;
       }
     }
+    async function updatePage(val: number) {
+      await router.push({
+        path: router.currentRoute.value.path,
+        query: {
+          search: search.value,
+          'filter[tier]': tier.value,
+          sort: sort.value.sort,
+          page: val,
+          limit: ItemsPerPage.value,
+          order: sort.value.order
+        }
+      });
+    }
+    async function updateLimit(val: number) {
+      await router.push({
+        path: router.currentRoute.value.path,
+        query: {
+          search: search.value,
+          'filter[tier]': tier.value,
+          sort: sort.value.sort,
+          page: 1,
+          limit: val,
+          order: sort.value.order
+        }
+      });
+    }
     async function updateTier(val: string) {
       await router.push({
         path: router.currentRoute.value.path,
@@ -192,10 +218,11 @@ export default defineComponent({
           search: search.value,
           'filter[tier]': val,
           sort: sort.value.sort,
+          page: Page.value,
+          limit: limit.value,
           order: sort.value.order
         }
       });
-      //void router.go(0);
     }
     function applyFilters() {
       void router.push({
@@ -204,16 +231,17 @@ export default defineComponent({
           search: search.value,
           'filter[tier]': tier.value,
           sort: sort.value.sort,
-          order: sort.value.order
+          order: sort.value.order,
+          page: page.value,
+          limit: ItemsPerPage.value
         }
       });
     }
-    watch([DataParams, ApiParams], () => {
+    watch([DataParams, ApiParams, Page, ItemsPerPage], () => {
       void getData();
     });
     onMounted(async () => {
       void (await getData());
-      console.log(router.currentRoute.value.path);
     });
 
     return {
@@ -229,6 +257,8 @@ export default defineComponent({
       Filter,
       applyFilters,
       updateTier,
+      updateLimit,
+      updatePage,
       search,
       tier,
       tierOptions,
@@ -317,13 +347,13 @@ page
                 type='number',
                 :options='pageOptions',
                 style='max-width: 100px',
-                @update:model-value='() => { getData(); }'
+                @update:model-value='(v) => { updateLimit(v); }'
               )
               q-pagination(
                 v-model='page',
                 :max='Pages',
                 input,
-                @update:model-value='() => { getData(); }'
+                @update:model-value='(v) => { updatePage(Number(v)); }'
               )
     q-dialog(v-model='showFilterDialog', maximized, no-route-dismiss)
       .row.full-height.full-width.filter-dialog

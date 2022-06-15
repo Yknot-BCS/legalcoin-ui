@@ -158,5 +158,18 @@ export const getQueryApiOptions = function (q: unknown): {
     sort: (query['sort'] as string) || 'created',
     order: (query['order'] as string) || 'desc'
   };
+  console.log(dataOptions);
   return dataOptions;
+};
+
+export const getQueryPage = function (q: unknown): number {
+  const route = useRoute();
+  const query = route.query;
+  return Number(query['page'] as string) || 1;
+};
+
+export const getQueryLimit = function (q: unknown): number {
+  const route = useRoute();
+  const query = route.query;
+  return Number(query['limit'] as string) || 6;
 };
