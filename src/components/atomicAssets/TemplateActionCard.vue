@@ -250,7 +250,7 @@ q-card
       //- expected yield?
       //- share icon
       .col-2.row.justify-center
-        q-icon(name='share', size='sm', @click='shareURL')
+        q-btn(icon='share', size='md', @click='shareURL', round)
     //- timeline
     Timeline(
       v-if='isBuybackNFT',
@@ -300,12 +300,12 @@ q-card
     //-     color='primary'
     //-   )
 
-    | owned: {{ isOwned }},
-    | for sale: {{ isForSale }},
-    | is buybacknft: {{ isBuybackNFT }},
-    | is owned by LC: {{ isOwnedByLC }},
-    | has buy order: {{ hasBuyOrder }},
-    | can claim: {{ isClaimable }}
+    //- | owned: {{ isOwned }},
+    //- | for sale: {{ isForSale }},
+    //- | is buybacknft: {{ isBuybackNFT }},
+    //- | is owned by LC: {{ isOwnedByLC }},
+    //- | has buy order: {{ hasBuyOrder }},
+    //- | can claim: {{ isClaimable }}
 </template>
 
 <style lang="sass"></style>
