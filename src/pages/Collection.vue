@@ -63,12 +63,6 @@ export default defineComponent({
       this.collectionData = await atomic_api.getCollection(
         this.$route.params.collection as string
       );
-    },
-    async getCollectionTemplates() {
-      this.templatesData = await atomic_api.getTemplates({
-        owner: process.env.AA_ACCOUNT,
-        collection_name: this.$route.params.collection as string
-      });
     }
   },
   async mounted() {
@@ -78,65 +72,67 @@ export default defineComponent({
     if (this.$route.params.collection) {
       console.log('Is Collection');
       await this.getCollectionData();
-      await this.getCollectionTemplates();
     }
   }
 });
 </script>
 
 <template lang="pug">
-q-page.q-pa-md.row
+q-page
   //- Collection Card
-  q-card.col-12.col-md-3(style='height: 50rem')
-    q-img.asset-img(:src='collectionImg')
-    .text Display Name: {{ collectionData.name }}
-    .text Author: {{ collectionData.Author }}
-    .text Market Fee: {{ collectionData.market_fee }}
-    .text Created: {{ new Date(Number(collectionData.created_at_time)).toLocaleDateString() }}
+  //- Background image
+  .row
+    q-img.bg-img(src='~assets/collections/slanted-gradient.svg', height='20em')
 
-  //- Template cards
-  q-card.col-12.col-md-9.row
-    .col-6.col-md-3(v-for='template in templatesData')
-      q-card.q-ma-sm
-        //- .text {{ template }}
-        q-card-section
-          .text-h6 {{ template.immutable_data.name }}
-          .text-subtitle2 {{ template.template_id }}
-        q-separator(inset)
-        q-img.asset-img(
-          :src='`https://ipfs.io/ipfs/${template.immutable_data.img}`'
+  //- Collection image 
+  .row.q-px-lg
+    .col-3
+      q-card.asset-img
+        q-img(:src='collectionImg')
+
+  //- Collection name and links
+  .row.justify-between.content-center.items-center.q-pa-lg 
+    .text-h2 
+      | {{ collectionData.data.name }}
+    .row.q-gutter-lg
+      q-icon(name='fa-solid fa-globe', size='md')
+      q-icon(name='fa-solid fa-ellipsis', size='md')
+
+  //- Collection description
+  .row.justify-start.q-pa-lg 
+    .text-subtitle1 
+      | {{ collectionData.data.description }}
+
+  //- Collection info
+    //- q-card.col-12.col-md-3(style='height: 50rem')
+    //-   | {{ collectionData }}
+    //-   q-img.asset-img(:src='collectionImg')
+    //-   .text Display Name: {{ collectionData.name }}
+    //-   .text Author: {{ collectionData.Author }}
+    //-   .text Market Fee: {{ collectionData.market_fee }}
+    //-   .text Created: {{ new Date(Number(collectionData.created_at_time)).toLocaleDateString() }}
+
+  .row.justify-center
+    .col-12
+      q-card(flat)
+        AtomicAssetsView(
+          :ApiParams='templateOptions',
+          :Page='page',
+          :ItemsPerPage='limit',
+          :DataParams='[]',
+          Type='Templates'
         )
-        q-card-actions
-          q-btn(flat) Action 1
-  //-     q-card.q-ma-sm(
-  //-       v-if='isLegalCoin(asset.collection.authorized_accounts[0])'
-  //-     )
-  //-       q-card-section
-  //-         .row
-  //-           .text-h6 {{ asset.collection.collection_name }}
-  //-         .row
-  //-           .col-6
-  //-             .text-subtitle2 GBP 500
-  //-           .col-6
-  //-             .text-subtitle2.float-right {{ asset.asset_id }}
-  //-         .row
-  //-           .text-subtitle2 Expected yield 15%
-  //-       q-separator(inset)
-  //-       router-link(:to='"/asset/" + asset.asset_id')
-  //-         q-img.asset-img(:src='"https://ipfs.io/ipfs/" + asset.data.img')
-  //-       q-card-actions.q-pa-md
-  //-         q-btn.full-width(
-  //-           flat,
-  //-           color='primary',
-  //-           :to='"/asset/" + asset.asset_id'
-  //-         ) View Asset
-  .col-12
-    q-card(flat)
-      AtomicAssetsView(
-        :ApiParams='templateOptions',
-        :Page='page',
-        :ItemsPerPage='limit',
-        :DataParams='[]',
-        Type='Templates'
-      )
 </template>
+
+<style lang="sass" scoped>
+.asset-img
+  position: relative
+  bottom: 5rem
+  min-height: 200px
+  max-height: 200px
+  min-width: 200px
+  max-width: 200px
+
+.bg-img
+  z-index: -1
+</style>
