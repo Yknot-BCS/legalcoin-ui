@@ -12,7 +12,7 @@ export default defineComponent({
       balance: ref('0'),
       nftCount: ref(0),
       nftValue: ref(0),
-      valueRatio: ref(1.01) // TODO determine this ratio dynamically
+      valueRatio: ref(1.0)
     };
   },
   computed: {
