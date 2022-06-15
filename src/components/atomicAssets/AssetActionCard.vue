@@ -11,7 +11,7 @@ import { mapGetters, mapActions } from 'vuex';
 import { Asset, Int64 } from '@greymass/eosio';
 import { date } from 'quasar';
 import { copyToClipboard } from 'quasar';
-import { getYield } from 'src/store/buy/actions';
+import { getYield } from 'src/api/atomic_assets';
 
 export default defineComponent({
   name: 'AssetActionCard',
