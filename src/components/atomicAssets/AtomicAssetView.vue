@@ -41,7 +41,7 @@ export default defineComponent({
     },
     Type: {
       type: String,
-      required: false
+      required: true
     }
   },
   setup(props) {
@@ -61,8 +61,6 @@ export default defineComponent({
         ? DataParams.value.find((v) => v.key === 'tier').value
         : 'All'
     );
-    console.log(tier.value);
-
     const tierOptions = ref([
       { label: 'Diamond', value: 'Diamond' },
       { label: 'Gold', value: 'Gold' },
@@ -122,6 +120,7 @@ export default defineComponent({
     const Pages = computed((): number =>
       Math.ceil(assetCount.value / limit.value)
     );
+    // Function to open correct filter on mobile or desktop
     function Filter() {
       if ($q.screen.lt.md) {
         showFilterDialog.value = !showFilterDialog.value;
@@ -129,6 +128,7 @@ export default defineComponent({
         showFilter.value = !showFilter.value;
       }
     }
+    // Check the type of atomic asset and then make api request to get gallery data
     async function getData() {
       let response: {
         data: GalleryCard[];
@@ -185,6 +185,7 @@ export default defineComponent({
           break;
       }
     }
+    // Apply page filter to url query
     async function updatePage(val: number) {
       await router.push({
         path: router.currentRoute.value.path,
@@ -198,6 +199,7 @@ export default defineComponent({
         }
       });
     }
+    // Apply limit filter to url query
     async function updateLimit(val: number) {
       await router.push({
         path: router.currentRoute.value.path,
@@ -211,6 +213,7 @@ export default defineComponent({
         }
       });
     }
+    // Apply tier filter to url query
     async function updateTier(val: string) {
       await router.push({
         path: router.currentRoute.value.path,
@@ -224,6 +227,7 @@ export default defineComponent({
         }
       });
     }
+    // Apply filters to url query
     function applyFilters() {
       void router.push({
         path: router.currentRoute.value.path,
@@ -237,9 +241,11 @@ export default defineComponent({
         }
       });
     }
+    // if any change is detected in these values update gallery data
     watch([DataParams, ApiParams, Page, ItemsPerPage], () => {
       void getData();
     });
+    // When component mounts get gallery data
     onMounted(async () => {
       void (await getData());
     });
@@ -275,6 +281,7 @@ page
 .row.justify-center
   .col-12
     q-card(flat)
+      // top action section for gallery (filter/search/sort)
       q-card-section
         .row.justify-between.q-col-gutter-md
           .col-md-1.col-sm-6.col-xs-6
@@ -318,6 +325,7 @@ page
               @update:model-value='() => { applyFilters(); }',
               color='primary'
             )
+      // Filter for desktop view
       q-card-section
         .row.justify-evenly
           .col-lg-2.col-md-3.q-pt-md(v-if='showFilter')
@@ -336,8 +344,11 @@ page
                       @update:model-value='(v) => { updateTier(v); }'
                     )
 
+          // Gallery section
           div(:class='showFilter ? "col-lg-10 col-md-9" : "col-12"')
             GalleryView(:data='GalleryData', type='asset')
+
+          // Paging for Gallery section
           .col-12 
             .row.justify-center
               q-select.q-px-sm(
@@ -355,6 +366,7 @@ page
                 input,
                 @update:model-value='(v) => { updatePage(Number(v)); }'
               )
+    // Filter dialog for mobile view
     q-dialog(v-model='showFilterDialog', maximized, no-route-dismiss)
       .row.full-height.full-width.filter-dialog
         .col-12
