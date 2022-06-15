@@ -1,32 +1,70 @@
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
-import { atomic_market_api } from 'src/api/atomic_assets';
+import { defineComponent, computed, ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { useStore } from 'src/store';
+import {
+  atomic_api,
+  getQueryDataOptions,
+  getQueryApiOptions,
+  getQueryPage,
+  getQueryLimit
+} from 'src/api/atomic_assets';
+import GalleryView from 'src/components/gallery/GalleryView.vue';
+import AtomicAssetsView from 'src/components/atomicAssets/AtomicAssetView.vue';
 
 export default defineComponent({
-  name: 'Gallery',
-  components: {},
+  name: 'Explore',
+  components: { GalleryView, AtomicAssetsView },
   setup() {
-    //const data = await atomic_api.getAsset('1099511627786');
-    async function getData() {
-      const options = { owner: 'pokemontest1', page: 1, limit: 10 };
-      return await atomic_market_api.getAssets(options);
-    }
-    onMounted(async () => {
-      console.log(await getData());
+    const store = useStore();
+    const route = useRoute();
+    const showFilter = ref<boolean>(false);
+    const search = ref<string>('');
+
+    // - Gallery view
+    const dataOptions = computed(() => getQueryDataOptions(route.query));
+    const page = computed(() => getQueryPage(route.query));
+    const limit = computed(() => getQueryLimit(route.query));
+    const assetOptions = computed(() => {
+      return {
+        owner: process.env.AA_ACCOUNT,
+        search: search.value,
+        min_template_mint: '1',
+        max_template_mint: '7000',
+        ...getQueryApiOptions(route.query)
+      } as unknown;
     });
-    return {};
+    // - Gallery view
+
+    onMounted(() => console.log(''));
+    return {
+      assetOptions,
+      page,
+      dataOptions,
+      limit,
+      search,
+      showFilter
+    };
   }
 });
 </script>
 
 <template lang="pug">
-q-page
-  .row.q-px-md
-    .col-12
-      .text-h3.text-weight-bold.q-pa-lg Gallery
-    .col-6
-      .q-px-md.text-h6.text-grey-8 My Gallery
-
-    .col-6
-      q-btn.q-px-md.float-right.text-grey-8(label='view all', flat)
+page
+.row.justify-center
+  .col-12
+    q-card(flat)
+      AtomicAssetsView(
+        :ApiParams='assetOptions',
+        :Page='page',
+        :ItemsPerPage='limit',
+        :DataParams='dataOptions',
+        Type='Templates'
+      )
 </template>
+
+<style scoped lang="sass">
+.info-block
+    width: 100%
+    max-width: 6rem
+</style>

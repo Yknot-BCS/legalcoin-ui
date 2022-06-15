@@ -52,6 +52,7 @@ export default defineComponent({
     const showFilterDialog = ref<boolean>(false);
     const DataParams = computed(() => props.DataParams);
     const { ApiParams, Page, ItemsPerPage, Type } = toRefs(props);
+    const price = ref<{ min: number; max: number }>({ min: 0, max: 10000 });
     const page = ref(Page);
     const search =
       ref<string>((ApiParams.value as AssetsApiParams).search as string) ||
@@ -269,6 +270,7 @@ export default defineComponent({
       tier,
       tierOptions,
       showFilter,
+      price,
       nftCount: ref(0),
       projectCount: ref(0)
     };
@@ -330,19 +332,28 @@ page
         .row.justify-evenly
           .col-lg-2.col-md-3.q-pt-md(v-if='showFilter')
             q-card.q-pa-md(bordered, flat)
-              q-card-section
-                .text-h5 Filters
-              q-separator(inset)
-              q-card-section
-                .row
-                  .col-6
-                    .text-h6 Tier
-                    q-option-group(
-                      :options='tierOptions',
-                      type='radio',
-                      v-model='tier',
-                      @update:model-value='(v) => { updateTier(v); }'
-                    )
+              q-expansion-item(expand-separator, icon='diamond', label='Tier')
+                q-option-group(
+                  :options='tierOptions',
+                  type='radio',
+                  v-model='tier',
+                  @update:model-value='(v) => { updateTier(v); }'
+                )
+              q-expansion-item(
+                expand-separator,
+                icon='attach_money',
+                label='Price'
+              )
+                q-range(v-model='price', :min='0', :max='12000', label)
+              q-expansion-item(
+                expand-separator,
+                icon='collections',
+                label='Collection'
+              )
+                q-list(bordered, separator)
+                  q-item(clickable, v-ripple)
+                    q-item-section Collection 1
+                    q-item-section All
 
           // Gallery section
           div(:class='showFilter ? "col-lg-10 col-md-9" : "col-12"')
@@ -381,16 +392,28 @@ page
               style='z-index: 1'
             )
             q-card-section
-              .text-h5 Filters
-            q-separator(inset)
-            q-card-section
-              .text-h6 Tier
-              q-option-group(
-                :options='tierOptions',
-                type='radio',
-                v-model='tier',
-                @update:model-value='(v) => { updateTier(v); }'
+              q-expansion-item(expand-separator, icon='diamond', label='Tier')
+                q-option-group(
+                  :options='tierOptions',
+                  type='radio',
+                  v-model='tier',
+                  @update:model-value='(v) => { updateTier(v); }'
+                )
+              q-expansion-item(
+                expand-separator,
+                icon='attach_money',
+                label='Price'
               )
+                q-range(v-model='price', :min='0', :max='12000', label)
+              q-expansion-item(
+                expand-separator,
+                icon='collections',
+                label='Collection'
+              )
+                q-list(bordered, separator)
+                  q-item(clickable, v-ripple)
+                    q-item-section Collection 1
+                    q-item-section All
 </template>
 
 <style scoped lang="sass">

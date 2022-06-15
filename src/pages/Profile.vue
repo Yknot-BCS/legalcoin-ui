@@ -27,9 +27,6 @@ export default defineComponent({
     const dataOptions = computed(() => getQueryDataOptions(route.query));
     const page = computed(() => getQueryPage(route.query));
     const limit = computed(() => getQueryLimit(route.query));
-    const options = {
-      owner: profileId.value
-    } as unknown;
     const assetCount = ref<number>(1);
     const collectionCount = ref<number>(1);
     const myGalleryOptions = computed(() => {
@@ -105,7 +102,7 @@ page
         :Page='page',
         :ItemsPerPage='limit',
         :DataParams='dataOptions',
-        Type='Aseets'
+        Type='Assets'
       )
 </template>
 
