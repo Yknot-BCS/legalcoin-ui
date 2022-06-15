@@ -11,6 +11,7 @@ import { mapGetters, mapActions } from 'vuex';
 import { Asset, Int64 } from '@greymass/eosio';
 import { date } from 'quasar';
 import { copyToClipboard } from 'quasar';
+import { getYield } from 'src/store/buy/actions';
 
 export default defineComponent({
   name: 'AssetActionCard',
@@ -173,6 +174,17 @@ export default defineComponent({
         return this.priceAsset.toString();
       } else {
         return 'loading';
+      }
+    },
+
+    expectedYield() {
+      if (this.assetData) {
+        return getYield(
+          this.assetData?.data?.mintprice,
+          this.assetData?.data?.maturedvalue
+        );
+      } else {
+        return '0';
       }
     }
   },
@@ -480,11 +492,13 @@ q-card
       .col-10.text-italic.text-subtitle1.column
         .col 
           | Owner: {{ assetData?.owner }}
-
-      //- expected yield?
       //- share icon
       .col-2.row.justify-center
         q-btn(icon='share', size='md', @click='shareURL', round)
+
+    //- expected yield?
+    .row.justify-center.items-center.fit.wrap 
+      .text-subtitle1 Expected yield: {{ expectedYield }}
     //- timeline
     Timeline(
       v-if='isBuybackNFT',
