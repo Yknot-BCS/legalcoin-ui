@@ -110,7 +110,8 @@ q-page.q-py-md
   .row.justify-center
     .col-md-6.row.justify-start.items-center.q-px-lg
       .column
-        h2.text-grey-1 Bringing the legal industry into the digital world
+        .text-h2.text-grey-1 Bringing the legal industry into the digital world
+        h5.text-grey-1 The leading platform for supporting class-action lawsuits
         .row.justify-start
           q-btn(
             :to='{ name: "discover" }',
