@@ -95,8 +95,13 @@ q-page
     .text-h2 
       | {{ collectionData.data.name }}
     .row.q-gutter-lg
-      q-icon(name='fa-solid fa-globe', size='md')
-      q-icon(name='fa-solid fa-ellipsis', size='md')
+      q-btn(
+        round,
+        icon='fa-solid fa-globe',
+        :href='collectionData.data?.url',
+        target='_blank'
+      )
+      q-btn(round, icon='fa-solid fa-ellipsis')
 
   //- Collection description
   .row.justify-start.q-pa-lg 
@@ -104,13 +109,10 @@ q-page
       | {{ collectionData.data.description }}
 
   //- Collection info
-    //- q-card.col-12.col-md-3(style='height: 50rem')
-    //-   | {{ collectionData }}
-    //-   q-img.asset-img(:src='collectionImg')
-    //-   .text Display Name: {{ collectionData.name }}
-    //-   .text Author: {{ collectionData.Author }}
-    //-   .text Market Fee: {{ collectionData.market_fee }}
-    //-   .text Created: {{ new Date(Number(collectionData.created_at_time)).toLocaleDateString() }}
+  .column.justify-start.q-pa-lg
+    .col Creator: {{ collectionData.authorized_accounts[0] }}
+    .col Market Fee: {{ collectionData.market_fee * 100 }}%
+    .col Created: {{ new Date(Number(collectionData.created_at_time)).toLocaleDateString() }}
 
   .row.justify-center
     .col-12
