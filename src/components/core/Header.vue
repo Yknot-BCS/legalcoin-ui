@@ -28,10 +28,16 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
   router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
     img.logo.q-mr-md(src='~assets/legalcoin-full.png')
 
-  .col.row.justify-center
-    search-bar.toolbar-select.q-mr-md.gt-sm(size='100')
+    .col.row.justify-center
+      search-bar.toolbar-select.q-mr-md(
+        size='35',
+        v-if='$q.screen.gt.xs && $q.screen.lt.md'
+      )
 
-  .q-mr-md.q-gutter-x-md.row.items-center.no-wrap(v-if='$q.screen.gt.sm')
+  .col.row.justify-center
+    search-bar.toolbar-select.q-mr-md(size='100', v-if='$q.screen.gt.md')
+
+  .q-mr-md.q-gutter-x-md.row.items-center.no-wrap(v-if='$q.screen.gt.md')
     q-btn(
       flat,
       icon='grid_view',
@@ -62,10 +68,10 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
     //- q-btn(v-if="isLoggedIn" @click="logout") Logout
     //- q-btn(v-if="!isLoggedIn" to="login" flat) Login
     //- q-btn(v-if="!isLoggedIn" to="register" outline) Register
-    div(v-if='$q.screen.lt.md')
-      q-btn(flat, round, dense)
+    div
+      q-btn(flat, round, dense, v-if='$q.screen.lt.sm')
         q-icon.material-icons-outlined(name='search')
-      q-btn(flat, round, dense, :to='{ name: "buy" }')
+      q-btn(flat, round, dense, :to='{ name: "buy" }', v-if='$q.screen.lt.md')
         q-icon.material-icons-outlined(name='grid_view')
       q-btn.q-ml-xs(
         flat,
