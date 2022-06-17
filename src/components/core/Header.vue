@@ -49,23 +49,23 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
     )
 
   .row.items-center.no-wrap
-    q-btn.q-mr-sm(
-      v-if='$q.screen.gt.sm && isLoggedIn',
-      dense,
-      flat,
-      round,
-      size='md',
-      icon='wallet',
-      color='grey-6',
-      :to='{ name: "wallet" }'
-    )
+    //- q-btn.q-mr-sm(
+    //-   v-if='$q.screen.gt.sm && isLoggedIn',
+    //-   dense,
+    //-   flat,
+    //-   round,
+    //-   size='md',
+    //-   icon='wallet',
+    //-   color='grey-6',
+    //-   :to='{ name: "wallet" }'
+    //- )
     //- q-btn(v-if="isLoggedIn" @click="logout") Logout
     //- q-btn(v-if="!isLoggedIn" to="login" flat) Login
     //- q-btn(v-if="!isLoggedIn" to="register" outline) Register
     div(v-if='$q.screen.lt.md')
       q-btn(flat, round, dense)
         q-icon.material-icons-outlined(name='search')
-      q-btn.q-ml-sm(flat, round, dense, :to='{ name: "buy" }')
+      q-btn(flat, round, dense, :to='{ name: "buy" }')
         q-icon.material-icons-outlined(name='grid_view')
       q-btn.q-ml-xs(
         flat,
@@ -82,39 +82,73 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
       //-   .q-mr-sm Sign In
     q-btn(dense, flat, round, size='md', no-wrap, v-if='isLoggedIn')
       // TODO Change avatar when logged in
-      q-avatar(rounded, size='30px')
-        q-icon.material-icons-outlined(name='account_circle', color='grey-6')
+      q-avatar(rounded, size='40px')
+        q-icon.material-icons-outlined(name='account_circle', color='primary')
       //- q-icon(name='arrow_drop_down' size='16px')
-      q-menu(auto-close, fit)
+      q-menu.menu-edit(auto-close, fit)
         q-list(dense)
-          q-item(v-if='isLoggedIn')
-            q-item-section
-              | Signed in as
-              strong {{ profile.name }} {{ profile.surname }}
-          q-separator(v-if='isLoggedIn')
-          // TODO add params for profile, gallery and wallet
           q-item.menu-link(
+            v-if='isLoggedIn',
             clickable,
             :to='{ name: "profile", params: { profile: 1 } }'
           )
-            q-item-section Your profile
-          q-item.menu-link(clickable, :to='{ name: "gallery" }')
-            q-item-section Your gallery
+            q-item-section.q-pa-sm
+              q-btn(
+                flat,
+                icon='account_circle',
+                label='Profile',
+                dense,
+                font-size='10px'
+              )
+          q-separator(v-if='isLoggedIn')
+          // TODO add params for profile, gallery and wallet
           q-item.menu-link(clickable, :to='{ name: "wallet" }')
-            q-item-section Your wallet
+            q-item-section.q-pa-sm
+              q-btn(
+                flat,
+                icon='wallet',
+                label='Wallet',
+                dense,
+                font-size='10px'
+              )
+          q-separator(v-if='isLoggedIn')
           q-item.menu-link(
             clickable,
             :to='{ name: "account-settings", params: { profile: 1 } }'
           )
-            q-item-section Settings
+            q-item-section.q-pa-sm
+              q-btn(
+                flat,
+                icon='settings',
+                label='Settings',
+                dense,
+                font-size='10px'
+              )
+          q-separator(v-if='isLoggedIn')
+          //- q-item.menu-link(clickable, :to='{ name: "gallery" }')
+          //-   q-item-section Your gallery
+          //- q-item.menu-link(clickable, :to='{ name: "wallet" }')
+          //-   q-item-section Your wallet
+          //- q-item.menu-link(
+          //-   clickable,
+          //-   :to='{ name: "account-settings", params: { profile: 1 } }'
+          //- )
+          //-   q-item-section Settings
           q-separator
           //- q-item.menu-link(clickable)
           //-   q-item-section Help
           //- q-item.menu-link(clickable)
           //-   q-item-section Settings
           //- q-separator
-          q-item.menu-link(clickable, v-if='isLoggedIn', @click='logout()')
-            q-item-section Sign out
+          q-item(v-if='isLoggedIn')
+            q-item-section.q-pa-lg
+              q-btn.logout-btn(
+                flat,
+                label='Sign Out',
+                dense,
+                font-size='10px',
+                @click='logout()'
+              )
           //- q-item.menu-link(clickable v-if="!isLoggedIn" :to="{name: 'login'}")
           //-   q-item-section Sign in
 </template>
@@ -137,7 +171,11 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
   background: $primary
   color: white
 .q-list
-  min-width: 150px
+  width: 350px
 .logo
   height:40px
+.logout-btn
+  background-color: orange
+.menu-edit
+  top: 200px
 </style>

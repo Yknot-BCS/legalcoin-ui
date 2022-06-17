@@ -18,7 +18,8 @@ export default defineComponent({
   setup() {
     return {
       hideProfile: ref(false),
-      emailNotifications: ref(false)
+      emailNotifications: ref(false),
+      kycKey: ref(false)
     };
   }
 });
@@ -28,12 +29,12 @@ export default defineComponent({
 q-page.fit.row.wrap.justify-center
   q-card.settings-card
     q-card-section
-      .text-h6.text-grey-8
-        | My Account Settings
+      .text-h5.text-grey-8.q-mt-xl.q-mr-lg
+        | Account Settings
     q-card-section
-      .row.justify-start.items-center
+      .row.justify-start.items-center.text-grey-8
         | {{ account.profile.name }} {{ account.profile.surname }}
-        q-btn(
+        q-btn.edit-btn(
           :to='{ name: "editprofile" }',
           icon='edit',
           flat,
@@ -41,7 +42,13 @@ q-page.fit.row.wrap.justify-center
           color='grey-6'
         )
       .col
-        q-btn(:to='{ name: "profile" }', flat, outline, padding='none')
+        q-btn(
+          :to='{ name: "profile" }',
+          flat,
+          outline,
+          padding='none',
+          font-size='15px'
+        )
           .text-italic
             | View My Profile
     q-separator
@@ -61,15 +68,37 @@ q-page.fit.row.wrap.justify-center
     //- q-separator
     q-card-section
       .text-bold
-        | Link Connected Accounts
+        q-item(tag='label', v-ripple)
+          q-item-section
+            q-item-label E-MAIL NOTIFICATIONS
+            q-item-label(caption) ON
+          q-item-section(avatar)
+            q-toggle(
+              color='primary',
+              checked-icon='check',
+              val='battery',
+              v-model='emailNotifications'
+            )
+            q-item-label(caption) {{ account.profile.email }}
+    q-separator
 
-      link-crypto-account
+    q-card-section
+      .text-bold
+        q-item(tag='label', v-ripple)
+          q-item-section
+            q-item-label KYC
+            q-item-label(caption) COMPLETE
+          q-item-section(avatar)
+            q-toggle(
+              color='primary',
+              checked-icon='check',
+              val='battery',
+              v-model='kycKey'
+            )
     q-separator
     q-card-section
-      NewCryptoAccount
-    q-separator
-    q-card-section
-      TransferTokensForm
+      .q-pa-sm.q-gutter-sm.justify-center
+        q-btn.btn-width(label='Sign Out', flat, dense)
 </template>
 
 <style lang="sass" scoped>
@@ -77,4 +106,14 @@ q-page.fit.row.wrap.justify-center
   width: 100%
   max-width: 30rem
   height: 100%
+
+.edit-btn
+  left: 210px
+
+.btn-width
+  width: 350px
+  justify-center: center
+  font-size: 20px
+  background-color: orange
+  border-radius: 5px
 </style>
