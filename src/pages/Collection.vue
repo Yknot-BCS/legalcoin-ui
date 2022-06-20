@@ -110,7 +110,7 @@ q-page
 
   //- Collection info
   .column.justify-start.q-pa-lg
-    .col Creator: {{ collectionData.authorized_accounts[0] }}
+    .col Creator: {{ collectionData.authorized_accounts?.[0] }}
     .col Market Fee: {{ collectionData.market_fee * 100 }}%
     .col Created: {{ new Date(Number(collectionData.created_at_time)).toLocaleDateString() }}
 
