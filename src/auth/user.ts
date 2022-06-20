@@ -70,30 +70,14 @@ export async function getProfile() {
         email
         emailVerified
         receiveEmailNotifications
-        cryptoAccount{
-          accountName
-          publicKey
-          secret
-          linkedAccounts
-        }
+        accountName
+        publicKey
+        secret
+        linkedAccounts
       }
     }`)) as any;
   const profile = res.profile;
-  if (profile.cryptoAccount === null) {
-    profile.cryptoAccount = {
-      accountName: '',
-      publicKey: '',
-      secret: '',
-      linkedAccounts: []
-    };
-  } else if (profile.cryptoAccount.accountName === null) {
-    profile.cryptoAccount = {
-      accountName: '',
-      publicKey: '',
-      secret: '',
-      linkedAccounts: profile.cryptoAccount.linkedAccounts
-    };
-  }
+  if (profile.accountName === null) profile.accountName = '';
   return profile;
 }
 

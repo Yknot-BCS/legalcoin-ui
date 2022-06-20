@@ -14,7 +14,7 @@ export default defineComponent({
     const $q = useQuasar();
     const store = useStore();
     const cryptoAccountName = computed(
-      () => store.state.account.profile.cryptoAccount.accountName
+      () => store.state.account.profile.accountName
     );
     const toAccount = ref('zzzzzzzzb.ya');
     const quantity = ref('1.0000');

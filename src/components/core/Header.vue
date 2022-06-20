@@ -72,10 +72,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
               strong {{ profile.name }} {{ profile.surname }}
           q-separator(v-if='isLoggedIn')
           // TODO add params for profile, gallery and wallet
-          q-item.menu-link(
-            clickable,
-            :to='"/profile/" + profile.cryptoAccount.accountName'
-          )
+          q-item.menu-link(clickable, :to='"/profile/" + profile.accountName')
             q-item-section Your profile
           q-item.menu-link(clickable, :to='{ name: "gallery" }')
             q-item-section Your gallery
