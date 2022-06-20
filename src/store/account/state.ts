@@ -39,12 +39,10 @@ export function state(): AccountStateInterface {
       email: '',
       emailVerified: false,
       receiveEmailNotifications: false,
-      cryptoAccount: {
-        accountName: '',
-        publicKey: '',
-        secret: '',
-        linkedAccounts: ['']
-      }
+      accountName: '',
+      publicKey: '',
+      secret: '',
+      linkedAccounts: ['']
     },
     session: {
       token: '',

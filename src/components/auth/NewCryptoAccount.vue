@@ -11,16 +11,14 @@ export default defineComponent({
   setup() {
     const $q = useQuasar();
     const store = useStore();
-    const profileCryptoAccount = computed(
-      () => store.state.account.profile.cryptoAccount
-    );
+    const profile = computed(() => store.state.account.profile);
     const cryptoIsAuthenticated = computed(
       // eslint-disable-next-line
       (): boolean => store.getters['account/cryptoIsAuthenticated']
     );
     const userPassword = ref('');
     async function cryptoNew(cryptoAccountName?: string) {
-      if (profileCryptoAccount.value.accountName === '') {
+      if (profile.value.accountName === '') {
         try {
           // eslint-disable-next-line
           const optionalAccountName = cryptoAccountName
@@ -37,7 +35,7 @@ export default defineComponent({
           await store.dispatch('account/refreshProfile');
           $q.notify({
             type: 'positive',
-            message: `Added "${profileCryptoAccount.value.accountName}" to your profile`
+            message: `Added "${profile.value.accountName}" to your profile`
           });
         } catch (error) {
           $q.notify({
@@ -61,10 +59,40 @@ export default defineComponent({
     async function createNewAccount() {
       await cryptoNew();
     }
+    function cryptoReset() {
+      $q.dialog({
+        title: 'Crypto Account Reset',
+        message:
+          'Are you sure you want to reset your crypto account? This will only affect your profile, not the blockchain, but you may loose access to your account.',
+        cancel: true,
+        focus: 'cancel',
+        color: 'negative'
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
+      }).onOk(async () => {
+        try {
+          await api.accounts.mutation(`
+            {
+              cryptoReset
+            }
+            `);
+          await store.dispatch('account/refreshProfile');
+          $q.notify({
+            type: 'positive',
+            message: 'Reset crypto account'
+          });
+        } catch (error) {
+          $q.notify({
+            type: 'negative',
+            message: (error as Error).message
+          });
+        }
+      });
+    }
     return {
       cryptoIsAuthenticated,
-      profileCryptoAccount,
+      profile,
       userPassword,
+      cryptoReset,
       connectExistingAccount,
       createNewAccount,
       requiredRule
@@ -77,10 +105,16 @@ export default defineComponent({
 .q-gutter-y-sm
   .col-12.text-bold Profile Crypto Account
   .col-12.text-italic With this account you can sign transactions on the blockchain without connecting an independant wallet (like Anchor).
-  .col-12(v-if='profileCryptoAccount.accountName !== ""') Profile account name: &nbsp;
-    span.text-bold {{ profileCryptoAccount.accountName }}
-  .col-12(v-if='profileCryptoAccount.accountName !== ""') Profile public key: &nbsp;
-    span.text-bold {{ profileCryptoAccount.publicKey }}
+  .col-12.row(v-if='profile.accountName !== ""')
+    .col-12 Profile account name: &nbsp;
+      span.text-bold {{ profile.accountName }}
+    .col-12 Profile public key: &nbsp;
+      span.text-bold {{ profile.publicKey }}
+    q-btn.col-12(
+      @click='cryptoReset',
+      color='negative',
+      label='Reset crypto account'
+    ) 
   q-card(flat, bordered)(v-else)
     q-item.bg-info You still need to create a crypto account for your profile. Connect an existing account or create a new one below.
     q-card-section

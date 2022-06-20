@@ -27,9 +27,7 @@ export default defineComponent({
       useDialogPluginComponent();
     const store = useStore();
     const $q = useQuasar();
-    const cryptoAccount = computed(
-      () => store.state.account.profile.cryptoAccount
-    );
+    const profile = computed(() => store.state.account.profile);
     const userPassword = ref('');
     const getPrivateKey = async (): Promise<PrivateKey> => {
       try {
@@ -67,7 +65,7 @@ export default defineComponent({
         }
         if (!action.authorization || !action.authorization.length) {
           action.authorization = [
-            { actor: cryptoAccount.value.accountName, permission: 'active' }
+            { actor: profile.value.accountName, permission: 'active' }
           ];
         }
         console.log(action, abi);
@@ -114,7 +112,7 @@ export default defineComponent({
       }
     };
     return {
-      cryptoAccount,
+      profile,
       userPassword,
       getPrivateKey,
       signTransaction,
