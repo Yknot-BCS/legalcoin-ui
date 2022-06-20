@@ -126,13 +126,13 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: '/explore',
+    path: '/discover',
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
         path: '',
-        name: 'explore',
-        component: () => import('pages/Explore.vue')
+        name: 'discover',
+        component: () => import('pages/Discover.vue')
       }
     ]
   },

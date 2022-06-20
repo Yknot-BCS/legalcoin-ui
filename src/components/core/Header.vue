@@ -24,7 +24,7 @@ export default {
 </script>
 
 <template lang="pug">
-q-toolbar.row.q-py-sm.q-px-md
+q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
   router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
     img.logo.q-mr-md(src='~assets/legalcoin-full.png')
 
@@ -74,7 +74,7 @@ q-toolbar.row.q-py-sm.q-px-md
           // TODO add params for profile, gallery and wallet
           q-item.menu-link(
             clickable,
-            :to='{ name: "profile", params: { profile: 1 } }'
+            :to='"/profile/" + profile.cryptoAccount.accountName'
           )
             q-item-section Your profile
           q-item.menu-link(clickable, :to='{ name: "gallery" }')

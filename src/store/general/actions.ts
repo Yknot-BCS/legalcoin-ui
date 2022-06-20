@@ -2,7 +2,7 @@
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { GeneralStateInterface } from './state';
-import { atomic_api } from 'src/api/atomic_assets';
+import { atomic_api, atomic_market_api } from 'src/api/atomic_assets';
 import { Template } from 'src/types';
 
 // Split multiple with ","
@@ -39,7 +39,7 @@ export const actions: ActionTree<GeneralStateInterface, StateInterface> = {
       match: state.search,
       sort: 'created'
     };
-    const assetData = await atomic_api.getAssets(assetOptions as any);
+    const assetData = await atomic_market_api.getAssets(assetOptions as any);
     if (assetData.length > 0) {
       options.push({
         label: 'Assets',

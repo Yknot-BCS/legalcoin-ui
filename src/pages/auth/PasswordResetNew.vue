@@ -1,11 +1,17 @@
 <script lang="ts">
 import auth from 'src/auth';
+import AuthCard from '../../components/auth/AuthCard.vue';
+
 import { ref } from 'vue';
+import { defineComponent } from 'vue';
 import { requiredRule } from './inputRules';
 import { useRoute, useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 
-export default {
+export default defineComponent({
+  components: {
+    AuthCard
+  },
   setup() {
     const route = useRoute();
     const router = useRouter();
@@ -42,12 +48,13 @@ export default {
       }
     };
   }
-};
+});
 </script>
 
 <template lang="pug">
-.form-wrapper.row.q-pa-md.bg-grey-3
-  .text-h5.col-12 Reset Password
+AuthCard
+  .text-h5.col-12.text-weight-bold Set New Password
+  p.col-12 to continue to LegalCoin
   q-form.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
     q-input.col-12(
       v-model='userPassword',

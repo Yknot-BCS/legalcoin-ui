@@ -4,11 +4,11 @@ import { GalleryCard } from 'src/types';
 import AssetCard from './assetCard.vue';
 import CollectionCard from './collectionCard.vue';
 import ListingCard from './listingCard.vue';
-import TemplateCard from './templateCard.vue';
+import TemplateViewer from './templateCard.vue';
 
 export default defineComponent({
   name: 'Cards',
-  components: { AssetCard, CollectionCard, ListingCard, TemplateCard },
+  components: { AssetCard, CollectionCard, ListingCard, TemplateViewer },
   props: {
     data: {
       type: Object as PropType<GalleryCard>,
@@ -32,7 +32,7 @@ div(v-if='cardType === "asset"')
   AssetCard(:data='card')
 
 div(v-else-if='cardType === "template"')
-  TemplateCard(:data='card')
+  TemplateViewer(:data='card')
 
 div(v-else-if='cardType === "collection"')
   CollectionCard(:data='card')

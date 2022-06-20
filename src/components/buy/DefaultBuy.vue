@@ -33,14 +33,14 @@ export default defineComponent({
     );
     const sections = computed(() => {
       return [
-        {
-          name: 'Assets',
-          data: assets.value,
-          results: accountData.value.assets,
-          type: 'asset',
-          page: assetPage.value,
-          pages: assetPages.value
-        },
+        // {
+        //   name: 'Assets',
+        //   data: assets.value,
+        //   results: accountData.value.assets,
+        //   type: 'asset',
+        //   page: assetPage.value,
+        //   pages: assetPages.value
+        // },
         {
           name: 'Collections',
           data: collections.value,
@@ -48,15 +48,15 @@ export default defineComponent({
           type: 'collection',
           page: collectionPage.value,
           pages: collectionPages.value
-        },
-        {
-          name: 'Templates',
-          data: templates.value,
-          results: accountData.value.templates,
-          type: 'template',
-          page: templatePage.value,
-          pages: templatePages.value
         }
+        // {
+        //   name: 'Templates',
+        //   data: templates.value,
+        //   results: accountData.value.templates,
+        //   type: 'template',
+        //   page: templatePage.value,
+        //   pages: templatePages.value
+        // }
       ];
     });
 
