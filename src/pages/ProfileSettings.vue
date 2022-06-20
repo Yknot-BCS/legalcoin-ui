@@ -68,37 +68,14 @@ q-page.fit.row.wrap.justify-center
     //- q-separator
     q-card-section
       .text-bold
-        q-item(tag='label', v-ripple)
-          q-item-section
-            q-item-label E-MAIL NOTIFICATIONS
-            q-item-label(caption) ON
-          q-item-section(avatar)
-            q-toggle(
-              color='primary',
-              checked-icon='check',
-              val='battery',
-              v-model='emailNotifications'
-            )
-            q-item-label(caption) {{ account.profile.email }}
-    q-separator
-
-    q-card-section
-      .text-bold
-        q-item(tag='label', v-ripple)
-          q-item-section
-            q-item-label KYC
-            q-item-label(caption) COMPLETE
-          q-item-section(avatar)
-            q-toggle(
-              color='primary',
-              checked-icon='check',
-              val='battery',
-              v-model='kycKey'
-            )
+        | Link Connected Accounts
+        link-crypto-account
     q-separator
     q-card-section
-      .q-pa-sm.q-gutter-sm.justify-center
-        q-btn.btn-width(label='Sign Out', flat, dense)
+      NewCryptoAccount
+    q-separator
+    q-card-section
+      TransferTokensForm
 </template>
 
 <style lang="sass" scoped>

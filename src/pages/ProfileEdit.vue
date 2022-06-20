@@ -87,5 +87,4 @@ q-page.fit.row.wrap.justify-center
 
 .text-subtitle1
   font-size: 25px
-  top: 30px
 </style>

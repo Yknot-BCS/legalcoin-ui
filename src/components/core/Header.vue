@@ -1,12 +1,15 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'src/store';
+import { useQuasar } from 'quasar';
 // import { useRouter } from 'vue-router';
 import SearchBar from 'src/components/core/SearchBar.vue';
 
 export default {
   components: { SearchBar },
   setup() {
+    const $q = useQuasar();
+    $q.screen.setSizes({ sm: 850, md: 1000, lg: 1440, xl: 1920 });
     const store = useStore();
     // const router = useRouter();
     const isLoggedIn = computed((): boolean => store.state.account.isLoggedIn);
@@ -14,7 +17,9 @@ export default {
     return {
       profile,
       isLoggedIn,
-      logout: () => store.commit('account/setLogout')
+      logout: () => store.commit('account/setLogout'),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      clicked: false
       // onClickAccount: async () => {
       //   if (!isLoggedIn.value) await router.push({ name: 'login' });
       // }
@@ -30,20 +35,22 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
 
     .col.row.justify-center
       search-bar.toolbar-select.q-mr-md(
-        size='35',
-        v-if='$q.screen.gt.xs && $q.screen.lt.md'
+        size='80',
+        v-if='$q.screen.gt.xs && $q.screen.lt.lg'
       )
 
   .col.row.justify-center
     search-bar.toolbar-select.q-mr-md(size='100', v-if='$q.screen.gt.md')
 
   .q-mr-md.q-gutter-x-md.row.items-center.no-wrap(v-if='$q.screen.gt.md')
-    q-btn(
+    q-btn.btn-left(
       flat,
       icon='grid_view',
       label='Discover',
       dense,
-      :to='{ name: "buy" }'
+      :to='{ name: "buy" }',
+      v-bind:class='{ white: !clicked, blue: clicked }',
+      v-on:click='clicked = !clicked'
     )
     q-btn(
       flat,
@@ -77,7 +84,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
         flat,
         round,
         dense,
-        v-if='!isLoggedIn',
+        v-if='!isLoggedIn && $q.screen.lt.md',
         :to='{ name: "login" }'
       )
         q-icon.material-icons-outlined(name='account_circle')
@@ -86,7 +93,85 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
       //-   q-avatar.q-mr-sm(rounded, size='30px')
       //-     q-icon.material-icons-outlined(name='account_circle')
       //-   .q-mr-sm Sign In
-    q-btn(dense, flat, round, size='md', no-wrap, v-if='isLoggedIn')
+    q-btn.gt-md(
+      dense,
+      flat,
+      round,
+      size='md',
+      no-wrap,
+      icon='account_circle',
+      label='Account',
+      color='primary',
+      v-if='isLoggedIn'
+    )
+      q-menu.menu-edit(auto-close, fit)
+        q-list(dense)
+          q-item.menu-link(
+            v-if='isLoggedIn',
+            clickable,
+            :to='{ name: "profile", params: { profile: 1 } }'
+          )
+            q-item-section.q-pa-sm
+              q-btn(
+                flat,
+                icon='account_circle',
+                label='Profile',
+                dense,
+                align='left',
+                font-size='10px'
+              )
+          q-separator(v-if='isLoggedIn')
+          // TODO add params for profile, gallery and wallet
+          q-item.menu-link(clickable, :to='{ name: "wallet" }')
+            q-item-section.q-pa-sm
+              q-btn(
+                flat,
+                icon='wallet',
+                label='Wallet',
+                dense,
+                align='left',
+                font-size='10px'
+              )
+          q-separator(v-if='isLoggedIn')
+          q-item.menu-link(
+            clickable,
+            :to='{ name: "account-settings", params: { profile: 1 } }'
+          )
+            q-item-section.q-pa-sm
+              q-btn(
+                flat,
+                icon='settings',
+                label='Settings',
+                dense,
+                align='left',
+                font-size='10px'
+              )
+          q-separator(v-if='isLoggedIn')
+          //- q-item.menu-link(clickable, :to='{ name: "gallery" }')
+          //-   q-item-section Your gallery
+          //- q-item.menu-link(clickable, :to='{ name: "wallet" }')
+          //-   q-item-section Your wallet
+          //- q-item.menu-link(
+          //-   clickable,
+          //-   :to='{ name: "account-settings", params: { profile: 1 } }'
+          //- )
+          //-   q-item-section Settings
+          q-separator
+          //- q-item.menu-link(clickable)
+          //-   q-item-section Help
+          //- q-item.menu-link(clickable)
+          //-   q-item-section Settings
+          //- q-separator
+          q-item(v-if='isLoggedIn')
+            q-item-section.q-pa-lg
+              q-btn.logout-btn(
+                flat,
+                label='Sign Out',
+                dense,
+                font-size='10px',
+                @click='logout()'
+              )
+    q-btn.lt-md(dense, flat, round, size='md', no-wrap, v-if='isLoggedIn')
       // TODO Change avatar when logged in
       q-avatar(rounded, size='40px')
         q-icon.material-icons-outlined(name='account_circle', color='primary')
@@ -104,6 +189,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
                 icon='account_circle',
                 label='Profile',
                 dense,
+                align='left',
                 font-size='10px'
               )
           q-separator(v-if='isLoggedIn')
@@ -115,6 +201,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
                 icon='wallet',
                 label='Wallet',
                 dense,
+                align='left',
                 font-size='10px'
               )
           q-separator(v-if='isLoggedIn')
@@ -128,6 +215,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
                 icon='settings',
                 label='Settings',
                 dense,
+                align='left',
                 font-size='10px'
               )
           q-separator(v-if='isLoggedIn')
@@ -173,9 +261,6 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
   &:hover
     opacity: 0.7
     color: $primary
-.menu-link:hover
-  background: $primary
-  color: white
 .q-list
   width: 350px
 .logo
@@ -184,4 +269,11 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
   background-color: orange
 .menu-edit
   top: 200px
+  align: left
+.btn-left
+  color: primary
+  &:focus
+    hover: $primary
+.blue
+  color: $primary
 </style>
