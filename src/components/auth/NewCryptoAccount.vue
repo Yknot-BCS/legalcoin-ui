@@ -11,16 +11,14 @@ export default defineComponent({
   setup() {
     const $q = useQuasar();
     const store = useStore();
-    const profileCryptoAccount = computed(
-      () => store.state.account.profile.cryptoAccount
-    );
+    const profile = computed(() => store.state.account.profile);
     const cryptoIsAuthenticated = computed(
       // eslint-disable-next-line
       (): boolean => store.getters['account/cryptoIsAuthenticated']
     );
     const userPassword = ref('');
     async function cryptoNew(cryptoAccountName?: string) {
-      if (profileCryptoAccount.value.accountName === '') {
+      if (profile.value.accountName === '') {
         try {
           // eslint-disable-next-line
           const optionalAccountName = cryptoAccountName
@@ -37,7 +35,7 @@ export default defineComponent({
           await store.dispatch('account/refreshProfile');
           $q.notify({
             type: 'positive',
-            message: `Added "${profileCryptoAccount.value.accountName}" to your profile`
+            message: `Added "${profile.value.accountName}" to your profile`
           });
         } catch (error) {
           $q.notify({
@@ -92,7 +90,7 @@ export default defineComponent({
     }
     return {
       cryptoIsAuthenticated,
-      profileCryptoAccount,
+      profile,
       userPassword,
       cryptoReset,
       connectExistingAccount,
@@ -107,11 +105,11 @@ export default defineComponent({
 .q-gutter-y-sm
   .col-12.text-bold Profile Crypto Account
   .col-12.text-italic With this account you can sign transactions on the blockchain without connecting an independant wallet (like Anchor).
-  .col-12.row(v-if='profileCryptoAccount.accountName !== ""')
+  .col-12.row(v-if='profile.accountName !== ""')
     .col-12 Profile account name: &nbsp;
-      span.text-bold {{ profileCryptoAccount.accountName }}
+      span.text-bold {{ profile.accountName }}
     .col-12 Profile public key: &nbsp;
-      span.text-bold {{ profileCryptoAccount.publicKey }}
+      span.text-bold {{ profile.publicKey }}
     q-btn.col-12(
       @click='cryptoReset',
       color='negative',

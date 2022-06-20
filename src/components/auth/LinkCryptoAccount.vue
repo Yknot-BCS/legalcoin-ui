@@ -15,8 +15,7 @@ export default defineComponent({
       (): boolean => store.getters['account/cryptoIsAuthenticated']
     );
     async function linkConnectedAccount() {
-      const linkedAccounts =
-        store.state.account.profile.cryptoAccount.linkedAccounts;
+      const linkedAccounts = store.state.account.profile.linkedAccounts;
       const cryptoAccountName = store.state.account.cryptoAccountName;
       if (cryptoAccountName !== '') {
         if (!linkedAccounts.includes(cryptoAccountName)) {
@@ -29,9 +28,7 @@ export default defineComponent({
             await api.accounts.mutation(`
               {
                 profileUpdate(input:{
-                  cryptoAccount: {
-                    linkedAccounts: ${newLinkedAccounts}
-                  }
+                  linkedAccounts: ${newLinkedAccounts}
                 })
               }
             `);
