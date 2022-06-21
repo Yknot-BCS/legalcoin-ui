@@ -49,8 +49,8 @@ export default defineComponent({
 
 <template lang="pug">
 //- Desktop view
-.row.justify-center(v-if='$q.screen.gt.md')
-  .col-12.page-view.q-py-lg.asset-container
+.row.justify-center(v-if='$q.screen.gt.sm')
+  .col-12.page-view.q-py-lg.asset-container-desktop
     .row.q-pa-sm
       //- Image
       q-card.col-12.q-my-sm
@@ -60,7 +60,7 @@ export default defineComponent({
           placeholder-src='https://placeimg.com/500/300/nature'
         )
       //- Actions
-      AssetActionCard.col-12.q-my-sm(
+      AssetActionCard.col-12.q-my-sm.q-ml-sm(
         :assetData='assetData',
         :saleData='saleData',
         :buyofferData='buyofferData',
@@ -86,7 +86,7 @@ export default defineComponent({
 
 //- Mobile view
 .row.justify-center(v-else)
-  .col-12.page-view.q-py-lg.asset-container
+  .col-12.page-view.q-py-lg.asset-container-mobile
     .row.q-pa-sm
       //- Image
       q-card.col-12.q-my-sm
@@ -135,7 +135,10 @@ export default defineComponent({
 // .container
 //   border: 1px solid $grey-6
 //   border-radius: 13px
-.asset-container
+.asset-container-desktop
+  width: 100%
+  max-width: 64rem
+.asset-container-mobile
   width: 100%
   max-width: 30rem
 </style>

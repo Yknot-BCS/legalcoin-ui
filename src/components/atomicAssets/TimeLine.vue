@@ -100,13 +100,13 @@ export default defineComponent({
           :style='markerMap[val].style'
         )
           .col-12.text-center {{ fnMarkerLabel(val) }}
-          .col-12.text-center(v-if='val == 0') Start
-          .col-12.text-center(v-else-if='val == 2') Maturity
-          .col-12.text-center(v-else-if='val == 4') Expiry
+          .col-12.text-center.text-progress-title(v-if='val == 0') Start
+          .col-12.text-center.text-progress-title(v-else-if='val == 2') Maturity
+          .col-12.text-center.text-progress-title(v-else-if='val == 4') Expiry
 
-          .col-12.text-center(v-if='val == 0') {{ startDateDisplay }}
-          .col-12.text-center(v-else-if='val == 2') {{ maturityDateDisplay }}
-          .col-12.text-center(v-else-if='val == 4') {{ expiryDateDisplay }}
+          .col-12.text-center.text-progress(v-if='val == 0') {{ startDateDisplay }}
+          .col-12.text-center.text-progress(v-else-if='val == 2') {{ maturityDateDisplay }}
+          .col-12.text-center.text-progress(v-else-if='val == 4') {{ expiryDateDisplay }}
 </template>
 
 <style lang="sass" scoped></style>
