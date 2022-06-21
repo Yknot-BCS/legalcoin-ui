@@ -7,6 +7,7 @@ import { onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import auth from 'src/auth';
 import DevBanner from 'src/components/dev/DevBanner.vue';
+import CompleteRegistrationBanners from 'src/components/auth/CompleteRegistrationBanners.vue';
 
 export default {
   setup() {
@@ -43,7 +44,13 @@ export default {
       )
     };
   },
-  components: { Header, Footer, MobileTabsFooter, DevBanner }
+  components: {
+    Header,
+    Footer,
+    MobileTabsFooter,
+    DevBanner,
+    CompleteRegistrationBanners
+  }
 };
 </script>
 
@@ -51,6 +58,7 @@ export default {
 q-layout(view='hHh lpR fff')
   dev-banner(v-if='DEVELOPMENT')
   Header
+  CompleteRegistrationBanners
   q-page-container
     router-view
     q-separator
