@@ -17,12 +17,12 @@ export default defineComponent({
       (): boolean => store.getters['account/cryptoIsAuthenticated']
     );
     const userPassword = ref('');
-    async function cryptoNew(cryptoAccountName?: string) {
+    async function cryptoNew(accountName?: string) {
       if (profile.value.accountName === '') {
         try {
           // eslint-disable-next-line
-          const optionalAccountName = cryptoAccountName
-            ? `accountName: "${cryptoAccountName}"`
+          const optionalAccountName = accountName
+            ? `accountName: "${accountName}"`
             : '';
           await api.accounts.mutation(`
               {
@@ -51,9 +51,9 @@ export default defineComponent({
       }
     }
     async function connectExistingAccount() {
-      const cryptoAccountName = store.state.account.cryptoAccountName;
-      if (cryptoAccountName !== '') {
-        await cryptoNew(cryptoAccountName);
+      const localAccountName = store.state.account.localAccountName;
+      if (localAccountName) {
+        await cryptoNew(localAccountName);
       }
     }
     async function createNewAccount() {

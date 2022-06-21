@@ -16,13 +16,13 @@ export default defineComponent({
     );
     async function linkConnectedAccount() {
       const linkedAccounts = store.state.account.profile.linkedAccounts;
-      const cryptoAccountName = store.state.account.cryptoAccountName;
-      if (cryptoAccountName !== '') {
-        if (!linkedAccounts.includes(cryptoAccountName)) {
+      const localAccountName = store.state.account.localAccountName;
+      if (localAccountName !== '') {
+        if (!linkedAccounts.includes(localAccountName)) {
           try {
             const newLinkedAccounts = JSON.stringify([
               ...linkedAccounts,
-              cryptoAccountName
+              localAccountName
             ]);
             // eslint-disable-next-line
             await api.accounts.mutation(`
@@ -35,7 +35,7 @@ export default defineComponent({
             await store.dispatch('account/refreshProfile');
             $q.notify({
               type: 'positive',
-              message: `Linked "${cryptoAccountName}" to your profile`
+              message: `Linked "${localAccountName}" to your profile`
             });
           } catch (error) {
             $q.notify({
@@ -46,7 +46,7 @@ export default defineComponent({
         } else {
           $q.notify({
             type: 'negative',
-            message: `"${cryptoAccountName}" is already linked`
+            message: `"${localAccountName}" is already linked`
           });
         }
       }

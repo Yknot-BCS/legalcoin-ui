@@ -10,8 +10,8 @@ type PlatformSigner = {
 
 export interface AccountStateInterface {
   loading: unknown;
-  cryptoAccountName: string;
-  cryptoAccountDetails: AccountDetails;
+  localAccountName: string;
+  localAccountDetails: AccountDetails;
   useLocalSigner: boolean;
   platformSigner: PlatformSigner;
   isLoggedIn: boolean;
@@ -23,8 +23,8 @@ export function state(): AccountStateInterface {
   return {
     // Local Signer
     loading: false,
-    cryptoAccountName: '',
-    cryptoAccountDetails: {} as AccountDetails,
+    localAccountName: '',
+    localAccountDetails: {} as AccountDetails,
     useLocalSigner: false,
     // Platform Signer
     platformSigner: {
