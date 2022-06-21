@@ -64,41 +64,57 @@ q-page
     q-card
       q-card-section
         .text-h6.text-grey-8
-          | My Balance
+          | Balance
       q-card-section
-        .text-bold 
-          | {{ balance }} LEGAL
-        .text
+        .text-wallet-topline.text-bold
+          | {{ balance }} LCP (LEGALCOIN POUND)
+        .text-body2
           | {{ gbpValue }} (GBP)
           //- TODO get GBP value
       q-separator.q-mx-md
       q-card-section
-        .text-bold 
+        .text-wallet-topline.text-bold 
           | {{ nftCount }} NFTS
-        .text
-          | {{ nftValue.toFixed(2) }} (LEGAL)
+        .text-body2
+          | {{ nftValue.toFixed(2) }} (LCP)
       q-separator.q-mx-md
       q-card-section
         .text-h6.text-grey-8
           | Options
         .row.justify-center.q-mt-sm
           .row.col-6
-            q-btn.col.q-mx-sm.q-mt-sm(
-              label='BUY LEGAL',
+            q-btn.wallet-btn.col.q-mx-sm.q-mt-sm(
+              label='BUY LEGALCOIN',
               @click='$router.push({ name: "buytokens", params: { status: "checkout" } })'
             )
           .row.col-6
-            q-btn.col.q-mx-sm.q-mt-sm(
+            q-btn.wallet-btn.col.q-mx-sm.q-mt-sm(
               label='WITHDRAW',
               disable,
               @click='$router.push({ name: "withdraw" })'
             )
             q-tooltip Coming soon!
+          .row.col-6
+            q-btn.wallet-btn.col.q-mx-sm.q-mt-sm(
+              label='SELL MY NFT',
+              disable,
+              @click='nothing'
+            )
+          .row.col-6
+            q-btn.wallet-btn.col.q-mx-sm.q-mt-sm(
+              label='SELL MY NFT',
+              disable,
+              @click='nothing'
+            )
           .row.col-12
-            q-btn.col.q-mx-sm.q-mt-sm(
+            q-btn.wallet-btn.col.q-mx-sm.q-mt-sm(
               label='VIEW TRANSACTION HISTORY',
               @click='$router.push({ name: "txhistory" })'
             )
 </template>
 
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+.wallet-btn
+  border: 0.5px solid grey
+  font-family: 'ralewayregular'
+</style>
