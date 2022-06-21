@@ -109,6 +109,22 @@ export async function passwordResetNew(
   `);
 }
 
+export async function passwordNew(
+  currentPassword: string,
+  newPassword: string
+) {
+  await api.accounts.mutation(`
+  {
+    passwordNew(
+      input:{
+        currentPassword: "${currentPassword}"
+        newPassword: "${newPassword}"
+      }
+    )
+  }
+  `);
+}
+
 export async function emailVerificationRequest() {
   await api.accounts.mutation(`
     mutation {

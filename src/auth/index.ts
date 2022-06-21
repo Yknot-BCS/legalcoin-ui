@@ -4,6 +4,7 @@ import {
   getProfile,
   passwordResetRequest,
   passwordResetNew,
+  passwordNew,
   emailVerificationRequest,
   cryptoNew
 } from './user';
@@ -26,6 +27,7 @@ export default {
   isLoggedIn,
   passwordResetRequest,
   passwordResetNew,
+  passwordNew,
   emailVerificationRequest,
   cryptoNew
 };
