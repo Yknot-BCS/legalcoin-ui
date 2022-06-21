@@ -96,18 +96,6 @@ q-page
               @click='$router.push({ name: "withdraw" })'
             )
             q-tooltip Coming soon!
-          .row.col-6
-            q-btn.wallet-btn.col.q-mx-sm.q-mt-sm(
-              label='SELL MY NFT',
-              flat,
-              @click='nothing'
-            )
-          .row.col-6
-            q-btn.wallet-btn.col.q-mx-sm.q-mt-sm(
-              label='SELL MY NFT',
-              flat,
-              @click='nothing'
-            )
           .row.col-12
             q-btn.wallet-btn.col.q-mx-sm.q-mt-sm(
               label='VIEW TRANSACTION HISTORY',
