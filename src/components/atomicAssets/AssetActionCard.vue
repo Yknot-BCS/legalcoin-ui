@@ -433,11 +433,11 @@ export default defineComponent({
 q-card 
   q-card-section
     //- name
-    .text-bold.text-h6
+    .text-bold.NFT-heading
       | {{ assetData?.data?.name }}
     //- by
     .row.justify-between.items-center.fit.wrap
-      .col-10.text-italic.text-subtitle1.column
+      .col-10.text-subtitle1.column
         .col 
           | Owner: {{ assetData?.owner }}
       //- share icon
@@ -446,7 +446,7 @@ q-card
 
     //- expected yield?
     .row.justify-center.items-center.fit.wrap 
-      .text-subtitle1 Expected yield: {{ expectedYield }}
+      .text-subtitle2 Expected yield: {{ expectedYield }}
     //- timeline
     Timeline(
       v-if='isBuybackNFT',
