@@ -20,7 +20,7 @@ export default defineComponent({
 
     const accountName = computed(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      () => store.getters['account/cryptoAccountName'] as string
+      () => store.getters['account/getAccountName'] as string
     );
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access

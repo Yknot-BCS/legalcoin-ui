@@ -9,10 +9,10 @@ export const mutations: MutationTree<AccountStateInterface> = {
   setLoadingWallet(state: AccountStateInterface, wallet: string) {
     state.loading = wallet;
   },
-  setCryptoAccountName(state: AccountStateInterface, accountName: string) {
+  setLocalAccountName(state: AccountStateInterface, accountName: string) {
     state.localAccountName = accountName;
   },
-  setCryptoAccountDetails(
+  setLocalAccountDetails(
     state: AccountStateInterface,
     accountDetails: AccountDetails
   ) {

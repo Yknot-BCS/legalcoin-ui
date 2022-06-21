@@ -27,7 +27,7 @@ export default defineComponent({
   },
   computed: {
     ...mapGetters({
-      accountName: 'account/cryptoAccountName',
+      accountName: 'account/getAccountName',
       isAuthenticated: 'account/isAuthenticated'
     }),
     maxPages(): number {

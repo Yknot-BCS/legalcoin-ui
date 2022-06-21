@@ -12,7 +12,7 @@ export const getters: GetterTree<AccountStateInterface, StateInterface> = {
     if (state.useLocalSigner) return !!state.localAccountName;
     else return !!state.profile.accountName;
   },
-  cryptoAccountName(state): string {
+  getAccountName(state): string {
     if (state.useLocalSigner) return state.localAccountName;
     else return state.profile.accountName;
   },

@@ -13,9 +13,9 @@ export default defineComponent({
     const SYS = computed(() => process.env.NETWORK_TOKEN);
     const $q = useQuasar();
     const store = useStore();
-    const cryptoAccountName = computed(
+    const accountName = computed(
       // eslint-disable-next-line
-      () => store.getters['account/cryptoAccountName'] as string
+      () => store.getters['account/getAccountName'] as string
     );
     const toAccount = ref('admin.ya');
     const quantity = ref('1.00000000');
@@ -31,11 +31,9 @@ export default defineComponent({
       const action = {
         account: 'eosio.token',
         name: 'transfer',
-        authorization: [
-          { actor: cryptoAccountName.value, permission: 'active' }
-        ],
+        authorization: [{ actor: accountName.value, permission: 'active' }],
         data: {
-          from: cryptoAccountName.value,
+          from: accountName.value,
           to: toAccount.value,
           quantity: `${qty} ${SYS.value}`,
           memo: 'Test platform signer'

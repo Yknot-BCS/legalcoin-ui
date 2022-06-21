@@ -17,7 +17,7 @@ export default defineComponent({
   },
   computed: {
     ...mapGetters({
-      accountName: 'account/cryptoAccountName',
+      accountName: 'account/accountName',
       isAuthenticated: 'account/isAuthenticated'
     }),
 

@@ -15,15 +15,15 @@ export default defineComponent({
   mounted() {
     const storedAccount = localStorage.getItem('account');
     if (storedAccount) {
-      this.setAccountName(storedAccount);
+      this.setLocalAccountName(storedAccount);
     }
   },
   computed: {
-    ...mapGetters({ account: 'account/cryptoAccountName' })
+    ...mapGetters({ account: 'account/getAccountName' })
   },
   methods: {
     ...mapMutations({
-      setAccountName: 'account/setCryptoAccountName'
+      setLocalAccountName: 'account/setLocalAccountName'
     })
   }
 });
