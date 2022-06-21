@@ -31,7 +31,7 @@ export default defineComponent({
   },
   computed: {
     ...mapGetters({
-      accountName: 'account/cryptoAccountName'
+      accountName: 'account/getAccountName'
     }),
 
     showDialog: {

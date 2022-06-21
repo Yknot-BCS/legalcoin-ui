@@ -25,7 +25,7 @@ export default defineComponent({
     const store = useStore();
     const accountName = computed(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      () => store.getters['account/cryptoAccountName'] as string
+      () => store.getters['account/getAccountName'] as string
     );
     console.log(accountName);
 

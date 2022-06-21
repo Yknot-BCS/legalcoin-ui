@@ -23,7 +23,8 @@ export default defineComponent({
   },
   computed: {
     ...mapGetters({
-      account: 'account/account'
+      account: 'account/account',
+      accountName: 'account/getAccountName'
     })
   },
   setup() {
@@ -59,6 +60,13 @@ q-page.fit.row.wrap.justify-center
     q-card-section
       q-btn(@click='showUpdatePassword = true', v-if='!showUpdatePassword') Change Password
       UpdatePassword(v-else)
+    q-separator
+    q-card-section
+      .text-bold Profile
+      div Email: {{ account.profile.email }}
+      div Platform Account: {{ account.profile.accountName }}
+      div Connected Account: {{ accountName }}
+
     //- q-card-section
     //-     .text-bold
     //-         | My Gallery
@@ -81,7 +89,7 @@ q-page.fit.row.wrap.justify-center
     //- q-separator
     //- q-card-section
     //-   NewCryptoAccount
-    //- q-separator
+    //- q-separator 
     //- q-card-section
     //-   TransferTokensForm
 </template>

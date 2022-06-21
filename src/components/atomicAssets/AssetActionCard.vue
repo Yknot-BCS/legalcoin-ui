@@ -46,7 +46,7 @@ export default defineComponent({
 
   computed: {
     ...mapGetters({
-      accountName: 'account/cryptoAccountName'
+      accountName: 'account/getAccountName'
     }),
     isOwned() {
       // Check if the current user is the owner of the asset

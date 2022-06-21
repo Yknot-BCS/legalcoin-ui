@@ -11,7 +11,7 @@ export default defineComponent({
     };
   },
   computed: {
-    ...mapGetters({ account: 'account/cryptoAccountName' })
+    ...mapGetters({ account: 'account/getAccountName' })
   },
   methods: {
     ...mapActions({ cryptoLogin: 'account/cryptoLogin' }),
