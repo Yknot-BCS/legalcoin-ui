@@ -33,6 +33,15 @@ export default defineComponent({
     ...mapGetters({
       accountName: 'account/cryptoAccountName'
     }),
+
+    showDialog: {
+      get() {
+        return this.showListingDialog;
+      },
+      set(value: boolean) {
+        this.$emit('update:showListingDialog', value);
+      }
+    },
     // Create Listing Dialog
     aucDuration() {
       let daysToSecs = this.aucTDays * 24 * 60 * 60;
@@ -166,7 +175,7 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-dialog(v-model='showListingDialog')
+q-dialog(v-model='showDialog')
   q-card
     q-tabs(v-model='listingType')
       q-tab(name='sale', label='Sale')
