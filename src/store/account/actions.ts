@@ -39,14 +39,14 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
       commit('setLoadingWallet');
     }
   },
-  async sendTransaction({ dispatch }, { actions }) {
+  async sendTransaction({ dispatch, getters }, { actions }) {
     /* eslint-disable */  // TODO enable eslint and fix types
     let transaction = null;
     actions.forEach((action: { authorization: string | any[]; }) => {
       if (!action.authorization || !action.authorization.length) {
         action.authorization = [
           {
-            actor: this.state.account.cryptoAccountName,
+            actor: getters.cryptoAccountName,
             permission: 'active'
           }
         ];
