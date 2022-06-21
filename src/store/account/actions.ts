@@ -46,7 +46,7 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
       if (!action.authorization || !action.authorization.length) {
         action.authorization = [
           {
-            actor: getters.accountName,
+            actor: getters.getAccountName,
             permission: 'active'
           }
         ];
