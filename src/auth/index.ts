@@ -4,7 +4,8 @@ import {
   getProfile,
   passwordResetRequest,
   passwordResetNew,
-  emailVerificationRequest
+  emailVerificationRequest,
+  cryptoNew
 } from './user';
 import {
   setAccessToken,
@@ -25,5 +26,6 @@ export default {
   isLoggedIn,
   passwordResetRequest,
   passwordResetNew,
-  emailVerificationRequest
+  emailVerificationRequest,
+  cryptoNew
 };

@@ -116,3 +116,14 @@ export async function emailVerificationRequest() {
     }
   `);
 }
+
+export async function cryptoNew(password: string) {
+  await api.accounts.mutation(`
+    {
+      cryptoNew(
+        input:{
+          password: "${password}"
+      })
+    }
+  `);
+}
