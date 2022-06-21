@@ -1,12 +1,13 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
-import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
 import {
   ISale,
   IBuyoffer,
-  IMarketOffer
+  IMarketOffer,
+  IMarketAsset
 } from 'atomicmarket/build/API/Explorer/Objects';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
+import CreateListingDialog from './CreateListingDialog.vue';
 import { mapGetters, mapActions } from 'vuex';
 import { Asset, Int64 } from '@greymass/eosio';
 import { date } from 'quasar';
@@ -15,10 +16,10 @@ import { getYield } from 'src/api/atomic_assets';
 
 export default defineComponent({
   name: 'AssetActionCard',
-  components: { Timeline },
+  components: { Timeline, CreateListingDialog },
   props: {
     assetData: {
-      type: Object as PropType<IAsset>,
+      type: Object as PropType<IMarketAsset>,
       required: true
     },
     saleData: {
@@ -39,7 +40,6 @@ export default defineComponent({
       quantity: ref(1),
       transaction: null,
       pollAsset: null,
-      listPrice: ref(0),
       showListingDialog: ref(false)
     };
   },
@@ -371,64 +371,6 @@ export default defineComponent({
       }
     },
 
-    async listNFT() {
-      let amountStr = Asset.from(
-        Number(this.listPrice),
-        Asset.Symbol.fromParts('WAX', 8) // FIXME input LEGAL price
-      ).toString(); //'2.00000000 WAX'
-      let actions: unknown = [
-        {
-          account: 'atomicmarket',
-          name: 'announcesale',
-          data: {
-            seller: this.accountName as string,
-            asset_ids: [this.assetData.asset_id],
-            listing_price: amountStr,
-            settlement_symbol: '8,WAX', // FIXME input LEGAL symbol
-            maker_marketplace: ''
-          }
-        },
-        {
-          account: 'atomicassets',
-          name: 'createoffer',
-          data: {
-            sender: this.accountName as string,
-            recipient: 'atomicmarket',
-            sender_asset_ids: [this.assetData.asset_id],
-            recipient_asset_ids: [],
-            memo: 'sale'
-          }
-        }
-      ];
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      this.transaction = await this.sendTransaction({ actions });
-    },
-
-    async tryListNFT() {
-      console.log('try listing');
-      try {
-        await this.listNFT();
-        this.$q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          message: 'Complete'
-        });
-        this.showListingDialog = false;
-        this.$emit('updateAssetInfo');
-      } catch (e: unknown) {
-        if (typeof e === 'string') {
-          e.toUpperCase(); // works, `e` narrowed to string
-        } else if (e instanceof Error) {
-          this.$q.notify({
-            color: 'red-4',
-            textColor: 'white',
-            message: e.message,
-            timeout: 5000
-          });
-        }
-      }
-    },
-
     async cancelListing() {
       let actions: unknown = [
         {
@@ -476,6 +418,12 @@ export default defineComponent({
           });
         }
       );
+    },
+
+    oi(event: Event) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      console.log(event);
+      // this.showListingDialog = event.target.value as boolean;
     }
   }
 });
@@ -574,28 +522,12 @@ q-card
     //- | can claim: {{ isClaimable }}
 
     //- list on market dialog
-    q-dialog(v-model='showListingDialog')
-      q-card
-        q-card-section
-          .text-bold
-            | Listing Price
-          q-input(
-            v-model='listPrice',
-            type='number',
-            label='Price (LEGAL)',
-            outlined
-          )
-        q-card-section
-          q-btn.q-mr-sm(
-            @click='tryListNFT()',
-            label='LIST ON MARKET',
-            color='primary'
-          )
-          q-btn(
-            @click='showListingDialog = false',
-            label='CANCEL',
-            color='primary'
-          )
+    CreateListingDialog(
+      :assetData='assetData',
+      v-model='showListingDialog',
+      @update:showListingDialog='showListingDialog = $event',
+      @update-asset-info='$emit("updateAssetInfo", $event)'
+    )
 </template>
 
 <style lang="sass"></style>
