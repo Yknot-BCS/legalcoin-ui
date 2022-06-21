@@ -12,9 +12,8 @@ export default defineComponent({
     const $q = useQuasar();
     const store = useStore();
     const profile = computed(() => store.state.account.profile);
-    const cryptoIsAuthenticated = computed(
-      // eslint-disable-next-line
-      (): boolean => store.getters['account/cryptoIsAuthenticated']
+    const localIsAuthenticated = computed(
+      (): boolean => !!store.state.account.localAccountName
     );
     const userPassword = ref('');
     async function cryptoNew(accountName?: string) {
@@ -89,7 +88,7 @@ export default defineComponent({
       });
     }
     return {
-      cryptoIsAuthenticated,
+      localIsAuthenticated,
       profile,
       userPassword,
       cryptoReset,
@@ -128,7 +127,7 @@ export default defineComponent({
       )
     q-card-actions(align='stretch')
       q-btn.col(
-        :disable='!cryptoIsAuthenticated',
+        :disable='!localIsAuthenticated',
         @click='connectExistingAccount()',
         type='submit',
         color='primary'

@@ -18,7 +18,7 @@ export default defineComponent({
   computed: {
     ...mapGetters({
       accountName: 'account/cryptoAccountName',
-      cryptoIsAuthenticated: 'account/cryptoIsAuthenticated'
+      isAuthenticated: 'account/isAuthenticated'
     }),
 
     gbpValue(): string {
@@ -26,7 +26,7 @@ export default defineComponent({
     }
   },
   async mounted() {
-    if (this.cryptoIsAuthenticated) {
+    if (this.isAuthenticated) {
       const tokenBal: Asset[] = await this.$api.getTokenBalances(
         process.env.LC_CONTRACT,
         this.accountName

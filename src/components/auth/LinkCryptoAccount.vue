@@ -10,9 +10,8 @@ export default defineComponent({
   setup() {
     const $q = useQuasar();
     const store = useStore();
-    const cryptoIsAuthenticated = computed(
-      // eslint-disable-next-line
-      (): boolean => store.getters['account/cryptoIsAuthenticated']
+    const localIsAuthenticated = computed(
+      (): boolean => !!store.state.account.localAccountName
     );
     async function linkConnectedAccount() {
       const linkedAccounts = store.state.account.profile.linkedAccounts;
@@ -52,7 +51,7 @@ export default defineComponent({
       }
     }
     return {
-      cryptoIsAuthenticated,
+      localIsAuthenticated,
       linkConnectedAccount
     };
   }
@@ -60,5 +59,5 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-btn(v-if='cryptoIsAuthenticated', @click='linkConnectedAccount()') Link Connected Account
+q-btn(v-if='localIsAuthenticated', @click='linkConnectedAccount()') Link Connected Account
 </template>

@@ -35,7 +35,7 @@ export default defineComponent({
   computed: {
     ...mapGetters({
       accountName: 'account/cryptoAccountName',
-      cryptoIsAuthenticated: 'account/cryptoIsAuthenticated'
+      isAuthenticated: 'account/isAuthenticated'
     }),
     displayDate() {
       return date.formatDate(this.paymentDate, 'DD MMM, YYYY');
@@ -120,8 +120,7 @@ export default defineComponent({
 //- | Receipt for
 //-     | Buying of LEGAL
 //- If payment has succeeded
-q-card(v-if='paymentStatus === "success"').receipt-card
-
+q-card.receipt-card(v-if='paymentStatus === "success"')
   q-card-section 
     .text-h5.text-grey-8 
       | Transaction Summary
@@ -176,7 +175,10 @@ q-card(v-if='paymentStatus === "success"').receipt-card
         | {{ errorMessage }}
   q-separator
   .row
-    q-btn.col-12(label='View Balance', @click='$router.push({ name: "wallet" })')
+    q-btn.col-12(
+      label='View Balance',
+      @click='$router.push({ name: "wallet" })'
+    )
     //- TODO add fee and any other details
 //- If payment has failed
 q-card(v-if='paymentStatus === "failure"')

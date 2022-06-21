@@ -28,7 +28,7 @@ export default defineComponent({
   computed: {
     ...mapGetters({
       accountName: 'account/cryptoAccountName',
-      cryptoIsAuthenticated: 'account/cryptoIsAuthenticated'
+      isAuthenticated: 'account/isAuthenticated'
     }),
     maxPages(): number {
       return Math.ceil(this.transactions.length / this.txPerPage);
@@ -64,8 +64,8 @@ export default defineComponent({
         //   console.log(response.data);
 
         /* eslint-disable */
-      let rawOrders = response.data[0];
-      /* eslint-enable */
+        let rawOrders = response.data[0];
+        /* eslint-enable */
 
         let buyOrders: TxCardProps[] = [];
         for (const order of rawOrders) {
@@ -103,7 +103,7 @@ export default defineComponent({
 <template lang="pug">
 q-page
   .row.justify-center
-    q-card(v-if='cryptoIsAuthenticated')
+    q-card(v-if='isAuthenticated')
       q-card-section
         .text-h4.text-grey-8
           | Transaction History
