@@ -49,8 +49,8 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
       label='Discover',
       dense,
       :to='{ name: "buy" }',
-      v-bind:class='{ white: !clicked, blue: clicked }',
-      v-on:click='clicked = !clicked'
+      :class='{ white: !clicked, blue: clicked }',
+      @click='clicked = !clicked'
     )
     q-btn(
       flat,
@@ -76,7 +76,13 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
     //- q-btn(v-if="!isLoggedIn" to="login" flat) Login
     //- q-btn(v-if="!isLoggedIn" to="register" outline) Register
     div
-      q-btn(flat, round, dense, v-if='$q.screen.lt.sm')
+      q-btn(
+        flat,
+        round,
+        dense,
+        :to='{ name: "mobile-search" }',
+        v-if='$q.screen.lt.sm'
+      )
         q-icon.material-icons-outlined(name='search')
       q-btn(flat, round, dense, :to='{ name: "buy" }', v-if='$q.screen.lt.md')
         q-icon.material-icons-outlined(name='grid_view')

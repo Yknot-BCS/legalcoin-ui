@@ -16,7 +16,7 @@ export default {
 
 <template lang="pug">
 q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
-  q-btn.q-mr-md(flat, round, dense, :to='{ name: "home" }')
+  q-btn.q-mr-md(flat, round, dense, :to='{ name: "home" }', active)
     q-icon.material-icons-outlined(name='chevron_left')
   .col.row.justify-center
     search-bar.toolbar-select.q-mr-md.lt-md(size='50')
@@ -29,18 +29,4 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
   flex-basis: 500px
   flex-grow: 0
   flex-shrink: 1
-.toolbar-link
-  color: black
-  text-decoration: none
-  font-size: 1.2rem
-  &:hover
-    opacity: 0.7
-    color: $primary
-.menu-link:hover
-  background: $primary
-  color: white
-.q-list
-  min-width: 150px
-.logo
-  height:40px
 </style>
