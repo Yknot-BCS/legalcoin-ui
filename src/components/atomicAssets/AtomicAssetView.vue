@@ -14,7 +14,8 @@ import { useQuasar } from 'quasar';
 import {
   get_assets,
   get_collections,
-  get_templates
+  get_templates,
+  get_sale
 } from 'src/api/atomic_assets';
 import { AssetsApiParams } from 'atomicassets/build/API/Explorer/Params';
 import { useRouter } from 'vue-router';
@@ -42,16 +43,47 @@ export default defineComponent({
     Type: {
       type: String,
       required: true
+    },
+    DisableFilter: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    Status: {
+      type: String,
+      required: false,
+      default: '["buynow"]'
+    },
+    FilterStatus: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    Price: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    Collection: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    Tier: {
+      type: Boolean,
+      required: false,
+      default: true
     }
   },
   setup(props) {
     const router = useRouter();
     const $q = useQuasar();
     const GalleryData = ref<GalleryCard[]>([]);
+    const disableFilter = computed(() => props.DisableFilter);
     const showFilter = ref<boolean>(false);
     const showFilterDialog = ref<boolean>(false);
     const DataParams = computed(() => props.DataParams);
-    const { ApiParams, Page, ItemsPerPage, Type } = toRefs(props);
+    const { ApiParams, Page, ItemsPerPage, Type, Status } = toRefs(props);
     const price = ref<{ min: number; max: number }>({ min: 0, max: 10000 });
     const page = ref(Page);
     const search =
@@ -70,6 +102,9 @@ export default defineComponent({
       { label: 'All', value: 'All' }
     ]);
     const pageOptions = [6, 12, 24, 48];
+    console.log(Status.value);
+    const statusSelection = ref(JSON.parse(Status.value) as string[]);
+    console.log(statusSelection.value);
     const limit = ref(ItemsPerPage);
     const assetCount = ref<number>(1);
     const sortOptions = ref([
@@ -121,6 +156,10 @@ export default defineComponent({
     const Pages = computed((): number =>
       Math.ceil(assetCount.value / limit.value)
     );
+    const filterStatus = computed(() => props.FilterStatus);
+    const filterPrice = computed(() => props.Price);
+    const filterCollection = computed(() => props.Collection);
+    const filterTier = computed(() => props.Tier);
     // Function to open correct filter on mobile or desktop
     function Filter() {
       if ($q.screen.lt.md) {
@@ -172,7 +211,21 @@ export default defineComponent({
           assetCount.value = response.count;
 
           break;
+
+        case 'Sale':
+          response = await get_sale(
+            ApiParams.value,
+            Page.value,
+            ItemsPerPage.value,
+            DataParams.value
+          );
+
+          GalleryData.value = response.data;
+          assetCount.value = response.count;
+
+          break;
         default:
+          DataParams.value;
           response = await get_assets(
             ApiParams.value,
             Page.value,
@@ -224,7 +277,8 @@ export default defineComponent({
           sort: sort.value.sort,
           page: 1,
           limit: limit.value,
-          order: sort.value.order
+          order: sort.value.order,
+          status: JSON.stringify(statusSelection.value)
         }
       });
     }
@@ -238,7 +292,8 @@ export default defineComponent({
           sort: sort.value.sort,
           order: sort.value.order,
           page: 1,
-          limit: ItemsPerPage.value
+          limit: ItemsPerPage.value,
+          status: JSON.stringify(statusSelection.value)
         }
       });
     }
@@ -272,7 +327,13 @@ export default defineComponent({
       showFilter,
       price,
       nftCount: ref(0),
-      projectCount: ref(0)
+      projectCount: ref(0),
+      statusSelection,
+      filterStatus,
+      disableFilter,
+      filterPrice,
+      filterCollection,
+      filterTier
     };
   }
 });
@@ -286,7 +347,7 @@ page
       // top action section for gallery (filter/search/sort)
       q-card-section
         .row.justify-between.q-col-gutter-md
-          .col-md-1.col-sm-6.col-xs-6
+          .col-md-1.col-sm-6.col-xs-6(v-if='disableFilter')
             .filter-container.full-width(
               text-color='black',
               :class='$q.screen.lt.md ? "" : "no-border"',
@@ -332,23 +393,109 @@ page
         .row.justify-evenly
           .col-lg-2.col-md-3.q-pt-md(v-if='showFilter')
             q-card.q-pa-md(bordered, flat)
-              q-expansion-item(expand-separator, icon='diamond', label='Tier')
-                q-option-group(
-                  :options='tierOptions',
-                  type='radio',
-                  v-model='tier',
-                  @update:model-value='(v) => { updateTier(v); }'
-                )
+              q-expansion-item(
+                expand-separator,
+                icon='query_stats',
+                label='Status',
+                default-opened,
+                v-if='filterStatus'
+              )
+                .row.q-col-gutter-sm.q-pa-md
+                  .col-12
+                    .row
+                      .col-6 Buy Now
+                      .col-6
+                        q-checkbox.float-right.q-pl-md(
+                          v-model='statusSelection',
+                          val='buynow',
+                          color='primary',
+                          @update:model-value='() => { applyFilters(); }'
+                        )
+                  .col-12
+                    .row
+                      .col-6 Marketplace
+                      .col-6
+                        q-checkbox.float-right.q-pl-md(
+                          v-model='statusSelection',
+                          val='marketplace',
+                          color='primary',
+                          @update:model-value='() => { applyFilters(); }'
+                        )
+                  .col-12
+                    .row
+                      .col-6 On Auction
+                      .col-6
+                        q-checkbox.float-right.q-pl-md(
+                          v-model='statusSelection',
+                          val='auction',
+                          color='primary',
+                          @update:model-value='() => { applyFilters(); }'
+                        )
+              q-expansion-item(
+                expand-separator,
+                icon='diamond',
+                label='Tier',
+                v-if='filterTier'
+              )
+                .row.q-col-gutter-sm.q-pa-md
+                  .col-12
+                    .row
+                      .col-6 Diamond
+                      .col-6
+                        q-radio.float-right.q-pl-md(
+                          v-model='tier',
+                          val='Diamond',
+                          @update:model-value='(v) => { updateTier(v); }'
+                        )
+                  .col-12
+                    .row
+                      .col-6 Gold
+                      .col-6
+                        q-radio.float-right.q-pl-md(
+                          v-model='tier',
+                          val='Gold',
+                          @update:model-value='(v) => { updateTier(v); }'
+                        )
+                  .col-12
+                    .row
+                      .col-6 Silver
+                      .col-6
+                        q-radio.float-right.q-pl-md(
+                          v-model='tier',
+                          val='Silver',
+                          @update:model-value='(v) => { updateTier(v); }'
+                        )
+                  .col-12
+                    .row
+                      .col-6 Bronze
+                      .col-6
+                        q-radio.float-right.q-pl-md(
+                          v-model='tier',
+                          val='Bronze',
+                          @update:model-value='(v) => { updateTier(v); }'
+                        )
+                  .col-12
+                    .row
+                      .col-6 All
+                      .col-6
+                        q-radio.float-right.q-pl-md(
+                          v-model='tier',
+                          val='All',
+                          @update:model-value='(v) => { updateTier(v); }'
+                        )
+
               q-expansion-item(
                 expand-separator,
                 icon='attach_money',
-                label='Price'
+                label='Price',
+                v-if='filterPrice'
               )
-                q-range(v-model='price', :min='0', :max='12000', label)
+                q-range.q-pa-lg(v-model='price', :min='0', :max='12000', label)
               q-expansion-item(
                 expand-separator,
                 icon='collections',
-                label='Collection'
+                label='Collection',
+                v-if='filterCollection'
               )
                 q-list(bordered, separator)
                   q-item(clickable, v-ripple)
@@ -392,23 +539,109 @@ page
               style='z-index: 1'
             )
             q-card-section
-              q-expansion-item(expand-separator, icon='diamond', label='Tier')
-                q-option-group(
-                  :options='tierOptions',
-                  type='radio',
-                  v-model='tier',
-                  @update:model-value='(v) => { updateTier(v); }'
-                )
+              q-expansion-item(
+                expand-separator,
+                icon='query_stats',
+                label='Status',
+                default-opened,
+                v-if='filterStatus'
+              )
+                .row.q-col-gutter-sm.q-pa-md
+                  .col-12
+                    .row
+                      .col-6 Buy Now
+                      .col-6
+                        q-checkbox.float-right.q-pl-md(
+                          v-model='statusSelection',
+                          val='buynow',
+                          color='primary',
+                          @update:model-value='() => { applyFilters(); }'
+                        )
+                  .col-12
+                    .row
+                      .col-6 Marketplace
+                      .col-6
+                        q-checkbox.float-right.q-pl-md(
+                          v-model='statusSelection',
+                          val='marketplace',
+                          color='primary',
+                          @update:model-value='() => { applyFilters(); }'
+                        )
+                  .col-12
+                    .row
+                      .col-6 On Auction
+                      .col-6
+                        q-checkbox.float-right.q-pl-md(
+                          v-model='statusSelection',
+                          val='auction',
+                          color='primary',
+                          @update:model-value='() => { applyFilters(); }'
+                        )
+              q-expansion-item(
+                expand-separator,
+                icon='diamond',
+                label='Tier',
+                v-if='filterTier'
+              )
+                .row.q-col-gutter-sm.q-pa-md
+                  .col-12
+                    .row
+                      .col-6 Diamond
+                      .col-6
+                        q-radio.float-right.q-pl-md(
+                          v-model='tier',
+                          val='Diamond',
+                          @update:model-value='(v) => { updateTier(v); }'
+                        )
+                  .col-12
+                    .row
+                      .col-6 Gold
+                      .col-6
+                        q-radio.float-right.q-pl-md(
+                          v-model='tier',
+                          val='Gold',
+                          @update:model-value='(v) => { updateTier(v); }'
+                        )
+                  .col-12
+                    .row
+                      .col-6 Silver
+                      .col-6
+                        q-radio.float-right.q-pl-md(
+                          v-model='tier',
+                          val='Silver',
+                          @update:model-value='(v) => { updateTier(v); }'
+                        )
+                  .col-12
+                    .row
+                      .col-6 Bronze
+                      .col-6
+                        q-radio.float-right.q-pl-md(
+                          v-model='tier',
+                          val='Bronze',
+                          @update:model-value='(v) => { updateTier(v); }'
+                        )
+                  .col-12
+                    .row
+                      .col-6 All
+                      .col-6
+                        q-radio.float-right.q-pl-md(
+                          v-model='tier',
+                          val='All',
+                          @update:model-value='(v) => { updateTier(v); }'
+                        )
+
               q-expansion-item(
                 expand-separator,
                 icon='attach_money',
-                label='Price'
+                label='Price',
+                v-if='filterPrice'
               )
-                q-range(v-model='price', :min='0', :max='12000', label)
+                q-range.q-pa-lg(v-model='price', :min='0', :max='12000', label)
               q-expansion-item(
                 expand-separator,
                 icon='collections',
-                label='Collection'
+                label='Collection',
+                v-if='filterCollection'
               )
                 q-list(bordered, separator)
                   q-item(clickable, v-ripple)

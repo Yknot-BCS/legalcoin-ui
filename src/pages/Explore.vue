@@ -5,9 +5,10 @@ import { useStore } from 'src/store';
 import {
   atomic_api,
   getQueryDataOptions,
-  getQueryApiOptions,
+  getSalesQueryApiOptions,
   getQueryPage,
-  getQueryLimit
+  getQueryLimit,
+  getQueryStatus
 } from 'src/api/atomic_assets';
 import GalleryView from 'src/components/gallery/GalleryView.vue';
 import AtomicAssetsView from 'src/components/atomicAssets/AtomicAssetView.vue';
@@ -25,15 +26,16 @@ export default defineComponent({
     const dataOptions = computed(() => getQueryDataOptions(route.query));
     const page = computed(() => getQueryPage(route.query));
     const limit = computed(() => getQueryLimit(route.query));
+    const status = computed(() => getQueryStatus(route.query));
+    console.log(status.value);
     const assetOptions = computed(() => {
       return {
-        owner: process.env.AA_ACCOUNT,
+        state: '1',
         search: search.value,
-        min_template_mint: '1',
-        max_template_mint: '7000',
-        ...getQueryApiOptions(route.query)
+        ...getSalesQueryApiOptions(route.query)
       } as unknown;
     });
+    console.log(getSalesQueryApiOptions(route.query));
     // - Gallery view
 
     onMounted(() => console.log(''));
@@ -43,7 +45,8 @@ export default defineComponent({
       dataOptions,
       limit,
       search,
-      showFilter
+      showFilter,
+      status
     };
   }
 });
@@ -59,7 +62,8 @@ page
         :Page='page',
         :ItemsPerPage='limit',
         :DataParams='dataOptions',
-        Type='Templates'
+        Type='Sale',
+        :Status='status'
       )
 </template>
 
