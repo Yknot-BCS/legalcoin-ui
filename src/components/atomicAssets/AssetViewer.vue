@@ -53,7 +53,7 @@ export default defineComponent({
   .col-12.page-view.q-py-lg.asset-container-desktop
     .row.q-pa-sm
       //- Image
-      q-card.col-12.q-my-sm
+      q-card.col-12.q-my-sm(flat)
         //- TODO replace with placeholder
         q-img.asset-img(
           :src='assetImg',
@@ -68,7 +68,7 @@ export default defineComponent({
         @update-asset-info='$emit("updateAssetInfo", $event)'
       )
       //- Details and Description
-      q-card.col-12.q-my-sm
+      q-card.col-12.q-my-sm(flat, bordered)
         q-tabs.text-grey-8(
           v-model='tab',
           dense,
@@ -76,8 +76,8 @@ export default defineComponent({
           active-color='primary',
           :breakpoint='0'
         )
-          q-tab(name='description', label='Description')
-          q-tab(name='details', label='Details')
+          q-tab.text-body1(name='description', label='Description')
+          q-tab.text-body1(name='details', label='Details')
         q-tab-panels(v-model='tab', animated)
           q-tab-panel(name='description')
             Description(:description='assetData.data.description')
@@ -89,7 +89,7 @@ export default defineComponent({
   .col-12.page-view.q-py-lg.asset-container-mobile
     .row.q-pa-sm
       //- Image
-      q-card.col-12.q-my-sm
+      q-card.col-12.q-my-sm(flat)
         q-img.asset-img(
           :src='assetImg',
           placeholder-src='https://placeimg.com/500/300/nature'
@@ -105,7 +105,7 @@ export default defineComponent({
       )
 
       //- Details and Description
-      q-card.col-12.q-my-sm
+      q-card.col-12.q-my-sm(flat, bordered)
         q-tabs.text-grey-8(
           v-model='tab',
           dense,
@@ -113,8 +113,8 @@ export default defineComponent({
           active-color='primary',
           :breakpoint='0'
         )
-          q-tab(name='description', label='Description')
-          q-tab(name='details', label='Details')
+          q-tab.text-body1(name='description', label='Description')
+          q-tab.text-body1(name='details', label='Details')
 
         q-tab-panels(v-model='tab', animated)
           q-tab-panel(name='description')

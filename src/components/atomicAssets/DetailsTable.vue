@@ -75,16 +75,15 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-.q-pa-md
-  q-table.deatails-table(
-    :rows='rows',
-    row-key='name',
-    hide-header,
-    hide-bottom,
-    :pagination='{ rowsPerPage: 20 }',
-    flat,
-    bordered
-  )
+q-table.deatails-table(
+  :rows='rows',
+  row-key='name',
+  hide-header,
+  hide-bottom,
+  :pagination='{ rowsPerPage: 20 }',
+  flat,
+  bordered
+)
 </template>
 
 <style lang="sass">
