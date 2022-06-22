@@ -3,7 +3,7 @@ import { defineComponent } from 'vue';
 import { ref } from 'vue';
 import axios from 'axios';
 import { mapGetters } from 'vuex';
-import TokensReceipt from 'src/components/BuyTokens/TokensReceipt.vue';
+import TokensReceipt from 'src/components/buytokens/TokensReceipt.vue';
 
 export default defineComponent({
   name: 'BuyTokens',
@@ -28,8 +28,8 @@ export default defineComponent({
   },
   computed: {
     ...mapGetters({
-      accountName: 'account/cryptoAccountName',
-      cryptoIsAuthenticated: 'account/cryptoIsAuthenticated',
+      accountName: 'account/getAccountName',
+      isAuthenticated: 'account/isAuthenticated',
       account: 'account/account'
     }),
     totalFee(): number {
@@ -152,7 +152,7 @@ export default defineComponent({
         message: 'Navigating to payment gateway. Hang on...'
       });
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      if (this.cryptoIsAuthenticated && this.account.isLoggedIn) {
+      if (this.isAuthenticated && this.account.isLoggedIn) {
         await this.createBuyOrder();
         await this.goToPaygate();
       } else {

@@ -41,7 +41,7 @@ export default defineComponent({
     // - Gallery view
 
     const isMyAccount = computed(
-      () => profileId.value === profile.value.cryptoAccount.accountName
+      () => profileId.value === profile.value.accountName
     );
 
     onMounted(async () => {

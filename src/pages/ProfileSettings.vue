@@ -6,13 +6,25 @@ import { mapGetters } from 'vuex';
 import LinkCryptoAccount from 'src/components/auth/LinkCryptoAccount.vue';
 import NewCryptoAccount from 'src/components/auth/NewCryptoAccount.vue';
 import TransferTokensForm from 'src/components/auth/TransferTokensForm.vue';
+import UpdatePassword from 'src/components/auth/UpdatePassword.vue';
 
 export default defineComponent({
   name: 'Template',
-  components: { LinkCryptoAccount, NewCryptoAccount, TransferTokensForm },
+  data() {
+    return {
+      showUpdatePassword: false
+    };
+  },
+  components: {
+    LinkCryptoAccount,
+    NewCryptoAccount,
+    TransferTokensForm,
+    UpdatePassword
+  },
   computed: {
     ...mapGetters({
-      account: 'account/account'
+      account: 'account/account',
+      accountName: 'account/getAccountName'
     })
   },
   setup() {
@@ -45,6 +57,16 @@ q-page.fit.row.wrap.justify-center
           .text-italic
             | View My Profile
     q-separator
+    q-card-section
+      q-btn(@click='showUpdatePassword = true', v-if='!showUpdatePassword') Change Password
+      UpdatePassword(v-else)
+    q-separator
+    q-card-section
+      .text-bold Profile
+      div Email: {{ account.profile.email }}
+      div Platform Account: {{ account.profile.accountName }}
+      div Connected Account: {{ accountName }}
+
     //- q-card-section
     //-     .text-bold
     //-         | My Gallery
@@ -59,17 +81,17 @@ q-page.fit.row.wrap.justify-center
     //-     | Enabled
     //-     q-toggle(v-model="emailNotifications")
     //- q-separator
-    q-card-section
-      .text-bold
-        | Link Connected Accounts
+    //- q-card-section
+    //-   .text-bold
+    //-     | Link Connected Accounts
 
-      link-crypto-account
-    q-separator
-    q-card-section
-      NewCryptoAccount
-    q-separator
-    q-card-section
-      TransferTokensForm
+    //-   link-crypto-account
+    //- q-separator
+    //- q-card-section
+    //-   NewCryptoAccount
+    //- q-separator 
+    //- q-card-section
+    //-   TransferTokensForm
 </template>
 
 <style lang="sass" scoped>

@@ -12,13 +12,13 @@ export default defineComponent({
       balance: ref('0'),
       nftCount: ref(0),
       nftValue: ref(0),
-      valueRatio: ref(1.01) // TODO determine this ratio dynamically
+      valueRatio: ref(1.0)
     };
   },
   computed: {
     ...mapGetters({
-      accountName: 'account/cryptoAccountName',
-      cryptoIsAuthenticated: 'account/cryptoIsAuthenticated'
+      accountName: 'account/accountName',
+      isAuthenticated: 'account/isAuthenticated'
     }),
 
     gbpValue(): string {
@@ -26,7 +26,7 @@ export default defineComponent({
     }
   },
   async mounted() {
-    if (this.cryptoIsAuthenticated) {
+    if (this.isAuthenticated) {
       const tokenBal: Asset[] = await this.$api.getTokenBalances(
         process.env.LC_CONTRACT,
         this.accountName

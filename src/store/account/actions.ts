@@ -28,25 +28,25 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
     const users = await (authenticator as Authenticator).login();
     if (users.length) {
       const account = users[0];
-      const cryptoAccountName = await account.getAccountName();
-      commit('setCryptoAccountName', cryptoAccountName);
+      const accountName = await account.getAccountName();
+      commit('setLocalAccountName', accountName);
       localStorage.setItem(
         'autoLogin',
         (authenticator as Authenticator).constructor.name
       );
-      localStorage.setItem('account', cryptoAccountName);
+      localStorage.setItem('account', accountName);
       localStorage.setItem('returning', 'true');
       commit('setLoadingWallet');
     }
   },
-  async sendTransaction({ dispatch }, { actions }) {
+  async sendTransaction({ dispatch, getters }, { actions }) {
     /* eslint-disable */  // TODO enable eslint and fix types
     let transaction = null;
     actions.forEach((action: { authorization: string | any[]; }) => {
       if (!action.authorization || !action.authorization.length) {
         action.authorization = [
           {
-            actor: this.state.account.cryptoAccountName,
+            actor: getters.getAccountName,
             permission: 'active'
           }
         ];

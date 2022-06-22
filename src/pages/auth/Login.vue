@@ -2,7 +2,7 @@
 import auth from 'src/auth';
 import AuthCard from '../../components/auth/AuthCard.vue';
 
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { defineComponent } from 'vue';
 import { requiredRule } from './inputRules';
 import { useStore } from 'src/store';
@@ -18,6 +18,7 @@ export default defineComponent({
     const userPassword = ref('');
     const store = useStore();
     const router = useRouter();
+    const profile = computed(() => store.state.account.profile);
     const $q = useQuasar();
     return {
       userEmail,
@@ -27,12 +28,29 @@ export default defineComponent({
         try {
           // Login
           await auth.login(userEmail, userPassword);
+
           // Refresh profile
           await store.dispatch('account/refreshProfile');
           $q.notify({
             type: 'positive',
             message: 'Logged in'
           });
+
+          // Create new crypto account
+          if (
+            (profile.value.accountName === '' || !profile.value.accountName) &&
+            profile.value.emailVerified
+          ) {
+            try {
+              await auth.cryptoNew(userPassword.value);
+            } catch (error) {
+              $q.notify({
+                type: 'negative',
+                message: (error as Error).message
+              });
+            }
+          }
+
           // Navigate to home
           await router.push({ name: 'home' });
         } catch (error) {
