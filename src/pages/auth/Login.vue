@@ -69,10 +69,47 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-AuthCard
-  .text-h5.col-12.text-weight-bold Sign In
-  p.col-12 to continue to LegalCoin
-  q-form.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
+q-card.row.col.animated.fadeInDown(v-if='$q.screen.gt.sm')
+  .col-4.self-center(style='z-index: 1')
+    img.float-right.q-mr-xl.q-mb-xl(
+      src='~assets/legalcoin-full.png',
+      style='width: 13rem'
+    )
+  .col-2
+    .div.triangle.bg-primary.float-right
+  AuthCard.col-6
+    .text-body1.text-weight-bold.text-grey-10.col-12 Sign In
+    q-form.text-body1.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
+      q-input.col-12(
+        v-model='userEmail',
+        label='Email',
+        lazy-rules,
+        :rules='[requiredRule]',
+        autocomplete='email'
+      )
+      q-input.col-12(
+        v-model='userPassword',
+        type='password',
+        label='Password',
+        lazy-rules,
+        :rules='[requiredRule]',
+        autocomplete='current-password'
+      )
+      q-btn.col-12(type='submit', color='secondary', text-color='black') SIGN IN
+      q-btn.col-12(
+        flat,
+        color='grey-10',
+        @click='navigate("passwordresetrequest")'
+      ) Forgot your password?
+    .col-12.text-center
+      span.q-mr-xs Need an account?
+      router-link(to='register') Sign Up
+    .row.justify-center.align-center.q-mt-lg
+      router-link.skip-link(:to='{ name: "home" }') Skip this step
+AuthCard.bg-grey-1.col-6.animated.fadeInDown(v-else)
+  img(src='~assets/legalcoin-full.png', style='width: 13rem')
+  .text-body1.text-weight-bold.text-grey-10.col-12 Sign In
+  q-form.text-body1.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
     q-input.col-12(
       v-model='userEmail',
       label='Email',
@@ -88,17 +125,15 @@ AuthCard
       :rules='[requiredRule]',
       autocomplete='current-password'
     )
-    q-btn.col-12(type='submit', color='primary') Sign In
+    q-btn.col-12(type='submit', color='primary', text-color='black') SIGN IN
     q-btn.col-12(
       flat,
-      color='primary',
+      color='grey-10',
       @click='navigate("passwordresetrequest")'
     ) Forgot your password?
   .col-12.text-center
     span.q-mr-xs Need an account?
     router-link(to='register') Sign Up
-  // TODO: Fix quasar seperator
-  .q-mt-lg(style='border: 1px solid #ddd')
   .row.justify-center.align-center.q-mt-lg
     router-link.skip-link(:to='{ name: "home" }') Skip this step
 </template>

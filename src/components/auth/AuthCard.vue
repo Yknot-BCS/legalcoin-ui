@@ -4,10 +4,8 @@ export default defineComponent({});
 </script>
 
 <template lang="pug">
-.page-wrapper
-  q-card.q-pa-lg.bg-grey-1.shadow-10.animated.fadeInDown
-    img.q-my-lg(src='~assets/legalcoin-full.png', style='width: 12rem')
-    slot
+.q-pa-lg.bg-primary.shadow-10.no-border-radius
+  slot
 </template>
 
 <style lang="sass" scoped>
