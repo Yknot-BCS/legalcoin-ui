@@ -31,17 +31,6 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: '/mobile-search',
-    component: () => import('layouts/Auth.vue'),
-    children: [
-      {
-        path: '',
-        name: 'mobile-search',
-        component: () => import('components/core/MobileBar.vue')
-      }
-    ]
-  },
-  {
     path: '/emailverify-success',
     component: () => import('layouts/Auth.vue'),
     children: [
