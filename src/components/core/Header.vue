@@ -1,15 +1,29 @@
 <script lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'src/store';
+import { mapGetters } from 'vuex';
 import { useQuasar } from 'quasar';
 // import { useRouter } from 'vue-router';
 import SearchBar from 'src/components/core/SearchBar.vue';
 
 export default {
   components: { SearchBar },
+  computed: {
+    ...mapGetters({
+      account: 'account/account'
+    })
+  },
+  data() {
+    return {
+      classObject: {
+        active: true,
+        'text-danger': false
+      }
+    };
+  },
   setup() {
     const $q = useQuasar();
-    $q.screen.setSizes({ sm: 850, md: 1000, lg: 1440, xl: 1920 });
+    $q.screen.setSizes({ sm: 600, md: 1024, lg: 1440, xl: 1920 });
     const store = useStore();
     // const router = useRouter();
     const isLoggedIn = computed((): boolean => store.state.account.isLoggedIn);
@@ -29,28 +43,21 @@ export default {
 </script>
 
 <template lang="pug">
-q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
+q-toolbar.row.q-py-sm.q-px-md.bg-grey-1.gt-md
   router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
     img.logo.q-mr-md(src='~assets/legalcoin-full.png')
-
-    .col.row.justify-center
-      search-bar.toolbar-select.q-mr-md(
-        size='80',
-        v-if='$q.screen.gt.xs && $q.screen.lt.lg'
-      )
 
   .col.row.justify-center
     search-bar.toolbar-select.q-mr-md(size='100', v-if='$q.screen.gt.md')
 
-  .q-mr-md.q-gutter-x-md.row.items-center.no-wrap(v-if='$q.screen.gt.md')
+  .q-mr-md.q-gutter-x-md.row.items-center.no-wrap(v-if='$q.screen.gt.sm')
     q-btn.btn-left(
       flat,
       icon='grid_view',
       label='Discover',
       dense,
       :to='{ name: "buy" }',
-      :class='{ white: !clicked, blue: clicked }',
-      @click='clicked = !clicked'
+      :class='(color = primary)'
     )
     q-btn(
       flat,
@@ -62,19 +69,6 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
     )
 
   .row.items-center.no-wrap
-    //- q-btn.q-mr-sm(
-    //-   v-if='$q.screen.gt.sm && isLoggedIn',
-    //-   dense,
-    //-   flat,
-    //-   round,
-    //-   size='md',
-    //-   icon='wallet',
-    //-   color='grey-6',
-    //-   :to='{ name: "wallet" }'
-    //- )
-    //- q-btn(v-if="isLoggedIn" @click="logout") Logout
-    //- q-btn(v-if="!isLoggedIn" to="login" flat) Login
-    //- q-btn(v-if="!isLoggedIn" to="register" outline) Register
     div
       q-btn(
         flat,
@@ -94,16 +88,88 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
         :to='{ name: "login" }'
       )
         q-icon.material-icons-outlined(name='account_circle')
-    div(v-if='$q.screen.gt.sm')
-      //- q-btn(dense, outline, v-if='!isLoggedIn', :to='{ name: "login" }')
-      //-   q-avatar.q-mr-sm(rounded, size='30px')
-      //-     q-icon.material-icons-outlined(name='account_circle')
-      //-   .q-mr-sm Sign In
+    q-btn.gt-sm(
+      dense,
+      flat,
+      round,
+      no-wrap,
+      icon='account_circle',
+      label='Account',
+      v-if='isLoggedIn'
+    )
+      q-menu.menu-edit(auto-close, fit)
+        q-list(dense)
+          q-item.menu-link(
+            v-if='isLoggedIn',
+            clickable,
+            :to='{ name: "profile", params: { profile: 1 } }'
+          )
+            q-item-section.q-pa-sm
+              q-btn(
+                flat,
+                icon='account_circle',
+                label='Profile',
+                dense,
+                align='left',
+                font-size='10px'
+              )
+          q-separator(v-if='isLoggedIn')
+          // TODO add params for profile, gallery and wallet
+          q-item.menu-link(clickable, :to='{ name: "wallet" }')
+            q-item-section.q-pa-sm
+              q-btn(
+                flat,
+                icon='wallet',
+                label='Wallet',
+                dense,
+                align='left',
+                font-size='10px'
+              )
+          q-separator(v-if='isLoggedIn')
+          q-item.menu-link(
+            clickable,
+            :to='{ name: "account-settings", params: { profile: 1 } }'
+          )
+            q-item-section.q-pa-sm
+              q-btn(
+                flat,
+                icon='settings',
+                label='Settings',
+                dense,
+                align='left',
+                font-size='10px'
+              )
+          q-separator(v-if='isLoggedIn')
+          q-separator
+          q-item(v-if='isLoggedIn')
+            q-item-section.q-pa-lg
+              q-btn.logout-btn(
+                flat,
+                label='Sign Out',
+                dense,
+                font-size='10px',
+                @click='logout()'
+              )
+
+q-toolbar.row.q-py-sm.q-px-md.bg-grey-1(
+  v-if='$q.screen.gt.sm && $q.screen.lt.lg'
+)
+  router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
+    img.logo.q-mr-md(src='~assets/legalcoin-full.png')
+
+  .col.row.justify-center
+    search-bar.toolbar-select.q-mr-md(size='70')
+
+  .row.items-center.no-wrap
+    div
+      q-btn(flat, round, dense, :to='{ name: "buy" }')
+        q-icon.material-icons-outlined(name='grid_view')
+      q-btn(flat, round, dense, :to='{ name: "login" }', v-if='!isLoggedIn')
+        q-icon.material-icons-outlined(name='account_circle')
     q-btn.gt-md(
       dense,
       flat,
       round,
-      size='md',
       no-wrap,
       icon='account_circle',
       label='Account',
@@ -153,21 +219,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
                 font-size='10px'
               )
           q-separator(v-if='isLoggedIn')
-          //- q-item.menu-link(clickable, :to='{ name: "gallery" }')
-          //-   q-item-section Your gallery
-          //- q-item.menu-link(clickable, :to='{ name: "wallet" }')
-          //-   q-item-section Your wallet
-          //- q-item.menu-link(
-          //-   clickable,
-          //-   :to='{ name: "account-settings", params: { profile: 1 } }'
-          //- )
-          //-   q-item-section Settings
           q-separator
-          //- q-item.menu-link(clickable)
-          //-   q-item-section Help
-          //- q-item.menu-link(clickable)
-          //-   q-item-section Settings
-          //- q-separator
           q-item(v-if='isLoggedIn')
             q-item-section.q-pa-lg
               q-btn.logout-btn(
@@ -177,7 +229,27 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
                 font-size='10px',
                 @click='logout()'
               )
-    q-btn.lt-md(dense, flat, round, size='md', no-wrap, v-if='isLoggedIn')
+
+q-toolbar.row.q-py-sm.q-px-md.bg-grey-1(v-if='$q.screen.lt.md')
+  router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
+    img.logo.q-mr-md(src='~assets/legalcoin-full.png')
+
+  .col.row.justify-center
+    search-bar.toolbar-select.q-mr-md(
+      size='40',
+      v-if='$q.screen.gt.xs && $q.screen.lt.md'
+    )
+
+  .row.items-center.no-wrap
+    div
+      q-btn.lt-sm(flat, round, dense, :to='{ name: "mobile-search" }')
+        q-icon.material-icons-outlined(name='search')
+      q-btn(flat, round, dense, :to='{ name: "buy" }')
+        q-icon.material-icons-outlined(name='grid_view')
+      q-btn(flat, round, dense, :to='{ name: "login" }', v-if='!isLoggedIn')
+        q-icon.material-icons-outlined(name='account_circle')
+    div
+    q-btn(dense, flat, round, no-wrap, v-if='isLoggedIn')
       // TODO Change avatar when logged in
       q-avatar(rounded, size='40px')
         q-icon.material-icons-outlined(name='account_circle', color='primary')
@@ -225,21 +297,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
                 font-size='10px'
               )
           q-separator(v-if='isLoggedIn')
-          //- q-item.menu-link(clickable, :to='{ name: "gallery" }')
-          //-   q-item-section Your gallery
-          //- q-item.menu-link(clickable, :to='{ name: "wallet" }')
-          //-   q-item-section Your wallet
-          //- q-item.menu-link(
-          //-   clickable,
-          //-   :to='{ name: "account-settings", params: { profile: 1 } }'
-          //- )
-          //-   q-item-section Settings
           q-separator
-          //- q-item.menu-link(clickable)
-          //-   q-item-section Help
-          //- q-item.menu-link(clickable)
-          //-   q-item-section Settings
-          //- q-separator
           q-item(v-if='isLoggedIn')
             q-item-section.q-pa-lg
               q-btn.logout-btn(
@@ -249,13 +307,15 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
                 font-size='10px',
                 @click='logout()'
               )
-          //- q-item.menu-link(clickable v-if="!isLoggedIn" :to="{name: 'login'}")
-          //-   q-item-section Sign in
 </template>
 
 <style scoped lang="sass">
 .q-btn
   font-size: 20px
+  &:hover
+    color: $primary
+  &:focus
+    color: $primary
 .toolbar-select
   flex-basis: 500px
   flex-grow: 0
@@ -276,10 +336,6 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
 .menu-edit
   top: 200px
   align: left
-.btn-left
-  color: primary
-  &:focus
-    hover: $primary
 .blue
   color: $primary
 </style>

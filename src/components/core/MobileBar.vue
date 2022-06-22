@@ -19,7 +19,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
   q-btn.q-mr-md(flat, round, dense, :to='{ name: "home" }', active)
     q-icon.material-icons-outlined(name='chevron_left')
   .col.row.justify-center
-    search-bar.toolbar-select.q-mr-md.lt-md(size='50')
+    search-bar.toolbar-select.q-mr-md.lt-md(size='30')
 </template>
 
 <style scoped lang="sass">
