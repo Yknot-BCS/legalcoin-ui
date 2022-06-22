@@ -25,6 +25,9 @@ export default defineComponent({
   setup(props) {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
       useDialogPluginComponent();
+    const DEVELOPMENT = computed(
+      () => process.env.DEVELOPMENT?.toLowerCase() === 'true'
+    );
     const store = useStore();
     const $q = useQuasar();
     const profile = computed(() => store.state.account.profile);
@@ -119,7 +122,8 @@ export default defineComponent({
       requiredRule,
       dialogRef,
       onDialogHide,
-      onDialogCancel
+      onDialogCancel,
+      DEVELOPMENT
     };
   }
 });
@@ -142,7 +146,7 @@ q-dialog(ref='dialogRef', @hide='onDialogHide', persistent)
           :rules='[requiredRule]',
           autocomplete='current-password'
         )
-        q-card(bordered, flat)
+        q-card(bordered, flat, v-if='!DEVELOPMENT')
           q-expansion-item(expand-separator, label='Transaction Details')
             q-card
               q-card-section {{ actions }}
