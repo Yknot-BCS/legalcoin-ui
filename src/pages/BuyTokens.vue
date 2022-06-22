@@ -3,7 +3,7 @@ import { defineComponent } from 'vue';
 import { ref } from 'vue';
 import axios from 'axios';
 import { mapGetters } from 'vuex';
-import TokensReceipt from 'src/components/buytokens/TokensReceipt.vue';
+import TokensReceipt from 'src/components/BuyTokens/TokensReceipt.vue';
 
 export default defineComponent({
   name: 'BuyTokens',
