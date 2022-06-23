@@ -141,7 +141,7 @@ q-page
         v-for='collection in storecollections.slice(0, numberOfCards)',
         v-if='storecollections.length > 0'
       )
-        Cards.rounded.shadow-10(:data='collection', type='collection')
+        Cards.rounded.shadow-10(:data='collection', type='Collections')
 
     .row.justify-center.q-mt-md
       q-btn(
