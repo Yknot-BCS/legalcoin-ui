@@ -12,12 +12,13 @@ export default defineComponent({
       balance: ref('0'),
       nftCount: ref(0),
       nftValue: ref(0),
-      valueRatio: ref(1.0)
+      valueRatio: ref(1.0),
+      polling: ref()
     };
   },
   computed: {
     ...mapGetters({
-      accountName: 'account/accountName',
+      accountName: 'account/getAccountName',
       isAuthenticated: 'account/isAuthenticated'
     }),
 
@@ -25,35 +26,56 @@ export default defineComponent({
       return (Number(this.balance) * (1 / this.valueRatio)).toFixed(2);
     }
   },
-  async mounted() {
-    if (this.isAuthenticated) {
-      const tokenBal: Asset[] = await this.$api.getTokenBalances(
-        process.env.LC_CONTRACT,
-        this.accountName
-      );
-      if (tokenBal.length > 0) {
-        this.balance = tokenBal[0].value.toFixed(2);
+  methods: {
+    async getBalance() {
+      if (this.isAuthenticated) {
+        const tokenBal: Asset[] = await this.$api.getTokenBalances(
+          process.env.LC_CONTRACT,
+          this.accountName
+        );
+        if (tokenBal.length > 0) {
+          this.balance = tokenBal[0].value.toFixed(2);
+        }
       }
-
-      //  get NFT count
-      const myGalleryOptions = {
-        owner: this.accountName as string,
-        page: 1,
-        order: 'desc',
-        limit: 6,
-        sort: 'created',
-        authorized_account: [process.env.AA_ACCOUNT]
-      };
-      let data = await atomic_market_api.getAssets(myGalleryOptions as unknown);
-      // console.log(data);
-      this.nftCount = data.length;
-      // TODO get NFT worth in LEGAL
-      for (const asset of data) {
-        if (asset?.data?.mintprice) {
-          this.nftValue += Asset.from(asset.data.mintprice).value;
+    },
+    async getNftCount() {
+      if (this.isAuthenticated) {
+        //  get NFT count
+        const myGalleryOptions = {
+          owner: this.accountName as string,
+          page: 1,
+          order: 'desc',
+          limit: 6,
+          sort: 'created',
+          authorized_account: [process.env.AA_ACCOUNT]
+        };
+        let data = await atomic_market_api.getAssets(
+          myGalleryOptions as unknown
+        );
+        // console.log(data);
+        this.nftCount = data.length;
+        // get NFT worth in LEGAL
+        this.nftValue = 0;
+        for (const asset of data) {
+          if (asset?.data?.mintprice) {
+            this.nftValue += Asset.from(asset.data.mintprice).value;
+          }
         }
       }
     }
+  },
+  async mounted() {
+    await this.getBalance();
+    await this.getNftCount();
+
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    this.polling = setInterval(async () => {
+      void (await this.getBalance());
+      void (await this.getNftCount());
+    }, 5000);
+  },
+  beforeUnmount() {
+    clearInterval(this.polling);
   }
 });
 </script>

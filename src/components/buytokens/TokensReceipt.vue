@@ -29,7 +29,7 @@ export default defineComponent({
       hasError: ref(false),
       errorMessage: ref(''),
       polling: ref(),
-      issueInProgress: ref(false)
+      issueInProgress: ref(true)
     };
   },
   computed: {
@@ -43,59 +43,60 @@ export default defineComponent({
   },
   methods: {
     async tryGetOrderInfo(pg_id: string) {
-      //   console.log('tryGetOrderInfo');
-      const hash = crypto
-        .createHmac('sha256', process.env.ISSUER_SECRET)
-        .update(this.accountName)
-        .digest('hex');
+      if (this.isAuthenticated) {
+        const hash = crypto
+          .createHmac('sha256', process.env.ISSUER_SECRET)
+          .update(this.accountName)
+          .digest('hex');
 
-      const issuerAPI = axios.create({
-        baseURL: process.env.ISSUER_API_ENDPOINT,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: hash
+        const issuerAPI = axios.create({
+          baseURL: process.env.ISSUER_API_ENDPOINT,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: hash
+          }
+        });
+
+        const response = await issuerAPI.get(
+          `/getorders/${<string>this.accountName}`,
+          { params: { pg_id: pg_id } }
+        );
+
+        /* eslint-disable */
+        let order = response.data[0][0];
+        this.amount = order?.item_price as number;
+        this.paymentDate = new Date(order?.created as string);
+        this.currency = 'GBP' as string;
+        this.orderRef = order?.id as string;
+        this.status = order?.pg_payment_status?.status as string;
+        /* eslint-disable */
+
+        if (
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          order?.error_code === undefined ||
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          order?.error_code === null
+        ) {
+          this.issueInProgress = true;
         }
-      });
-
-      const response = await issuerAPI.get(
-        `/getorders/${<string>this.accountName}`,
-        { params: { pg_id: pg_id } }
-      );
-
-      /* eslint-disable */
-      let order = response.data[0][0];
-      this.amount = order?.item_price as number;
-      this.paymentDate = new Date(order?.created as string);
-      this.currency = 'GBP' as string;
-      this.orderRef = order?.id as string;
-      this.status = order?.pg_payment_status?.status as string;
-      /* eslint-disable */
-
-      if (
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        order?.error_code === undefined ||
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        order?.error_code === null
-      ) {
-        this.issueInProgress = true;
-      }
-      if (
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        order?.error_code !== 0 &&
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        order?.error_code !== null &&
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        order?.error_code !== undefined
-      ) {
-        this.hasError = true;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        this.errorMessage = order?.error_message as string;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      } else if (order?.error_code === 0) {
-        this.hasError = false;
-        this.errorMessage = '';
-        this.issueInProgress = false;
-        clearInterval(this.polling);
+        if (
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          order?.error_code !== 0 &&
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          order?.error_code !== null &&
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          order?.error_code !== undefined
+        ) {
+          this.hasError = true;
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          this.errorMessage = order?.error_message as string;
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        } else if (order?.error_code === 0) {
+          this.hasError = false;
+          this.errorMessage = '';
+          this.issueInProgress = false;
+          clearInterval(this.polling);
+        }
       }
     }
   },
