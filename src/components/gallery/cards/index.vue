@@ -28,7 +28,7 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-div(v-if='cardType === "Assets"')
+div(v-if='cardType === "Assets" || cardType === "Sale"')
   AssetCard(:data='card')
 
 div(v-else-if='cardType === "Templates"')

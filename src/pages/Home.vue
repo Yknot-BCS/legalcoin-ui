@@ -160,7 +160,7 @@ q-page
         v-for='template in trendingTemplates.slice(0, numberOfCards)',
         v-if='trendingTemplates.length > 0'
       )
-        Cards.rounded.shadow-10(:data='template', type='template')
+        Cards.rounded.shadow-10(:data='template', type='Templates')
 
     .row.justify-center.q-mt-md
       q-btn(
