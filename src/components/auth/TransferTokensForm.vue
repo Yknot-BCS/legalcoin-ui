@@ -13,11 +13,12 @@ export default defineComponent({
     const SYS = computed(() => process.env.NETWORK_TOKEN);
     const $q = useQuasar();
     const store = useStore();
-    const cryptoAccountName = computed(
-      () => store.state.account.profile.cryptoAccount.accountName
+    const accountName = computed(
+      // eslint-disable-next-line
+      () => store.getters['account/getAccountName'] as string
     );
-    const toAccount = ref('zzzzzzzzb.ya');
-    const quantity = ref('1.0000');
+    const toAccount = ref('admin.ya');
+    const quantity = ref('1.00000000');
     async function send() {
       if (isNaN(Number(quantity.value))) {
         $q.notify({
@@ -26,15 +27,13 @@ export default defineComponent({
         });
         return;
       }
-      const qty = Number(quantity.value).toFixed(4);
+      const qty = Number(quantity.value).toFixed(8);
       const action = {
         account: 'eosio.token',
         name: 'transfer',
-        authorization: [
-          { actor: cryptoAccountName.value, permission: 'active' }
-        ],
+        authorization: [{ actor: accountName.value, permission: 'active' }],
         data: {
-          from: cryptoAccountName.value,
+          from: accountName.value,
           to: toAccount.value,
           quantity: `${qty} ${SYS.value}`,
           memo: 'Test platform signer'

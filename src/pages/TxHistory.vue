@@ -21,13 +21,14 @@ export default defineComponent({
       transactions: ref([]),
       buyOrders: ref([]),
       currentPage: ref(1),
-      txPerPage: ref(10)
+      txPerPage: ref(10),
+      loading: ref(false)
     };
   },
   computed: {
     ...mapGetters({
-      accountName: 'account/cryptoAccountName',
-      cryptoIsAuthenticated: 'account/cryptoIsAuthenticated'
+      accountName: 'account/getAccountName',
+      isAuthenticated: 'account/isAuthenticated'
     }),
     maxPages(): number {
       return Math.ceil(this.transactions.length / this.txPerPage);
@@ -43,90 +44,96 @@ export default defineComponent({
   },
   methods: {
     async getBuyOrders() {
-      const hash = crypto
-        .createHmac('sha256', process.env.ISSUER_SECRET)
-        .update(this.accountName)
-        .digest('hex');
+      try {
+        const hash = crypto
+          .createHmac('sha256', process.env.ISSUER_SECRET)
+          .update(this.accountName)
+          .digest('hex');
 
-      const issuerAPI = axios.create({
-        baseURL: process.env.ISSUER_API_ENDPOINT,
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: hash
-        }
-      });
-
-      const response = await issuerAPI.get(
-        `getorders/${<string>this.accountName}`
-      );
-      //   console.log(response.data);
-
-      /* eslint-disable */
-      let rawOrders = response.data[0];
-      /* eslint-enable */
-
-      let buyOrders: TxCardProps[] = [];
-      for (const order of rawOrders) {
-        // console.log(order);
-        buyOrders.push({
-          action: 'Buy LEGAL',
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          description: order?.item_description as string,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          date: new Date(order?.created),
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          amount: order.item_price as number
+        const issuerAPI = axios.create({
+          baseURL: process.env.ISSUER_API_ENDPOINT,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: hash
+          }
         });
-        // console.log(buyOrders);
+
+        const response = await issuerAPI.get(
+          `getorders/${<string>this.accountName}`
+        );
+        //   console.log(response.data);
+
+        /* eslint-disable */
+        let rawOrders = response.data[0];
+        /* eslint-enable */
+
+        let buyOrders: TxCardProps[] = [];
+        for (const order of rawOrders) {
+          // console.log(order);
+          buyOrders.push({
+            action: 'Buy LEGAL',
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            description: order?.item_description as string,
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            date: new Date(order?.created),
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+            amount: order.item_price as number
+          });
+          // console.log(buyOrders);
+        }
+        // sort buyOrders by date descending
+        buyOrders.sort((a, b) => {
+          return b.date.getTime() - a.date.getTime();
+        });
+        this.transactions.push(...buyOrders);
+      } catch (error) {
+        this.loading = false;
+        console.error(error);
       }
-      // sort buyOrders by date descending
-      buyOrders.sort((a, b) => {
-        return b.date.getTime() - a.date.getTime();
-      });
-      this.transactions.push(...buyOrders);
     }
   },
   async mounted() {
+    this.loading = true;
     await this.getBuyOrders();
+    this.loading = false;
   }
 });
 </script>
 
 <template lang="pug">
-q-page.fit.row.wrap.justify-center
-  q-card.history-card(v-if='cryptoIsAuthenticated')
-    .text-h4.text-grey-8
-      | Transaction History
-    q-separator
+q-page
+  .row.justify-center
+    q-card(v-if='isAuthenticated')
+      q-card-section
+        .text-h4.text-grey-8
+          | Transaction History
+      q-separator
 
-    q-card-section(v-if='transactions.length > 0')
-      TxCard(
-        v-for='(tx, index) in pagedTransactions',
-        :key='index',
-        :action='tx.action',
-        :description='tx.description',
-        :date='tx.date',
-        :amount='tx.amount'
-      )
-    q-card-section(v-else)
-      | No transaction history
+      q-card-section(v-if='transactions.length > 0')
+        TxCard(
+          v-for='(tx, index) in pagedTransactions',
+          :key='index',
+          :action='tx.action',
+          :description='tx.description',
+          :date='tx.date',
+          :amount='tx.amount'
+        )
+      q-card-section(v-else-if='loading')
+        .row.justify-center
+          q-spinner-clock(color='primary', size='2em')
+      q-card-section(v-else)
+        | No transaction history
 
-    q-card-section.q-pa-lg.flex.flex-center
-      q-pagination(
-        v-model='currentPage',
-        :max='maxPages',
-        direction-links,
-        :max-pages='5',
-        boundary-numbers
-      )
-  q-card(v-else)
-    h3 You must be logged in to view this page
+      q-card-section.q-pa-lg.flex.flex-center
+        q-pagination(
+          v-model='currentPage',
+          :max='maxPages',
+          direction-links,
+          :max-pages='5',
+          boundary-numbers
+        )
+    q-card(v-else)
+      h3 You must be logged in to view this page
 </template>
 
-<style lang="sass" scoped>
-.history-card
-  width: 100%
-  max-width: 30rem
-  height: 100%
-  max-height: 50rem
-</style>
+<style lang="sass" scoped></style>

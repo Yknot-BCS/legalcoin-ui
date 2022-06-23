@@ -90,22 +90,16 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
     )
       q-menu.menu-edit(auto-close, fit)
         q-list(dense)
-          q-item.menu-link(
-            v-if='isLoggedIn',
-            clickable,
-            :to='{ name: "profile", params: { profile: 1 } }'
-          )
-            q-item-section.q-pa-sm
-              q-btn(
-                flat,
-                icon='account_circle',
-                label='Profile',
-                dense,
-                align='left',
-                font-size='10px'
-              )
+          q-item(v-if='isLoggedIn')
+            q-item-section
+              | Signed in as
+              strong {{ profile.name }} {{ profile.surname }}
           q-separator(v-if='isLoggedIn')
           // TODO add params for profile, gallery and wallet
+          q-item.menu-link(clickable, :to='"/profile/" + profile.accountName')
+            q-item-section Your profile
+          q-item.menu-link(clickable, :to='{ name: "gallery" }')
+            q-item-section Your gallery
           q-item.menu-link(clickable, :to='{ name: "wallet" }')
             q-item-section.q-pa-sm
               q-btn(

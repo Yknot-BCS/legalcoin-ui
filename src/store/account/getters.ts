@@ -7,14 +7,17 @@ export const getters: GetterTree<AccountStateInterface, StateInterface> = {
   account(state): AccountStateInterface {
     return state;
   },
-  cryptoIsAuthenticated(state): boolean {
-    return !!state.cryptoAccountName;
+  isAuthenticated(state): boolean {
+    // TODO rename to isAuthenticated
+    if (state.useLocalSigner) return !!state.localAccountName;
+    else return !!state.profile.accountName;
   },
-  cryptoAccountName(state): string {
-    return state.cryptoAccountName;
+  getAccountName(state): string {
+    if (state.useLocalSigner) return state.localAccountName;
+    else return state.profile.accountName;
   },
   getAccountData(state): AccountDetails {
-    return state.cryptoAccountDetails;
+    return state.localAccountDetails;
   },
   useLocalSigner(state): boolean {
     return state.useLocalSigner;

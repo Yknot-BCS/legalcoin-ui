@@ -10,35 +10,31 @@ export default defineComponent({
   setup() {
     const $q = useQuasar();
     const store = useStore();
-    const cryptoIsAuthenticated = computed(
-      // eslint-disable-next-line
-      (): boolean => store.getters['account/cryptoIsAuthenticated']
+    const localIsAuthenticated = computed(
+      (): boolean => !!store.state.account.localAccountName
     );
     async function linkConnectedAccount() {
-      const linkedAccounts =
-        store.state.account.profile.cryptoAccount.linkedAccounts;
-      const cryptoAccountName = store.state.account.cryptoAccountName;
-      if (cryptoAccountName !== '') {
-        if (!linkedAccounts.includes(cryptoAccountName)) {
+      const linkedAccounts = store.state.account.profile.linkedAccounts;
+      const localAccountName = store.state.account.localAccountName;
+      if (localAccountName !== '') {
+        if (!linkedAccounts.includes(localAccountName)) {
           try {
             const newLinkedAccounts = JSON.stringify([
               ...linkedAccounts,
-              cryptoAccountName
+              localAccountName
             ]);
             // eslint-disable-next-line
             await api.accounts.mutation(`
               {
                 profileUpdate(input:{
-                  cryptoAccount: {
-                    linkedAccounts: ${newLinkedAccounts}
-                  }
+                  linkedAccounts: ${newLinkedAccounts}
                 })
               }
             `);
             await store.dispatch('account/refreshProfile');
             $q.notify({
               type: 'positive',
-              message: `Linked "${cryptoAccountName}" to your profile`
+              message: `Linked "${localAccountName}" to your profile`
             });
           } catch (error) {
             $q.notify({
@@ -49,13 +45,13 @@ export default defineComponent({
         } else {
           $q.notify({
             type: 'negative',
-            message: `"${cryptoAccountName}" is already linked`
+            message: `"${localAccountName}" is already linked`
           });
         }
       }
     }
     return {
-      cryptoIsAuthenticated,
+      localIsAuthenticated,
       linkConnectedAccount
     };
   }
@@ -63,5 +59,5 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-btn(v-if='cryptoIsAuthenticated', @click='linkConnectedAccount()') Link Connected Account
+q-btn(v-if='localIsAuthenticated', @click='linkConnectedAccount()') Link Connected Account
 </template>

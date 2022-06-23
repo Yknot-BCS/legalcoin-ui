@@ -15,7 +15,7 @@ function assetToAmount(asset: string, decimals = -1): number {
   }
 }
 
-function getYield(cost: string, profit: string): string {
+export function getYield(cost: string, profit: string): string {
   try {
     if (cost === undefined || profit === undefined) {
       return '0%';

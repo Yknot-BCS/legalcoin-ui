@@ -70,30 +70,14 @@ export async function getProfile() {
         email
         emailVerified
         receiveEmailNotifications
-        cryptoAccount{
-          accountName
-          publicKey
-          secret
-          linkedAccounts
-        }
+        accountName
+        publicKey
+        secret
+        linkedAccounts
       }
     }`)) as any;
   const profile = res.profile;
-  if (profile.cryptoAccount === null) {
-    profile.cryptoAccount = {
-      accountName: '',
-      publicKey: '',
-      secret: '',
-      linkedAccounts: []
-    };
-  } else if (profile.cryptoAccount.accountName === null) {
-    profile.cryptoAccount = {
-      accountName: '',
-      publicKey: '',
-      secret: '',
-      linkedAccounts: profile.cryptoAccount.linkedAccounts
-    };
-  }
+  if (profile.accountName === null) profile.accountName = '';
   return profile;
 }
 
@@ -125,10 +109,37 @@ export async function passwordResetNew(
   `);
 }
 
+export async function passwordNew(
+  currentPassword: string,
+  newPassword: string
+) {
+  await api.accounts.mutation(`
+  {
+    passwordNew(
+      input:{
+        currentPassword: "${currentPassword}"
+        newPassword: "${newPassword}"
+      }
+    )
+  }
+  `);
+}
+
 export async function emailVerificationRequest() {
   await api.accounts.mutation(`
     mutation {
       emailVerifyRequest
+    }
+  `);
+}
+
+export async function cryptoNew(password: string) {
+  await api.accounts.mutation(`
+    {
+      cryptoNew(
+        input:{
+          password: "${password}"
+      })
     }
   `);
 }

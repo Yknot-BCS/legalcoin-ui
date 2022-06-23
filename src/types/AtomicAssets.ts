@@ -49,6 +49,11 @@ export interface CollectionData {
   created_at_time: string;
 }
 
+export interface Filters {
+  search: string;
+  tier: { label: string; value: string };
+}
+
 interface SchemaData {
   schema_name: string;
   format: Format[];

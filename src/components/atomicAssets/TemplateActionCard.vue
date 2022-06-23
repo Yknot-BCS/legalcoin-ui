@@ -7,6 +7,7 @@ import { mapGetters, mapActions } from 'vuex';
 import { Asset, Int64 } from '@greymass/eosio';
 import { date } from 'quasar';
 import { copyToClipboard } from 'quasar';
+import { getYield } from 'src/api/atomic_assets';
 
 export default defineComponent({
   name: 'TemplateActionCard',
@@ -33,7 +34,7 @@ export default defineComponent({
 
   computed: {
     ...mapGetters({
-      accountName: 'account/cryptoAccountName'
+      accountName: 'account/getAccountName'
     }),
 
     isForSale() {
@@ -131,6 +132,17 @@ export default defineComponent({
         return this.priceAsset.toString();
       } else {
         return 'loading';
+      }
+    },
+
+    expectedYield() {
+      if (this.templateData) {
+        return getYield(
+          this.templateData?.immutable_data?.mintprice,
+          this.templateData?.immutable_data?.maturedvalue
+        );
+      } else {
+        return '0';
       }
     }
   },
@@ -245,12 +257,16 @@ q-card
     .row.justify-between.items-center.fit.wrap
       .col-10.text-italic.text-subtitle1.column
         .col 
-          //- | Owner: {{ assetData?.owner }}
-
-      //- expected yield?
+          | by: {{ templateData?.collection.authorized_accounts[0] === 'admin.lc' ? 'LegalCoin' : templateData?.collection.authorized_accounts[0] }}
+          q-icon.q-ml-sm(name='fa-solid fa-circle-check', color='green')
       //- share icon
       .col-2.row.justify-center
-        q-icon(name='share', size='sm', @click='shareURL')
+        q-btn(icon='share', size='md', @click='shareURL', round)
+
+    //- expected yield
+    .row.justify-center.items-center.fit.wrap 
+      .text-subtitle1 Expected yield: {{ expectedYield }}
+
     //- timeline
     Timeline(
       v-if='isBuybackNFT',
@@ -300,12 +316,12 @@ q-card
     //-     color='primary'
     //-   )
 
-    | owned: {{ isOwned }},
-    | for sale: {{ isForSale }},
-    | is buybacknft: {{ isBuybackNFT }},
-    | is owned by LC: {{ isOwnedByLC }},
-    | has buy order: {{ hasBuyOrder }},
-    | can claim: {{ isClaimable }}
+    //- | owned: {{ isOwned }},
+    //- | for sale: {{ isForSale }},
+    //- | is buybacknft: {{ isBuybackNFT }},
+    //- | is owned by LC: {{ isOwnedByLC }},
+    //- | has buy order: {{ hasBuyOrder }},
+    //- | can claim: {{ isClaimable }}
 </template>
 
 <style lang="sass"></style>

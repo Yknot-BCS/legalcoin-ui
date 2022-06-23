@@ -1,11 +1,11 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue';
-import { atomic_api, atomic_market_api } from 'src/api/atomic_assets';
-import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
+import { atomic_market_api } from 'src/api/atomic_assets';
 import {
   ISale,
   IBuyoffer,
-  IMarketOffer
+  IMarketOffer,
+  IMarketAsset
 } from 'atomicmarket/build/API/Explorer/Objects';
 import AssetViewer from 'src/components/atomicAssets/AssetViewer.vue';
 import { useStore } from 'src/store';
@@ -16,14 +16,16 @@ export default defineComponent({
   name: 'Asset',
   components: { AssetViewer },
   setup() {
-    const assetData = ref<IAsset>(new Object({ data: { img: '' } }) as IAsset);
+    const assetData = ref<IMarketAsset>(
+      new Object({ data: { img: '' } }) as IMarketAsset
+    );
     const saleData = ref<ISale>(new Object({}) as ISale);
     const buyofferData = ref<IBuyoffer>(new Object({}) as IBuyoffer);
     const offerData = ref<IMarketOffer>(new Object({}) as IMarketOffer);
     const store = useStore();
     const accountName = computed(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      () => store.getters['account/cryptoAccountName'] as string
+      () => store.getters['account/getAccountName'] as string
     );
     console.log(accountName);
 
@@ -50,7 +52,7 @@ export default defineComponent({
   },
   methods: {
     async getAssetData() {
-      this.assetData = await atomic_api.getAsset(
+      this.assetData = await atomic_market_api.getAsset(
         this.$route.params.asset as string
       );
       console.log(this.assetData);

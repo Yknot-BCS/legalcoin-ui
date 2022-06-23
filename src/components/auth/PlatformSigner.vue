@@ -25,11 +25,12 @@ export default defineComponent({
   setup(props) {
     const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
       useDialogPluginComponent();
+    const DEVELOPMENT = computed(
+      () => process.env.DEVELOPMENT?.toLowerCase() === 'true'
+    );
     const store = useStore();
     const $q = useQuasar();
-    const cryptoAccount = computed(
-      () => store.state.account.profile.cryptoAccount
-    );
+    const profile = computed(() => store.state.account.profile);
     const userPassword = ref('');
     const getPrivateKey = async (): Promise<PrivateKey> => {
       try {
@@ -67,7 +68,7 @@ export default defineComponent({
         }
         if (!action.authorization || !action.authorization.length) {
           action.authorization = [
-            { actor: cryptoAccount.value.accountName, permission: 'active' }
+            { actor: profile.value.accountName, permission: 'active' }
           ];
         }
         console.log(action, abi);
@@ -114,14 +115,15 @@ export default defineComponent({
       }
     };
     return {
-      cryptoAccount,
+      profile,
       userPassword,
       getPrivateKey,
       signTransaction,
       requiredRule,
       dialogRef,
       onDialogHide,
-      onDialogCancel
+      onDialogCancel,
+      DEVELOPMENT
     };
   }
 });
@@ -144,7 +146,7 @@ q-dialog(ref='dialogRef', @hide='onDialogHide', persistent)
           :rules='[requiredRule]',
           autocomplete='current-password'
         )
-        q-card(bordered, flat)
+        q-card(bordered, flat, v-if='!DEVELOPMENT')
           q-expansion-item(expand-separator, label='Transaction Details')
             q-card
               q-card-section {{ actions }}

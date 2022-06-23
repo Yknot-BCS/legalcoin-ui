@@ -3,11 +3,11 @@ import { defineComponent, PropType, ref } from 'vue';
 import DetailsTable from 'src/components/atomicAssets/DetailsTable.vue';
 import Description from 'src/components/atomicAssets/Description.vue';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
-import { IAsset } from 'atomicassets/build/API/Explorer/Objects';
 import {
   ISale,
   IBuyoffer,
-  IMarketOffer
+  IMarketOffer,
+  IMarketAsset
 } from 'atomicmarket/build/API/Explorer/Objects';
 import AssetActionCard from 'src/components/atomicAssets/AssetActionCard.vue';
 
@@ -18,7 +18,7 @@ export default defineComponent({
   components: { DetailsTable, Description, Timeline, AssetActionCard },
   props: {
     assetData: {
-      type: Object as PropType<IAsset>,
+      type: Object as PropType<IMarketAsset>,
       required: true
     },
     saleData: {
