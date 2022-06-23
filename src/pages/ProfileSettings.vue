@@ -30,7 +30,8 @@ export default defineComponent({
   setup() {
     return {
       hideProfile: ref(false),
-      emailNotifications: ref(false)
+      emailNotifications: ref(false),
+      kycKey: ref(false)
     };
   }
 });
@@ -40,12 +41,12 @@ export default defineComponent({
 q-page.fit.row.wrap.justify-center
   q-card.settings-card
     q-card-section
-      .text-h6.text-grey-8
-        | My Account Settings
+      .text-h5.text-grey-8.q-mt-xl.q-mr-lg
+        | Account Settings
     q-card-section
-      .row.justify-start.items-center
+      .row.justify-start.items-center.text-grey-8
         | {{ account.profile.name }} {{ account.profile.surname }}
-        q-btn(
+        q-btn.edit-btn(
           :to='{ name: "editprofile" }',
           icon='edit',
           flat,
@@ -53,7 +54,13 @@ q-page.fit.row.wrap.justify-center
           color='grey-6'
         )
       .col
-        q-btn(:to='{ name: "profile" }', flat, outline, padding='none')
+        q-btn(
+          :to='{ name: "profile" }',
+          flat,
+          outline,
+          padding='none',
+          font-size='15px'
+        )
           .text-italic
             | View My Profile
     q-separator
@@ -99,4 +106,14 @@ q-page.fit.row.wrap.justify-center
   width: 100%
   max-width: 30rem
   height: 100%
+
+.edit-btn
+  left: 210px
+
+.btn-width
+  width: 350px
+  justify-center: center
+  font-size: 20px
+  background-color: orange
+  border-radius: 5px
 </style>
