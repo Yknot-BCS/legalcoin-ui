@@ -28,16 +28,16 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-div(v-if='cardType === "asset"')
+div(v-if='cardType === "Assets"')
   AssetCard(:data='card')
 
-div(v-else-if='cardType === "template"')
+div(v-else-if='cardType === "Templates"')
   TemplateViewer(:data='card')
 
-div(v-else-if='cardType === "collection"')
+div(v-else-if='cardType === "Collections"')
   CollectionCard(:data='card')
 
-div(v-else-if='cardType === "listing"')
+div(v-else-if='cardType === "Listings"')
   ListingCard(:data='card')
 </template>
 

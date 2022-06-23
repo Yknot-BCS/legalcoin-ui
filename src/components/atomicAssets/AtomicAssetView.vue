@@ -333,7 +333,8 @@ export default defineComponent({
       disableFilter,
       filterPrice,
       filterCollection,
-      filterTier
+      filterTier,
+      type: Type
     };
   }
 });
@@ -504,7 +505,7 @@ page
 
           // Gallery section
           div(:class='showFilter ? "col-lg-10 col-md-9" : "col-12"')
-            GalleryView(:data='GalleryData', type='asset')
+            GalleryView(:data='GalleryData', :type='type')
 
           // Paging for Gallery section
           .col-12 
