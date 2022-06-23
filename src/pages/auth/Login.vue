@@ -73,7 +73,7 @@ q-card.row.col.animated.fadeInDown(v-if='$q.screen.gt.sm')
   .col-4.self-center(style='z-index: 1')
     img.float-right.q-mr-xl.q-mb-xl(
       src='~assets/legalcoin-full.png',
-      style='width: 13rem'
+      style='width: 18rem'
     )
   .col-2
     .div.triangle.bg-primary.float-right

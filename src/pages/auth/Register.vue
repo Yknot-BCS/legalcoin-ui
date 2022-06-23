@@ -52,11 +52,12 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
+//Desktop
 q-card.row.col.animated.fadeInDown(v-if='$q.screen.gt.sm')
   .col-4.self-center(style='z-index: 1')
     img.float-right.q-mr-xl.q-mb-xl(
       src='~assets/legalcoin-full.png',
-      style='width: 13rem'
+      style='width: 18rem'
     )
   .col-2
     .div.triangle.bg-primary.float-right
@@ -104,6 +105,7 @@ q-card.row.col.animated.fadeInDown(v-if='$q.screen.gt.sm')
     .col-12.text-center.q-mt-md
       span.q-mr-xs Already have an account?
       router-link(to='login') Sign In
+//Mobile
 AuthCard.bg-grey-1.col-6.animated.fadeInDown(v-else)
   img(src='~assets/legalcoin-full.png', style='width: 13rem')
   .text-body1.text-weight-bold.text-grey-10.col-12 Create An Account
