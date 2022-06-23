@@ -9,7 +9,7 @@ export default {
   components: { SearchBar },
   computed: {
     ...mapGetters({
-      account: 'account/account'
+      accountName: 'account/getAccountName'
     })
   },
   setup() {
@@ -47,7 +47,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
       icon='grid_view',
       label='Discover',
       dense,
-      :to='{ name: "buy" }',
+      :to='{ name: "discover" }',
       :class='(color = primary)'
     )
     q-btn(
@@ -69,7 +69,13 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
         v-if='$q.screen.lt.sm'
       )
         q-icon.material-icons-outlined(name='search')
-      q-btn(flat, round, dense, :to='{ name: "buy" }', v-if='$q.screen.lt.md')
+      q-btn(
+        flat,
+        round,
+        dense,
+        :to='{ name: "discover" }',
+        v-if='$q.screen.lt.md'
+      )
         q-icon.material-icons-outlined(name='grid_view')
       q-btn.q-ml-xs(
         flat,
@@ -79,27 +85,33 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
         :to='{ name: "login" }'
       )
         q-icon.material-icons-outlined(name='account_circle')
-    q-btn.gt-sm(
+    q-btn(
       dense,
       flat,
       round,
       no-wrap,
       icon='account_circle',
-      label='Account',
+      :label='$q.screen.gt.sm ? `Account` : `` || $q.screen.lt.sm ? `` : ``',
       v-if='isLoggedIn'
     )
       q-menu.menu-edit(auto-close, fit)
         q-list(dense)
-          q-item(v-if='isLoggedIn')
-            q-item-section
-              | Signed in as
-              strong {{ profile.name }} {{ profile.surname }}
+          q-item.menu-link(
+            v-if='isLoggedIn',
+            clickable,
+            :to='{ name: "profile", params: { profile: accountName } }'
+          )
+            q-item-section.q-pa-sm
+              q-btn(
+                flat,
+                icon='account_circle',
+                label='Profile',
+                dense,
+                align='left',
+                font-size='10px'
+              )
           q-separator(v-if='isLoggedIn')
           // TODO add params for profile, gallery and wallet
-          q-item.menu-link(clickable, :to='"/profile/" + profile.accountName')
-            q-item-section Your profile
-          q-item.menu-link(clickable, :to='{ name: "gallery" }')
-            q-item-section Your gallery
           q-item.menu-link(clickable, :to='{ name: "wallet" }')
             q-item-section.q-pa-sm
               q-btn(
@@ -113,7 +125,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
           q-separator(v-if='isLoggedIn')
           q-item.menu-link(
             clickable,
-            :to='{ name: "account-settings", params: { profile: 1 } }'
+            :to='{ name: "account-settings", params: { profile: accountName } }'
           )
             q-item-section.q-pa-sm
               q-btn(
