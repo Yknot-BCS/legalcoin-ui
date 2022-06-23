@@ -131,7 +131,7 @@ q-page
         h4.q-ma-none.q-pl-lg.trending-title Trending
         .landing-right-card-container
           .main-asset.col-md-6.q-pa-lg(v-if='assets.length > 0')
-            Cards.shadow-10(:data='assets[0]', type='asset')
+            Cards.shadow-10(:data='assets[0]', type='Assets')
   .div
     .row.justify-center
       h2.text-grey-9.text-center Featured Collections
