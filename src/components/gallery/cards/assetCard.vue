@@ -24,9 +24,9 @@ q-card
     .row
       .text-h6 {{ card.name }}
     .row
-      .col-6
+      .col-8
         .text-subtitle2 {{ card.mintprice }}
-      .col-6
+      .col-4
         .text-subtitle2.float-right {{ card.tier }}
     .row
       .text-subtitle2 Expected yield {{ card.yield }}
