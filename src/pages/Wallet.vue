@@ -40,7 +40,6 @@ export default defineComponent({
     },
     async getNftCount() {
       if (this.isAuthenticated) {
-        this.nftValue = 0;
         //  get NFT count
         const myGalleryOptions = {
           owner: this.accountName as string,
@@ -56,6 +55,7 @@ export default defineComponent({
         // console.log(data);
         this.nftCount = data.length;
         // get NFT worth in LEGAL
+        this.nftValue = 0;
         for (const asset of data) {
           if (asset?.data?.mintprice) {
             this.nftValue += Asset.from(asset.data.mintprice).value;
