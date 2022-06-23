@@ -40,6 +40,7 @@ export default defineComponent({
     },
     async getNftCount() {
       if (this.isAuthenticated) {
+        this.nftValue = 0;
         //  get NFT count
         const myGalleryOptions = {
           owner: this.accountName as string,
