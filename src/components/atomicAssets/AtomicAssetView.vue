@@ -15,7 +15,8 @@ import {
   get_assets,
   get_collections,
   get_templates,
-  get_sale
+  get_sale,
+  getCollectionsList
 } from 'src/api/atomic_assets';
 import { AssetsApiParams } from 'atomicassets/build/API/Explorer/Params';
 import { useRouter } from 'vue-router';
@@ -44,6 +45,10 @@ export default defineComponent({
       type: String,
       required: true
     },
+    Price: {
+      type: Object as PropType<{ min: number; max: number }>,
+      required: false
+    },
     DisableFilter: {
       type: Boolean,
       required: false,
@@ -59,12 +64,12 @@ export default defineComponent({
       required: false,
       default: true
     },
-    Price: {
+    FilterPrice: {
       type: Boolean,
       required: false,
       default: true
     },
-    Collection: {
+    FilterCollection: {
       type: Boolean,
       required: false,
       default: true
@@ -84,7 +89,9 @@ export default defineComponent({
     const showFilterDialog = ref<boolean>(false);
     const DataParams = computed(() => props.DataParams);
     const { ApiParams, Page, ItemsPerPage, Type, Status } = toRefs(props);
-    const price = ref<{ min: number; max: number }>({ min: 0, max: 10000 });
+    const price =
+      ref(props.Price) ||
+      ref<{ min: number; max: number }>({ min: 0, max: 10000 });
     const page = ref(Page);
     const search =
       ref<string>((ApiParams.value as AssetsApiParams).search as string) ||
@@ -157,9 +164,15 @@ export default defineComponent({
       Math.ceil(assetCount.value / limit.value)
     );
     const filterStatus = computed(() => props.FilterStatus);
-    const filterPrice = computed(() => props.Price);
-    const filterCollection = computed(() => props.Collection);
+    const filterPrice = computed(() => props.FilterPrice);
+    const filterCollection = computed(() => props.FilterCollection);
     const filterTier = computed(() => props.Tier);
+    const collections = ref(
+      (ApiParams.value as AssetsApiParams).collection_whitelist.split(',') ||
+        ([] as string[])
+    );
+    console.log(collections.value);
+    const collectionsArray = ref<string[]>([]);
     // Function to open correct filter on mobile or desktop
     function Filter() {
       if ($q.screen.lt.md) {
@@ -293,7 +306,13 @@ export default defineComponent({
           order: sort.value.order,
           page: 1,
           limit: ItemsPerPage.value,
-          status: JSON.stringify(statusSelection.value)
+          status: JSON.stringify(statusSelection.value),
+          min_price: price.value.min,
+          max_price: price.value.max,
+          collections:
+            collections.value.length > 0
+              ? collections.value.toString()
+              : collectionsArray.value.toString()
         }
       });
     }
@@ -304,6 +323,8 @@ export default defineComponent({
     // When component mounts get gallery data
     onMounted(async () => {
       void (await getData());
+      const collectionData = await getCollectionsList();
+      collectionsArray.value = collectionData.array;
     });
 
     return {
@@ -334,7 +355,9 @@ export default defineComponent({
       filterPrice,
       filterCollection,
       filterTier,
-      type: Type
+      type: Type,
+      collections,
+      collectionsArray
     };
   }
 });
@@ -491,17 +514,30 @@ page
                 label='Price',
                 v-if='filterPrice'
               )
-                q-range.q-pa-lg(v-model='price', :min='0', :max='12000', label)
+                q-range.q-pa-lg(
+                  v-model='price',
+                  :min='0',
+                  :max='12000',
+                  label,
+                  @change='() => { applyFilters(); }'
+                )
               q-expansion-item(
                 expand-separator,
                 icon='collections',
                 label='Collection',
                 v-if='filterCollection'
               )
-                q-list(bordered, separator)
-                  q-item(clickable, v-ripple)
-                    q-item-section Collection 1
-                    q-item-section All
+                .row.q-col-gutter-sm.q-pa-md
+                .col-12(v-for='col in collectionsArray')
+                  .row
+                    .col-6 {{ col }}
+                    .col-6
+                      q-checkbox.float-right.q-pl-md(
+                        v-model='collections',
+                        :val='col',
+                        color='primary',
+                        @update:model-value='(value) => { applyFilters(); }'
+                      )
 
           // Gallery section
           div(:class='showFilter ? "col-lg-10 col-md-9" : "col-12"')
@@ -637,7 +673,13 @@ page
                 label='Price',
                 v-if='filterPrice'
               )
-                q-range.q-pa-lg(v-model='price', :min='0', :max='12000', label)
+                q-range.q-pa-lg(
+                  v-model='price',
+                  :min='0',
+                  :max='12000',
+                  label,
+                  @change='() => { applyFilters(); }'
+                )
               q-expansion-item(
                 expand-separator,
                 icon='collections',

@@ -2,6 +2,7 @@ import { ExplorerApi } from 'atomicassets';
 import { AtomicMarketApi } from 'atomicmarket';
 import { GalleryCard } from 'src/types';
 import { useRoute } from 'vue-router';
+import { ISale } from 'atomicmarket/build/API/Explorer/Objects';
 
 export const atomic_api = new ExplorerApi(
   process.env.ATOMICASSETS_API_ENDPOINT,
@@ -168,15 +169,21 @@ export const get_sale = async function (
   ItemsPerPage: number,
   DataParams: { key: string; value: string }[]
 ) {
-  const count = await atomic_market_api.countSales(ApiParams, DataParams);
-  const rawData = await atomic_market_api.getSales(
-    ApiParams,
-    Page,
-    ItemsPerPage,
-    DataParams
+  const rawData = await atomic_market_api.fetchEndpoint('/v2/sales', {
+    ...ApiParams,
+    page: Page,
+    limit: ItemsPerPage,
+    ...DataParams
+  });
+  const count: number = await atomic_market_api.fetchEndpoint(
+    '/v2/sales/_count',
+    {
+      ...ApiParams,
+      ...DataParams
+    }
   );
   console.log(rawData);
-  const data = rawData.map((sales) => {
+  const data = (rawData as ISale[]).map((sales) => {
     return {
       ...sales.assets[0].data,
       to: '/asset/' + sales.assets[0].asset_id,
@@ -239,7 +246,10 @@ export const getSalesQueryApiOptions = function (q: unknown): {
   seller?: string;
   seller_blacklist?: string;
   status?: string[];
-  collection_whitelist: string;
+  collection_whitelist?: string;
+  min_price?: string;
+  max_price?: string;
+  symbol?: string;
 } {
   const route = useRoute();
   const query = route.query;
@@ -251,13 +261,15 @@ export const getSalesQueryApiOptions = function (q: unknown): {
     seller?: string;
     seller_blacklist?: string;
     status?: string[];
-    collection_whitelist: string;
+    collection_whitelist?: string;
+    min_price?: string;
+    max_price?: string;
+    symbol?: string;
   };
   dataOptions = {
     search: (query['search'] as string) || '',
     sort: (query['sort'] as string) || 'created',
-    order: (query['order'] as string) || 'desc',
-    collection_whitelist: 'emission.lc'
+    order: (query['order'] as string) || 'desc'
   };
   if (query['filter[tier]'] && query['filter[tier]'] !== 'All') {
     dataOptions = {
@@ -288,6 +300,20 @@ export const getSalesQueryApiOptions = function (q: unknown): {
     dataOptions = { ...dataOptions, seller_blacklist: process.env.AA_ACCOUNT };
   } else {
   }
+  if (query['min_price'] && query['max_price']) {
+    dataOptions = {
+      ...dataOptions,
+      min_price: (query['min_price'] as string) || '0',
+      max_price: (query['max_price'] as string) || '10000',
+      symbol: 'WAX'
+    };
+  }
+  if (query['collections']) {
+    dataOptions = {
+      ...dataOptions,
+      collection_whitelist: query['collections'] as string
+    };
+  }
   return dataOptions;
 };
 
@@ -307,4 +333,36 @@ export const getQueryStatus = function (q: unknown): string {
   const route = useRoute();
   const query = route.query;
   return (query['status'] as string) || '[]';
+};
+
+export const getQueryPrice = function (q: unknown): {
+  min: number;
+  max: number;
+} {
+  const route = useRoute();
+  const query = route.query;
+  return (
+    {
+      min: Number(query['min_price']),
+      max: Number(query['max_price'])
+    } || {
+      min: 0,
+      max: 10000
+    }
+  );
+};
+
+export const getCollectionsList = async function (): Promise<{
+  array: string[];
+  stringList: string;
+}> {
+  const collectionsfilter = {
+    authorized_account: process.env.AA_ACCOUNT,
+    limit: 100,
+    order: 'desc',
+    sort: 'created'
+  } as unknown;
+  const data = await atomic_api.getCollections(collectionsfilter);
+  const dataList = data.map((col) => col.collection_name);
+  return { array: dataList, stringList: dataList.toString() };
 };
