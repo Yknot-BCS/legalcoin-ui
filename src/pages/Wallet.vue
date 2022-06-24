@@ -82,26 +82,26 @@ export default defineComponent({
 
 <template lang="pug">
 q-page
-  .row.justify-center
+  .row.justify-center.q-pt-xl
     q-card
       q-card-section
-        .text-h6.text-grey-14
+        .text-wallet-heading.text-grey-14
           | Balance
       q-card-section
         .text-wallet-topline.text-bold.text-grey-10
           | {{ balance }} LCP (LEGALCOIN POUND)
-        .text-body2.text-grey-10
+        .text-wallet-bottomline.text-grey-10
           | {{ gbpValue }} (GBP)
           //- TODO get GBP value
       q-separator.q-mx-md
       q-card-section
         .text-wallet-topline.text-bold.text-grey-10
           | {{ nftCount }} NFTS
-        .text-body2.text-grey-10
+        .text-wallet-bottomline.text-grey-10
           | {{ nftValue.toFixed(2) }} (LCP)
       q-separator.q-mx-md
       q-card-section
-        .text-h6.text-grey-14
+        .text-wallet-heading.text-grey-14
           | Options
         .row.justify-center.q-mt-sm
           .row.col-6
@@ -129,5 +129,14 @@ q-page
 <style lang="sass" scoped>
 .wallet-btn
   border: 0.5px solid grey
+  font-family: 'ralewayregular'
+.text-wallet-heading
+  font-size: 1.25rem
+  font-family: 'ralewayregular'
+.text-wallet-topline
+  font-size: 0.88rem
+  font-family: 'heveticaneue'
+.text-wallet-bottomline
+  font-size: 0.88rem
   font-family: 'ralewayregular'
 </style>
