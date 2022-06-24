@@ -79,8 +79,7 @@ export default defineComponent({
 
 <template lang="pug">
 q-page
-  //- Collection Card
-  //- Desktop Version
+  //----------------- Desktop Version -----------------
   //- Background image
   .row(v-if='$q.screen.gt.sm', style='height: 2rem')
     q-img.bg-img(
@@ -93,16 +92,16 @@ q-page
       q-card.asset-img
         q-img(:src='collectionImg')
   .row(v-if='$q.screen.gt.sm', style='height: 10rem')
-    //- Collection name, links and info
+  //- Collection name, links and info
   .row.q-px-lg(v-if='$q.screen.gt.sm')
     .col-4
-      .row.text-h2
+      .row.text-h3
         | {{ collectionData.data.name }}
       .row.text-subtitle1.q-px-xs
         | {{ collectionData.data.description }}
     //- Links
-    .col-6
-    .col.self-center.q-gutter-lg
+    .col
+    .row.self-center.q-gutter-lg
       q-btn(
         round,
         icon='fa-solid fa-globe',
@@ -116,7 +115,7 @@ q-page
     .col.q-px-xs Market Fee: {{ collectionData.market_fee * 100 }}%
     .col.q-px-xs Created: {{ new Date(Number(collectionData.created_at_time)).toLocaleDateString() }}
 
-  //- Mobile Version
+  //----------------- Mobile Version -----------------
   //- Background image
   .row(v-if='$q.screen.lt.md', style='height: 10rem')
     q-img.bg-img(
@@ -124,32 +123,33 @@ q-page
       height='20rem'
     )
   .row(v-if='$q.screen.lt.md')
-  //- Collection name and links
+  //- Collection image
   .row.q-px-lg(v-if='$q.screen.lt.md')
     q-card.col-3.asset-img
       q-img(:src='collectionImg')
+  //- Collection name and info
   .row.justify-between.content-center.items-center.q-pl-lg.q-pt-sm(
     v-if='$q.screen.lt.md'
   )
     .col-7
-      .row.text-h2
+      .row.text-h3
         | {{ collectionData.data.name }}
       .row.text-subtitle1.q-pl-xs
         | {{ collectionData.data.description }}
-    .col-3.q-gutter-lg
-      q-btn(
-        round,
-        icon='fa-solid fa-globe',
-        :href='collectionData.data?.url',
-        target='_blank'
-      )
-      q-btn(round, icon='fa-solid fa-ellipsis')
   //- Collection info
   .column.justify-start.q-pa-lg(v-if='$q.screen.lt.md')
     .col.q-pl-xs Creator: {{ collectionData.authorized_accounts?.[0] }}
     .col.q-pl-xs Market Fee: {{ collectionData.market_fee * 100 }}%
     .col.q-pl-xs Created: {{ new Date(Number(collectionData.created_at_time)).toLocaleDateString() }}
-
+  //- Links
+  .row.q-gutter-lg.q-pa-lg(v-if='$q.screen.lt.md')
+    q-btn(
+      round,
+      icon='fa-solid fa-globe',
+      :href='collectionData.data?.url',
+      target='_blank'
+    )
+    q-btn(round, icon='fa-solid fa-ellipsis')
   .row.justify-center
     .col-12
       q-card(flat)
