@@ -20,7 +20,7 @@ export default defineComponent({
 
     const accountName = computed(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      () => store.getters['account/cryptoAccountName'] as string
+      () => store.getters['account/getAccountName'] as string
     );
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -141,7 +141,7 @@ export default defineComponent({
   .col-6
     q-btn.q-px-md.float-right.text-grey-8(label='view all', flat)
   .col-12
-    GalleryView(:data='myGalleryData', type='asset')
+    GalleryView(:data='myGalleryData', type='Assets')
 
 .row.q-pa-md
   .col-12
@@ -153,12 +153,12 @@ export default defineComponent({
     q-btn.q-px-md.float-right.text-grey-8(label='view all', flat)
   q-seperator
   .col-12.q-px-sm
-    GalleryView(:data='discoverData', type='asset')
+    GalleryView(:data='discoverData', type='Assets')
 
   .col-6.px.q-pt-md
     .q-px-md.text-h6.text-grey-8 Collections
   .col-6
     q-btn.q-px-md.float-right.text-grey-8(label='view all', flat)
   .col-12.q-px-sm
-    GalleryView(:data='collectionData', type='collection')
+    GalleryView(:data='collectionData', type='Collections')
 </template>

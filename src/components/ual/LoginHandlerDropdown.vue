@@ -17,7 +17,7 @@ export default defineComponent({
   },
   methods: {
     ...mapMutations({
-      setAccountName: 'account/setCryptoAccountName'
+      setLocalAccountName: 'account/setLocalAccountName'
     }),
     getAuthenticator() {
       const wallet = localStorage.getItem('autoLogin');
@@ -43,7 +43,7 @@ export default defineComponent({
     },
     clearAccount(): void {
       localStorage.removeItem('account');
-      this.setAccountName('');
+      this.setLocalAccountName('');
     }
   }
 });

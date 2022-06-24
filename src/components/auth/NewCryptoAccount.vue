@@ -12,17 +12,16 @@ export default defineComponent({
     const $q = useQuasar();
     const store = useStore();
     const profile = computed(() => store.state.account.profile);
-    const cryptoIsAuthenticated = computed(
-      // eslint-disable-next-line
-      (): boolean => store.getters['account/cryptoIsAuthenticated']
+    const localIsAuthenticated = computed(
+      (): boolean => !!store.state.account.localAccountName
     );
     const userPassword = ref('');
-    async function cryptoNew(cryptoAccountName?: string) {
+    async function cryptoNew(accountName?: string) {
       if (profile.value.accountName === '') {
         try {
           // eslint-disable-next-line
-          const optionalAccountName = cryptoAccountName
-            ? `accountName: "${cryptoAccountName}"`
+          const optionalAccountName = accountName
+            ? `accountName: "${accountName}"`
             : '';
           await api.accounts.mutation(`
               {
@@ -51,9 +50,9 @@ export default defineComponent({
       }
     }
     async function connectExistingAccount() {
-      const cryptoAccountName = store.state.account.cryptoAccountName;
-      if (cryptoAccountName !== '') {
-        await cryptoNew(cryptoAccountName);
+      const localAccountName = store.state.account.localAccountName;
+      if (localAccountName) {
+        await cryptoNew(localAccountName);
       }
     }
     async function createNewAccount() {
@@ -89,7 +88,7 @@ export default defineComponent({
       });
     }
     return {
-      cryptoIsAuthenticated,
+      localIsAuthenticated,
       profile,
       userPassword,
       cryptoReset,
@@ -128,7 +127,7 @@ export default defineComponent({
       )
     q-card-actions(align='stretch')
       q-btn.col(
-        :disable='!cryptoIsAuthenticated',
+        :disable='!localIsAuthenticated',
         @click='connectExistingAccount()',
         type='submit',
         color='primary'

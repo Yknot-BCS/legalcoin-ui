@@ -28,13 +28,13 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
     const users = await (authenticator as Authenticator).login();
     if (users.length) {
       const account = users[0];
-      const cryptoAccountName = await account.getAccountName();
-      commit('setCryptoAccountName', cryptoAccountName);
+      const accountName = await account.getAccountName();
+      commit('setLocalAccountName', accountName);
       localStorage.setItem(
         'autoLogin',
         (authenticator as Authenticator).constructor.name
       );
-      localStorage.setItem('account', cryptoAccountName);
+      localStorage.setItem('account', accountName);
       localStorage.setItem('returning', 'true');
       commit('setLoadingWallet');
     }
@@ -46,7 +46,7 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
       if (!action.authorization || !action.authorization.length) {
         action.authorization = [
           {
-            actor: getters.cryptoAccountName,
+            actor: getters.getAccountName,
             permission: 'active'
           }
         ];
