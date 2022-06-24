@@ -103,7 +103,8 @@ page
         :ItemsPerPage='limit',
         :DataParams='dataOptions',
         Type='Assets',
-        :FilterStatus='false'
+        :FilterStatus='false',
+        :FilterPrice='false'
       )
 </template>
 

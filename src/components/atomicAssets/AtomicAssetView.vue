@@ -168,7 +168,7 @@ export default defineComponent({
     const filterCollection = computed(() => props.FilterCollection);
     const filterTier = computed(() => props.Tier);
     const collections = ref(
-      (ApiParams.value as AssetsApiParams).collection_whitelist.split(',') ||
+      (ApiParams.value as AssetsApiParams).collection_whitelist?.split(',') ||
         ([] as string[])
     );
     console.log(collections.value);
@@ -297,24 +297,43 @@ export default defineComponent({
     }
     // Apply filters to url query
     function applyFilters() {
-      void router.push({
-        path: router.currentRoute.value.path,
-        query: {
-          search: search.value,
-          'filter[tier]': tier.value,
-          sort: sort.value.sort,
-          order: sort.value.order,
-          page: 1,
-          limit: ItemsPerPage.value,
-          status: JSON.stringify(statusSelection.value),
-          min_price: price.value.min,
-          max_price: price.value.max,
-          collections:
-            collections.value.length > 0
-              ? collections.value.toString()
-              : collectionsArray.value.toString()
-        }
-      });
+      if (Type.value === 'Sale') {
+        void router.push({
+          path: router.currentRoute.value.path,
+          query: {
+            search: search.value,
+            'filter[tier]': tier.value,
+            sort: sort.value.sort,
+            order: sort.value.order,
+            page: 1,
+            limit: ItemsPerPage.value,
+            status: JSON.stringify(statusSelection.value),
+            min_price: price.value.min,
+            max_price: price.value.max,
+            collections:
+              collections.value.length > 0
+                ? collections.value.toString()
+                : collectionsArray.value.toString()
+          }
+        });
+      } else {
+        void router.push({
+          path: router.currentRoute.value.path,
+          query: {
+            search: search.value,
+            'filter[tier]': tier.value,
+            sort: sort.value.sort,
+            order: sort.value.order,
+            page: 1,
+            limit: ItemsPerPage.value,
+            status: JSON.stringify(statusSelection.value),
+            collections:
+              collections.value.length > 0
+                ? collections.value.toString()
+                : collectionsArray.value.toString()
+          }
+        });
+      }
     }
     // if any change is detected in these values update gallery data
     watch([DataParams, ApiParams, Page, ItemsPerPage], () => {

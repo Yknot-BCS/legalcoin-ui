@@ -151,14 +151,27 @@ export const getQueryApiOptions = function (q: unknown): {
   search: string;
   sort: string;
   order: string;
+  collection_whitelist?: string;
 } {
   const route = useRoute();
   const query = route.query;
-  const dataOptions = {
+  let dataOptions = {} as {
+    search: string;
+    sort: string;
+    order: string;
+    collection_whitelist?: string;
+  };
+  dataOptions = {
     search: (query['search'] as string) || '',
     sort: (query['sort'] as string) || 'created',
     order: (query['order'] as string) || 'desc'
   };
+  if (query['collections']) {
+    dataOptions = {
+      ...dataOptions,
+      collection_whitelist: query['collections'] as string
+    };
+  }
   console.log(dataOptions);
   return dataOptions;
 };
