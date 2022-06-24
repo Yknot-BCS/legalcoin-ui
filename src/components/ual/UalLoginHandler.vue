@@ -15,15 +15,15 @@ export default defineComponent({
   mounted() {
     const storedAccount = localStorage.getItem('account');
     if (storedAccount) {
-      this.setAccountName(storedAccount);
+      this.setLocalAccountName(storedAccount);
     }
   },
   computed: {
-    ...mapGetters({ account: 'account/cryptoAccountName' })
+    ...mapGetters({ account: 'account/account' })
   },
   methods: {
     ...mapMutations({
-      setAccountName: 'account/setCryptoAccountName'
+      setLocalAccountName: 'account/setLocalAccountName'
     })
   }
 });
@@ -31,7 +31,10 @@ export default defineComponent({
 
 <template lang="pug">
 .text-white.q-my-xs
-  LoginHandlerDropdown(v-if='account', :account='account')
+  LoginHandlerDropdown(
+    v-if='account.localAccountName',
+    :account='account.localAccountName'
+  )
   q-btn(
     v-else,
     @click='showModal = true',

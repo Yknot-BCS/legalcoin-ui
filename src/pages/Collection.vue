@@ -6,7 +6,7 @@ import {
 import { defineComponent, ref, computed } from 'vue';
 import {
   atomic_api,
-  getQueryApiOptions,
+  getTemplateQueryApiOptions,
   getQueryPage,
   getQueryLimit
 } from 'src/api/atomic_assets';
@@ -32,7 +32,7 @@ export default defineComponent({
       return {
         owner: process.env.AA_ACCOUNT,
         collection_name: route.params.collection as string,
-        ...getQueryApiOptions(route.query)
+        ...getTemplateQueryApiOptions(route.query)
       } as unknown;
     });
     // - Gallery view
