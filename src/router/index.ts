@@ -29,7 +29,7 @@ export default route<StateInterface>(function (
   });
 
   Router.beforeEach((to, _) => {
-    const isAuthenticated = store.state.account.profile.emailVerified
+    const isAuthenticated = store.state.account.profile.emailVerified;
     if (to.name !== 'emailverify-request' && to.name === 'home' && auth.isLoggedIn() && !isAuthenticated) {
       return { name: 'emailverify-request' };
     }

@@ -16,6 +16,9 @@ export default defineComponent({
     const router = useRouter();
     onMounted(async () => {
       await store.dispatch('account/refreshProfile');
+      if (store.state.account.profile.emailVerified) {
+        await router.push({ name: 'home' });
+      }
     });
     return {
       logout: async () => {
