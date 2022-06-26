@@ -30,7 +30,7 @@ export default route<StateInterface>(function (
 
   Router.beforeEach((to, _) => {
     const isAuthenticated = store.state.account.profile.emailVerified;
-    if (to.name !== 'emailverify-request' && to.name === 'home' && auth.isLoggedIn() && !isAuthenticated) {
+    if (to.name !== 'emailverify-request' && auth.isLoggedIn() && !isAuthenticated) {
       return { name: 'emailverify-request' };
     }
     // Route to home when already logged in
