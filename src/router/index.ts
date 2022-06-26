@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { route } from 'quasar/wrappers';
 import { createRouter, createWebHistory } from 'vue-router';
-import { StateInterface } from '../store';
+import { StateInterface, useStore } from '../store';
 import routes from './routes';
 import auth from 'src/auth';
 
@@ -32,6 +32,10 @@ export default route<StateInterface>(function (
     // Route to home when already logged in
     if (to.name === 'login' && auth.isLoggedIn()) {
       return { name: 'home' };
+    }
+    const isAuthenticated = store.state.account.profile.emailVerified
+    if (to.name !== 'emailverify-request' && to.name === 'home' && !isAuthenticated) {
+      return { name: 'emailverify-request' };
     }
   });
 
