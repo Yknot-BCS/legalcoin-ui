@@ -1,7 +1,6 @@
 <script lang="ts">
 import Header from 'src/components/core/Header.vue';
 import Footer from 'src/components/core/Footer.vue';
-import MobileTabsFooter from 'src/components/core/MobileTabsFooter.vue';
 import { useStore } from 'src/store';
 import { onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
@@ -47,7 +46,6 @@ export default {
   components: {
     Header,
     Footer,
-    MobileTabsFooter,
     DevBanner,
     CompleteRegistrationBanners
   }
@@ -64,8 +62,6 @@ q-layout(view='hHh lpR fff')
     q-separator
   q-footer(v-if='$q.screen.gt.sm')
     Footer
-  q-footer(reveal, v-if='$q.screen.lt.md')
-    MobileTabsFooter
   q-page-scroller(position='bottom-right', :scroll-offset='150')
     q-btn(fab, color='primary', icon='arrow_upward')
 </template>
