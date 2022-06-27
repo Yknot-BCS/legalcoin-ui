@@ -28,10 +28,24 @@ export default route<StateInterface>(function (
     history: createHistory(process.env.VUE_ROUTER_BASE)
   });
 
-  Router.beforeEach((to, _) => {
-    const isAuthenticated = store.state.account.profile.emailVerified;
-    if (to.name !== 'emailverify-request' && auth.isLoggedIn() && !isAuthenticated) {
-      return { name: 'emailverify-request' };
+  Router.beforeEach(async (to, _) => {
+    let isAuthenticated = store.state.account.profile.emailVerified;
+    if (auth.isLoggedIn()) {
+      try {
+        if (store.state.account.profile.email == '') {
+          await store.dispatch('account/refreshProfile');
+        }
+        isAuthenticated = store.state.account.profile.emailVerified;
+        if (
+          to.name !== 'emailverify-request' &&
+          auth.isLoggedIn() &&
+          !isAuthenticated
+        ) {
+          return { name: 'emailverify-request' };
+        }
+      } catch {
+        console.log('Could not dispatch refreshProfile');
+      }
     }
     // Route to home when already logged in
     if (to.name === 'login' && auth.isLoggedIn() && isAuthenticated) {
