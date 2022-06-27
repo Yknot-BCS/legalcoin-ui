@@ -345,7 +345,7 @@ export const getQueryLimit = function (q: unknown): number {
 export const getQueryStatus = function (q: unknown): string {
   const route = useRoute();
   const query = route.query;
-  return (query['status'] as string) || '[]';
+  return (query['status'] as string) || '["buynow", "marketplace"]';
 };
 
 export const getQueryPrice = function (q: unknown): {
@@ -354,15 +354,10 @@ export const getQueryPrice = function (q: unknown): {
 } {
   const route = useRoute();
   const query = route.query;
-  return (
-    {
-      min: Number(query['min_price']),
-      max: Number(query['max_price'])
-    } || {
-      min: 0,
-      max: 10000
-    }
-  );
+  return {
+    min: Number(query['min_price']) || 0,
+    max: Number(query['max_price']) || 10000
+  };
 };
 
 export const getCollectionsList = async function (): Promise<{

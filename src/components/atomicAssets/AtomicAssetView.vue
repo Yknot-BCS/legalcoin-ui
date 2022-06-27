@@ -88,7 +88,8 @@ export default defineComponent({
     const showFilter = ref<boolean>(false);
     const showFilterDialog = ref<boolean>(false);
     const DataParams = computed(() => props.DataParams);
-    const { ApiParams, Page, ItemsPerPage, Type, Status } = toRefs(props);
+    const ApiParams = computed(() => props.ApiParams);
+    const { Page, ItemsPerPage, Type, Status } = toRefs(props);
     const price =
       ref(props.Price) ||
       ref<{ min: number; max: number }>({ min: 0, max: 10000 });
@@ -110,7 +111,11 @@ export default defineComponent({
     ]);
     const pageOptions = [6, 12, 24, 48];
     console.log(Status.value);
-    const statusSelection = ref(JSON.parse(Status.value) as string[]);
+    const statusSelection = ref(
+      (JSON.parse(Status.value) as string[]).filter((element) => {
+        return element !== '';
+      })
+    );
     console.log(statusSelection.value);
     const limit = ref(ItemsPerPage);
     const assetCount = ref<number>(1);
@@ -297,6 +302,7 @@ export default defineComponent({
     }
     // Apply filters to url query
     function applyFilters() {
+      console.log(statusSelection.value);
       if (Type.value === 'Sale') {
         void router.push({
           path: router.currentRoute.value.path,
@@ -339,11 +345,17 @@ export default defineComponent({
     watch([DataParams, ApiParams, Page, ItemsPerPage], () => {
       void getData();
     });
+    watch(ApiParams, (newval, olval) => {
+      collections.value = (
+        newval as AssetsApiParams
+      ).collection_whitelist?.split(',');
+    });
     // When component mounts get gallery data
-    onMounted(async () => {
-      void (await getData());
-      const collectionData = await getCollectionsList();
-      collectionsArray.value = collectionData.array;
+    onMounted(() => {
+      void getCollectionsList().then((collectionData) => {
+        collectionsArray.value = collectionData.array;
+      });
+      void getData();
     });
 
     return {
