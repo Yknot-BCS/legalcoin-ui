@@ -34,7 +34,8 @@ export default {
 <template lang="pug">
 q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
   router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
-    img.logo.q-mr-md(src='~assets/legalcoin-full.png')
+    img.logo.q-mr-md.gt-sm(src='~assets/legalcoin-full.png')
+    img.logo-small.q-mr-md.lt-sm(src='~assets/legalcoin-full.png')
 
   .col.row.justify-center
     search-bar.toolbar-select.q-mr-md(size='110', v-if='$q.screen.gt.md')
@@ -170,7 +171,9 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
 .q-list
   width: 350px
 .logo
-  height:40px
+  height: 40px
+.logo-small
+  width: 150px
 .logout-btn
   background-color: orange
 .menu-edit
