@@ -1,9 +1,8 @@
 <script lang="ts">
-import { defineComponent, computed, ref, onMounted } from 'vue';
+import { defineComponent, computed, ref, onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'src/store';
 import {
-  atomic_api,
   getQueryDataOptions,
   getSalesQueryApiOptions,
   getQueryPage,
@@ -19,7 +18,6 @@ export default defineComponent({
   name: 'Explore',
   components: { GalleryView, AtomicAssetsView },
   setup() {
-    const store = useStore();
     const route = useRoute();
     const showFilter = ref<boolean>(false);
     const search = ref<string>('');
@@ -30,7 +28,7 @@ export default defineComponent({
     const limit = computed(() => getQueryLimit(route.query));
     const status = computed(() => getQueryStatus(route.query));
     const price = computed(() => getQueryPrice(route.query));
-    const collections = ref<string>('');
+    const collections = ref<string>('emissions.lc');
     console.log(status.value);
     const assetOptions = computed(() => {
       return {
@@ -40,10 +38,8 @@ export default defineComponent({
         ...getSalesQueryApiOptions(route.query)
       } as unknown;
     });
-    console.log(getSalesQueryApiOptions(route.query));
-    // - Gallery view
 
-    onMounted(async () => {
+    onBeforeMount(async () => {
       const collectionData = await getCollectionsList();
       collections.value = collectionData.stringList;
       console.log(collections.value);

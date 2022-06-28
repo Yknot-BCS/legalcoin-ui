@@ -388,7 +388,8 @@ export default defineComponent({
       filterTier,
       type: Type,
       collections,
-      collectionsArray
+      collectionsArray,
+      model: ref('one')
     };
   }
 });
@@ -447,7 +448,19 @@ page
       q-card-section
         .row.justify-evenly
           .col-lg-2.col-md-3.q-pt-md(v-if='showFilter')
-            q-card.q-pa-md(bordered, flat)
+            q-card.q-pb-md(bordered, flat)
+              .q-pa-md
+                q-btn-toggle(
+                  v-model='model',
+                  spread,
+                  no-caps,
+                  rounded,
+                  unelevated,
+                  toggle-color='primary',
+                  color='white',
+                  text-color='primary',
+                  :options='[ { label: "Primary", value: "one" }, { label: "Retail", value: "two" }, ]'
+                )
               q-expansion-item(
                 expand-separator,
                 icon='query_stats',
@@ -559,16 +572,16 @@ page
                 v-if='filterCollection'
               )
                 .row.q-col-gutter-sm.q-pa-md
-                .col-12(v-for='col in collectionsArray')
-                  .row
-                    .col-6 {{ col }}
-                    .col-6
-                      q-checkbox.float-right.q-pl-md(
-                        v-model='collections',
-                        :val='col',
-                        color='primary',
-                        @update:model-value='(value) => { applyFilters(); }'
-                      )
+                  .col-12(v-for='col in collectionsArray')
+                    .row
+                      .col-6 {{ col }}
+                      .col-6
+                        q-checkbox.float-right.q-pl-md(
+                          v-model='collections',
+                          :val='col',
+                          color='primary',
+                          @update:model-value='(value) => { applyFilters(); }'
+                        )
 
           // Gallery section
           div(:class='showFilter ? "col-lg-10 col-md-9" : "col-12"')
