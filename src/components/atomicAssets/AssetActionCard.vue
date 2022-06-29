@@ -9,6 +9,7 @@ import {
 } from 'atomicmarket/build/API/Explorer/Objects';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
 import CreateListingDialog from './CreateListingDialog.vue';
+import Countdown from './Countdown.vue';
 import { mapGetters, mapActions } from 'vuex';
 import { Asset, Int64 } from '@greymass/eosio';
 import { date } from 'quasar';
@@ -17,7 +18,7 @@ import { getYield } from 'src/api/atomic_assets';
 
 export default defineComponent({
   name: 'AssetActionCard',
-  components: { Timeline, CreateListingDialog },
+  components: { Timeline, CreateListingDialog, Countdown },
   props: {
     assetData: {
       type: Object as PropType<IMarketAsset>,
@@ -191,6 +192,19 @@ export default defineComponent({
       } else {
         return '0';
       }
+    },
+
+    // Auction relevant properties
+    isOnAuction() {
+      if (!!this.aucData) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    isAucSeller() {
+      return this.accountName === this.aucData?.seller;
     }
   },
   mounted() {
@@ -414,6 +428,134 @@ export default defineComponent({
       }
     },
 
+    async aucClaim() {
+      let actions: unknown = [
+        {
+          account: 'atomicmarket',
+          name: 'auctclaimsel',
+          data: {
+            auction_id: this.aucData.auction_id
+          }
+        }
+      ];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      this.transaction = await this.sendTransaction({ actions });
+    },
+
+    async tryAucClaim() {
+      console.log('try auction claim');
+      try {
+        await this.aucClaim();
+        this.$q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          message: 'Claimed'
+        });
+        this.$emit('updateAssetInfo');
+      } catch (e: unknown) {
+        if (typeof e === 'string') {
+          e.toUpperCase(); // works, `e` narrowed to string
+        } else if (e instanceof Error) {
+          this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            message: e.message,
+            timeout: 5000
+          });
+        }
+      }
+    },
+
+    async cancelAuc() {
+      let actions: unknown = [
+        {
+          account: 'atomicmarket',
+          name: 'cancelauct',
+          data: {
+            auction_id: this.aucData.auction_id
+          }
+        }
+      ];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      this.transaction = await this.sendTransaction({ actions });
+    },
+
+    async tryCancelAuction() {
+      console.log('try auction cancel');
+      try {
+        await this.cancelAuc();
+        this.$q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          message: 'Cancelled'
+        });
+        this.$emit('updateAssetInfo');
+      } catch (e: unknown) {
+        if (typeof e === 'string') {
+          e.toUpperCase(); // works, `e` narrowed to string
+        } else if (e instanceof Error) {
+          this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            message: e.message,
+            timeout: 5000
+          });
+        }
+      }
+    },
+
+    async aucPlaceBid() {
+      let actions = [
+        {
+          account: 'eosio.token',
+          name: 'transfer',
+          data: {
+            from: 'fuzzytestnet',
+            to: 'atomicmarket',
+            quantity: '11.00000000 WAX',
+            memo: 'deposit'
+          }
+        },
+        {
+          account: 'atomicmarket',
+          name: 'auctionbid',
+          data: {
+            bidder: 'fuzzytestnet',
+            auction_id: 16157,
+            bid: '11.00000000 WAX',
+            taker_marketplace: ''
+          }
+        }
+      ];
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      this.transaction = await this.sendTransaction({ actions });
+    },
+
+    async tryAucBid() {
+      console.log('try auction bid');
+      try {
+        await this.aucPlaceBid();
+        this.$q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          message: 'Bid placed'
+        });
+        this.$emit('updateAssetInfo');
+      } catch (e: unknown) {
+        if (typeof e === 'string') {
+          e.toUpperCase(); // works, `e` narrowed to string
+        } else if (e instanceof Error) {
+          this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            message: e.message,
+            timeout: 5000
+          });
+        }
+      }
+    },
+
     shareURL() {
       void copyToClipboard(window.location.origin + this.$route.path).then(
         () => {
@@ -423,12 +565,6 @@ export default defineComponent({
           });
         }
       );
-    },
-
-    oi(event: Event) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      console.log(event);
-      // this.showListingDialog = event.target.value as boolean;
     }
   }
 });
@@ -443,7 +579,16 @@ q-card
     //- by
     .row.justify-between.items-center.fit.wrap
       .col-10.text-italic.text-subtitle1.column
-        .col 
+        .col(v-if='isOnAuction')
+          //- router-link(
+          //-   :to='{ name: "profile", params: { profile: aucData?.seller } }'
+          //- )
+          | Seller: {{ aucData?.seller }}
+        .col(v-else) 
+          //- TODO hyperlink this to profile page
+          //- router-link(
+          //-   :to='{ name: "profile", params: { profile: assetData?.data?.owner } }'
+          //- )
           | Owner: {{ assetData?.owner }}
       //- share icon
       .col-2.row.justify-center
@@ -494,7 +639,7 @@ q-card
         color='primary'
       )
     //- when owning, with list on market button
-    .div(v-if='isOwned && !isForSale')
+    .div(v-if='isOwned && !isForSale && !isOnAuction')
       q-btn.full-width.q-mt-lg(
         @click='showListingDialog = true',
         label='LIST ON MARKET',
@@ -518,13 +663,49 @@ q-card
         color='primary'
       )
 
-    //- | owned: {{ isOwned }},
-    //- | for sale: {{ isForSale }},
-    //- | is buybacknft: {{ isBuybackNFT }},
-    //- | is owned by LC: {{ isOwnedByLC }},
-    //- | has buy offer: {{ hasBuyOrder }},
-    //- | has offer: {{ hasOffer }},
-    //- | can claim: {{ isClaimable }}
+    //- when on auction, show highest bid and time left
+    //- Sates: 1: Listed, 2: Cancelled, 3: SOLD, 4: Invalid/Done No bids
+    q-card-section(v-if='isOnAuction')
+      .row
+        //- Countdown component
+        q-card-section(v-if='aucData?.state === 1')
+          Countdown(:endDate='new Date(Number(aucData?.end_time))')
+
+        //- Auction status
+        //- Top bid, with bid button
+        q-card-section(v-if='aucData?.state === 1')
+          | Top bid
+          | Value
+          q-btn(@click='tryAucBid()', label='Place Bid')
+
+    //- when on auction and is seller, show cancel auction button or claim button
+    q-card-section(v-if='isOnAuction && isAucSeller')
+      //- Cancel auction button,
+      q-btn.full-width(
+        v-if='aucData?.state === 1 || aucData?.state === 4',
+        @click='tryCancelAuction()',
+        label='CANCEL AUCTION',
+        color='primary'
+      )
+      //- Claim auction button
+      q-btn(
+        v-if='aucData?.state == 3',
+        @click='tryAucClaim()',
+        label='CLAIM AUCTION',
+        color='primary'
+      )
+
+    //- when on auction and is buyer, show place bid button
+
+    | owned: {{ isOwned }},
+    | for sale: {{ isForSale }},
+    | is buybacknft: {{ isBuybackNFT }},
+    | is owned by LC: {{ isOwnedByLC }},
+    | has buy offer: {{ hasBuyOrder }},
+    | has offer: {{ hasOffer }},
+    | can claim: {{ isClaimable }},
+    | is on auction: {{ isOnAuction }},
+    | is auc seller: {{ isAucSeller }}
 
     //- list on market dialog
     CreateListingDialog(

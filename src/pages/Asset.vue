@@ -110,7 +110,9 @@ export default defineComponent({
     },
 
     async getAucData() {
+      // Don't get cancelled auctions
       let aucFilter = {
+        state: '1,3,4',
         asset_id:
           this.$route.params.asset === undefined
             ? ''
