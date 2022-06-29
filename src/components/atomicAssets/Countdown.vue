@@ -1,7 +1,6 @@
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
 import { date } from 'quasar';
-import { watch } from 'fs';
 
 export default defineComponent({
   name: 'Countdown',

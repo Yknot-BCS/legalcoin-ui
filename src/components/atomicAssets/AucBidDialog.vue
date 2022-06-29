@@ -2,7 +2,7 @@
 import { defineComponent, PropType, ref } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 import { IAuction } from 'atomicmarket/build/API/Explorer/Objects';
-import { Asset, Int64 } from '@greymass/eosio';
+import { Asset } from '@greymass/eosio';
 
 export default defineComponent({
   name: 'AuctionBidDialog',

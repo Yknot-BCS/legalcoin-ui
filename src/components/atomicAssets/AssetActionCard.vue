@@ -5,7 +5,8 @@ import {
   IBuyoffer,
   IMarketOffer,
   IMarketAsset,
-  IAuction
+  IAuction,
+  IAuctionBid
 } from 'atomicmarket/build/API/Explorer/Objects';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
 import CreateListingDialog from './CreateListingDialog.vue';
@@ -207,6 +208,14 @@ export default defineComponent({
 
     isAucSeller() {
       return this.accountName === this.aucData?.seller;
+    },
+
+    bids() {
+      if (this.isOnAuction) {
+        return this.aucData?.bids;
+      } else {
+        return undefined;
+      }
     }
   },
   mounted() {
@@ -655,7 +664,9 @@ q-card
     | has offer: {{ hasOffer }},
     | can claim: {{ isClaimable }},
     | is on auction: {{ isOnAuction }},
-    | is auc seller: {{ isAucSeller }}
+    | is auc seller: {{ isAucSeller }},
+
+    | bid: {{ bids }}
 
     //- list on market dialog
     CreateListingDialog(
