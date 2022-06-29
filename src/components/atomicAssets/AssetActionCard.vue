@@ -53,6 +53,11 @@ export default defineComponent({
     ...mapGetters({
       accountName: 'account/getAccountName'
     }),
+
+    maturityDateDisplay() {
+      return date.formatDate(this.maturityDate, 'DD MMM YYYY');
+    },
+
     isOwned() {
       // Check if the current user is the owner of the asset
       if (this.accountName === this.assetData.owner) {
@@ -438,11 +443,11 @@ export default defineComponent({
 q-card 
   q-card-section
     //- name
-    .text-bold.text-h6
+    .text-bold.text-NFTCard-heading.text-grey-10
       | {{ assetData?.data?.name }}
     //- by
     .row.justify-between.items-center.fit.wrap
-      .col-10.text-italic.text-subtitle1.column
+      .col-10.text-subtitle2.column
         .col 
           | Owner: {{ assetData?.owner }}
       //- share icon
@@ -450,8 +455,8 @@ q-card
         q-btn(icon='share', size='md', @click='shareURL', round)
 
     //- expected yield?
-    .row.justify-center.items-center.fit.wrap 
-      .text-subtitle1 Expected yield: {{ expectedYield }}
+    .row.fit.wrap 
+      .text-subtitle2 Maturity: {{ maturityDateDisplay }}
     //- timeline
     Timeline(
       v-if='isBuybackNFT',
@@ -463,14 +468,14 @@ q-card
     .div(v-if='isForSale && !isOwned')
       .row.justify-between.q-mt-lg
         .col-6
-          .column.content-start 
+          .column.content-start.text-NFTCard-price-head.text-grey-10
             | Purchase Price
-            .text-subtitle1
+            .text-NFTCard-price-value.text-grey-10
               | {{ priceStr }}
         .col-6
-          .column.content-end.items-end
+          .column.content-end.items-end.text-NFTCard-price-head.text-grey-10
             | Days to Maturity
-            .text-subtitle1
+            .text-NFTCard-price-value.text-grey-10
               | {{ daysToMaturity }}
       .row.justify-between.q-mt-lg
         .col-3
@@ -483,9 +488,9 @@ q-card
             outlined
           )
         .col-6
-          .column.content-end.items-end
+          .column.content-end.items-end.text-NFTCard-price-head.text-grey-10
             | Total
-            .text-subtitle1
+            .text-NFTCard-price-value.text-grey-10
               | {{ priceStr }}
 
       q-btn.full-width.q-mt-lg(
