@@ -259,7 +259,7 @@ q-card
       | {{ templateData?.immutable_data?.name }}
     //- by
     .row.justify-between.items-center.fit.wrap
-      .col-10.text-subtitle1.column
+      .col-10.text-subtitle2.column
         .col 
           | by: {{ templateData?.collection.authorized_accounts[0] === 'admin.lc' ? 'LegalCoin' : templateData?.collection.authorized_accounts[0] }}
           q-icon.q-ml-sm(name='fa-solid fa-circle-check', color='green')
