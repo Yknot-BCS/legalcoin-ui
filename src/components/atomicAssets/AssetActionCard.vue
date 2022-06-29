@@ -216,6 +216,21 @@ export default defineComponent({
       } else {
         return undefined;
       }
+    },
+
+    // get the highest bid
+    highestBid() {
+      if (this.isOnAuction) {
+        // take the bids and get the max amount
+        let topBid = this.bids?.reduce((a, b) => {
+          return a.amount > b.amount ? a : b;
+        });
+        console.log('highestBid', topBid);
+        let topValue = topBid?.amount || 0;
+        return topValue;
+      } else {
+        return undefined;
+      }
     }
   },
   mounted() {
@@ -667,6 +682,7 @@ q-card
     | is auc seller: {{ isAucSeller }},
 
     | bid: {{ bids }}
+    | top value: {{ highestBid }}
 
     //- list on market dialog
     CreateListingDialog(
