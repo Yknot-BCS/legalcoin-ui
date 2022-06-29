@@ -105,9 +105,8 @@ q-page
   .row.justify-center
     q-card(v-if='isAuthenticated')
       q-card-section
-        .text-h4.text-grey-8
+        .text-body1.text-grey-8
           | Transaction History
-      q-separator
 
       q-card-section(v-if='transactions.length > 0')
         TxCard(

@@ -39,16 +39,20 @@ q-card-section.row
   .col-1
     q-icon(name='fa-solid fa-credit-card')
   .col-7
-    .col.text-bold
+    .col.text-bold.text-txcard
       | {{ action }}
     .col
-      .col
+      .col.text-txcard
         | {{ description }}
-      .col
+      .col.text-txcard
         | {{ displayDate }}
-  .col-4.text-bold
+  .col-4.text-bold.text-txcard
     | {{ amount }} LEGAL
 q-separator
 </template>
 
-<style lang="sass"></style>
+<style lang="sass">
+.text-txcard
+  font-family: Arial
+  font-size: 0.88rem
+</style>
