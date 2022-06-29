@@ -4,7 +4,8 @@ import {
   ISale,
   IBuyoffer,
   IMarketOffer,
-  IMarketAsset
+  IMarketAsset,
+  IAuction
 } from 'atomicmarket/build/API/Explorer/Objects';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
 import CreateListingDialog from './CreateListingDialog.vue';
@@ -24,15 +25,19 @@ export default defineComponent({
     },
     saleData: {
       type: Object as PropType<ISale>,
-      required: true
+      required: false
     },
     buyofferData: {
       type: Object as PropType<IBuyoffer>,
-      required: true
+      required: false
     },
     offerData: {
       type: Object as PropType<IMarketOffer>,
-      required: true
+      required: false
+    },
+    aucData: {
+      type: Object as PropType<IAuction>,
+      required: false
     }
   },
   setup() {
