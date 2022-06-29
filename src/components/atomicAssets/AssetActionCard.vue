@@ -657,8 +657,6 @@ q-card
     | is on auction: {{ isOnAuction }},
     | is auc seller: {{ isAucSeller }}
 
-    | show auc dialog: {{ showAucDialog }},
-
     //- list on market dialog
     CreateListingDialog(
       :assetData='assetData',

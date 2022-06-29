@@ -43,19 +43,20 @@ export default defineComponent({
     ...mapActions({ sendTransaction: 'account/sendTransaction' }),
 
     async aucPlaceBid() {
-      let amountStr = Asset.fromUnits(
-        Int64.from(this.aucData.price.amount),
+      let amountStr = Asset.from(
+        Number(this.bidPrice),
         Asset.Symbol.fromParts(
           this.aucData.price.token_symbol,
           this.aucData.price.token_precision
         )
       ).toString();
+      console.log(amountStr);
       let actions = [
         {
-          account: 'eosio.token',
+          account: this.aucData?.price?.token_contract,
           name: 'transfer',
           data: {
-            from: 'fuzzytestnet',
+            from: this.accountName as string,
             to: 'atomicmarket',
             quantity: amountStr,
             memo: 'deposit'
@@ -65,9 +66,9 @@ export default defineComponent({
           account: 'atomicmarket',
           name: 'auctionbid',
           data: {
-            bidder: 'fuzzytestnet',
-            auction_id: 16157,
-            bid: '11.00000000 WAX',
+            bidder: this.accountName as string,
+            auction_id: this.aucData.auction_id,
+            bid: amountStr,
             taker_marketplace: ''
           }
         }
