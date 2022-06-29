@@ -4,8 +4,9 @@ export default defineComponent({});
 </script>
 
 <template lang="pug">
-.q-pa-lg.bg-primary.shadow-10.no-border-radius
-  slot
+.page-wrapper
+  q-card.q-pa-lg.bg-grey-1.shadow-10.animated.fadeInDown.login-card
+    slot
 </template>
 
 <style lang="sass" scoped>

@@ -69,16 +69,18 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-card.row.col.animated.fadeInDown(v-if='$q.screen.gt.sm')
+//Desktop
+q-card.row.col.animated.fadeInDown.justify-center.triangle(
+  v-if='$q.screen.gt.sm'
+)
   .col-4.self-center(style='z-index: 1')
-    img.float-right.q-mr-xl.q-mb-xl(
+    img.text-center.q-mr-xl.q-mb-xl(
       src='~assets/legalcoin-full.png',
       style='width: 18rem'
     )
-  .col-2
-    .div.triangle.bg-primary.float-right
-  AuthCard.col-6
-    .text-body1.text-weight-bold.text-grey-10.col-12 Sign In
+  AuthCard.q-py-xl
+    .text-body1.text-bold.text-grey-10.col-12.q-pt-md Sign In
+    .text-body2.text-grey-10 to continue to LegalCoin
     q-form.text-body1.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
       q-input.col-12(
         v-model='userEmail',
@@ -95,7 +97,7 @@ q-card.row.col.animated.fadeInDown(v-if='$q.screen.gt.sm')
         :rules='[requiredRule]',
         autocomplete='current-password'
       )
-      q-btn.col-12(type='submit', color='secondary', text-color='black') SIGN IN
+      q-btn.col-12(type='submit', color='primary', text-color='secondary') SIGN IN
       q-btn.col-12(
         flat,
         color='grey-10',
@@ -104,10 +106,13 @@ q-card.row.col.animated.fadeInDown(v-if='$q.screen.gt.sm')
     .col-12.text-center
       span.q-mr-xs Need an account?
       router-link(to='register') Sign Up
+    .q-mt-lg(style='border: 1px solid #ddd')
     .row.justify-center.align-center.q-mt-lg
       router-link.skip-link(:to='{ name: "home" }') Skip this step
-AuthCard.bg-grey-1.col-6.animated.fadeInDown(v-else)
-  img(src='~assets/legalcoin-full.png', style='width: 13rem')
+
+AuthCard.col-6.animated.fadeInDown.q-ma-sm(v-else)
+  .row.justify-center
+    img(src='~assets/legalcoin-full.png', style='width: 13rem')
   .text-body1.text-weight-bold.text-grey-10.col-12 Sign In
   q-form.text-body1.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
     q-input.col-12(
@@ -134,6 +139,8 @@ AuthCard.bg-grey-1.col-6.animated.fadeInDown(v-else)
   .col-12.text-center
     span.q-mr-xs Need an account?
     router-link(to='register') Sign Up
+  //- separator
+  .q-mt-lg(style='border: 1px solid #ddd')
   .row.justify-center.align-center.q-mt-lg
     router-link.skip-link(:to='{ name: "home" }') Skip this step
 </template>

@@ -53,15 +53,15 @@ export default defineComponent({
 
 <template lang="pug">
 //Desktop
-q-card.row.col.animated.fadeInDown(v-if='$q.screen.gt.sm')
+q-card.row.col.animated.fadeInDown.justify-center.triangle(
+  v-if='$q.screen.gt.sm'
+)
   .col-4.self-center(style='z-index: 1')
-    img.float-right.q-mr-xl.q-mb-xl(
+    img.text-center.q-mr-xl.q-mb-xl(
       src='~assets/legalcoin-full.png',
       style='width: 18rem'
     )
-  .col-2
-    .div.triangle.bg-primary.float-right
-  AuthCard.col-6(flat)
+  AuthCard.col.q-py-xl
     .text-body1.text-weight-bold.text-grey-10.col-12 Create An Account
     q-form.text-body1.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
       q-input.col-6.q-pr-md(
@@ -101,14 +101,16 @@ q-card.row.col.animated.fadeInDown(v-if='$q.screen.gt.sm')
         :rules='[requiredRule, passwordMatchRule]',
         autocomplete='new-password'
       )
-      q-btn.col-12(type='submit', color='secondary', text-color='black') CREATE NEW ACCOUNT
+      q-btn.col-12(type='submit', color='primary', text-color='secondary') CREATE NEW ACCOUNT
     .col-12.text-center.q-mt-md
       span.q-mr-xs Already have an account?
       router-link(to='login') Sign In
 //Mobile
-AuthCard.bg-grey-1.col-6.animated.fadeInDown(v-else)
-  img(src='~assets/legalcoin-full.png', style='width: 13rem')
-  .text-body1.text-weight-bold.text-grey-10.col-12 Create An Account
+AuthCard.col.animated.fadeInDown.q-ma-sm(v-else)
+  .row.justify-center
+    img(src='~assets/legalcoin-full.png', style='width: 15rem')
+
+  .text-body1.text-weight-bold.text-grey-10.col-12.q-pt-lg Create An Account
   q-form.text-body1.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
     q-input.col-6.q-pr-md(
       v-model='userName',

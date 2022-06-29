@@ -16,11 +16,12 @@ export default defineComponent({
   img.polygon.br.animated.fadeInLeft.slower(src='~assets/polygons/pg5.svg')
   img.polygon.br(src='~assets/polygons/pg6.svg')
 
-  q-layout(view='hHh lpR fFf')
-    .row.justify-center.items-center
+  q-layout.q-pt-xl(view='hHh lpR fFf')
+    .row
       router-link.cursor-pointer(to='/')
-    q-page-container.row.justify-center.q-mt-sm-xl
-      router-view.q-mt-md-xl
+    .row
+      q-page-container.col-12.q-mt-sm-xl
+        router-view
 </template>
 
 <style lang="sass" scoped>
