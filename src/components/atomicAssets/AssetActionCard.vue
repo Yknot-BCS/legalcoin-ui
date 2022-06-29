@@ -10,6 +10,7 @@ import {
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
 import CreateListingDialog from './CreateListingDialog.vue';
 import Countdown from './Countdown.vue';
+import AucBidDialog from './AucBidDialog.vue';
 import { mapGetters, mapActions } from 'vuex';
 import { Asset, Int64 } from '@greymass/eosio';
 import { date } from 'quasar';
@@ -18,7 +19,7 @@ import { getYield } from 'src/api/atomic_assets';
 
 export default defineComponent({
   name: 'AssetActionCard',
-  components: { Timeline, CreateListingDialog, Countdown },
+  components: { Timeline, CreateListingDialog, Countdown, AucBidDialog },
   props: {
     assetData: {
       type: Object as PropType<IMarketAsset>,
@@ -46,7 +47,8 @@ export default defineComponent({
       quantity: ref(1),
       transaction: null,
       pollAsset: null,
-      showListingDialog: ref(false)
+      showListingDialog: ref(false),
+      showAucDialog: ref(false)
     };
   },
 
@@ -504,58 +506,6 @@ export default defineComponent({
       }
     },
 
-    async aucPlaceBid() {
-      let actions = [
-        {
-          account: 'eosio.token',
-          name: 'transfer',
-          data: {
-            from: 'fuzzytestnet',
-            to: 'atomicmarket',
-            quantity: '11.00000000 WAX',
-            memo: 'deposit'
-          }
-        },
-        {
-          account: 'atomicmarket',
-          name: 'auctionbid',
-          data: {
-            bidder: 'fuzzytestnet',
-            auction_id: 16157,
-            bid: '11.00000000 WAX',
-            taker_marketplace: ''
-          }
-        }
-      ];
-
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      this.transaction = await this.sendTransaction({ actions });
-    },
-
-    async tryAucBid() {
-      console.log('try auction bid');
-      try {
-        await this.aucPlaceBid();
-        this.$q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          message: 'Bid placed'
-        });
-        this.$emit('updateAssetInfo');
-      } catch (e: unknown) {
-        if (typeof e === 'string') {
-          e.toUpperCase(); // works, `e` narrowed to string
-        } else if (e instanceof Error) {
-          this.$q.notify({
-            color: 'red-4',
-            textColor: 'white',
-            message: e.message,
-            timeout: 5000
-          });
-        }
-      }
-    },
-
     shareURL() {
       void copyToClipboard(window.location.origin + this.$route.path).then(
         () => {
@@ -676,7 +626,7 @@ q-card
         q-card-section(v-if='aucData?.state === 1')
           | Top bid
           | Value
-          q-btn(@click='tryAucBid()', label='Place Bid')
+          q-btn(@click='showAucDialog = true', label='Place Bid')
 
     //- when on auction and is seller, show cancel auction button or claim button
     q-card-section(v-if='isOnAuction && isAucSeller')
@@ -707,11 +657,21 @@ q-card
     | is on auction: {{ isOnAuction }},
     | is auc seller: {{ isAucSeller }}
 
+    | show auc dialog: {{ showAucDialog }},
+
     //- list on market dialog
     CreateListingDialog(
       :assetData='assetData',
       v-model='showListingDialog',
       @update:showListingDialog='showListingDialog = $event',
+      @update-asset-info='$emit("updateAssetInfo", $event)'
+    )
+
+    //- auction dialog
+    AucBidDialog(
+      :aucData='aucData',
+      v-model='showAucDialog',
+      @update:showAucDialog='showAucDialog = $event',
       @update-asset-info='$emit("updateAssetInfo", $event)'
     )
 </template>
