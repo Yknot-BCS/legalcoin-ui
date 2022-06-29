@@ -79,29 +79,19 @@ export default defineComponent({
 
 <template lang="pug">
 q-page
-  //----------------- Desktop Version -----------------
   //- Background image
-  .row(v-if='$q.screen.gt.sm', style='height: 2rem')
+  .row(style='height: 15rem')
     q-img.bg-img(
       src='~assets/collections/slanted-gradient.svg',
       height='20rem'
     )
   //- Collection image
-  .row.q-px-lg.items-center(v-if='$q.screen.gt.sm', style='height: 10rem')
-    .col-3.q-pt-xl(style='height: 1rem')
+  .row.q-px-lg.items-center.justify-between(style='height: 12rem')
+    .col.q-pt-xl
       q-card.asset-img
         q-img(:src='collectionImg')
-  .row(v-if='$q.screen.gt.sm', style='height: 10rem')
-  //- Collection name, links and info
-  .row.q-px-lg(v-if='$q.screen.gt.sm')
-    .col-4
-      .row.text-h3
-        | {{ collectionData.data.name }}
-      .row.text-subtitle1.q-px-xs
-        | {{ collectionData.data.description }}
     //- Links
-    .col
-    .row.self-center.q-gutter-lg
+    .col.self-center.text-right.q-gutter-lg.q-pl-lg.q-pt-lg
       q-btn(
         round,
         icon='fa-solid fa-globe',
@@ -109,47 +99,31 @@ q-page
         target='_blank'
       )
       q-btn(round, icon='fa-solid fa-ellipsis')
-    //- Info
-  .col.justify-start.q-pa-lg(v-if='$q.screen.gt.sm')
+    //- Collection name and description
+  .row(v-if='$q.screen.gt.xs')
+    .col.q-pl-lg
+      .row.text-h3
+        | {{ collectionData.data.name }}
+      .row.text-subtitle1.q-px-xs.q-pb-lg
+        .col-4.text-bold
+          | {{ collectionData.data.description }}
+        //- Info
+        .col Creator: {{ collectionData.authorized_accounts?.[0] }}
+        .col Market Fee: {{ collectionData.market_fee * 100 }}%
+        .col Created: {{ new Date(Number(collectionData.created_at_time)).toLocaleDateString() }}
+  //- Mobile Info
+  .row(v-if='$q.screen.lt.sm')
+    .col.q-pl-lg
+      .row.text-h3
+        | {{ collectionData.data.name }}
+      .row.text-subtitle1.q-px-xs.q-pb-lg
+        .col.text-bold
+          | {{ collectionData.data.description }}
+  .row.q-pl-lg(v-if='$q.screen.lt.sm')
     .col.q-px-xs Creator: {{ collectionData.authorized_accounts?.[0] }}
     .col.q-px-xs Market Fee: {{ collectionData.market_fee * 100 }}%
     .col.q-px-xs Created: {{ new Date(Number(collectionData.created_at_time)).toLocaleDateString() }}
-
-  //----------------- Mobile Version -----------------
-  //- Background image
-  .row(v-if='$q.screen.lt.md', style='height: 10rem')
-    q-img.bg-img(
-      src='~assets/collections/slanted-gradient.svg',
-      height='20rem'
-    )
-  .row(v-if='$q.screen.lt.md')
-  //- Collection image
-  .row.q-px-lg(v-if='$q.screen.lt.md')
-    q-card.col-3.asset-img
-      q-img(:src='collectionImg')
-  //- Collection name and info
-  .row.justify-between.content-center.items-center.q-pl-lg.q-pt-sm(
-    v-if='$q.screen.lt.md'
-  )
-    .col-7
-      .row.text-h3
-        | {{ collectionData.data.name }}
-      .row.text-subtitle1.q-pl-xs
-        | {{ collectionData.data.description }}
-  //- Collection info
-  .column.justify-start.q-pa-lg(v-if='$q.screen.lt.md')
-    .col.q-pl-xs Creator: {{ collectionData.authorized_accounts?.[0] }}
-    .col.q-pl-xs Market Fee: {{ collectionData.market_fee * 100 }}%
-    .col.q-pl-xs Created: {{ new Date(Number(collectionData.created_at_time)).toLocaleDateString() }}
-  //- Links
-  .row.q-gutter-lg.q-pa-lg(v-if='$q.screen.lt.md')
-    q-btn(
-      round,
-      icon='fa-solid fa-globe',
-      :href='collectionData.data?.url',
-      target='_blank'
-    )
-    q-btn(round, icon='fa-solid fa-ellipsis')
+  //- Assets
   .row.justify-center
     .col-12
       q-card(flat)
