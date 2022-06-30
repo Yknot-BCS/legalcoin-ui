@@ -5,7 +5,8 @@ import {
   ISale,
   IBuyoffer,
   IMarketOffer,
-  IMarketAsset
+  IMarketAsset,
+  IAuction
 } from 'atomicmarket/build/API/Explorer/Objects';
 import AssetViewer from 'src/components/atomicAssets/AssetViewer.vue';
 import { useStore } from 'src/store';
@@ -22,6 +23,7 @@ export default defineComponent({
     const saleData = ref<ISale>(new Object({}) as ISale);
     const buyofferData = ref<IBuyoffer>(new Object({}) as IBuyoffer);
     const offerData = ref<IMarketOffer>(new Object({}) as IMarketOffer);
+    const aucData = ref<IAuction>(new Object({}) as IAuction);
     const store = useStore();
     const accountName = computed(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -34,7 +36,8 @@ export default defineComponent({
       assetData,
       saleData,
       buyofferData,
-      offerData
+      offerData,
+      aucData
     };
   },
   computed: {
@@ -106,11 +109,29 @@ export default defineComponent({
       console.log(this.saleData);
     },
 
+    async getAucData() {
+      // Don't get cancelled auctions
+      let aucFilter = {
+        state: '1,3,4',
+        asset_id:
+          this.$route.params.asset === undefined
+            ? ''
+            : this.$route.params.asset,
+        page: 1,
+        order: 'desc',
+        sort: 'created',
+        limit: 100
+      } as unknown;
+      this.aucData = (await atomic_market_api.getAuctions(aucFilter))[0];
+      console.log(this.aucData);
+    },
+
     async updateAssetInfo() {
       await this.getAssetData();
       await this.getSaleData();
       await this.getBuyOfferData();
       await this.getOfferData();
+      await this.getAucData();
     }
   },
   async mounted() {
@@ -131,6 +152,7 @@ export default defineComponent({
     :saleData='saleData',
     :buyofferData='buyofferData',
     :offerData='offerData',
+    :aucData='aucData',
     @update-asset-info='updateAssetInfo()'
   )
 q-page.row.fit.wrap.justify-center(v-else)

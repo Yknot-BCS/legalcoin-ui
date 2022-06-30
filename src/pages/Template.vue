@@ -48,8 +48,9 @@ export default defineComponent({
             ? ''
             : this.$route.params.asset,
         page: 1,
-        order: 'asc',
+        order: 'desc',
         limit: 100,
+        sort: 'created',
         collection_name:
           this.$route.params.collection_name === undefined
             ? ''
