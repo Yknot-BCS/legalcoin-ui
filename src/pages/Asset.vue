@@ -110,13 +110,16 @@ export default defineComponent({
     },
 
     async getAucData() {
+      // Don't get cancelled auctions
       let aucFilter = {
+        state: '1,3,4',
         asset_id:
           this.$route.params.asset === undefined
             ? ''
             : this.$route.params.asset,
         page: 1,
-        order: 'asc',
+        order: 'desc',
+        sort: 'created',
         limit: 100
       } as unknown;
       this.aucData = (await atomic_market_api.getAuctions(aucFilter))[0];
