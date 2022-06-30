@@ -118,7 +118,8 @@ export default defineComponent({
             ? ''
             : this.$route.params.asset,
         page: 1,
-        order: 'asc',
+        order: 'desc',
+        sort: 'created',
         limit: 100
       } as unknown;
       this.aucData = (await atomic_market_api.getAuctions(aucFilter))[0];

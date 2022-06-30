@@ -88,6 +88,7 @@ export default defineComponent({
           message: 'Bid placed'
         });
         this.$emit('updateAssetInfo');
+        this.$emit('update:showAucDialog', false);
       } catch (e: unknown) {
         if (typeof e === 'string') {
           e.toUpperCase(); // works, `e` narrowed to string

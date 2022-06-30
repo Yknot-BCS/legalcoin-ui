@@ -197,9 +197,15 @@ export default defineComponent({
       }
     },
 
+    // ---------------------------
     // Auction relevant properties
+    // ---------------------------
     isOnAuction() {
-      if (!!this.aucData) {
+      if (
+        !!this.aucData &&
+        !this.aucData.claimed_by_buyer &&
+        !this.aucData.claimed_by_seller
+      ) {
         return true;
       } else {
         return false;
@@ -222,13 +228,10 @@ export default defineComponent({
     highestBid() {
       if (this.isOnAuction) {
         if (this.bids?.length > 0) {
-          console.log('bids', this.bids);
-
           // take the bids and get the max amount
           let topBid = this.bids?.reduce((a, b) => {
             return a.amount > b.amount ? a : b;
           });
-          console.log('highestBid', topBid);
           let topValue = topBid?.amount || 0;
           return topValue;
         } else {
@@ -267,7 +270,7 @@ export default defineComponent({
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       this.pollAsset = setInterval(() => {
         void this.$emit('updateAssetInfo');
-      }, 10000);
+      }, 5000);
     }
   },
   beforeUnmount() {
@@ -706,18 +709,27 @@ q-card
 
     //- when on auction, show highest bid and time left
     //- Sates: 1: Listed, 2: Cancelled, 3: SOLD, 4: Invalid/Done No bids
-    q-card-section(v-if='isOnAuction && aucData?.state === 1')
+    q-card-section(
+      v-if='isOnAuction && (aucData?.state === 1 || aucData?.state === 4)'
+    )
       //- Countdown component
       q-card-section
         Countdown(:endDate='new Date(Number(aucData?.end_time))')
 
       q-separator(color='primary')
-      //- Auction status
-      //- Top bid, with bid button
-      q-card-section(v-if='!isAucSeller')
-        .text-grey-9 Top bid
-        .text-bold {{ highestBidDisplay }}
+
+      q-card-section
+        //- Starting value if no bids
+        .column(v-if='aucData?.bids?.length === 0')
+          .text-grey-9 No bids - Starting value
+          .text-bold {{ highestBidDisplay }}
+
+        //- Top bid, with bid button
+        .column(v-else)
+          .text-grey-9 Top bid
+          .text-bold {{ highestBidDisplay }}
         q-btn.full-width.q-mt-lg(
+          v-if='!isAucSeller && aucData?.state !== 4',
           @click='showAucDialog = true',
           label='Place Bid',
           color='primary'
@@ -744,11 +756,10 @@ q-card
 
     //- when on auction and is buyer, show claim auction button
     q-card-section(
-      v-if='isOnAuction && !isAucSeller && !aucData.claimed_by_buyer && aucData.buyer == accountName'
+      v-if='isOnAuction && !isAucSeller && !aucData.claimed_by_buyer && aucData.buyer == accountName && aucData.state == 3'
     )
       //- Claim auction button
       q-btn.full-width(
-        v-if='aucData?.state == 3',
         @click='tryAucClaimBuy()',
         label='CLAIM AUCTION',
         color='primary'
