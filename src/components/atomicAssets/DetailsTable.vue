@@ -65,9 +65,9 @@ export default defineComponent({
       }),
       {}
     );
-    const sortedRows = sortingArr.map(
-      (name) => arrayMap[name as keyof typeof arrayMap]
-    );
+    const sortedRows = sortingArr
+      .map((name) => arrayMap[name as keyof typeof arrayMap])
+      .filter((n) => n !== undefined);
 
     return { columns, rows: sortedRows };
   }
