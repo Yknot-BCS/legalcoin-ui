@@ -60,13 +60,13 @@ export default defineComponent({
 .row
   | Auction ends {{ displayDate }}
 .row.q-mt-sm
-  .col-2.column
+  .col-2.column(v-if='days > 0')
     .col.text-bold {{ days }}
     .col Days
-  .col-2.column
+  .col-2.column(v-if='hours > 0 || days > 0')
     .col.text-bold {{ hours }}
     .col Hours
-  .col-2.column
+  .col-2.column(v-if='minutes > 0 || hours > 0 || days > 0')
     .col.text-bold {{ minutes }}
     .col Minutes
   .col-2.column

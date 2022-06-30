@@ -210,26 +210,55 @@ export default defineComponent({
       return this.accountName === this.aucData?.seller;
     },
 
-    bids() {
+    bids(): IAuctionBid[] {
       if (this.isOnAuction) {
         return this.aucData?.bids;
       } else {
-        return undefined;
+        return [];
       }
     },
 
     // get the highest bid
     highestBid() {
       if (this.isOnAuction) {
-        // take the bids and get the max amount
-        let topBid = this.bids?.reduce((a, b) => {
-          return a.amount > b.amount ? a : b;
-        });
-        console.log('highestBid', topBid);
-        let topValue = topBid?.amount || 0;
-        return topValue;
+        if (this.bids?.length > 0) {
+          console.log('bids', this.bids);
+
+          // take the bids and get the max amount
+          let topBid = this.bids?.reduce((a, b) => {
+            return a.amount > b.amount ? a : b;
+          });
+          console.log('highestBid', topBid);
+          let topValue = topBid?.amount || 0;
+          return topValue;
+        } else {
+          return undefined;
+        }
       } else {
         return undefined;
+      }
+    },
+
+    // Show highest bid, otherwise show starting price
+    highestBidDisplay() {
+      if (this.highestBid) {
+        let bidAsset = Asset.fromUnits(
+          Int64.from(this.highestBid),
+          Asset.Symbol.fromParts(
+            this.aucData?.price?.token_symbol,
+            this.aucData?.price?.token_precision
+          )
+        );
+        return bidAsset;
+      } else {
+        let startPriceAsset = Asset.fromUnits(
+          Int64.from(this.aucData.price.amount),
+          Asset.Symbol.fromParts(
+            this.aucData.price?.token_symbol,
+            this.aucData?.price?.token_precision
+          )
+        );
+        return startPriceAsset;
       }
     }
   },
@@ -454,7 +483,7 @@ export default defineComponent({
       }
     },
 
-    async aucClaim() {
+    async aucClaimSel() {
       let actions: unknown = [
         {
           account: 'atomicmarket',
@@ -468,10 +497,48 @@ export default defineComponent({
       this.transaction = await this.sendTransaction({ actions });
     },
 
-    async tryAucClaim() {
+    async tryAucClaimSel() {
       console.log('try auction claim');
       try {
-        await this.aucClaim();
+        await this.aucClaimSel();
+        this.$q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          message: 'Claimed'
+        });
+        this.$emit('updateAssetInfo');
+      } catch (e: unknown) {
+        if (typeof e === 'string') {
+          e.toUpperCase(); // works, `e` narrowed to string
+        } else if (e instanceof Error) {
+          this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            message: e.message,
+            timeout: 5000
+          });
+        }
+      }
+    },
+
+    async aucClaimBuy() {
+      let actions: unknown = [
+        {
+          account: 'atomicmarket',
+          name: 'auctclaimbuy',
+          data: {
+            auction_id: this.aucData.auction_id
+          }
+        }
+      ];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      this.transaction = await this.sendTransaction({ actions });
+    },
+
+    async tryAucClaimBuy() {
+      console.log('try auction claim');
+      try {
+        await this.aucClaimBuy();
         this.$q.notify({
           color: 'green-4',
           textColor: 'white',
@@ -639,21 +706,27 @@ q-card
 
     //- when on auction, show highest bid and time left
     //- Sates: 1: Listed, 2: Cancelled, 3: SOLD, 4: Invalid/Done No bids
-    q-card-section(v-if='isOnAuction')
-      .row
-        //- Countdown component
-        q-card-section(v-if='aucData?.state === 1')
-          Countdown(:endDate='new Date(Number(aucData?.end_time))')
+    q-card-section(v-if='isOnAuction && aucData?.state === 1')
+      //- Countdown component
+      q-card-section
+        Countdown(:endDate='new Date(Number(aucData?.end_time))')
 
-        //- Auction status
-        //- Top bid, with bid button
-        q-card-section(v-if='aucData?.state === 1')
-          | Top bid
-          | Value
-          q-btn(@click='showAucDialog = true', label='Place Bid')
+      q-separator(color='primary')
+      //- Auction status
+      //- Top bid, with bid button
+      q-card-section(v-if='!isAucSeller')
+        .text-grey-9 Top bid
+        .text-bold {{ highestBidDisplay }}
+        q-btn.full-width.q-mt-lg(
+          @click='showAucDialog = true',
+          label='Place Bid',
+          color='primary'
+        )
 
     //- when on auction and is seller, show cancel auction button or claim button
-    q-card-section(v-if='isOnAuction && isAucSeller')
+    q-card-section(
+      v-if='isOnAuction && isAucSeller && !aucData.claimed_by_seller'
+    )
       //- Cancel auction button,
       q-btn.full-width(
         v-if='aucData?.state === 1 || aucData?.state === 4',
@@ -662,27 +735,37 @@ q-card
         color='primary'
       )
       //- Claim auction button
-      q-btn(
+      q-btn.full-width(
         v-if='aucData?.state == 3',
-        @click='tryAucClaim()',
+        @click='tryAucClaimSel()',
         label='CLAIM AUCTION',
         color='primary'
       )
 
-    //- when on auction and is buyer, show place bid button
+    //- when on auction and is buyer, show claim auction button
+    q-card-section(
+      v-if='isOnAuction && !isAucSeller && !aucData.claimed_by_buyer && aucData.buyer == accountName'
+    )
+      //- Claim auction button
+      q-btn.full-width(
+        v-if='aucData?.state == 3',
+        @click='tryAucClaimBuy()',
+        label='CLAIM AUCTION',
+        color='primary'
+      )
 
-    | owned: {{ isOwned }},
-    | for sale: {{ isForSale }},
-    | is buybacknft: {{ isBuybackNFT }},
-    | is owned by LC: {{ isOwnedByLC }},
-    | has buy offer: {{ hasBuyOrder }},
-    | has offer: {{ hasOffer }},
-    | can claim: {{ isClaimable }},
-    | is on auction: {{ isOnAuction }},
-    | is auc seller: {{ isAucSeller }},
+    //- | owned: {{ isOwned }},
+    //- | for sale: {{ isForSale }},
+    //- | is buybacknft: {{ isBuybackNFT }},
+    //- | is owned by LC: {{ isOwnedByLC }},
+    //- | has buy offer: {{ hasBuyOrder }},
+    //- | has offer: {{ hasOffer }},
+    //- | can claim: {{ isClaimable }},
+    //- | is on auction: {{ isOnAuction }},
+    //- | is auc seller: {{ isAucSeller }},
 
-    | bid: {{ bids }}
-    | top value: {{ highestBid }}
+    //- | bid: {{ bids }}
+    //- | top value: {{ highestBid }}
 
     //- list on market dialog
     CreateListingDialog(
