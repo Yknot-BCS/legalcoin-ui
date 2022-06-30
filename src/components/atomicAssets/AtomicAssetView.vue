@@ -461,7 +461,7 @@ page
                   toggle-color='primary',
                   color='white',
                   text-color='primary',
-                  :options='[ { label: "Primary", value: "primary" }, { label: "Retail", value: "retail" }, ]'
+                  :options='[ { label: " Legalcoin market", value: "primary" }, { label: "Open Market", value: "retail" }, ]'
                 )
               q-expansion-item(
                 expand-separator,
@@ -602,7 +602,7 @@ page
       .row.full-height.full-width.filter-dialog
         .col-12
           q-card.q-pa-md(flat)
-            q-btn.absolute-top-right(
+            q-btn.absolute-top-right.q-pb-lg(
               size='20px',
               flat,
               dense,
@@ -611,7 +611,18 @@ page
               v-close-popup,
               style='z-index: 1'
             )
-            q-card-section
+            .q-pa-md
+              q-btn-toggle.q-py-md(
+                v-model='market',
+                spread,
+                no-caps,
+                rounded,
+                unelevated,
+                toggle-color='primary',
+                color='white',
+                text-color='primary',
+                :options='[ { label: " Legalcoin market", value: "primary" }, { label: "Open Market", value: "retail" }, ]'
+              )
               q-expansion-item(
                 expand-separator,
                 icon='query_stats',
@@ -624,17 +635,17 @@ page
                     .row
                       .col-6 Buy Now
                       .col-6
-                        q-checkbox.float-right.q-pl-md(
+                        q-radio.float-right.q-pl-md(
                           v-model='status',
                           val='buynow',
                           color='primary',
                           @update:model-value='() => { applyFilters(); }'
                         )
-                  .col-12
+                  .col-12(v-if='market === "retail"')
                     .row
                       .col-6 On Auction
                       .col-6
-                        q-checkbox.float-right.q-pl-md(
+                        q-radio.float-right.q-pl-md(
                           v-model='status',
                           val='auction',
                           color='primary',
@@ -712,10 +723,17 @@ page
                 label='Collection',
                 v-if='filterCollection'
               )
-                q-list(bordered, separator)
-                  q-item(clickable, v-ripple)
-                    q-item-section Collection 1
-                    q-item-section All
+                .row.q-col-gutter-sm.q-pa-md
+                  .col-12(v-for='col in collectionsArray')
+                    .row
+                      .col-6 {{ col }}
+                      .col-6
+                        q-checkbox.float-right.q-pl-md(
+                          v-model='collections',
+                          :val='col',
+                          color='primary',
+                          @update:model-value='(value) => { applyFilters(); }'
+                        )
 </template>
 
 <style scoped lang="sass">
