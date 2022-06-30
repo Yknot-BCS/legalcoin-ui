@@ -37,10 +37,6 @@ export default defineComponent({
       accountName: 'account/getAccountName'
     }),
 
-    maturityDateDisplay() {
-      return date.formatDate(this.maturityDate, 'DD MMM YYYY');
-    },
-
     isForSale() {
       return !!this.saleData || this.saleData?.price !== undefined;
     },
@@ -269,7 +265,7 @@ q-card
 
     //- maturity
     .row.fit.wrap 
-      .text-subtitle2 Maturity: {{ maturityDateDisplay }}
+      .text-subtitle2 Expected yield: {{ expectedYield }}
 
     //- timeline
     Timeline(

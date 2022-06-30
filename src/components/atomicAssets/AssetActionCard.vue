@@ -54,10 +54,6 @@ export default defineComponent({
       accountName: 'account/getAccountName'
     }),
 
-    maturityDateDisplay() {
-      return date.formatDate(this.maturityDate, 'DD MMM YYYY');
-    },
-
     isOwned() {
       // Check if the current user is the owner of the asset
       if (this.accountName === this.assetData.owner) {
@@ -456,7 +452,7 @@ q-card
 
     //- expected yield?
     .row.fit.wrap 
-      .text-subtitle2 Maturity: {{ maturityDateDisplay }}
+      .text-subtitle2 Expected yield: {{ expectedYield }}
     //- timeline
     Timeline(
       v-if='isBuybackNFT',
