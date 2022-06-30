@@ -7,9 +7,9 @@ import {
   getSalesQueryApiOptions,
   getQueryPage,
   getQueryLimit,
-  getQueryStatus,
   getQueryPrice,
-  getCollectionsList
+  getCollectionsList,
+  getQueryStatus
 } from 'src/api/atomic_assets';
 import GalleryView from 'src/components/gallery/GalleryView.vue';
 import AtomicAssetsView from 'src/components/atomicAssets/AtomicAssetView.vue';
@@ -26,16 +26,16 @@ export default defineComponent({
     const dataOptions = computed(() => getQueryDataOptions(route.query));
     const page = computed(() => getQueryPage(route.query));
     const limit = computed(() => getQueryLimit(route.query));
-    const status = computed(() => getQueryStatus(route.query));
     const price = computed(() => getQueryPrice(route.query));
+    const status = computed(() => getQueryStatus(route.query));
     const collections = ref<string>('emissions.lc');
-    console.log(status.value);
+    console.log('status', status.value);
     const assetOptions = computed(() => {
       return {
         state: '1',
         search: search.value,
         collection_whitelist: collections.value,
-        ...getSalesQueryApiOptions(route.query)
+        ...getSalesQueryApiOptions(route.query, status.value)
       } as unknown;
     });
 
@@ -51,7 +51,6 @@ export default defineComponent({
       limit,
       search,
       showFilter,
-      status,
       price,
       collections
     };
@@ -70,7 +69,6 @@ page
         :ItemsPerPage='limit',
         :DataParams='dataOptions',
         Type='Sale',
-        :Status='status',
         :Price='price'
       )
 </template>
