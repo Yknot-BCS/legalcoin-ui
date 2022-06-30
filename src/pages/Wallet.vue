@@ -89,7 +89,7 @@ q-page
           | Balance
       q-card-section
         .text-wallet-topline.text-bold 
-          | {{ balance }} LCP (LEGALCOIN POUND)
+          | {{ balance }} LEGAL (LEGALCOIN)
         .text-wallet-bottomline
           | £ {{ gbpValue }} (GBP)
           //- TODO get GBP value
@@ -98,7 +98,7 @@ q-page
         .text-wallet-topline.text-bold 
           | {{ nftCount }} NFTS
         .text-wallet-bottomline
-          | {{ nftValue.toFixed(2) }} (LCP)
+          | {{ nftValue.toFixed(2) }} (LEGAL)
       q-separator.q-mx-md
       q-card-section
         .text-wallet-heading.text-grey-8
