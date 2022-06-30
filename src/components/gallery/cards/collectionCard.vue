@@ -19,9 +19,9 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-card
+q-card(bordered)
   q-card-section
-    .text-h6 {{ card.name }}
+    .text-h6.heading {{ card.name }}
   q-separator(inset)
   router-link(
     :to='{ name: "collection", params: { collection: card.collection } }'

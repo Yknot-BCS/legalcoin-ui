@@ -19,7 +19,7 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-card
+q-card.gt-sm
   q-card-section
     q-badge.text-subtitle2.float-right(
       rounded,
@@ -30,7 +30,25 @@ q-card
       .text-h6.heading {{ card.name }}
     .row
       .col-2.column
-        .text-subtitle4 {{ card.mintprice }} &#8226;
+        .text-subtitle4 {{ card.mintprice }}
+      .col-2.column
+        .text-subtitle4 {{ card.yield }} yield
+  q-separator(inset)
+  router-link(:to='{ name: "asset", params: { asset: card.id } }')
+    q-img.asset-img(:src='card.imageUrl')
+
+q-card.lt-sm
+  q-card-section
+    q-badge.text-subtitle2.text.float-right(
+      rounded,
+      color='primary',
+      label='Silver'
+    )
+    .row
+      .text-h6.heading {{ card.name }}
+    .row
+      .col-2.column
+        .text-subtitle4 {{ card.mintprice }}
       .col-2.column
         .text-subtitle4 {{ card.yield }} yield
   q-separator(inset)
@@ -47,4 +65,6 @@ q-card
   font-weight: bold
 .column
   width: 95px
+.text
+  margin-top: 25px
 </style>

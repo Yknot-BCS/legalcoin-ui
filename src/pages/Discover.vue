@@ -67,7 +67,7 @@ export default defineComponent({
 page
 .row.justify-center
   .col-12
-    q-card(flat)
+    q-card(bordered)
       AtomicAssetsView(
         :ApiParams='assetOptions',
         :Page='page',

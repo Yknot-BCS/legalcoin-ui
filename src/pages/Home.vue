@@ -175,6 +175,10 @@ q-page
 .pgb
   position: relative
 
+.rounded
+  border-radius: 1rem
+  overflow: hidden
+
 @media (min-width: $breakpoint-sm-max)
   .landing-heading
     color: grey-10
