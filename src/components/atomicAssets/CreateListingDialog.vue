@@ -14,7 +14,7 @@ export default defineComponent({
     },
     showListingDialog: {
       type: Boolean as PropType<boolean>,
-      required: true
+      required: false
     }
   },
   emits: ['update:showListingDialog', 'updateAssetInfo'],

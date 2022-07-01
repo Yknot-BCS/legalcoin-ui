@@ -16,10 +16,12 @@ import {
   get_collections,
   get_templates,
   get_sale,
-  getCollectionsList
+  getCollectionsList,
+  getQueryMarket,
+  getQueryStatus
 } from 'src/api/atomic_assets';
 import { AssetsApiParams } from 'atomicassets/build/API/Explorer/Params';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 export default defineComponent({
   name: 'AtomicAssetView',
@@ -54,11 +56,6 @@ export default defineComponent({
       required: false,
       default: true
     },
-    Status: {
-      type: String,
-      required: false,
-      default: '["buynow"]'
-    },
     FilterStatus: {
       type: Boolean,
       required: false,
@@ -82,13 +79,21 @@ export default defineComponent({
   },
   setup(props) {
     const router = useRouter();
+    const route = useRoute();
     const $q = useQuasar();
     const GalleryData = ref<GalleryCard[]>([]);
     const disableFilter = computed(() => props.DisableFilter);
     const showFilter = ref<boolean>(false);
     const showFilterDialog = ref<boolean>(false);
     const DataParams = computed(() => props.DataParams);
-    const { ApiParams, Page, ItemsPerPage, Type, Status } = toRefs(props);
+    const ApiParams = computed(() => props.ApiParams);
+    const market = ref(getQueryMarket(route.query));
+    const status = ref<string>(
+      market.value === 'retail'
+        ? getQueryStatus(route.query).toString()
+        : 'buynow'
+    );
+    const { Page, ItemsPerPage, Type } = toRefs(props);
     const price =
       ref(props.Price) ||
       ref<{ min: number; max: number }>({ min: 0, max: 10000 });
@@ -109,9 +114,6 @@ export default defineComponent({
       { label: 'All', value: 'All' }
     ]);
     const pageOptions = [6, 12, 24, 48];
-    console.log(Status.value);
-    const statusSelection = ref(JSON.parse(Status.value) as string[]);
-    console.log(statusSelection.value);
     const limit = ref(ItemsPerPage);
     const assetCount = ref<number>(1);
     const sortOptions = ref([
@@ -171,7 +173,6 @@ export default defineComponent({
       (ApiParams.value as AssetsApiParams).collection_whitelist?.split(',') ||
         ([] as string[])
     );
-    console.log(collections.value);
     const collectionsArray = ref<string[]>([]);
     // Function to open correct filter on mobile or desktop
     function Filter() {
@@ -230,7 +231,8 @@ export default defineComponent({
             ApiParams.value,
             Page.value,
             ItemsPerPage.value,
-            DataParams.value
+            DataParams.value,
+            status.value
           );
 
           GalleryData.value = response.data;
@@ -291,7 +293,7 @@ export default defineComponent({
           page: 1,
           limit: limit.value,
           order: sort.value.order,
-          status: JSON.stringify(statusSelection.value)
+          market: JSON.stringify(market.value)
         }
       });
     }
@@ -307,7 +309,8 @@ export default defineComponent({
             order: sort.value.order,
             page: 1,
             limit: ItemsPerPage.value,
-            status: JSON.stringify(statusSelection.value),
+            market: market.value,
+            status: status.value,
             min_price: price.value.min,
             max_price: price.value.max,
             collections:
@@ -326,7 +329,8 @@ export default defineComponent({
             order: sort.value.order,
             page: 1,
             limit: ItemsPerPage.value,
-            status: JSON.stringify(statusSelection.value),
+            market: market.value,
+            status: status.value,
             collections:
               collections.value.length > 0
                 ? collections.value.toString()
@@ -339,11 +343,20 @@ export default defineComponent({
     watch([DataParams, ApiParams, Page, ItemsPerPage], () => {
       void getData();
     });
+    watch([market], () => {
+      void applyFilters();
+    });
+    watch(ApiParams, (newval, olval) => {
+      collections.value = (
+        newval as AssetsApiParams
+      ).collection_whitelist?.split(',');
+    });
     // When component mounts get gallery data
-    onMounted(async () => {
-      void (await getData());
-      const collectionData = await getCollectionsList();
-      collectionsArray.value = collectionData.array;
+    onMounted(() => {
+      void getCollectionsList().then((collectionData) => {
+        collectionsArray.value = collectionData.array;
+      });
+      void getData();
     });
 
     return {
@@ -368,7 +381,7 @@ export default defineComponent({
       price,
       nftCount: ref(0),
       projectCount: ref(0),
-      statusSelection,
+      status,
       filterStatus,
       disableFilter,
       filterPrice,
@@ -376,7 +389,9 @@ export default defineComponent({
       filterTier,
       type: Type,
       collections,
-      collectionsArray
+      collectionsArray,
+      model: ref('one'),
+      market
     };
   }
 });
@@ -435,7 +450,19 @@ page
       q-card-section
         .row.justify-evenly
           .col-lg-2.col-md-3.q-pt-md(v-if='showFilter')
-            q-card.q-pa-md(bordered, flat)
+            q-card.q-pb-md(bordered, flat)
+              .q-pa-md
+                q-btn-toggle(
+                  v-model='market',
+                  spread,
+                  no-caps,
+                  rounded,
+                  unelevated,
+                  toggle-color='primary',
+                  color='white',
+                  text-color='primary',
+                  :options='[ { label: " Legalcoin market", value: "primary" }, { label: "Open Market", value: "retail" }, ]'
+                )
               q-expansion-item(
                 expand-separator,
                 icon='query_stats',
@@ -448,28 +475,18 @@ page
                     .row
                       .col-6 Buy Now
                       .col-6
-                        q-checkbox.float-right.q-pl-md(
-                          v-model='statusSelection',
+                        q-radio.float-right.q-pl-md(
+                          v-model='status',
                           val='buynow',
                           color='primary',
                           @update:model-value='() => { applyFilters(); }'
                         )
-                  .col-12
-                    .row
-                      .col-6 Marketplace
-                      .col-6
-                        q-checkbox.float-right.q-pl-md(
-                          v-model='statusSelection',
-                          val='marketplace',
-                          color='primary',
-                          @update:model-value='() => { applyFilters(); }'
-                        )
-                  .col-12
+                  .col-12(v-if='market === "retail"')
                     .row
                       .col-6 On Auction
                       .col-6
-                        q-checkbox.float-right.q-pl-md(
-                          v-model='statusSelection',
+                        q-radio.float-right.q-pl-md(
+                          v-model='status',
                           val='auction',
                           color='primary',
                           @update:model-value='() => { applyFilters(); }'
@@ -547,16 +564,16 @@ page
                 v-if='filterCollection'
               )
                 .row.q-col-gutter-sm.q-pa-md
-                .col-12(v-for='col in collectionsArray')
-                  .row
-                    .col-6 {{ col }}
-                    .col-6
-                      q-checkbox.float-right.q-pl-md(
-                        v-model='collections',
-                        :val='col',
-                        color='primary',
-                        @update:model-value='(value) => { applyFilters(); }'
-                      )
+                  .col-12(v-for='col in collectionsArray')
+                    .row
+                      .col-6 {{ col }}
+                      .col-6
+                        q-checkbox.float-right.q-pl-md(
+                          v-model='collections',
+                          :val='col',
+                          color='primary',
+                          @update:model-value='(value) => { applyFilters(); }'
+                        )
 
           // Gallery section
           div(:class='showFilter ? "col-lg-10 col-md-9" : "col-12"')
@@ -585,7 +602,7 @@ page
       .row.full-height.full-width.filter-dialog
         .col-12
           q-card.q-pa-md(flat)
-            q-btn.absolute-top-right(
+            q-btn.absolute-top-right.q-pb-lg(
               size='20px',
               flat,
               dense,
@@ -594,7 +611,18 @@ page
               v-close-popup,
               style='z-index: 1'
             )
-            q-card-section
+            .q-pa-md
+              q-btn-toggle.q-py-md(
+                v-model='market',
+                spread,
+                no-caps,
+                rounded,
+                unelevated,
+                toggle-color='primary',
+                color='white',
+                text-color='primary',
+                :options='[ { label: " Legalcoin market", value: "primary" }, { label: "Open Market", value: "retail" }, ]'
+              )
               q-expansion-item(
                 expand-separator,
                 icon='query_stats',
@@ -607,28 +635,18 @@ page
                     .row
                       .col-6 Buy Now
                       .col-6
-                        q-checkbox.float-right.q-pl-md(
-                          v-model='statusSelection',
+                        q-radio.float-right.q-pl-md(
+                          v-model='status',
                           val='buynow',
                           color='primary',
                           @update:model-value='() => { applyFilters(); }'
                         )
-                  .col-12
-                    .row
-                      .col-6 Marketplace
-                      .col-6
-                        q-checkbox.float-right.q-pl-md(
-                          v-model='statusSelection',
-                          val='marketplace',
-                          color='primary',
-                          @update:model-value='() => { applyFilters(); }'
-                        )
-                  .col-12
+                  .col-12(v-if='market === "retail"')
                     .row
                       .col-6 On Auction
                       .col-6
-                        q-checkbox.float-right.q-pl-md(
-                          v-model='statusSelection',
+                        q-radio.float-right.q-pl-md(
+                          v-model='status',
                           val='auction',
                           color='primary',
                           @update:model-value='() => { applyFilters(); }'
@@ -705,10 +723,17 @@ page
                 label='Collection',
                 v-if='filterCollection'
               )
-                q-list(bordered, separator)
-                  q-item(clickable, v-ripple)
-                    q-item-section Collection 1
-                    q-item-section All
+                .row.q-col-gutter-sm.q-pa-md
+                  .col-12(v-for='col in collectionsArray')
+                    .row
+                      .col-6 {{ col }}
+                      .col-6
+                        q-checkbox.float-right.q-pl-md(
+                          v-model='collections',
+                          :val='col',
+                          color='primary',
+                          @update:model-value='(value) => { applyFilters(); }'
+                        )
 </template>
 
 <style scoped lang="sass">

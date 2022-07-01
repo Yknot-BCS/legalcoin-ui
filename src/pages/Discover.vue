@@ -1,16 +1,15 @@
 <script lang="ts">
-import { defineComponent, computed, ref, onMounted } from 'vue';
+import { defineComponent, computed, ref, onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'src/store';
 import {
-  atomic_api,
   getQueryDataOptions,
   getSalesQueryApiOptions,
   getQueryPage,
   getQueryLimit,
-  getQueryStatus,
   getQueryPrice,
-  getCollectionsList
+  getCollectionsList,
+  getQueryStatus
 } from 'src/api/atomic_assets';
 import GalleryView from 'src/components/gallery/GalleryView.vue';
 import AtomicAssetsView from 'src/components/atomicAssets/AtomicAssetView.vue';
@@ -19,7 +18,6 @@ export default defineComponent({
   name: 'Explore',
   components: { GalleryView, AtomicAssetsView },
   setup() {
-    const store = useStore();
     const route = useRoute();
     const showFilter = ref<boolean>(false);
     const search = ref<string>('');
@@ -28,22 +26,20 @@ export default defineComponent({
     const dataOptions = computed(() => getQueryDataOptions(route.query));
     const page = computed(() => getQueryPage(route.query));
     const limit = computed(() => getQueryLimit(route.query));
-    const status = computed(() => getQueryStatus(route.query));
     const price = computed(() => getQueryPrice(route.query));
-    const collections = ref<string>('');
-    console.log(status.value);
+    const status = computed(() => getQueryStatus(route.query));
+    const collections = ref<string>('emissions.lc');
+    console.log('status', status.value);
     const assetOptions = computed(() => {
       return {
         state: '1',
         search: search.value,
         collection_whitelist: collections.value,
-        ...getSalesQueryApiOptions(route.query)
+        ...getSalesQueryApiOptions(route.query, status.value)
       } as unknown;
     });
-    console.log(getSalesQueryApiOptions(route.query));
-    // - Gallery view
 
-    onMounted(async () => {
+    onBeforeMount(async () => {
       const collectionData = await getCollectionsList();
       collections.value = collectionData.stringList;
       console.log(collections.value);
@@ -55,7 +51,6 @@ export default defineComponent({
       limit,
       search,
       showFilter,
-      status,
       price,
       collections
     };
@@ -74,7 +69,6 @@ page
         :ItemsPerPage='limit',
         :DataParams='dataOptions',
         Type='Sale',
-        :Status='status',
         :Price='price'
       )
 </template>

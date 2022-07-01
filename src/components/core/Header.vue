@@ -47,8 +47,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
       icon='grid_view',
       label='Discover',
       dense,
-      :to='{ name: "discover" }',
-      :class='(color = primary)'
+      :to='{ name: "discover" }'
     )
     q-btn(
       flat,
