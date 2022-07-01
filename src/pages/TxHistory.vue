@@ -103,7 +103,7 @@ export default defineComponent({
 <template lang="pug">
 q-page
   .row.justify-center
-    q-card(v-if='isAuthenticated')
+    q-card.q-my-lg(v-if='isAuthenticated')
       q-card-section
         .text-body1.text-grey-8
           | Transaction History

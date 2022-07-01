@@ -37,7 +37,7 @@ export default defineComponent({
 <template lang="pug">
 q-card-section.row
   .col-1
-    q-icon(name='fa-solid fa-credit-card')
+    q-icon(v-if='action === "Buy LEGAL"', name='fa-solid fa-credit-card')
   .col-7
     .col.text-bold.text-txcard
       | {{ action }}
