@@ -81,6 +81,7 @@ AuthCard
       label='Email',
       lazy-rules,
       :rules='[requiredRule, emailValidRule]',
+      type='email',
       autocomplete='email'
     )
     q-input.col-12(
