@@ -38,7 +38,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
 
   .col.row.justify-center
     search-bar.toolbar-select.q-mr-md(size='100', v-if='$q.screen.gt.md')
-    search-bar.toolbar-select.q-mr-md(size='55', v-if='$q.screen.md')
+    search-bar.toolbar-select.q-mr-md(size='50', v-if='$q.screen.md')
     search-bar.toolbar-select.q-mr-md(size='30', v-if='$q.screen.sm')
 
   .q-mr-md.q-gutter-x-md.row.items-center.no-wrap(v-if='$q.screen.gt.sm')
