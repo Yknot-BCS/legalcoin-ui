@@ -132,7 +132,7 @@ q-page
       .landing-right
         .landing-right-card-container
           .main-asset.col-md-6.q-pa-lg(v-if='assets.length > 0')
-            Cards.shadow-10(:data='assets[0]', type='Assets')
+            Cards(:data='assets[0]', type='Assets')
 
     //- Featured Collections
   .div

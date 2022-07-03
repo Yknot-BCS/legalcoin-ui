@@ -21,17 +21,13 @@ export default defineComponent({
 <template lang="pug">
 q-card
   q-card-section
-    q-badge.text-subtitle2.float-right(
-      rounded,
-      color='primary',
-      label=' Silver'
-    )
+    q-badge.text-subtitle2.float-right.text(rounded) {{ card.tier }}
     .row
       .text-h6.heading {{ card.name }}
     .row
-      .col-2.column
-        .text {{ card.mintprice }}
-      .col-2.column
+      .col-auto
+        .q-mr-sm {{ card.mintprice }} &#8226;
+      .col-auto
         .text-subtitle4 {{ card.yield }} yield
   q-separator(inset)
   router-link(
@@ -49,4 +45,6 @@ q-card
   width: 100px
 .heading
   font-weight: bold
+.text
+  margin-top: 15px
 </style>
