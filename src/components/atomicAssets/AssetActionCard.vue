@@ -681,8 +681,10 @@ q-card
       q-btn.full-width.q-mt-lg(
         @click='tryBuySale()',
         label='BUY',
-        color='primary'
+        color='primary',
+        :disabled='this.accountName === ""'
       )
+      q-tooltip.tooltip(v-if='this.accountName == ""') You need to be signed in in order to do this
     //- when owning, with list on market button
     .div(v-if='isOwned && !isForSale && !isOnAuction')
       q-btn.full-width.q-mt-lg(

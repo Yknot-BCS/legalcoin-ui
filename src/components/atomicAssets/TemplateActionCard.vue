@@ -302,12 +302,13 @@ q-card
             | Total
             .text-NFTCard-price-value.text-grey-10
               | {{ priceStr }}
-
       q-btn.full-width.q-mt-lg(
         @click='tryBuySale()',
         label='BUY',
-        color='primary'
+        color='primary',
+        :disable='this.accountName == ""'
       )
+      q-tooltip.tooltip(v-if='this.accountName == ""') You need to be signed in in order to do this
     //- when owning, with list on market button
     //- .div(v-if='isOwned && !isForSale')
     //-   q-btn.full-width.q-mt-lg(
