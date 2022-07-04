@@ -92,43 +92,43 @@ export default defineComponent({
   //-           DetailsTable(:data='assetData?.data', :schema='assetData.schema')
 
 //- Mobile view
-.row.justify-center
-  .col-12.page-view.q-py-lg.asset-container
-    .row.q-pa-sm
-      //- Image
-      q-card.col-12.q-my-sm
-        q-img.asset-img(
-          :src='assetImg',
-          placeholder-src='https://placeimg.com/500/300/nature'
-        )
+.row.col-12.q-pt-xl.justify-center
+  //- Image
+  q-card.col-6.q-my-sm.q-mx-md(flat)
+    q-img.asset-img(
+      :src='assetImg',
+      placeholder-src='https://placeimg.com/500/300/nature'
+    )
 
-      //- Actions
-      AssetActionCard.col-12.q-my-sm(
-        :assetData='assetData',
-        :saleData='saleData',
-        :buyofferData='buyofferData',
-        :offerData='offerData',
-        :aucData='aucData',
-        @update-asset-info='$emit("updateAssetInfo", $event)'
-      )
+  //- Actions
+  AssetActionCard.col-6.q-my-sm.q-mx-md(
+    :assetData='assetData',
+    :saleData='saleData',
+    :buyofferData='buyofferData',
+    :offerData='offerData',
+    :aucData='aucData',
+    @update-asset-info='$emit("updateAssetInfo", $event)'
+  )
 
-      //- Details and Description
-      q-card.col-12.q-my-sm
-        q-tabs.text-grey-8(
-          v-model='tab',
-          dense,
-          align='left',
-          active-color='primary',
-          :breakpoint='0'
-        )
-          q-tab(name='description', label='Description')
-          q-tab(name='details', label='Details')
+  //- Details and Description
+.row.col-12.q-pa-sm.justify-center
+  q-card.col-6.q-my-sm.q-mx-md(flat)
+    q-tabs.text-grey-8(
+      v-model='tab',
+      dense,
+      align='left',
+      active-color='primary',
+      :breakpoint='0'
+    )
+      q-tab(name='description', label='Description')
+      q-tab(name='details', label='Details')
 
-        q-tab-panels(v-model='tab', animated)
-          q-tab-panel(name='description')
-            Description(:description='assetData?.data?.description')
-          q-tab-panel(name='details')
-            DetailsTable(:data='assetData?.data', :schema='assetData.schema')
+    q-tab-panels(v-model='tab', animated)
+      q-tab-panel(name='description')
+        Description(:description='assetData?.data?.description')
+      q-tab-panel(name='details')
+        DetailsTable(:data='assetData?.data', :schema='assetData.schema')
+  q-card.col-6.q-my-sm.q-mx-md(flat)
 </template>
 
 <style lang="sass" scoped>
@@ -137,9 +137,9 @@ export default defineComponent({
   max-width: 1400px
 // .page-background
 //   background: #f0f0f0
-// .asset-img
-//   width: 100%
-//   height: 675px
+.asset-img
+  width: 100%
+  height: 100%
 // .container
 //   border: 1px solid $grey-6
 //   border-radius: 13px

@@ -26,7 +26,8 @@ export default defineComponent({
         label: 'Field',
         align: 'left',
         field: 'name',
-        sortable: true
+        sortable: true,
+        style: 'font-family: arial; font-style: bold; font-weight: bold'
       },
       {
         name: 'value',
@@ -34,7 +35,7 @@ export default defineComponent({
         label: 'Value',
         field: 'value',
         sortable: true,
-        style: 'padding-left:30px'
+        style: 'padding-left:30px; font-family: arial; font-style: italic'
       }
     ];
 
@@ -75,16 +76,16 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-.q-pa-md
-  q-table.deatails-table(
-    :rows='rows',
-    row-key='name',
-    hide-header,
-    hide-bottom,
-    :pagination='{ rowsPerPage: 20 }',
-    flat,
-    bordered
-  )
+q-table.deatails-table(
+  :rows='rows',
+  :columns='columns',
+  row-key='name',
+  hide-header,
+  hide-bottom,
+  :pagination='{ rowsPerPage: 20 }',
+  flat,
+  bordered
+)
 </template>
 
 <style lang="sass">
@@ -100,4 +101,6 @@ export default defineComponent({
   td:first-child
     background-color: #f0f0f0
     width: 30%
+  td:second-child
+    background-color: red
 </style>
