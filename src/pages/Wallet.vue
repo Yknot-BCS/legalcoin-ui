@@ -97,6 +97,8 @@ q-page
       q-card-section
         .text-wallet-topline.text-bold 
           | {{ nftCount }} NFTS
+          q-icon.q-pl-sm.q-pb-xs(name='fa-solid fa-question-circle')
+            q-tooltip.tooltip(anchor='center right', :offset='[110, 0]') LEGAL value of all owned NFTs
         .text-wallet-bottomline
           | {{ nftValue.toFixed(2) }} (LEGAL)
       q-separator.q-mx-md
@@ -117,7 +119,7 @@ q-page
               flat,
               @click='$router.push({ name: "withdraw" })'
             )
-            q-tooltip Coming soon!
+            q-tooltip.tooltip Coming soon!
           .row.col-12
             q-btn.col.q-mx-sm.q-mt-sm.wallet-btn(
               label='VIEW TRANSACTION HISTORY',
