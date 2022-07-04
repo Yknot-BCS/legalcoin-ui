@@ -241,10 +241,11 @@ q-page
                   .col
                     | Processing Fee:
                     q-icon(name='fa-solid fa-circle-info')
-                      q-tooltip(
+                      q-tooltip.tooltip(
                         anchor='top middle',
                         self='center middle',
-                        max-width='200px'
+                        max-width='200px',
+                        :offset='[0, 90]'
                       )
                         | This is charged by LegalCoin to cover the costs levied by payment providers such as Visa & Mastercard. This may vary based on the payment method you choose later.
                   | as low as &#163; {{ processingFee.toFixed(2) }}
