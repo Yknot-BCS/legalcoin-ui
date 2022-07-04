@@ -5,6 +5,9 @@ import AuthCard from '../../components/auth/AuthCard.vue';
 import { ref } from 'vue';
 import { defineComponent } from 'vue';
 import { requiredRule } from './inputRules';
+import { passRule } from './inputRules';
+import { passLenRule } from './inputRules';
+import { emailValidRule } from './inputRules';
 import { useRouter } from 'vue-router';
 import { useQuasar } from 'quasar';
 
@@ -29,6 +32,9 @@ export default defineComponent({
       userPassword,
       userRetypePassword: ref(''),
       requiredRule,
+      passRule,
+      passLenRule,
+      emailValidRule,
       passwordMatchRule,
       onSubmit: async () => {
         try {
@@ -74,7 +80,8 @@ AuthCard
       v-model='userEmail',
       label='Email',
       lazy-rules,
-      :rules='[requiredRule]',
+      :rules='[requiredRule, emailValidRule]',
+      type='email',
       autocomplete='email'
     )
     q-input.col-12(
@@ -82,7 +89,7 @@ AuthCard
       type='password',
       label='Password',
       lazy-rules,
-      :rules='[requiredRule]',
+      :rules='[requiredRule, passRule, passLenRule]',
       autocomplete='new-password'
     )
     q-input.col-12(
