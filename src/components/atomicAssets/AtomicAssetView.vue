@@ -15,7 +15,9 @@ import {
   get_assets,
   get_collections,
   get_templates,
+  get_discover,
   get_sale,
+  get_auction,
   getCollectionsList,
   getQueryMarket,
   getQueryStatus
@@ -50,6 +52,11 @@ export default defineComponent({
     Price: {
       type: Object as PropType<{ min: number; max: number }>,
       required: false
+    },
+    DisableSearch: {
+      type: Boolean,
+      required: false,
+      default: true
     },
     DisableFilter: {
       type: Boolean,
@@ -165,6 +172,7 @@ export default defineComponent({
     const Pages = computed((): number =>
       Math.ceil(assetCount.value / limit.value)
     );
+    const disableSearch = computed(() => props.DisableSearch);
     const filterStatus = computed(() => props.FilterStatus);
     const filterPrice = computed(() => props.FilterPrice);
     const filterCollection = computed(() => props.FilterCollection);
@@ -190,7 +198,6 @@ export default defineComponent({
       };
       switch (Type.value) {
         case 'Assets':
-          DataParams.value;
           response = await get_assets(
             ApiParams.value,
             Page.value,
@@ -227,16 +234,47 @@ export default defineComponent({
           break;
 
         case 'Sale':
-          response = await get_sale(
+          response = await get_discover(
             ApiParams.value,
             Page.value,
             ItemsPerPage.value,
             DataParams.value,
-            status.value
+            status.value,
+            market.value
           );
 
           GalleryData.value = response.data;
           assetCount.value = response.count;
+
+          break;
+        case 'Profile':
+          GalleryData.value = [];
+          assetCount.value = 0;
+          response = await get_assets(
+            ApiParams.value,
+            Page.value,
+            ItemsPerPage.value,
+            DataParams.value
+          );
+          GalleryData.value = GalleryData.value.concat(response.data);
+          assetCount.value += response.count;
+          response = await get_sale(
+            ApiParams.value,
+            Page.value,
+            ItemsPerPage.value,
+            DataParams.value
+          );
+          GalleryData.value = GalleryData.value.concat(response.data);
+          assetCount.value += response.count;
+          response = await get_auction(
+            ApiParams.value,
+            Page.value,
+            ItemsPerPage.value,
+            DataParams.value
+          );
+
+          GalleryData.value = GalleryData.value.concat(response.data);
+          assetCount.value += response.count;
 
           break;
         default:
@@ -391,7 +429,8 @@ export default defineComponent({
       collections,
       collectionsArray,
       model: ref('one'),
-      market
+      market,
+      disableSearch
     };
   }
 });
@@ -421,7 +460,8 @@ page
                 :label='$q.screen.lt.md ? "Filters" : ""'
               )
           .col-md-8.col-sm-12.col-xs-12(
-            :class='$q.screen.lt.md ? "order-last" : ""'
+            :class='$q.screen.lt.md ? "order-last" : ""',
+            v-if='disableSearch'
           )
             q-input(
               dense,

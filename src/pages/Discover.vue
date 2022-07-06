@@ -69,7 +69,8 @@ page
         :ItemsPerPage='limit',
         :DataParams='dataOptions',
         Type='Sale',
-        :Price='price'
+        :Price='price',
+        :DisableSearch='false'
       )
 </template>
 

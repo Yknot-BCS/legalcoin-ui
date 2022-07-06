@@ -102,7 +102,7 @@ page
         :Page='page',
         :ItemsPerPage='limit',
         :DataParams='dataOptions',
-        Type='Assets',
+        Type='Profile',
         :FilterStatus='false',
         :FilterPrice='false'
       )
