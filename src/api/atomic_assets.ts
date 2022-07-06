@@ -339,6 +339,74 @@ export const get_auction = async function (
   return { data, count };
 };
 
+export const get_profile = async function (
+  ApiParams: any,
+  Page: number,
+  ItemsPerPage: number,
+  DataParams: { key: string; value: string }[],
+  status: string
+) {
+  let count = 0;
+  let data: GalleryCard[] = [];
+  if (status === 'buynow') {
+    const rawData = await atomic_api.getAssets(
+      ApiParams,
+      Page,
+      ItemsPerPage,
+      DataParams
+    );
+    count = await atomic_api.countAssets(ApiParams, DataParams);
+    data = rawData.map((asset) => {
+      return {
+        ...asset.data,
+        to: '/asset/' + asset.asset_id,
+        yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
+        name: asset.data.name as string,
+        imageUrl:
+          asset.data.img && (asset.data.img as string).includes('http')
+            ? (asset.data.img as string)
+            : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+        collection: asset.collection.collection_name,
+        template: asset.template.template_id,
+        schema: asset.schema.schema_name,
+        id: asset.asset_id
+      } as GalleryCard;
+    });
+  }
+  if (status === 'auction') {
+    const rawData = await atomic_market_api.getAuctions(
+      ApiParams,
+      Page,
+      ItemsPerPage,
+      DataParams
+    );
+    count = await atomic_market_api.countAuctions({
+      ...ApiParams,
+      ...DataParams
+    });
+    rawData.forEach((element) => {
+      data = element.assets.map((asset) => {
+        return {
+          ...asset.data,
+          to: '/asset/' + asset.asset_id,
+          yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
+          name: asset.data.name as string,
+          imageUrl:
+            asset.data.img && (asset.data.img as string).includes('http')
+              ? (asset.data.img as string)
+              : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+          collection: asset.collection.collection_name,
+          template: asset.template.template_id,
+          schema: asset.schema.schema_name,
+          id: asset.asset_id
+        } as GalleryCard;
+      });
+    });
+  }
+
+  return { data, count };
+};
+
 export const getTemplateQueryApiOptions = function (q: unknown): {
   search: string;
   sort: string;

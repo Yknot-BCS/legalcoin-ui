@@ -39,6 +39,8 @@ div(v-else-if='cardType === "Collections"')
 
 div(v-else-if='cardType === "Listings"')
   ListingCard(:data='card')
+div(v-else)
+  AssetCard(:data='card')
 </template>
 
 <style lang="sass" scoped></style>
