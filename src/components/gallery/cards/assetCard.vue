@@ -21,7 +21,22 @@ export default defineComponent({
 <template lang="pug">
 q-card
   q-card-section
-    q-badge.text-subtitle2.float-right.text(rounded, color='primary') {{ card.tier }}
+    q-badge.text-subtitle2.float-right.text(v-if='card.tier == `Silver`')(
+      rounded,
+      color='grey'
+    ) {{ card.tier }}
+    q-badge.text-subtitle2.float-right.text(v-if='card.tier == `Gold`')(
+      rounded,
+      color='yellow-7'
+    ) {{ card.tier }}
+    q-badge.text-subtitle2.float-right.text(v-if='card.tier == `Bronze`')(
+      rounded,
+      color='orange-14'
+    ) {{ card.tier }}
+    q-badge.text-subtitle2.float-right.text(v-if='card.tier == `Platinum`')(
+      rounded,
+      color='grey-4'
+    ) {{ card.tier }}
     .row
       .text-h6.heading {{ card.name }}
     .row
