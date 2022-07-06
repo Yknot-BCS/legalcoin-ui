@@ -60,8 +60,7 @@ export default defineComponent({
             ? ''
             : this.$route.params.template_id,
         state: 1,
-        seller:
-          this.$route.query.seller === undefined ? '' : this.$route.query.seller
+        seller: process.env.AA_ACCOUNT
       } as unknown;
       this.saleData = (await atomic_market_api.getSales(saleFilter))[0];
       console.log(this.saleData);

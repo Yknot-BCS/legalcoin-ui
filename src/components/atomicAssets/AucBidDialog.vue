@@ -57,13 +57,13 @@ export default defineComponent({
           name: 'transfer',
           data: {
             from: this.accountName as string,
-            to: 'atomicmarket',
+            to: process.env.ATOMICMARKET,
             quantity: amountStr,
             memo: 'deposit'
           }
         },
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'auctionbid',
           data: {
             bidder: this.accountName as string,
