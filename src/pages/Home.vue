@@ -60,7 +60,7 @@ export default defineComponent({
       let trending = [];
       for (const collection of this.collections) {
         let templateStatsFilter = {
-          symbol: 'WAX',
+          symbol: process.env.LC_SYMBOL,
           search: collection.collection_name
         } as unknown;
 

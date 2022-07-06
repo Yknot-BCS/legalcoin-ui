@@ -173,7 +173,7 @@ export default defineComponent({
 
       let actions = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'assertsale',
           data: {
             sale_id: this.saleData.sale_id,
@@ -190,13 +190,13 @@ export default defineComponent({
           name: 'transfer',
           data: {
             from: this.accountName as string,
-            to: 'atomicmarket',
+            to: process.env.ATOMICMARKET,
             quantity: amountStr,
             memo: 'deposit'
           }
         },
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'purchasesale',
           data: {
             buyer: this.accountName as string,
@@ -251,11 +251,11 @@ export default defineComponent({
 q-card 
   q-card-section
     //- name
-    .text-bold.text-h6
+    .text-bold.text-NFTCard-heading.text-grey-10
       | {{ templateData?.immutable_data?.name }}
     //- by
     .row.justify-between.items-center.fit.wrap
-      .col-10.text-italic.text-subtitle1.column
+      .col-10.text-subtitle2.column
         .col 
           | by: {{ templateData?.collection.authorized_accounts[0] === 'admin.lc' ? 'LegalCoin' : templateData?.collection.authorized_accounts[0] }}
           q-icon.q-ml-sm(name='fa-solid fa-circle-check', color='green')
@@ -263,9 +263,9 @@ q-card
       .col-2.row.justify-center
         q-btn(icon='share', size='md', @click='shareURL', round)
 
-    //- expected yield
-    .row.justify-center.items-center.fit.wrap 
-      .text-subtitle1 Expected yield: {{ expectedYield }}
+    //- maturity
+    .row.fit.wrap 
+      .text-subtitle2 Expected yield: {{ expectedYield }}
 
     //- timeline
     Timeline(
@@ -278,14 +278,14 @@ q-card
     .div(v-if='isForSale')
       .row.justify-between.q-mt-lg
         .col-6
-          .column.content-start 
+          .column.content-start.text-NFTCard-price-head.text-grey-10
             | Purchase Price
-            .text-subtitle1
+            .text-NFTCard-price-value.text-grey-10
               | {{ priceStr }}
         .col-6
-          .column.content-end.items-end
+          .column.content-end.items-end.text-NFTCard-price-head.text-grey-10
             | Days to Maturity
-            .text-subtitle1
+            .text-NFTCard-price-value.text-grey-10
               | {{ daysToMaturity }}
       .row.justify-between.q-mt-lg
         .col-3
@@ -298,9 +298,9 @@ q-card
             outlined
           )
         .col-6
-          .column.content-end.items-end
+          .column.content-end.items-end.text-NFTCard-price-head.text-grey-10
             | Total
-            .text-subtitle1
+            .text-NFTCard-price-value.text-grey-10
               | {{ priceStr }}
 
       q-btn.full-width.q-mt-lg(

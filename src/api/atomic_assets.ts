@@ -494,7 +494,7 @@ export const getSalesQueryApiOptions = function (
         ...dataOptions,
         min_price: (query['min_price'] as string) || '0',
         max_price: (query['max_price'] as string) || '10000',
-        symbol: 'WAX'
+        symbol: process.env.LC_SYMBOL
       };
     }
     if (query['collections']) {
@@ -542,7 +542,7 @@ export const getSalesQueryApiOptions = function (
         ...dataOptions,
         min_price: (query['min_price'] as string) || '0',
         max_price: (query['max_price'] as string) || '10000',
-        symbol: 'WAX'
+        symbol: process.env.LC_SYMBOL
       };
     }
     if (query['collections']) {
