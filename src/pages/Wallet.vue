@@ -126,18 +126,4 @@ q-page
             )
 </template>
 
-<style lang="sass" scoped>
-.wallet-btn
-  border: 0.5px solid $gray-80
-  font-family: 'ralewayregular'
-  border-radius: 6px 6px 6px 6px
-.text-wallet-heading
-  font-size: 1.25rem
-  font-family: 'ralewayregular'
-.text-wallet-topline
-  font-size: 0.88rem
-  font-family: 'heveticaneue'
-.text-wallet-bottomline
-  font-size: 0.88rem
-  font-family: 'ralewayregular'
-</style>
+<style lang="sass" scoped></style>
