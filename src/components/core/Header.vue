@@ -178,9 +178,6 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
 .menu-edit
   top: 200px
   align: left
-.blue
-  color: $primary
 .btn
   right: 5px
-  cursor: pointer
 </style>
