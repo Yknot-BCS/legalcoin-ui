@@ -149,7 +149,7 @@ AuthCard.col.animated.fadeInDown.q-ma-sm(v-else)
       :rules='[requiredRule, passwordMatchRule]',
       autocomplete='new-password'
     )
-    q-btn.col-12(type='submit', color='primary', text-color='black') CREATE NEW ACCOUNT
+    q-btn.col-12(type='submit', color='primary', text-color='secondary') CREATE NEW ACCOUNT
   .col-12.text-center.q-mt-md
     span.q-mr-xs Already have an account?
     router-link(to='login') Sign In

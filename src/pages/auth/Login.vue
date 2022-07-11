@@ -130,7 +130,7 @@ AuthCard.col-6.animated.fadeInDown.q-ma-sm(v-else)
       :rules='[requiredRule]',
       autocomplete='current-password'
     )
-    q-btn.col-12(type='submit', color='primary', text-color='black') SIGN IN
+    q-btn.col-12(type='submit', color='primary', text-color='secondary') SIGN IN
     q-btn.col-12(
       flat,
       color='grey-10',
