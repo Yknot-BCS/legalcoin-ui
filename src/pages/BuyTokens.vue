@@ -243,7 +243,7 @@ q-page
                   .col
                     | Processing Fee:
                     q-icon(name='fa-solid fa-circle-info')
-                      q-tooltip.tooltip(
+                      q-tooltip(
                         anchor='top middle',
                         self='center middle',
                         max-width='200px'
@@ -252,7 +252,7 @@ q-page
                   | as low as &#163; {{ processingFee.toFixed(2) }}
           q-card-section
             .row.justify-center
-              q-btn.wallet-btn(flat, label='CONTINUE', type='submit')
+              q-btn.outline-btn(flat, label='CONTINUE', type='submit')
           q-card-section.text-wallet-bottomline
             | By continuing you agree to the terms and conditions
 

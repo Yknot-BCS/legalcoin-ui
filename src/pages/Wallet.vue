@@ -105,13 +105,13 @@ q-page
           | Options
         .row.justify-center.q-mt-sm
           .row.col-6
-            q-btn.col.q-mx-sm.q-mt-sm.wallet-btn(
+            q-btn.col.q-mx-sm.q-mt-sm.outline-btn(
               label='BUY LEGALCOIN',
               flat,
               @click='$router.push({ name: "buytokens", params: { status: "checkout" } })'
             )
           .row.col-6
-            q-btn.col.q-mx-sm.q-mt-sm.wallet-btn(
+            q-btn.col.q-mx-sm.q-mt-sm.outline-btn(
               label='WITHDRAW',
               disable,
               flat,
@@ -119,7 +119,7 @@ q-page
             )
             q-tooltip Coming soon!
           .row.col-12
-            q-btn.col.q-mx-sm.q-mt-sm.wallet-btn(
+            q-btn.col.q-mx-sm.q-mt-sm.outline-btn(
               label='VIEW TRANSACTION HISTORY',
               flat,
               @click='$router.push({ name: "txhistory" })'
