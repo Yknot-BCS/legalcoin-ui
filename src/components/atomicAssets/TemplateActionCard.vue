@@ -34,7 +34,8 @@ export default defineComponent({
 
   computed: {
     ...mapGetters({
-      accountName: 'account/getAccountName'
+      accountName: 'account/getAccountName',
+      isAuthenticated: 'account/isAuthenticated'
     }),
 
     isForSale() {
@@ -306,9 +307,9 @@ q-card
         @click='tryBuySale()',
         label='BUY',
         color='primary',
-        :disable='this.accountName == ""'
+        :disable='!isAuthenticated'
       )
-      q-tooltip.tooltip(v-if='this.accountName == ""') You need to be signed in in order to do this
+      q-tooltip.tooltip(v-if='!isAuthenticated') Please log in
     //- when owning, with list on market button
     //- .div(v-if='isOwned && !isForSale')
     //-   q-btn.full-width.q-mt-lg(
