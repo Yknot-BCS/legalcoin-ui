@@ -34,7 +34,8 @@ export default defineComponent({
 
   computed: {
     ...mapGetters({
-      accountName: 'account/getAccountName'
+      accountName: 'account/getAccountName',
+      isAuthenticated: 'account/isAuthenticated'
     }),
 
     isForSale() {
@@ -302,12 +303,13 @@ q-card
             | Total
             .text-NFTCard-price-value.text-grey-10
               | {{ priceStr }}
-
       q-btn.full-width.q-mt-lg(
         @click='tryBuySale()',
         label='BUY',
-        color='primary'
+        color='primary',
+        :disable='!isAuthenticated'
       )
+      q-tooltip.tooltip(v-if='!isAuthenticated') Please log in
     //- when owning, with list on market button
     //- .div(v-if='isOwned && !isForSale')
     //-   q-btn.full-width.q-mt-lg(

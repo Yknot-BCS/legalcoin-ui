@@ -55,7 +55,8 @@ export default defineComponent({
 
   computed: {
     ...mapGetters({
-      accountName: 'account/getAccountName'
+      accountName: 'account/getAccountName',
+      isAuthenticated: 'account/isAuthenticated'
     }),
 
     isOwned() {
@@ -681,8 +682,10 @@ q-card
       q-btn.full-width.q-mt-lg(
         @click='tryBuySale()',
         label='BUY',
-        color='primary'
+        color='primary',
+        :disabled='!isAuthenticated'
       )
+      q-tooltip.tooltip(v-if='!isAuthenticated') Please log in
     //- when owning, with list on market button
     .div(v-if='isOwned && !isForSale && !isOnAuction')
       q-btn.full-width.q-mt-lg(
