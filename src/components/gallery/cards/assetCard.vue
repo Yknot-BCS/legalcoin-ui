@@ -37,7 +37,11 @@ export default defineComponent({
 <template lang="pug">
 q-card
   q-card-section
-    q-badge.text-subtitle2.float-right.text(rounded, :color='badgeColour') {{ card.tier }}
+    q-badge.text-subtitle2.float-right.text(
+      v-if='card.tier',
+      rounded,
+      :color='badgeColour'
+    ) {{ card.tier }}
     .row
       .text-h6.heading {{ card.name }}
     .row
