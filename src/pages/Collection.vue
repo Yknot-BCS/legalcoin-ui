@@ -81,11 +81,11 @@ export default defineComponent({
 q-page
   //- Collection Card
   //- Background image
-  .row
+  .row(style='height: 12rem')
     q-img.bg-img(src='~assets/collections/slanted-gradient.svg', height='20em')
 
   //- Collection image 
-  .row.q-px-lg
+  .row.q-px-lg(style='height: 7rem')
     .col-3
       q-card.asset-img
         q-img(:src='collectionImg')
