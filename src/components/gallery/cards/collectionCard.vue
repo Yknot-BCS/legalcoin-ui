@@ -19,20 +19,14 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-card
+q-card(bordered)
   q-card-section
-    .text-h6 {{ card.name }}
+    .text-h6.heading {{ card.name }}
   q-separator(inset)
   router-link(
     :to='{ name: "collection", params: { collection: card.collection } }'
   )
     q-img.asset-img(:src='card.imageUrl')
-  q-card-actions.q-pa-md
-    q-btn.full-width(
-      flat,
-      color='primary',
-      :to='{ name: "collection", params: { collection: card.collection } }'
-    ) View Collection
 </template>
 
 <style lang="sass" scoped>
@@ -40,4 +34,6 @@ q-card
   width: 100%
   height: 500px
   max-height: 400px
+.heading
+  font-weight: bold
 </style>
