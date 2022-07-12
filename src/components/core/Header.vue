@@ -37,8 +37,8 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
     img.logo.q-mr-md(src='~assets/legalcoin-full.png')
 
   .col.row.justify-center
-    search-bar.toolbar-select.q-mr-md(size='110', v-if='$q.screen.gt.md')
-    search-bar.toolbar-select.q-mr-md(size='55', v-if='$q.screen.md')
+    search-bar.toolbar-select.q-mr-md(size='100', v-if='$q.screen.gt.md')
+    search-bar.toolbar-select.q-mr-md(size='50', v-if='$q.screen.md')
     search-bar.toolbar-select.q-mr-md(size='30', v-if='$q.screen.sm')
 
   .q-mr-md.q-gutter-x-md.row.items-center.no-wrap(v-if='$q.screen.gt.sm')
@@ -47,8 +47,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
       icon='grid_view',
       label='Discover',
       dense,
-      :to='{ name: "discover" }',
-      :class='(color = primary)'
+      :to='{ name: "discover" }'
     )
     q-btn(
       flat,

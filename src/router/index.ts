@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { route } from 'quasar/wrappers';
 import { createRouter, createWebHistory } from 'vue-router';
-import { StateInterface } from '../store';
+import { StateInterface, useStore } from '../store';
 import routes from './routes';
 import auth from 'src/auth';
 
@@ -28,9 +28,27 @@ export default route<StateInterface>(function (
     history: createHistory(process.env.VUE_ROUTER_BASE)
   });
 
-  Router.beforeEach((to, _) => {
+  Router.beforeEach(async (to, _) => {
+    let isAuthenticated = store.state.account.profile.emailVerified;
+    if (auth.isLoggedIn()) {
+      try {
+        if (store.state.account.profile.email == '') {
+          await store.dispatch('account/refreshProfile');
+        }
+        isAuthenticated = store.state.account.profile.emailVerified;
+        if (
+          to.name !== 'emailverify-request' &&
+          auth.isLoggedIn() &&
+          !isAuthenticated
+        ) {
+          return { name: 'emailverify-request' };
+        }
+      } catch {
+        console.log('Could not dispatch refreshProfile');
+      }
+    }
     // Route to home when already logged in
-    if (to.name === 'login' && auth.isLoggedIn()) {
+    if (to.name === 'login' && auth.isLoggedIn() && isAuthenticated) {
       return { name: 'home' };
     }
   });

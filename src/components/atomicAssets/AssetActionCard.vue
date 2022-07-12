@@ -4,10 +4,14 @@ import {
   ISale,
   IBuyoffer,
   IMarketOffer,
-  IMarketAsset
+  IMarketAsset,
+  IAuction,
+  IAuctionBid
 } from 'atomicmarket/build/API/Explorer/Objects';
 import Timeline from 'src/components/atomicAssets/TimeLine.vue';
 import CreateListingDialog from './CreateListingDialog.vue';
+import Countdown from './Countdown.vue';
+import AucBidDialog from './AucBidDialog.vue';
 import { mapGetters, mapActions } from 'vuex';
 import { Asset, Int64 } from '@greymass/eosio';
 import { date } from 'quasar';
@@ -16,7 +20,7 @@ import { getYield } from 'src/api/atomic_assets';
 
 export default defineComponent({
   name: 'AssetActionCard',
-  components: { Timeline, CreateListingDialog },
+  components: { Timeline, CreateListingDialog, Countdown, AucBidDialog },
   props: {
     assetData: {
       type: Object as PropType<IMarketAsset>,
@@ -24,15 +28,19 @@ export default defineComponent({
     },
     saleData: {
       type: Object as PropType<ISale>,
-      required: true
+      required: false
     },
     buyofferData: {
       type: Object as PropType<IBuyoffer>,
-      required: true
+      required: false
     },
     offerData: {
       type: Object as PropType<IMarketOffer>,
-      required: true
+      required: false
+    },
+    aucData: {
+      type: Object as PropType<IAuction>,
+      required: false
     }
   },
   setup() {
@@ -40,7 +48,8 @@ export default defineComponent({
       quantity: ref(1),
       transaction: null,
       pollAsset: null,
-      showListingDialog: ref(false)
+      showListingDialog: ref(false),
+      showAucDialog: ref(false)
     };
   },
 
@@ -48,6 +57,7 @@ export default defineComponent({
     ...mapGetters({
       accountName: 'account/getAccountName'
     }),
+
     isOwned() {
       // Check if the current user is the owner of the asset
       if (this.accountName === this.assetData.owner) {
@@ -186,6 +196,74 @@ export default defineComponent({
       } else {
         return '0';
       }
+    },
+
+    // ---------------------------
+    // Auction relevant properties
+    // ---------------------------
+    isOnAuction() {
+      if (
+        !!this.aucData &&
+        !this.aucData.claimed_by_buyer &&
+        !this.aucData.claimed_by_seller
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    isAucSeller() {
+      return this.accountName === this.aucData?.seller;
+    },
+
+    bids(): IAuctionBid[] {
+      if (this.isOnAuction) {
+        return this.aucData?.bids;
+      } else {
+        return [];
+      }
+    },
+
+    // get the highest bid
+    highestBid() {
+      if (this.isOnAuction) {
+        if (this.bids?.length > 0) {
+          // take the bids and get the max amount
+          let topBid = this.bids?.reduce((a, b) => {
+            return a.amount > b.amount ? a : b;
+          });
+          let topValue = topBid?.amount || 0;
+          return topValue;
+        } else {
+          return undefined;
+        }
+      } else {
+        return undefined;
+      }
+    },
+
+    // Show highest bid, otherwise show starting price
+    highestBidDisplay() {
+      if (this.highestBid) {
+        let bidAsset = Asset.fromUnits(
+          Int64.from(this.highestBid),
+          Asset.Symbol.fromParts(
+            this.aucData?.price?.token_symbol,
+            this.aucData?.price?.token_precision
+          )
+        );
+        return bidAsset;
+      } else {
+        let startPriceAsset = Asset.fromUnits(
+          Int64.from(this.aucData.price.amount),
+          Asset.Symbol.fromParts(
+            this.aucData.price?.token_symbol,
+            this.aucData?.price?.token_precision
+          )
+        );
+        return startPriceAsset;
+      }
     }
   },
   mounted() {
@@ -193,7 +271,7 @@ export default defineComponent({
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       this.pollAsset = setInterval(() => {
         void this.$emit('updateAssetInfo');
-      }, 10000);
+      }, 5000);
     }
   },
   beforeUnmount() {
@@ -215,7 +293,7 @@ export default defineComponent({
 
       let actions = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'assertsale',
           data: {
             sale_id: this.saleData.sale_id,
@@ -232,13 +310,13 @@ export default defineComponent({
           name: 'transfer',
           data: {
             from: this.accountName as string,
-            to: 'atomicmarket',
+            to: process.env.ATOMICMARKET,
             quantity: amountStr,
             memo: 'deposit'
           }
         },
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'purchasesale',
           data: {
             buyer: this.accountName as string,
@@ -282,14 +360,14 @@ export default defineComponent({
           name: 'createoffer',
           data: {
             sender: this.accountName as string,
-            recipient: 'atomicmarket',
+            recipient: process.env.ATOMICMARKET,
             sender_asset_ids: [this.buyofferData.assets[0].asset_id],
             recipient_asset_ids: [],
             memo: 'buyoffer'
           }
         },
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'acceptbuyo',
           data: {
             buyoffer_id: this.buyofferData.buyoffer_id,
@@ -374,7 +452,7 @@ export default defineComponent({
     async cancelListing() {
       let actions: unknown = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'cancelsale',
           data: {
             sale_id: this.saleData.sale_id
@@ -409,6 +487,120 @@ export default defineComponent({
       }
     },
 
+    async aucClaimSel() {
+      let actions: unknown = [
+        {
+          account: process.env.ATOMICMARKET,
+          name: 'auctclaimsel',
+          data: {
+            auction_id: this.aucData.auction_id
+          }
+        }
+      ];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      this.transaction = await this.sendTransaction({ actions });
+    },
+
+    async tryAucClaimSel() {
+      console.log('try auction claim');
+      try {
+        await this.aucClaimSel();
+        this.$q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          message: 'Claimed'
+        });
+        this.$emit('updateAssetInfo');
+      } catch (e: unknown) {
+        if (typeof e === 'string') {
+          e.toUpperCase(); // works, `e` narrowed to string
+        } else if (e instanceof Error) {
+          this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            message: e.message,
+            timeout: 5000
+          });
+        }
+      }
+    },
+
+    async aucClaimBuy() {
+      let actions: unknown = [
+        {
+          account: process.env.ATOMICMARKET,
+          name: 'auctclaimbuy',
+          data: {
+            auction_id: this.aucData.auction_id
+          }
+        }
+      ];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      this.transaction = await this.sendTransaction({ actions });
+    },
+
+    async tryAucClaimBuy() {
+      console.log('try auction claim');
+      try {
+        await this.aucClaimBuy();
+        this.$q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          message: 'Claimed'
+        });
+        this.$emit('updateAssetInfo');
+      } catch (e: unknown) {
+        if (typeof e === 'string') {
+          e.toUpperCase(); // works, `e` narrowed to string
+        } else if (e instanceof Error) {
+          this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            message: e.message,
+            timeout: 5000
+          });
+        }
+      }
+    },
+
+    async cancelAuc() {
+      let actions: unknown = [
+        {
+          account: process.env.ATOMICMARKET,
+          name: 'cancelauct',
+          data: {
+            auction_id: this.aucData.auction_id
+          }
+        }
+      ];
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      this.transaction = await this.sendTransaction({ actions });
+    },
+
+    async tryCancelAuction() {
+      console.log('try auction cancel');
+      try {
+        await this.cancelAuc();
+        this.$q.notify({
+          color: 'green-4',
+          textColor: 'white',
+          message: 'Cancelled'
+        });
+        this.$emit('updateAssetInfo');
+      } catch (e: unknown) {
+        if (typeof e === 'string') {
+          e.toUpperCase(); // works, `e` narrowed to string
+        } else if (e instanceof Error) {
+          this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            message: e.message,
+            timeout: 5000
+          });
+        }
+      }
+    },
+
     shareURL() {
       void copyToClipboard(window.location.origin + this.$route.path).then(
         () => {
@@ -418,12 +610,6 @@ export default defineComponent({
           });
         }
       );
-    },
-
-    oi(event: Event) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      console.log(event);
-      // this.showListingDialog = event.target.value as boolean;
     }
   }
 });
@@ -433,20 +619,29 @@ export default defineComponent({
 q-card 
   q-card-section
     //- name
-    .text-bold.text-h6
+    .text-bold.text-NFTCard-heading.text-grey-10
       | {{ assetData?.data?.name }}
     //- by
     .row.justify-between.items-center.fit.wrap
-      .col-10.text-italic.text-subtitle1.column
-        .col 
+      .col-10.text-italic.text-subtitle2.column
+        .col(v-if='isOnAuction')
+          //- router-link(
+          //-   :to='{ name: "profile", params: { profile: aucData?.seller } }'
+          //- )
+          | Seller: {{ aucData?.seller }}
+        .col(v-else) 
+          //- TODO hyperlink this to profile page
+          //- router-link(
+          //-   :to='{ name: "profile", params: { profile: assetData?.data?.owner } }'
+          //- )
           | Owner: {{ assetData?.owner }}
       //- share icon
       .col-2.row.justify-center
         q-btn(icon='share', size='md', @click='shareURL', round)
 
     //- expected yield?
-    .row.justify-center.items-center.fit.wrap 
-      .text-subtitle1 Expected yield: {{ expectedYield }}
+    .row.fit.wrap 
+      .text-subtitle2 Expected yield: {{ expectedYield }}
     //- timeline
     Timeline(
       v-if='isBuybackNFT',
@@ -458,14 +653,14 @@ q-card
     .div(v-if='isForSale && !isOwned')
       .row.justify-between.q-mt-lg
         .col-6
-          .column.content-start 
+          .column.content-start.text-NFTCard-price-head.text-grey-10
             | Purchase Price
-            .text-subtitle1
+            .text-NFTCard-price-value.text-grey-10
               | {{ priceStr }}
         .col-6
-          .column.content-end.items-end
+          .column.content-end.items-end.text-NFTCard-price-head.text-grey-10
             | Days to Maturity
-            .text-subtitle1
+            .text-NFTCard-price-value.text-grey-10
               | {{ daysToMaturity }}
       .row.justify-between.q-mt-lg
         .col-3
@@ -478,9 +673,9 @@ q-card
             outlined
           )
         .col-6
-          .column.content-end.items-end
+          .column.content-end.items-end.text-NFTCard-price-head.text-grey-10
             | Total
-            .text-subtitle1
+            .text-NFTCard-price-value.text-grey-10
               | {{ priceStr }}
 
       q-btn.full-width.q-mt-lg(
@@ -489,7 +684,7 @@ q-card
         color='primary'
       )
     //- when owning, with list on market button
-    .div(v-if='isOwned && !isForSale')
+    .div(v-if='isOwned && !isForSale && !isOnAuction')
       q-btn.full-width.q-mt-lg(
         @click='showListingDialog = true',
         label='LIST ON MARKET',
@@ -513,19 +708,90 @@ q-card
         color='primary'
       )
 
+    //- when on auction, show highest bid and time left
+    //- Sates: 1: Listed, 2: Cancelled, 3: SOLD, 4: Invalid/Done No bids
+    q-card-section(
+      v-if='isOnAuction && (aucData?.state === 1 || aucData?.state === 4)'
+    )
+      //- Countdown component
+      q-card-section
+        Countdown(:endDate='new Date(Number(aucData?.end_time))')
+
+      q-separator(color='primary')
+
+      q-card-section
+        //- Starting value if no bids
+        .column(v-if='aucData?.bids?.length === 0')
+          .text-grey-9 No bids - Starting value
+          .text-bold {{ highestBidDisplay }}
+
+        //- Top bid, with bid button
+        .column(v-else)
+          .text-grey-9 Top bid
+          .text-bold {{ highestBidDisplay }}
+        q-btn.full-width.q-mt-lg(
+          v-if='!isAucSeller && aucData?.state !== 4',
+          @click='showAucDialog = true',
+          label='Place Bid',
+          color='primary'
+        )
+
+    //- when on auction and is seller, show cancel auction button or claim button
+    q-card-section(
+      v-if='isOnAuction && isAucSeller && !aucData.claimed_by_seller'
+    )
+      //- Cancel auction button,
+      q-btn.full-width(
+        v-if='aucData?.state === 1 || aucData?.state === 4',
+        @click='tryCancelAuction()',
+        label='CANCEL AUCTION',
+        color='primary'
+      )
+      //- Claim auction button
+      q-btn.full-width(
+        v-if='aucData?.state == 3',
+        @click='tryAucClaimSel()',
+        label='CLAIM AUCTION',
+        color='primary'
+      )
+
+    //- when on auction and is buyer, show claim auction button
+    q-card-section(
+      v-if='isOnAuction && !isAucSeller && !aucData.claimed_by_buyer && aucData.buyer == accountName && aucData.state == 3'
+    )
+      //- Claim auction button
+      q-btn.full-width(
+        @click='tryAucClaimBuy()',
+        label='CLAIM AUCTION',
+        color='primary'
+      )
+
     //- | owned: {{ isOwned }},
     //- | for sale: {{ isForSale }},
     //- | is buybacknft: {{ isBuybackNFT }},
     //- | is owned by LC: {{ isOwnedByLC }},
     //- | has buy offer: {{ hasBuyOrder }},
     //- | has offer: {{ hasOffer }},
-    //- | can claim: {{ isClaimable }}
+    //- | can claim: {{ isClaimable }},
+    //- | is on auction: {{ isOnAuction }},
+    //- | is auc seller: {{ isAucSeller }},
+
+    //- | bid: {{ bids }}
+    //- | top value: {{ highestBid }}
 
     //- list on market dialog
     CreateListingDialog(
       :assetData='assetData',
       v-model='showListingDialog',
       @update:showListingDialog='showListingDialog = $event',
+      @update-asset-info='$emit("updateAssetInfo", $event)'
+    )
+
+    //- auction dialog
+    AucBidDialog(
+      :aucData='aucData',
+      v-model='showAucDialog',
+      @update:showAucDialog='showAucDialog = $event',
       @update-asset-info='$emit("updateAssetInfo", $event)'
     )
 </template>

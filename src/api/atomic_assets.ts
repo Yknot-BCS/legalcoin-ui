@@ -2,6 +2,7 @@ import { ExplorerApi } from 'atomicassets';
 import { AtomicMarketApi } from 'atomicmarket';
 import { GalleryCard } from 'src/types';
 import { useRoute } from 'vue-router';
+import { ISale } from 'atomicmarket/build/API/Explorer/Objects';
 
 export const atomic_api = new ExplorerApi(
   process.env.ATOMICASSETS_API_ENDPOINT,
@@ -136,7 +137,6 @@ export const getQueryDataOptions = function (q: unknown): {
   key: string;
   value: string;
 }[] {
-  console.log('here');
   const route = useRoute();
   const dataOptions = [];
   const query = route.query;
@@ -150,16 +150,109 @@ export const getQueryApiOptions = function (q: unknown): {
   search: string;
   sort: string;
   order: string;
+  collection_whitelist?: string;
 } {
   const route = useRoute();
   const query = route.query;
-  const dataOptions = {
+  let dataOptions = {} as {
+    search: string;
+    sort: string;
+    order: string;
+    collection_whitelist?: string;
+  };
+  dataOptions = {
     search: (query['search'] as string) || '',
     sort: (query['sort'] as string) || 'created',
     order: (query['order'] as string) || 'desc'
   };
-  console.log(dataOptions);
+  if (query['collections']) {
+    dataOptions = {
+      ...dataOptions,
+      collection_whitelist: query['collections'] as string
+    };
+  }
   return dataOptions;
+};
+
+export const get_discover = async function (
+  ApiParams: any,
+  Page: number,
+  ItemsPerPage: number,
+  DataParams: { key: string; value: string }[],
+  status: string,
+  market: string
+) {
+  let count = 0;
+  let data: GalleryCard[] = [];
+  if (market === 'retail') {
+    if (status === 'buynow') {
+      const rawData = await atomic_market_api.fetchEndpoint('/v2/sales', {
+        ...ApiParams,
+        page: Page,
+        limit: ItemsPerPage,
+        ...DataParams
+      });
+      count = await atomic_market_api.fetchEndpoint('/v2/sales/_count', {
+        ...ApiParams,
+        ...DataParams
+      });
+      data = (rawData as ISale[]).map((sales) => {
+        return {
+          ...sales.assets[0].data,
+          to: '/asset/' + sales.assets[0].asset_id,
+          yield: getYield(
+            sales.assets[0].data.mintprice,
+            sales.assets[0].data.maturedvalue
+          ),
+          name: sales.assets[0].data.name as string,
+          imageUrl:
+            sales.assets[0].data.img &&
+            (sales.assets[0].data.img as string).includes('http')
+              ? (sales.assets[0].data.img as string)
+              : 'https://ipfs.io/ipfs/' + (sales.assets[0].data.img as string),
+          collection: sales.assets[0].collection.collection_name,
+          template: sales.assets[0].template.template_id,
+          schema: sales.assets[0].schema.schema_name,
+          id: sales.assets[0].asset_id
+        } as GalleryCard;
+      });
+    }
+    if (status === 'auction') {
+      const rawData = await atomic_market_api.getAuctions(
+        ApiParams,
+        Page,
+        ItemsPerPage,
+        DataParams
+      );
+      count = await atomic_market_api.countAuctions({
+        ...ApiParams,
+        ...DataParams
+      });
+      rawData.forEach((element) => {
+        data = data.concat(
+          element.assets.map((asset) => {
+            return {
+              ...asset.data,
+              to: '/asset/' + asset.asset_id,
+              yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
+              name: asset.data.name as string,
+              imageUrl:
+                asset.data.img && (asset.data.img as string).includes('http')
+                  ? (asset.data.img as string)
+                  : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+              collection: asset.collection.collection_name,
+              template: asset.template.template_id,
+              schema: asset.schema.schema_name,
+              id: asset.asset_id
+            } as GalleryCard;
+          })
+        );
+      });
+    }
+  } else {
+    return await get_templates(ApiParams, Page, ItemsPerPage, DataParams);
+  }
+  return { data, count };
 };
 
 export const get_sale = async function (
@@ -168,15 +261,19 @@ export const get_sale = async function (
   ItemsPerPage: number,
   DataParams: { key: string; value: string }[]
 ) {
-  const count = await atomic_market_api.countSales(ApiParams, DataParams);
-  const rawData = await atomic_market_api.getSales(
-    ApiParams,
-    Page,
-    ItemsPerPage,
-    DataParams
-  );
-  console.log(rawData);
-  const data = rawData.map((sales) => {
+  let count = 0;
+  let data: GalleryCard[] = [];
+  const rawData = await atomic_market_api.fetchEndpoint('/v2/sales', {
+    ...ApiParams,
+    page: Page,
+    limit: ItemsPerPage,
+    ...DataParams
+  });
+  count = await atomic_market_api.fetchEndpoint('/v2/sales/_count', {
+    ...ApiParams,
+    ...DataParams
+  });
+  data = (rawData as ISale[]).map((sales) => {
     return {
       ...sales.assets[0].data,
       to: '/asset/' + sales.assets[0].asset_id,
@@ -196,6 +293,117 @@ export const get_sale = async function (
       id: sales.assets[0].asset_id
     } as GalleryCard;
   });
+
+  return { data, count };
+};
+
+export const get_auction = async function (
+  ApiParams: any,
+  Page: number,
+  ItemsPerPage: number,
+  DataParams: { key: string; value: string }[]
+) {
+  let count = 0;
+  let data: GalleryCard[] = [];
+
+  const rawData = await atomic_market_api.getAuctions(
+    ApiParams,
+    Page,
+    ItemsPerPage,
+    DataParams
+  );
+  count = await atomic_market_api.countAuctions({
+    ...ApiParams,
+    ...DataParams
+  });
+  rawData.forEach((element) => {
+    data = data.concat(
+      element.assets.map((asset) => {
+        return {
+          ...asset.data,
+          to: '/asset/' + asset.asset_id,
+          yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
+          name: asset.data.name as string,
+          imageUrl:
+            asset.data.img && (asset.data.img as string).includes('http')
+              ? (asset.data.img as string)
+              : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+          collection: asset.collection.collection_name,
+          template: asset.template.template_id,
+          schema: asset.schema.schema_name,
+          id: asset.asset_id
+        } as GalleryCard;
+      })
+    );
+  });
+  return { data, count };
+};
+
+export const get_profile = async function (
+  ApiParams: any,
+  Page: number,
+  ItemsPerPage: number,
+  DataParams: { key: string; value: string }[],
+  status: string
+) {
+  let count = 0;
+  let data: GalleryCard[] = [];
+  if (status === 'buynow') {
+    const rawData = await atomic_api.getAssets(
+      ApiParams,
+      Page,
+      ItemsPerPage,
+      DataParams
+    );
+    count = await atomic_api.countAssets(ApiParams, DataParams);
+    data = rawData.map((asset) => {
+      return {
+        ...asset.data,
+        to: '/asset/' + asset.asset_id,
+        yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
+        name: asset.data.name as string,
+        imageUrl:
+          asset.data.img && (asset.data.img as string).includes('http')
+            ? (asset.data.img as string)
+            : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+        collection: asset.collection.collection_name,
+        template: asset.template.template_id,
+        schema: asset.schema.schema_name,
+        id: asset.asset_id
+      } as GalleryCard;
+    });
+  }
+  if (status === 'auction') {
+    const rawData = await atomic_market_api.getAuctions(
+      ApiParams,
+      Page,
+      ItemsPerPage,
+      DataParams
+    );
+    count = await atomic_market_api.countAuctions({
+      ...ApiParams,
+      ...DataParams
+    });
+    rawData.forEach((element) => {
+      data = element.assets.map((asset) => {
+        return {
+          ...asset.data,
+          to: '/asset/' + asset.asset_id,
+          yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
+          name: asset.data.name as string,
+          imageUrl:
+            asset.data.img && (asset.data.img as string).includes('http')
+              ? (asset.data.img as string)
+              : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+          collection: asset.collection.collection_name,
+          template: asset.template.template_id,
+          schema: asset.schema.schema_name,
+          id: asset.asset_id
+        } as GalleryCard;
+      });
+    });
+  }
+
   return { data, count };
 };
 
@@ -227,68 +435,124 @@ export const getTemplateQueryApiOptions = function (q: unknown): {
       order: (query['order'] as string) || 'desc'
     };
   }
-  console.log(dataOptions);
   return dataOptions;
 };
 
-export const getSalesQueryApiOptions = function (q: unknown): {
-  search: string;
-  sort: string;
-  order: string;
+export const getSalesQueryApiOptions = function (
+  q: unknown,
+  status: string
+): {
+  search?: string;
+  sort?: string;
+  order?: string;
   match?: string;
   seller?: string;
   seller_blacklist?: string;
-  status?: string[];
-  collection_whitelist: string;
+  market?: string[];
+  collection_whitelist?: string;
+  min_price?: string;
+  max_price?: string;
+  symbol?: string;
 } {
   const route = useRoute();
   const query = route.query;
-  let dataOptions = {} as {
-    search: string;
-    sort: string;
-    order: string;
-    match?: string;
-    seller?: string;
-    seller_blacklist?: string;
-    status?: string[];
-    collection_whitelist: string;
-  };
-  dataOptions = {
-    search: (query['search'] as string) || '',
-    sort: (query['sort'] as string) || 'created',
-    order: (query['order'] as string) || 'desc',
-    collection_whitelist: 'emission.lc'
-  };
-  if (query['filter[tier]'] && query['filter[tier]'] !== 'All') {
-    dataOptions = {
-      ...dataOptions,
-      match: (query['filter[tier]'] as string) || null
+  if (status === 'buynow') {
+    let dataOptions = {} as {
+      search: string;
+      sort: string;
+      order: string;
+      match?: string;
+      seller?: string;
+      seller_blacklist?: string;
+      market?: string[];
+      collection_whitelist?: string;
+      min_price?: string;
+      max_price?: string;
+      symbol?: string;
     };
-  }
-  if (
-    query['status'] &&
-    (query['status'] as string[]).includes('buynow') &&
-    (query['status'] as string[]).includes('marketplace') &&
-    (query['status'] as string[]).includes('auction')
-  ) {
-  } else if (
-    query['status'] &&
-    (query['status'] as string[]).includes('buynow') &&
-    (query['status'] as string[]).includes('marketplace')
-  ) {
-  } else if (
-    query['status'] &&
-    (query['status'] as string[]).includes('buynow')
-  ) {
-    dataOptions = { ...dataOptions, seller: process.env.AA_ACCOUNT };
-  } else if (
-    query['status'] &&
-    (query['status'] as string[]).includes('marketplace')
-  ) {
-    dataOptions = { ...dataOptions, seller_blacklist: process.env.AA_ACCOUNT };
+    dataOptions = {
+      search: (query['search'] as string) || '',
+      sort: (query['sort'] as string) || 'created',
+      order: (query['order'] as string) || 'desc'
+    };
+    if (query['filter[tier]'] && query['filter[tier]'] !== 'All') {
+      dataOptions = {
+        ...dataOptions,
+        match: (query['filter[tier]'] as string) || null
+      };
+    }
+    if (query['market'] && (query['market'] as string[]).includes('retail')) {
+      dataOptions = {
+        ...dataOptions,
+        seller_blacklist: process.env.AA_ACCOUNT
+      };
+    } else {
+      dataOptions = { ...dataOptions, seller: process.env.AA_ACCOUNT };
+    }
+    if (query['min_price'] && query['max_price']) {
+      dataOptions = {
+        ...dataOptions,
+        min_price: (query['min_price'] as string) || '0',
+        max_price: (query['max_price'] as string) || '10000',
+        symbol: process.env.LC_SYMBOL
+      };
+    }
+    if (query['collections']) {
+      dataOptions = {
+        ...dataOptions,
+        collection_whitelist: query['collections'] as string
+      };
+    }
+    return dataOptions;
   } else {
+    let dataOptions = {} as {
+      search?: string;
+      sort: string;
+      order: string;
+      match?: string;
+      seller?: string;
+      seller_blacklist?: string;
+      market?: string[];
+      collection_whitelist?: string;
+      min_price?: string;
+      max_price?: string;
+      symbol?: string;
+    };
+    dataOptions = {
+      sort: (query['sort'] as string) || 'created',
+      order: (query['order'] as string) || 'desc'
+    };
+    if (query['filter[tier]'] && query['filter[tier]'] !== 'All') {
+      dataOptions = {
+        ...dataOptions,
+        match: (query['filter[tier]'] as string) || null
+      };
+    }
+    if (
+      query['market'] &&
+      (query['market'] as string[]).includes('secondary')
+    ) {
+      dataOptions = {
+        ...dataOptions,
+        seller_blacklist: process.env.AA_ACCOUNT
+      };
+    }
+    if (query['min_price'] && query['max_price']) {
+      dataOptions = {
+        ...dataOptions,
+        min_price: (query['min_price'] as string) || '0',
+        max_price: (query['max_price'] as string) || '10000',
+        symbol: process.env.LC_SYMBOL
+      };
+    }
+    if (query['collections']) {
+      dataOptions = {
+        ...dataOptions,
+        collection_whitelist: query['collections'] as string
+      };
+    }
+    return dataOptions;
   }
-  return dataOptions;
 };
 
 export const getQueryPage = function (q: unknown): number {
@@ -303,8 +567,41 @@ export const getQueryLimit = function (q: unknown): number {
   return Number(query['limit'] as string) || 6;
 };
 
+export const getQueryMarket = function (q: unknown): string {
+  const route = useRoute();
+  const query = route.query;
+  return (query['market'] as string) || 'primary';
+};
+
+export const getQueryPrice = function (q: unknown): {
+  min: number;
+  max: number;
+} {
+  const route = useRoute();
+  const query = route.query;
+  return {
+    min: Number(query['min_price']) || 0,
+    max: Number(query['max_price']) || 10000
+  };
+};
+
+export const getCollectionsList = async function (): Promise<{
+  array: string[];
+  stringList: string;
+}> {
+  const collectionsfilter = {
+    authorized_account: process.env.AA_ACCOUNT,
+    limit: 100,
+    order: 'desc',
+    sort: 'created'
+  } as unknown;
+  const data = await atomic_api.getCollections(collectionsfilter);
+  const dataList = data.map((col) => col.collection_name);
+  return { array: dataList, stringList: dataList.toString() };
+};
+
 export const getQueryStatus = function (q: unknown): string {
   const route = useRoute();
   const query = route.query;
-  return (query['status'] as string) || '[]';
+  return (query['status'] as string) || 'buynow';
 };

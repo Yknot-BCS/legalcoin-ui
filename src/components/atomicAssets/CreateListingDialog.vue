@@ -14,7 +14,7 @@ export default defineComponent({
     },
     showListingDialog: {
       type: Boolean as PropType<boolean>,
-      required: true
+      required: false
     }
   },
   emits: ['update:showListingDialog', 'updateAssetInfo'],
@@ -57,17 +57,22 @@ export default defineComponent({
     async listNFT() {
       let amountStr = Asset.from(
         Number(this.listPrice),
-        Asset.Symbol.fromParts('WAX', 8) // FIXME input LEGAL price
+        Asset.Symbol.fromParts(
+          process.env.LC_SYMBOL,
+          Number(process.env.LC_PRECISION)
+        )
       ).toString(); //'2.00000000 WAX'
       let actions: unknown = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'announcesale',
           data: {
             seller: this.accountName as string,
             asset_ids: [this.assetData.asset_id],
             listing_price: amountStr,
-            settlement_symbol: '8,WAX', // FIXME input LEGAL symbol
+            settlement_symbol: `${Number(process.env.LC_PRECISION)},${
+              process.env.LC_SYMBOL
+            }`,
             maker_marketplace: ''
           }
         },
@@ -76,7 +81,7 @@ export default defineComponent({
           name: 'createoffer',
           data: {
             sender: this.accountName as string,
-            recipient: 'atomicmarket',
+            recipient: process.env.ATOMICMARKET,
             sender_asset_ids: [this.assetData.asset_id],
             recipient_asset_ids: [],
             memo: 'sale'
@@ -115,12 +120,15 @@ export default defineComponent({
     async aucNFT() {
       let amountStr = Asset.from(
         Number(this.aucPrice),
-        Asset.Symbol.fromParts('WAX', 8) // FIXME input LEGAL price
+        Asset.Symbol.fromParts(
+          process.env.LC_SYMBOL,
+          Number(process.env.LC_PRECISION)
+        )
       ).toString(); //'2.00000000 WAX'
 
       let actions = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'announceauct',
           data: {
             seller: this.accountName as string,
@@ -135,7 +143,7 @@ export default defineComponent({
           name: 'transfer',
           data: {
             from: this.accountName as string,
-            to: 'atomicmarket',
+            to: process.env.ATOMICMARKET,
             asset_ids: [this.assetData.asset_id],
             memo: 'auction'
           }

@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, computed, ref, onMounted } from 'vue';
+import { defineComponent, computed, ref, onMounted, onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'src/store';
 import {
@@ -7,7 +7,8 @@ import {
   getQueryDataOptions,
   getQueryApiOptions,
   getQueryPage,
-  getQueryLimit
+  getQueryLimit,
+  getCollectionsList
 } from 'src/api/atomic_assets';
 import GalleryView from 'src/components/gallery/GalleryView.vue';
 import AtomicAssetsView from 'src/components/atomicAssets/AtomicAssetView.vue';
@@ -29,12 +30,12 @@ export default defineComponent({
     const limit = computed(() => getQueryLimit(route.query));
     const assetCount = ref<number>(1);
     const collectionCount = ref<number>(1);
+    const collections = ref<string>('emissions.lc');
     const myGalleryOptions = computed(() => {
       return {
         owner: profileId.value,
         search: search.value,
-        min_template_mint: '1',
-        max_template_mint: '7000',
+        collection_whitelist: collections.value,
         ...getQueryApiOptions(route.query)
       } as unknown;
     });
@@ -48,6 +49,10 @@ export default defineComponent({
       let data = await atomic_api.getAccount(profileId.value as string);
       assetCount.value = Number(data.assets);
       collectionCount.value = data.collections.length;
+    });
+    onBeforeMount(async () => {
+      const collectionData = await getCollectionsList();
+      collections.value = collectionData.stringList;
     });
     return {
       profileId,
@@ -102,8 +107,9 @@ page
         :Page='page',
         :ItemsPerPage='limit',
         :DataParams='dataOptions',
-        Type='Assets',
-        :FilterStatus='false'
+        Type='Profile',
+        :FilterPrice='false',
+        :FilterMarket='false'
       )
 </template>
 
