@@ -15,10 +15,11 @@ import {
   get_assets,
   get_collections,
   get_templates,
-  get_sale,
+  get_discover,
   getCollectionsList,
   getQueryMarket,
-  getQueryStatus
+  getQueryStatus,
+  get_profile
 } from 'src/api/atomic_assets';
 import { AssetsApiParams } from 'atomicassets/build/API/Explorer/Params';
 import { useRouter, useRoute } from 'vue-router';
@@ -51,6 +52,11 @@ export default defineComponent({
       type: Object as PropType<{ min: number; max: number }>,
       required: false
     },
+    DisableSearch: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
     DisableFilter: {
       type: Boolean,
       required: false,
@@ -62,6 +68,11 @@ export default defineComponent({
       default: true
     },
     FilterPrice: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    FilterMarket: {
       type: Boolean,
       required: false,
       default: true
@@ -165,8 +176,10 @@ export default defineComponent({
     const Pages = computed((): number =>
       Math.ceil(assetCount.value / limit.value)
     );
+    const disableSearch = computed(() => props.DisableSearch);
     const filterStatus = computed(() => props.FilterStatus);
     const filterPrice = computed(() => props.FilterPrice);
+    const filterMarket = computed(() => props.FilterMarket);
     const filterCollection = computed(() => props.FilterCollection);
     const filterTier = computed(() => props.Tier);
     const collections = ref(
@@ -190,7 +203,6 @@ export default defineComponent({
       };
       switch (Type.value) {
         case 'Assets':
-          DataParams.value;
           response = await get_assets(
             ApiParams.value,
             Page.value,
@@ -227,15 +239,30 @@ export default defineComponent({
           break;
 
         case 'Sale':
-          response = await get_sale(
+          response = await get_discover(
+            ApiParams.value,
+            Page.value,
+            ItemsPerPage.value,
+            DataParams.value,
+            status.value,
+            market.value
+          );
+
+          GalleryData.value = response.data;
+          assetCount.value = response.count;
+
+          break;
+        case 'Profile':
+          response = await get_profile(
             ApiParams.value,
             Page.value,
             ItemsPerPage.value,
             DataParams.value,
             status.value
           );
-
+          console.log(GalleryData.value);
           GalleryData.value = response.data;
+          console.log(GalleryData.value);
           assetCount.value = response.count;
 
           break;
@@ -391,7 +418,9 @@ export default defineComponent({
       collections,
       collectionsArray,
       model: ref('one'),
-      market
+      market,
+      disableSearch,
+      filterMarket
     };
   }
 });
@@ -421,7 +450,8 @@ page
                 :label='$q.screen.lt.md ? "Filters" : ""'
               )
           .col-md-8.col-sm-12.col-xs-12(
-            :class='$q.screen.lt.md ? "order-last" : ""'
+            :class='$q.screen.lt.md ? "order-last" : ""',
+            v-if='disableSearch'
           )
             q-input(
               dense,
@@ -451,7 +481,7 @@ page
         .row.justify-evenly
           .col-lg-2.col-md-3.q-pt-md(v-if='showFilter')
             q-card.q-pb-md(bordered, flat)
-              .q-pa-md
+              .q-pa-md(v-if='filterMarket')
                 q-btn-toggle(
                   v-model='market',
                   spread,
@@ -481,7 +511,7 @@ page
                           color='primary',
                           @update:model-value='() => { applyFilters(); }'
                         )
-                  .col-12(v-if='market === "retail"')
+                  .col-12(v-if='market === "retail" || Type === "Profile"')
                     .row
                       .col-6 On Auction
                       .col-6

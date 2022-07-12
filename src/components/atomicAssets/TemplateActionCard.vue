@@ -173,7 +173,7 @@ export default defineComponent({
 
       let actions = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'assertsale',
           data: {
             sale_id: this.saleData.sale_id,
@@ -190,13 +190,13 @@ export default defineComponent({
           name: 'transfer',
           data: {
             from: this.accountName as string,
-            to: 'atomicmarket',
+            to: process.env.ATOMICMARKET,
             quantity: amountStr,
             memo: 'deposit'
           }
         },
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'purchasesale',
           data: {
             buyer: this.accountName as string,

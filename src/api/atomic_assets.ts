@@ -174,7 +174,172 @@ export const getQueryApiOptions = function (q: unknown): {
   return dataOptions;
 };
 
+export const get_discover = async function (
+  ApiParams: any,
+  Page: number,
+  ItemsPerPage: number,
+  DataParams: { key: string; value: string }[],
+  status: string,
+  market: string
+) {
+  let count = 0;
+  let data: GalleryCard[] = [];
+  if (market === 'retail') {
+    if (status === 'buynow') {
+      const rawData = await atomic_market_api.fetchEndpoint('/v2/sales', {
+        ...ApiParams,
+        page: Page,
+        limit: ItemsPerPage,
+        ...DataParams
+      });
+      count = await atomic_market_api.fetchEndpoint('/v2/sales/_count', {
+        ...ApiParams,
+        ...DataParams
+      });
+      data = (rawData as ISale[]).map((sales) => {
+        return {
+          ...sales.assets[0].data,
+          to: '/asset/' + sales.assets[0].asset_id,
+          yield: getYield(
+            sales.assets[0].data.mintprice,
+            sales.assets[0].data.maturedvalue
+          ),
+          name: sales.assets[0].data.name as string,
+          imageUrl:
+            sales.assets[0].data.img &&
+            (sales.assets[0].data.img as string).includes('http')
+              ? (sales.assets[0].data.img as string)
+              : 'https://ipfs.io/ipfs/' + (sales.assets[0].data.img as string),
+          collection: sales.assets[0].collection.collection_name,
+          template: sales.assets[0].template.template_id,
+          schema: sales.assets[0].schema.schema_name,
+          id: sales.assets[0].asset_id
+        } as GalleryCard;
+      });
+    }
+    if (status === 'auction') {
+      const rawData = await atomic_market_api.getAuctions(
+        ApiParams,
+        Page,
+        ItemsPerPage,
+        DataParams
+      );
+      count = await atomic_market_api.countAuctions({
+        ...ApiParams,
+        ...DataParams
+      });
+      rawData.forEach((element) => {
+        data = data.concat(
+          element.assets.map((asset) => {
+            return {
+              ...asset.data,
+              to: '/asset/' + asset.asset_id,
+              yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
+              name: asset.data.name as string,
+              imageUrl:
+                asset.data.img && (asset.data.img as string).includes('http')
+                  ? (asset.data.img as string)
+                  : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+              collection: asset.collection.collection_name,
+              template: asset.template.template_id,
+              schema: asset.schema.schema_name,
+              id: asset.asset_id
+            } as GalleryCard;
+          })
+        );
+      });
+    }
+  } else {
+    return await get_templates(ApiParams, Page, ItemsPerPage, DataParams);
+  }
+  return { data, count };
+};
+
 export const get_sale = async function (
+  ApiParams: any,
+  Page: number,
+  ItemsPerPage: number,
+  DataParams: { key: string; value: string }[]
+) {
+  let count = 0;
+  let data: GalleryCard[] = [];
+  const rawData = await atomic_market_api.fetchEndpoint('/v2/sales', {
+    ...ApiParams,
+    page: Page,
+    limit: ItemsPerPage,
+    ...DataParams
+  });
+  count = await atomic_market_api.fetchEndpoint('/v2/sales/_count', {
+    ...ApiParams,
+    ...DataParams
+  });
+  data = (rawData as ISale[]).map((sales) => {
+    return {
+      ...sales.assets[0].data,
+      to: '/asset/' + sales.assets[0].asset_id,
+      yield: getYield(
+        sales.assets[0].data.mintprice,
+        sales.assets[0].data.maturedvalue
+      ),
+      name: sales.assets[0].data.name as string,
+      imageUrl:
+        sales.assets[0].data.img &&
+        (sales.assets[0].data.img as string).includes('http')
+          ? (sales.assets[0].data.img as string)
+          : 'https://ipfs.io/ipfs/' + (sales.assets[0].data.img as string),
+      collection: sales.assets[0].collection.collection_name,
+      template: sales.assets[0].template.template_id,
+      schema: sales.assets[0].schema.schema_name,
+      id: sales.assets[0].asset_id
+    } as GalleryCard;
+  });
+
+  return { data, count };
+};
+
+export const get_auction = async function (
+  ApiParams: any,
+  Page: number,
+  ItemsPerPage: number,
+  DataParams: { key: string; value: string }[]
+) {
+  let count = 0;
+  let data: GalleryCard[] = [];
+
+  const rawData = await atomic_market_api.getAuctions(
+    ApiParams,
+    Page,
+    ItemsPerPage,
+    DataParams
+  );
+  count = await atomic_market_api.countAuctions({
+    ...ApiParams,
+    ...DataParams
+  });
+  rawData.forEach((element) => {
+    data = data.concat(
+      element.assets.map((asset) => {
+        return {
+          ...asset.data,
+          to: '/asset/' + asset.asset_id,
+          yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
+          name: asset.data.name as string,
+          imageUrl:
+            asset.data.img && (asset.data.img as string).includes('http')
+              ? (asset.data.img as string)
+              : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+          collection: asset.collection.collection_name,
+          template: asset.template.template_id,
+          schema: asset.schema.schema_name,
+          id: asset.asset_id
+        } as GalleryCard;
+      })
+    );
+  });
+  return { data, count };
+};
+
+export const get_profile = async function (
   ApiParams: any,
   Page: number,
   ItemsPerPage: number,
@@ -184,34 +349,27 @@ export const get_sale = async function (
   let count = 0;
   let data: GalleryCard[] = [];
   if (status === 'buynow') {
-    const rawData = await atomic_market_api.fetchEndpoint('/v2/sales', {
-      ...ApiParams,
-      page: Page,
-      limit: ItemsPerPage,
-      ...DataParams
-    });
-    count = await atomic_market_api.fetchEndpoint('/v2/sales/_count', {
-      ...ApiParams,
-      ...DataParams
-    });
-    data = (rawData as ISale[]).map((sales) => {
+    const rawData = await atomic_api.getAssets(
+      ApiParams,
+      Page,
+      ItemsPerPage,
+      DataParams
+    );
+    count = await atomic_api.countAssets(ApiParams, DataParams);
+    data = rawData.map((asset) => {
       return {
-        ...sales.assets[0].data,
-        to: '/asset/' + sales.assets[0].asset_id,
-        yield: getYield(
-          sales.assets[0].data.mintprice,
-          sales.assets[0].data.maturedvalue
-        ),
-        name: sales.assets[0].data.name as string,
+        ...asset.data,
+        to: '/asset/' + asset.asset_id,
+        yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
+        name: asset.data.name as string,
         imageUrl:
-          sales.assets[0].data.img &&
-          (sales.assets[0].data.img as string).includes('http')
-            ? (sales.assets[0].data.img as string)
-            : 'https://ipfs.io/ipfs/' + (sales.assets[0].data.img as string),
-        collection: sales.assets[0].collection.collection_name,
-        template: sales.assets[0].template.template_id,
-        schema: sales.assets[0].schema.schema_name,
-        id: sales.assets[0].asset_id
+          asset.data.img && (asset.data.img as string).includes('http')
+            ? (asset.data.img as string)
+            : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+        collection: asset.collection.collection_name,
+        template: asset.template.template_id,
+        schema: asset.schema.schema_name,
+        id: asset.asset_id
       } as GalleryCard;
     });
   }
@@ -227,26 +385,25 @@ export const get_sale = async function (
       ...DataParams
     });
     rawData.forEach((element) => {
-      data = data.concat(
-        element.assets.map((asset) => {
-          return {
-            ...asset.data,
-            to: '/asset/' + asset.asset_id,
-            yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
-            name: asset.data.name as string,
-            imageUrl:
-              asset.data.img && (asset.data.img as string).includes('http')
-                ? (asset.data.img as string)
-                : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
-            collection: asset.collection.collection_name,
-            template: asset.template.template_id,
-            schema: asset.schema.schema_name,
-            id: asset.asset_id
-          } as GalleryCard;
-        })
-      );
+      data = element.assets.map((asset) => {
+        return {
+          ...asset.data,
+          to: '/asset/' + asset.asset_id,
+          yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
+          name: asset.data.name as string,
+          imageUrl:
+            asset.data.img && (asset.data.img as string).includes('http')
+              ? (asset.data.img as string)
+              : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+          collection: asset.collection.collection_name,
+          template: asset.template.template_id,
+          schema: asset.schema.schema_name,
+          id: asset.asset_id
+        } as GalleryCard;
+      });
     });
   }
+
   return { data, count };
 };
 
@@ -337,7 +494,7 @@ export const getSalesQueryApiOptions = function (
         ...dataOptions,
         min_price: (query['min_price'] as string) || '0',
         max_price: (query['max_price'] as string) || '10000',
-        symbol: 'WAX'
+        symbol: process.env.LC_SYMBOL
       };
     }
     if (query['collections']) {
@@ -385,7 +542,7 @@ export const getSalesQueryApiOptions = function (
         ...dataOptions,
         min_price: (query['min_price'] as string) || '0',
         max_price: (query['max_price'] as string) || '10000',
-        symbol: 'WAX'
+        symbol: process.env.LC_SYMBOL
       };
     }
     if (query['collections']) {

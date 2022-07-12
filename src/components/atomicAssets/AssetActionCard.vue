@@ -293,7 +293,7 @@ export default defineComponent({
 
       let actions = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'assertsale',
           data: {
             sale_id: this.saleData.sale_id,
@@ -310,13 +310,13 @@ export default defineComponent({
           name: 'transfer',
           data: {
             from: this.accountName as string,
-            to: 'atomicmarket',
+            to: process.env.ATOMICMARKET,
             quantity: amountStr,
             memo: 'deposit'
           }
         },
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'purchasesale',
           data: {
             buyer: this.accountName as string,
@@ -360,14 +360,14 @@ export default defineComponent({
           name: 'createoffer',
           data: {
             sender: this.accountName as string,
-            recipient: 'atomicmarket',
+            recipient: process.env.ATOMICMARKET,
             sender_asset_ids: [this.buyofferData.assets[0].asset_id],
             recipient_asset_ids: [],
             memo: 'buyoffer'
           }
         },
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'acceptbuyo',
           data: {
             buyoffer_id: this.buyofferData.buyoffer_id,
@@ -452,7 +452,7 @@ export default defineComponent({
     async cancelListing() {
       let actions: unknown = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'cancelsale',
           data: {
             sale_id: this.saleData.sale_id
@@ -490,7 +490,7 @@ export default defineComponent({
     async aucClaimSel() {
       let actions: unknown = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'auctclaimsel',
           data: {
             auction_id: this.aucData.auction_id
@@ -528,7 +528,7 @@ export default defineComponent({
     async aucClaimBuy() {
       let actions: unknown = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'auctclaimbuy',
           data: {
             auction_id: this.aucData.auction_id
@@ -566,7 +566,7 @@ export default defineComponent({
     async cancelAuc() {
       let actions: unknown = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'cancelauct',
           data: {
             auction_id: this.aucData.auction_id
