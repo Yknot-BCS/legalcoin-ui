@@ -640,11 +640,7 @@ q-card
         q-btn(icon='share', size='md', @click='shareURL', round)
 
     //- expected yield?
-<<<<<<< HEAD
-    .row.justify-center.items-center.fit.wrap 
-=======
     .row.fit.wrap 
->>>>>>> develop
       .text-subtitle2 Expected yield: {{ expectedYield }}
     //- timeline
     Timeline(
