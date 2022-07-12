@@ -87,7 +87,8 @@ export default defineComponent({
             template.immutable_data.img &&
             (template.immutable_data.img as string).includes('http')
               ? (template.immutable_data.img as string)
-              : 'https://ipfs.io/ipfs/' +
+              : process.env.IPFS_ENDPOINT +
+                '/ipfs/' +
                 (template.immutable_data.img as string),
           collection: template.collection.collection_name,
           template: '',

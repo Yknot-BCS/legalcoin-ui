@@ -46,7 +46,9 @@ export default defineComponent({
   },
   computed: {
     assetImg(): string {
-      return `https://ipfs.io/ipfs/${<string>this.assetData.data.img}`;
+      return `${process.env.IPFS_ENDPOINT}/ipfs/${<string>(
+        this.assetData.data.img
+      )}`;
     }
   }
 });

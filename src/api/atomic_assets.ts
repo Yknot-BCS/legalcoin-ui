@@ -38,7 +38,7 @@ export const get_assets = async function (
       imageUrl:
         asset.data.img && (asset.data.img as string).includes('http')
           ? (asset.data.img as string)
-          : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+          : process.env.IPFS_ENDPOINT + '/ipfs/' + (asset.data.img as string),
       collection: asset.collection.collection_name,
       template: asset.template.template_id,
       schema: asset.schema.schema_name,
@@ -65,7 +65,9 @@ export const get_collections = async function (
       imageUrl:
         collection.data.img && (collection.data.img as string).includes('http')
           ? (collection.data.img as string)
-          : 'https://ipfs.io/ipfs/' + (collection.data.img as string),
+          : process.env.IPFS_ENDPOINT +
+            '/ipfs/' +
+            (collection.data.img as string),
       collection: collection.collection_name,
       template: '',
       schema: '',
@@ -101,7 +103,9 @@ export const get_templates = async function (
         template.immutable_data.img &&
         (template.immutable_data.img as string).includes('http')
           ? (template.immutable_data.img as string)
-          : 'https://ipfs.io/ipfs/' + (template.immutable_data.img as string),
+          : process.env.IPFS_ENDPOINT +
+            '/ipfs/' +
+            (template.immutable_data.img as string),
       collection: template.collection.collection_name,
       template: '',
       schema: '',
@@ -209,7 +213,9 @@ export const get_discover = async function (
             sales.assets[0].data.img &&
             (sales.assets[0].data.img as string).includes('http')
               ? (sales.assets[0].data.img as string)
-              : 'https://ipfs.io/ipfs/' + (sales.assets[0].data.img as string),
+              : process.env.IPFS_ENDPOINT +
+                '/ipfs/' +
+                (sales.assets[0].data.img as string),
           collection: sales.assets[0].collection.collection_name,
           template: sales.assets[0].template.template_id,
           schema: sales.assets[0].schema.schema_name,
@@ -239,7 +245,9 @@ export const get_discover = async function (
               imageUrl:
                 asset.data.img && (asset.data.img as string).includes('http')
                   ? (asset.data.img as string)
-                  : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+                  : process.env.IPFS_ENDPOINT +
+                    '/ipfs/' +
+                    (asset.data.img as string),
               collection: asset.collection.collection_name,
               template: asset.template.template_id,
               schema: asset.schema.schema_name,
@@ -286,7 +294,9 @@ export const get_sale = async function (
         sales.assets[0].data.img &&
         (sales.assets[0].data.img as string).includes('http')
           ? (sales.assets[0].data.img as string)
-          : 'https://ipfs.io/ipfs/' + (sales.assets[0].data.img as string),
+          : process.env.IPFS_ENDPOINT +
+            '/ipfs/' +
+            (sales.assets[0].data.img as string),
       collection: sales.assets[0].collection.collection_name,
       template: sales.assets[0].template.template_id,
       schema: sales.assets[0].schema.schema_name,
@@ -327,7 +337,9 @@ export const get_auction = async function (
           imageUrl:
             asset.data.img && (asset.data.img as string).includes('http')
               ? (asset.data.img as string)
-              : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+              : process.env.IPFS_ENDPOINT +
+                '/ipfs/' +
+                (asset.data.img as string),
           collection: asset.collection.collection_name,
           template: asset.template.template_id,
           schema: asset.schema.schema_name,
@@ -365,7 +377,7 @@ export const get_profile = async function (
         imageUrl:
           asset.data.img && (asset.data.img as string).includes('http')
             ? (asset.data.img as string)
-            : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+            : process.env.IPFS_ENDPOINT + '/ipfs/' + (asset.data.img as string),
         collection: asset.collection.collection_name,
         template: asset.template.template_id,
         schema: asset.schema.schema_name,
@@ -394,7 +406,9 @@ export const get_profile = async function (
           imageUrl:
             asset.data.img && (asset.data.img as string).includes('http')
               ? (asset.data.img as string)
-              : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+              : process.env.IPFS_ENDPOINT +
+                '/ipfs/' +
+                (asset.data.img as string),
           collection: asset.collection.collection_name,
           template: asset.template.template_id,
           schema: asset.schema.schema_name,
