@@ -619,11 +619,7 @@ export default defineComponent({
 q-card 
   q-card-section
     //- name
-<<<<<<< HEAD
-    .text-bold.NFT-heading
-=======
     .text-bold.text-NFTCard-heading.text-grey-10
->>>>>>> develop
       | {{ assetData?.data?.name }}
     //- by
     .row.justify-between.items-center.fit.wrap
