@@ -60,7 +60,7 @@ export default defineComponent({
       let trending = [];
       for (const collection of this.collections) {
         let templateStatsFilter = {
-          symbol: 'WAX',
+          symbol: process.env.LC_SYMBOL,
           search: collection.collection_name
         } as unknown;
 
@@ -132,7 +132,7 @@ q-page
       .landing-right
         .landing-right-card-container
           .main-asset.col-md-6.q-pa-lg(v-if='assets.length > 0')
-            Cards.shadow-10(:data='assets[0]', type='Assets')
+            Cards(:data='assets[0]', type='Assets')
 
     //- Featured Collections
   .div
@@ -178,6 +178,9 @@ q-page
 .pgb
   position: relative
 
+.rounded
+  border-radius: 1rem
+  overflow: hidden
 .landing-heading
   color: $grey-9
   text-align: center

@@ -1,7 +1,6 @@
 <script lang="ts">
 import { defineComponent, computed, ref, onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
-import { useStore } from 'src/store';
 import {
   getQueryDataOptions,
   getSalesQueryApiOptions,
@@ -29,7 +28,6 @@ export default defineComponent({
     const price = computed(() => getQueryPrice(route.query));
     const status = computed(() => getQueryStatus(route.query));
     const collections = ref<string>('emissions.lc');
-    console.log('status', status.value);
     const assetOptions = computed(() => {
       return {
         state: '1',
@@ -42,7 +40,6 @@ export default defineComponent({
     onBeforeMount(async () => {
       const collectionData = await getCollectionsList();
       collections.value = collectionData.stringList;
-      console.log(collections.value);
     });
     return {
       assetOptions,
@@ -62,14 +59,15 @@ export default defineComponent({
 page
 .row.justify-center
   .col-12
-    q-card(flat)
+    q-card(bordered)
       AtomicAssetsView(
         :ApiParams='assetOptions',
         :Page='page',
         :ItemsPerPage='limit',
         :DataParams='dataOptions',
         Type='Sale',
-        :Price='price'
+        :Price='price',
+        :DisableSearch='false'
       )
 </template>
 

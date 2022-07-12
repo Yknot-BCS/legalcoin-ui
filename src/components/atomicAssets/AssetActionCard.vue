@@ -57,6 +57,7 @@ export default defineComponent({
     ...mapGetters({
       accountName: 'account/getAccountName'
     }),
+
     isOwned() {
       // Check if the current user is the owner of the asset
       if (this.accountName === this.assetData.owner) {
@@ -292,7 +293,7 @@ export default defineComponent({
 
       let actions = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'assertsale',
           data: {
             sale_id: this.saleData.sale_id,
@@ -309,13 +310,13 @@ export default defineComponent({
           name: 'transfer',
           data: {
             from: this.accountName as string,
-            to: 'atomicmarket',
+            to: process.env.ATOMICMARKET,
             quantity: amountStr,
             memo: 'deposit'
           }
         },
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'purchasesale',
           data: {
             buyer: this.accountName as string,
@@ -359,14 +360,14 @@ export default defineComponent({
           name: 'createoffer',
           data: {
             sender: this.accountName as string,
-            recipient: 'atomicmarket',
+            recipient: process.env.ATOMICMARKET,
             sender_asset_ids: [this.buyofferData.assets[0].asset_id],
             recipient_asset_ids: [],
             memo: 'buyoffer'
           }
         },
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'acceptbuyo',
           data: {
             buyoffer_id: this.buyofferData.buyoffer_id,
@@ -451,7 +452,7 @@ export default defineComponent({
     async cancelListing() {
       let actions: unknown = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'cancelsale',
           data: {
             sale_id: this.saleData.sale_id
@@ -489,7 +490,7 @@ export default defineComponent({
     async aucClaimSel() {
       let actions: unknown = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'auctclaimsel',
           data: {
             auction_id: this.aucData.auction_id
@@ -527,7 +528,7 @@ export default defineComponent({
     async aucClaimBuy() {
       let actions: unknown = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'auctclaimbuy',
           data: {
             auction_id: this.aucData.auction_id
@@ -565,7 +566,7 @@ export default defineComponent({
     async cancelAuc() {
       let actions: unknown = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'cancelauct',
           data: {
             auction_id: this.aucData.auction_id
@@ -618,11 +619,15 @@ export default defineComponent({
 q-card 
   q-card-section
     //- name
+<<<<<<< HEAD
     .text-bold.NFT-heading
+=======
+    .text-bold.text-NFTCard-heading.text-grey-10
+>>>>>>> develop
       | {{ assetData?.data?.name }}
     //- by
     .row.justify-between.items-center.fit.wrap
-      .col-10.text-italic.text-subtitle1.column
+      .col-10.text-italic.text-subtitle2.column
         .col(v-if='isOnAuction')
           //- router-link(
           //-   :to='{ name: "profile", params: { profile: aucData?.seller } }'
@@ -639,7 +644,11 @@ q-card
         q-btn(icon='share', size='md', @click='shareURL', round)
 
     //- expected yield?
+<<<<<<< HEAD
     .row.justify-center.items-center.fit.wrap 
+=======
+    .row.fit.wrap 
+>>>>>>> develop
       .text-subtitle2 Expected yield: {{ expectedYield }}
     //- timeline
     Timeline(
@@ -652,14 +661,14 @@ q-card
     .div(v-if='isForSale && !isOwned')
       .row.justify-between.q-mt-lg
         .col-6
-          .column.content-start 
+          .column.content-start.text-NFTCard-price-head.text-grey-10
             | Purchase Price
-            .text-subtitle1
+            .text-NFTCard-price-value.text-grey-10
               | {{ priceStr }}
         .col-6
-          .column.content-end.items-end
+          .column.content-end.items-end.text-NFTCard-price-head.text-grey-10
             | Days to Maturity
-            .text-subtitle1
+            .text-NFTCard-price-value.text-grey-10
               | {{ daysToMaturity }}
       .row.justify-between.q-mt-lg
         .col-3
@@ -672,9 +681,9 @@ q-card
             outlined
           )
         .col-6
-          .column.content-end.items-end
+          .column.content-end.items-end.text-NFTCard-price-head.text-grey-10
             | Total
-            .text-subtitle1
+            .text-NFTCard-price-value.text-grey-10
               | {{ priceStr }}
 
       q-btn.full-width.q-mt-lg(

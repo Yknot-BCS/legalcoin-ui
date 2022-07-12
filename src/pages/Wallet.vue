@@ -83,35 +83,35 @@ export default defineComponent({
 <template lang="pug">
 q-page
   .row.justify-center
-    q-card
+    q-card.q-mt-xl
       q-card-section
-        .text-h6.text-grey-14
+        .text-wallet-heading.text-grey-8
           | Balance
       q-card-section
-        .text-wallet-topline.text-bold.text-grey-10
-          | {{ balance }} LCP (LEGALCOIN POUND)
-        .text-body2.text-grey-10
-          | {{ gbpValue }} (GBP)
+        .text-wallet-topline.text-bold 
+          | {{ balance }} LEGAL (LEGALCOIN)
+        .text-wallet-bottomline
+          | £ {{ gbpValue }} (GBP)
           //- TODO get GBP value
       q-separator.q-mx-md
       q-card-section
-        .text-wallet-topline.text-bold.text-grey-10
+        .text-wallet-topline.text-bold 
           | {{ nftCount }} NFTS
-        .text-body2.text-grey-10
-          | {{ nftValue.toFixed(2) }} (LCP)
+        .text-wallet-bottomline
+          | {{ nftValue.toFixed(2) }} (LEGAL)
       q-separator.q-mx-md
       q-card-section
-        .text-h6.text-grey-14
+        .text-wallet-heading.text-grey-8
           | Options
         .row.justify-center.q-mt-sm
           .row.col-6
-            q-btn.wallet-btn.col.q-mx-sm.q-mt-sm(
+            q-btn.col.q-mx-sm.q-mt-sm.wallet-btn(
               label='BUY LEGALCOIN',
               flat,
               @click='$router.push({ name: "buytokens", params: { status: "checkout" } })'
             )
           .row.col-6
-            q-btn.wallet-btn.col.q-mx-sm.q-mt-sm(
+            q-btn.col.q-mx-sm.q-mt-sm.wallet-btn(
               label='WITHDRAW',
               disable,
               flat,
@@ -119,7 +119,7 @@ q-page
             )
             q-tooltip Coming soon!
           .row.col-12
-            q-btn.wallet-btn.col.q-mx-sm.q-mt-sm(
+            q-btn.col.q-mx-sm.q-mt-sm.wallet-btn(
               label='VIEW TRANSACTION HISTORY',
               flat,
               @click='$router.push({ name: "txhistory" })'
@@ -128,6 +128,16 @@ q-page
 
 <style lang="sass" scoped>
 .wallet-btn
-  border: 0.5px solid grey
+  border: 0.5px solid $gray-80
+  font-family: 'ralewayregular'
+  border-radius: 6px 6px 6px 6px
+.text-wallet-heading
+  font-size: 1.25rem
+  font-family: 'ralewayregular'
+.text-wallet-topline
+  font-size: 0.88rem
+  font-family: 'heveticaneue'
+.text-wallet-bottomline
+  font-size: 0.88rem
   font-family: 'ralewayregular'
 </style>
