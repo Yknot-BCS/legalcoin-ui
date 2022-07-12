@@ -21,7 +21,7 @@ export default defineComponent({
 <template lang="pug">
 q-card
   q-card-section
-    .text-h6 {{ card.name }}
+    .text-h6.heading {{ card.name }}
     .text-subtitle2 {{ card.id }}
   q-separator(inset)
   q-img.asset-img(:src='card.imageUrl')
@@ -34,4 +34,6 @@ q-card
   width: 100%
   height: 500px
   max-height: 400px
+.heading
+  font-weight: bold
 </style>
