@@ -80,7 +80,7 @@ export default defineComponent({
 <template lang="pug">
 q-page
   //- Background image
-  .row(style='height: 15rem')
+  .row(style='height: 11rem')
     q-img.bg-img(
       src='~assets/collections/slanted-gradient.svg',
       height='20rem'
@@ -90,8 +90,13 @@ q-page
     .col.q-pt-xl
       q-card.asset-img
         q-img(:src='collectionImg')
+    //- Collection name and description
+  .row(v-if='$q.screen.gt.xs')
+    .col.q-pl-lg
+      .row.text-h3
+        | {{ collectionData.data.name }}
     //- Links
-    .col.self-center.text-right.q-gutter-lg.q-pl-lg.q-pt-lg
+    .col.self-center.text-right.q-gutter-lg.q-pr-lg
       q-btn(
         round,
         icon='fa-solid fa-globe',
@@ -99,18 +104,13 @@ q-page
         target='_blank'
       )
       q-btn(round, icon='fa-solid fa-ellipsis')
-    //- Collection name and description
-  .row(v-if='$q.screen.gt.xs')
-    .col.q-pl-lg
-      .row.text-h3
-        | {{ collectionData.data.name }}
-      .row.text-subtitle1.q-px-xs.q-pb-lg
-        .col-4.text-bold
-          | {{ collectionData.data.description }}
-        //- Info
-        .col Creator: {{ collectionData.authorized_accounts?.[0] }}
-        .col Market Fee: {{ collectionData.market_fee * 100 }}%
-        .col Created: {{ new Date(Number(collectionData.created_at_time)).toLocaleDateString() }}
+  .row.text-subtitle1.q-px-xs.q-pb-lg.q-pl-lg
+    .col-4.text-bold
+      | {{ collectionData.data.description }}
+    //- Info
+    .col Creator: {{ collectionData.authorized_accounts?.[0] }}
+    .col Market Fee: {{ collectionData.market_fee * 100 }}%
+    .col Created: {{ new Date(Number(collectionData.created_at_time)).toLocaleDateString() }}
   //- Mobile Info
   .row(v-if='$q.screen.lt.sm')
     .col.q-pl-lg
