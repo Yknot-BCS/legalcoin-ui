@@ -181,14 +181,14 @@ q-page
   .row.justify-center
     q-form(@submit='tryBuyTokens')
       .row.justify-center
-        q-card(v-if='paymentStatus === "checkout"')
+        q-card.q-mt-xl(v-if='paymentStatus === "checkout"')
           q-card-section 
-            .text-h3.text-grey-8
+            .text-wallet-heading.text-grey-8
               | Buy LEGAL
 
-          q-card-section
-            | I want to spend
-          q-card-section
+          q-card-section.text-body2.q-pb-xs
+            | I want to spend:
+          q-card-section.text-wallet-bottomline
             q-input(
               outlined,
               label='Amount',
@@ -198,10 +198,12 @@ q-page
               @focus='changingBuyAmount = false'
             )
               template(v-slot:append)
-              | GBP
-          q-card-section
-            | I want to buy
-          q-card-section
+                .col.text-primary
+                  | GBP
+          q-separator
+          q-card-section.text-body2.q-pb-xs
+            | I want to buy:
+          q-card-section.text-wallet-bottomline
             q-input(
               outlined,
               label='Amount',
@@ -211,12 +213,14 @@ q-page
               :rules='[(val) => val >= minimumAmount || `Value must be larger than ${minimumAmount}`, (val) => val >= 0 || "Value must be positive"]'
             )
               template(v-slot:append)
-              | LEGAL
-          q-card-section
+                .col.text-primary
+                  | LEGAL
+          q-separator
+          q-card-section.text-wallet-heading.text-grey-8
             | Summary
-          q-card-section
+          q-card-section.text-wallet-bottomline
             //- Dropdown with price, network fee and processing fee
-            q-expansion-item(
+            q-expansion-item.text-wallet-bottomline(
               expand-separator,
               :label='`You get ${displayBuyAmount} LEGAL for £ ${spendAmount}`'
             ) 
@@ -229,7 +233,7 @@ q-page
               //-             strong &#163; {{spendAmount}}
 
               q-card
-                q-card-section.row.justify-between
+                q-card-section.row.justify-between.text-wallet-bottomline
                   .col
                     | {{ displayBuyAmount }} LEGAL @ &#163; {{ ratio.toFixed(2) }}
                   | &#163; {{ displayAfterFee }}
@@ -237,7 +241,7 @@ q-page
               //-     q-card-section
               //-         | Network Fee: 0.00 GBP
               q-card
-                q-card-section.row.justify-between
+                q-card-section.row.justify-between.text-wallet-bottomline
                   .col
                     | Processing Fee:
                     q-icon(name='fa-solid fa-circle-info')
@@ -250,8 +254,8 @@ q-page
                   | as low as &#163; {{ processingFee.toFixed(2) }}
           q-card-section
             .row.justify-center
-              q-btn(color='primary', label='Continue', type='submit')
-          q-card-section
+              q-btn.outline-btn(flat, label='CONTINUE', type='submit')
+          q-card-section.text-wallet-bottomline
             | By continuing you agree to the terms and conditions
 
     //- Show payment status
