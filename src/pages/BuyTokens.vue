@@ -198,7 +198,8 @@ q-page
               @focus='changingBuyAmount = false'
             )
               template(v-slot:append)
-              | GBP
+                .col.text-primary
+                  | GBP
           q-separator
           q-card-section.text-body2.q-pb-xs
             | I want to buy:
@@ -212,7 +213,8 @@ q-page
               :rules='[(val) => val >= minimumAmount || `Value must be larger than ${minimumAmount}`, (val) => val >= 0 || "Value must be positive"]'
             )
               template(v-slot:append)
-              | LEGAL
+                .col.text-primary
+                  | LEGAL
           q-separator
           q-card-section.text-wallet-heading.text-grey-8
             | Summary
