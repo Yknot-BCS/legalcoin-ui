@@ -90,8 +90,8 @@ q-page
     .col.q-pt-xl
       q-card.asset-img
         q-img(:src='collectionImg')
-    //- Collection name and description
-  .row(v-if='$q.screen.gt.xs')
+    //- Collection name and description //- Todo: smallest mobile view, links overlap title
+  .row 
     .col.q-pl-lg
       .row.text-h3
         | {{ collectionData.data.name }}
@@ -104,25 +104,14 @@ q-page
         target='_blank'
       )
       q-btn(round, icon='fa-solid fa-ellipsis')
-  .row.text-subtitle1.q-px-xs.q-pb-lg.q-pl-lg
-    .col-4.text-bold
+  .row.text-subtitle1.q-px-xs.q-py-sm.q-pl-lg
+    .col.text-bold
       | {{ collectionData.data.description }}
     //- Info
+  .row.q-pl-lg
     .col Creator: {{ collectionData.authorized_accounts?.[0] }}
     .col Market Fee: {{ collectionData.market_fee * 100 }}%
     .col Created: {{ new Date(Number(collectionData.created_at_time)).toLocaleDateString() }}
-  //- Mobile Info
-  .row(v-if='$q.screen.lt.sm')
-    .col.q-pl-lg
-      .row.text-h3
-        | {{ collectionData.data.name }}
-      .row.text-subtitle1.q-px-xs.q-pb-lg
-        .col.text-bold
-          | {{ collectionData.data.description }}
-  .row.q-pl-lg(v-if='$q.screen.lt.sm')
-    .col.q-px-xs Creator: {{ collectionData.authorized_accounts?.[0] }}
-    .col.q-px-xs Market Fee: {{ collectionData.market_fee * 100 }}%
-    .col.q-px-xs Created: {{ new Date(Number(collectionData.created_at_time)).toLocaleDateString() }}
   //- Assets
   .row.justify-center
     .col-12
