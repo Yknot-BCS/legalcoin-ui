@@ -94,7 +94,7 @@ export default defineComponent({
     const $q = useQuasar();
     const GalleryData = ref<GalleryCard[]>([]);
     const disableFilter = computed(() => props.DisableFilter);
-    const showFilter = ref<boolean>(false);
+    const showFilter = ref<boolean>($q.screen.gt.sm);
     const showFilterDialog = ref<boolean>(false);
     const DataParams = computed(() => props.DataParams);
     const ApiParams = computed(() => props.ApiParams);
