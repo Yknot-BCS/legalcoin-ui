@@ -50,7 +50,7 @@ q-card
       .col-auto
         .text-subtitle4 {{ card.yield }} yield
   q-separator(inset)
-  router-link(:to='{ name: "asset", params: { asset: card.id } }')
+  router-link(:to='card.to')
     q-img.asset-img(:src='card.imageUrl')
 </template>
 
