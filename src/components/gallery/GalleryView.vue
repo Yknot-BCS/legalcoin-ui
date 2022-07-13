@@ -31,6 +31,9 @@ export default defineComponent({
     :key='card.id'
   )
     Cards(:data='card', :type='cardType')
+  .col-12(v-if='cards.length === 0')
+    q-card.noItems
+      .text-h4.text-center No items to display
 </template>
 
 <style lang="sass" scoped>
@@ -38,4 +41,6 @@ export default defineComponent({
   width: 100%
   height: 500px
   max-height: 400px
+.noItems
+  padding: 100px 0px 100px 0px
 </style>
