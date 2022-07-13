@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ExplorerApi } from 'atomicassets';
 import { AtomicMarketApi } from 'atomicmarket';
 import { GalleryCard } from 'src/types';
@@ -150,7 +152,7 @@ export const getQueryDataOptions = function (q: unknown): {
   return dataOptions;
 };
 
-export const getQueryApiOptions = function (q: unknown): {
+export const getQueryApiOptions = function (_q: unknown): {
   search: string;
   sort: string;
   order: string;

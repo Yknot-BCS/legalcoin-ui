@@ -260,9 +260,7 @@ export default defineComponent({
             DataParams.value,
             status.value
           );
-          console.log(GalleryData.value);
           GalleryData.value = response.data;
-          console.log(GalleryData.value);
           assetCount.value = response.count;
 
           break;
@@ -373,7 +371,7 @@ export default defineComponent({
     watch([market], () => {
       void applyFilters();
     });
-    watch(ApiParams, (newval, olval) => {
+    watch(ApiParams, (newval) => {
       collections.value = (
         newval as AssetsApiParams
       ).collection_whitelist?.split(',');
@@ -427,7 +425,6 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-page
 .row.justify-center
   .col-12
     q-card(flat)

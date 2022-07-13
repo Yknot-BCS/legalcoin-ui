@@ -64,6 +64,7 @@ export default defineComponent({
           search: collection.collection_name
         } as unknown;
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let templateStats: any = await atomic_market_api.fetchEndpoint(
           '/v1/stats/templates',
           templateStatsFilter

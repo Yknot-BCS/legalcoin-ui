@@ -54,12 +54,12 @@ export interface Filters {
   tier: { label: string; value: string };
 }
 
-interface SchemaData {
-  schema_name: string;
-  format: Format[];
-  created_at_block: string;
-  created_at_time: string;
-}
+// interface SchemaData {
+//   schema_name: string;
+//   format: Format[];
+//   created_at_block: string;
+//   created_at_time: string;
+// }
 
 export interface Schema {
   contract: string;
@@ -208,12 +208,12 @@ interface Format {
   type: string;
 }
 
-interface BackedTokens {
-  token_contract: string;
-  token_symbol: string;
-  token_precision: number;
-  amount: string;
-}
+// interface BackedTokens {
+//   token_contract: string;
+//   token_symbol: string;
+//   token_precision: number;
+//   amount: string;
+// }
 
 interface SupportedTokens {
   token_contract: string;

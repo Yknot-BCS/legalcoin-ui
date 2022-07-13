@@ -56,7 +56,6 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-page
 .row.justify-center
   .col-12
     q-card(bordered)
