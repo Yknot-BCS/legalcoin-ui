@@ -25,8 +25,8 @@ export default defineComponent({
     const dataOptions = computed(() => getQueryDataOptions(route.query));
     const page = computed(() => getQueryPage(route.query));
     const limit = computed(() => getQueryLimit(route.query));
-    const price = computed(() => getQueryPrice(route.query));
-    const status = computed(() => getQueryStatus(route.query));
+    const price = computed(() => getQueryPrice());
+    const status = computed(() => getQueryStatus());
     const collections = ref<string>('emissions.lc');
     const assetOptions = computed(() => {
       return {
