@@ -97,11 +97,10 @@ export default defineComponent({
     const showFilterDialog = ref<boolean>(false);
     const DataParams = computed(() => props.DataParams);
     const ApiParams = computed(() => props.ApiParams);
-    const market = computed(() =>
-      (route.query['market'] as string) || route.fullPath.includes('profile')
-        ? 'open'
-        : 'legalcoin'
+    const market = computed(
+      () => (route.query['market'] as string) || 'legalcoin'
     );
+    console.log(market.value);
     const status = computed(() =>
       market.value === 'open'
         ? (route.query['status'] as string) || 'buynow'
@@ -229,7 +228,8 @@ export default defineComponent({
 
           break;
 
-        case 'Sale':
+        case 'Discover':
+          console.log(market.value);
           response = await get_discover(
             ApiParams.value,
             Page.value,

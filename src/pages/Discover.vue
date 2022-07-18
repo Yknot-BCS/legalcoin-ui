@@ -64,7 +64,7 @@ export default defineComponent({
         :Page='page',
         :ItemsPerPage='limit',
         :DataParams='dataOptions',
-        Type='Sale',
+        Type='Discover',
         :Price='price',
         :DisableSearch='false'
       )

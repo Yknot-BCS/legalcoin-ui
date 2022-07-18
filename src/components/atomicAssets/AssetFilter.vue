@@ -98,6 +98,9 @@ export default defineComponent({
       void getCollectionsList().then((collectionData) => {
         collectionsArray.value = collectionData.array;
       });
+      if (route.fullPath.includes('profile')) {
+        void applyFilter('market', 'open');
+      }
     });
 
     watch([tier], () => {
