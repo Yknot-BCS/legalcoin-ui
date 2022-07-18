@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, watch, ref, onMounted, toRefs } from 'vue';
+import { defineComponent, watch, ref, onMounted, toRefs, computed } from 'vue';
 import {
   getCollectionsList,
   getQueryMarket,
@@ -54,13 +54,15 @@ export default defineComponent({
     const route = useRoute();
     const { Search, Filter, Status, Price, Market, Collection, Tier } =
       toRefs(props);
+    console.log(Market.value);
     const market = ref(getQueryMarket());
+    console.log(market.value);
     const status = ref(getQueryStatus());
     const tier = ref(getQueryTier());
     const collections = ref(getQueryCollections());
     const price = ref(getQueryPrice());
-    const minPrice = price.value.min;
-    const maxPrice = price.value.max;
+    const minPrice = ref(price.value.min || 0);
+    const maxPrice = ref(price.value.max || 0);
     const tierOptions = ref([
       { label: 'Diamond', value: 'Diamond' },
       { label: 'Gold', value: 'Gold' },
@@ -70,15 +72,26 @@ export default defineComponent({
     ]);
     const collectionsArray = ref<string[]>([]);
 
+    const disablePriceFilter = computed(
+      () =>
+        !(minPrice.value > 0 || maxPrice.value > 0) ||
+        minPrice.value >= maxPrice.value
+    );
+
     // Apply filters to url query
-    function applyFilter(key: string, value: string) {
+    async function applyFilter(key: string, value: string) {
       let query = { ...route.query };
       query[key] = value;
       console.log(query);
-      void router.push({
+      await router.push({
         path: router.currentRoute.value.path,
         query: query
       });
+    }
+
+    async function applyPriceFilter() {
+      await applyFilter('min_price', minPrice.value.toString());
+      await applyFilter('max_price', maxPrice.value.toString());
     }
 
     onMounted(() => {
@@ -91,10 +104,10 @@ export default defineComponent({
       void applyFilter('tier', tier.value);
     });
 
-    watch([market], () => {
-      void applyFilter('market', market.value);
+    watch([market], async () => {
+      await applyFilter('market', market.value);
       status.value = 'buynow';
-      void applyFilter('status', 'buynow');
+      await applyFilter('status', 'buynow');
     });
 
     return {
@@ -113,7 +126,9 @@ export default defineComponent({
       showSearch: Search,
       showMarket: Market,
       showFilter: Filter,
-      collectionsArray
+      collectionsArray,
+      disablePriceFilter,
+      applyPriceFilter
     };
   }
 });
@@ -197,9 +212,23 @@ q-expansion-item(
   expand-separator,
   icon='attach_money',
   label='Price',
-  v-if='showPrice'
+  v-if='showPrice && market === "open"'
 )
-  q-input(v-model='minPrice', type='number')
+  .row.q-py-md.q-px-sm.full-height.items-center
+    .col-3.text-bold LEGAL
+    .col-4
+      q-input(outlined, dense, v-model='minPrice', type='number', label='Min')
+    .col-1.text-center.text-bold to
+    .col-4
+      q-input(outlined, dense, v-model='maxPrice', type='number', label='Max')
+  .row.q-px-sm.q-pb-md.full-height.items-center
+    q-btn.full-width(
+      unelevated,
+      :disable='disablePriceFilter',
+      color='primary',
+      label='Apply',
+      @click='applyPriceFilter()'
+    )
 q-expansion-item(
   expand-separator,
   icon='collections',
@@ -208,7 +237,7 @@ q-expansion-item(
 )
   .row.q-col-gutter-sm.q-pa-md
     .col-12(v-for='col in collectionsArray')
-      .row
+      .row.items-center.full-height
         .col-6 {{ col }}
         .col-6
           q-checkbox.float-right.q-pl-md(

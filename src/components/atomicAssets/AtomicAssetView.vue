@@ -97,8 +97,10 @@ export default defineComponent({
     const showFilterDialog = ref<boolean>(false);
     const DataParams = computed(() => props.DataParams);
     const ApiParams = computed(() => props.ApiParams);
-    const market = computed(
-      () => (route.query['market'] as string) || 'legalcoin'
+    const market = computed(() =>
+      (route.query['market'] as string) || route.fullPath.includes('profile')
+        ? 'open'
+        : 'legalcoin'
     );
     const status = computed(() =>
       market.value === 'open'
@@ -396,7 +398,13 @@ export default defineComponent({
         .row.justify-evenly
           .col-lg-2.col-md-3.q-pt-md(v-if='showFilter')
             q-card.q-pb-md(bordered, flat)
-              AssetFilter
+              AssetFilter(
+                :Status='filterStatus',
+                :Market='filterMarket',
+                :Collection='filterCollection',
+                :Tier='filterTier',
+                :Price='filterPrice'
+              )
 
           // Gallery section
           div(:class='showFilter ? "col-lg-10 col-md-9" : "col-12"')
@@ -435,7 +443,13 @@ export default defineComponent({
               style='z-index: 1'
             )
             .q-pa-md
-              AssetFilter
+              AssetFilter(
+                :Status='filterStatus',
+                :Market='filterMarket',
+                :Collection='filterCollection',
+                :Tier='filterTier',
+                :Price='filterPrice'
+              )
 </template>
 
 <style scoped lang="sass">

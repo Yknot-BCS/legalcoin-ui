@@ -605,7 +605,9 @@ export const getQueryTier = function (): string {
 export const getQueryMarket = function (): string {
   const route = useRoute();
   const query = route.query;
-  return (query['market'] as string) || 'legalcoin';
+  return (query['market'] as string) || route.fullPath.includes('profile')
+    ? 'open'
+    : 'legalcoin';
 };
 
 export const getQueryPrice = function (): {
