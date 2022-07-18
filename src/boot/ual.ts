@@ -7,10 +7,11 @@ declare module '@vue/runtime-core' {
   }
 }
 
+let ual = new UAL(null, null, null);
+
 export default boot(({ app }) => {
   const mainChain = {
     chainId: process.env.NETWORK_CHAIN_ID,
-    origin: process.env.TELOS_ORIGIN,
     rpcEndpoints: [
       {
         protocol: process.env.NETWORK_PROTOCOL,
@@ -24,7 +25,9 @@ export default boot(({ app }) => {
     new Anchor([mainChain], { appName: process.env.APP_NAME })
   ];
 
-  const ual = new UAL([mainChain], 'ual', authenticators);
+  ual = new UAL([mainChain], 'ual', authenticators);
 
   app.config.globalProperties.$ual = ual;
 });
+
+export { ual };

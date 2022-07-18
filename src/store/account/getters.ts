@@ -8,12 +8,21 @@ export const getters: GetterTree<AccountStateInterface, StateInterface> = {
     return state;
   },
   isAuthenticated(state): boolean {
-    return state.isAuthenticated;
+    // TODO rename to isAuthenticated
+    if (state.useLocalSigner) return !!state.localAccountName;
+    else return !!state.profile.accountName;
   },
-  accountName(state): string {
-    return state.accountName;
+  getAccountName(state): string {
+    if (state.useLocalSigner) return state.localAccountName;
+    else return state.profile.accountName;
   },
   getAccountData(state): AccountDetails {
-    return state.data;
+    return state.localAccountDetails;
+  },
+  useLocalSigner(state): boolean {
+    return state.useLocalSigner;
+  },
+  isLoggedIn(state): boolean {
+    return state.isLoggedIn;
   }
 };

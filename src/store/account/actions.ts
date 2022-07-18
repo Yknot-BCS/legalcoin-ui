@@ -2,9 +2,15 @@ import { Authenticator, User } from 'universal-authenticator-library';
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { AccountStateInterface } from './state';
+import auth from 'src/auth';
+import { ual } from 'src/boot/ual';
+// import { PushTransactionResponse } from '@greymass/eosio';
+import { SignTransactionResponse } from 'universal-authenticator-library';
+import { Dialog } from 'quasar';
+import PlatformSigner from 'src/components/auth/PlatformSigner.vue';
 
 export const actions: ActionTree<AccountStateInterface, StateInterface> = {
-  async login({ commit }, { account, authenticator }) {
+  async cryptoLogin({ commit }, { account, authenticator }) {
     commit(
       'setLoadingWallet',
       (authenticator as Authenticator).getStyle().text
@@ -23,7 +29,7 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
     if (users.length) {
       const account = users[0];
       const accountName = await account.getAccountName();
-      commit('setAccountName', accountName);
+      commit('setLocalAccountName', accountName);
       localStorage.setItem(
         'autoLogin',
         (authenticator as Authenticator).constructor.name
@@ -33,124 +39,73 @@ export const actions: ActionTree<AccountStateInterface, StateInterface> = {
       commit('setLoadingWallet');
     }
   },
-  async sendTransaction({}, { user, account, data }) {
+  async sendTransaction({ dispatch, getters }, { actions }) {
+    /* eslint-disable */  // TODO enable eslint and fix types
     let transaction = null;
-    const actions = [
-      {
-        account: account as string,
-        name: 'transfer',
-        authorization: [
+    actions.forEach((action: { authorization: string | any[]; }) => {
+      if (!action.authorization || !action.authorization.length) {
+        action.authorization = [
           {
-            actor: this.state.account.accountName,
+            actor: getters.getAccountName,
             permission: 'active'
           }
-        ],
-        data: data as unknown
+        ];
       }
-    ];
-    try {
-      transaction = await (user as User).signTransaction(
-        {
-          actions
-        },
-        {
-          blocksBehind: 3,
-          expireSeconds: 30
-        }
-      );
-    } catch (e) {
-      throw e;
+    });
+    if (this.state.account.useLocalSigner) {
+      const authenticators = ual.getAuthenticators().availableAuthenticators;
+      const users = await authenticators[0].login();
+      console.log(actions);
+      try {
+        transaction = await (users[0] as User).signTransaction(
+          {
+            actions
+          },
+          {
+            blocksBehind: 3,
+            expireSeconds: 30
+          }
+        );
+      }
+      catch (error) {
+        console.error(actions, error);
+        throw error;
+      }
+    }
+    else {
+      try {
+        transaction = await dispatch('platformSign', { actions });
+      }
+      catch (error) {
+        console.error(actions, error);
+        throw error;
+      }
     }
     return transaction;
   },
-  async stake({}, { user, data }) {
-    let transaction = null;
-    const actions = [
-      {
-        account: 'eosio',
-        name: 'delegatebw',
-        authorization: [
-          {
-            actor: this.state.account.accountName,
-            permission: 'active'
-          }
-        ],
-        data: data as unknown
-      }
-    ];
-    try {
-      transaction = await (user as User).signTransaction(
-        {
-          actions
-        },
-        {
-          blocksBehind: 3,
-          expireSeconds: 30
-        }
-      );
-    } catch (e) {
-      throw e;
+
+  async platformSign({ state, commit }, { actions }): Promise<SignTransactionResponse> {
+    // State mimics return value for platform signer
+    commit('setSignedTransaction', null);
+    commit('setSingedTransactionError', null);
+    if (!await new Promise(resolve => Dialog.create({
+      component: PlatformSigner,
+      componentProps: { actions }
+    })
+      .onOk(() => { resolve(true) })
+      .onCancel(() => { resolve(false) })
+      .onDismiss(() => { resolve(true); }))
+    ) throw new Error('Transaction cancelled by user');
+    else {
+      const error = state.platformSigner.error;
+      if (error) throw error;
+      else return state.platformSigner.signedTransactionResponse;
     }
-    return transaction;
   },
-  async unstake({}, { user, data }) {
-    let transaction = null;
-    const actions = [
-      {
-        account: 'eosio',
-        name: 'undelegatebw',
-        authorization: [
-          {
-            actor: this.state.account.accountName,
-            permission: 'active'
-          }
-        ],
-        data: data as unknown
-      }
-    ];
-    try {
-      transaction = await (user as User).signTransaction(
-        {
-          actions
-        },
-        {
-          blocksBehind: 3,
-          expireSeconds: 30
-        }
-      );
-    } catch (e) {
-      throw e;
-    }
-    return transaction;
-  },
-  async refund({}, { user, data }) {
-    let transaction = null;
-    const actions = [
-      {
-        account: 'eosio',
-        name: 'refund',
-        authorization: [
-          {
-            actor: this.state.account.accountName,
-            permission: 'active'
-          }
-        ],
-        data: data as unknown
-      }
-    ];
-    try {
-      transaction = await (user as User).signTransaction(
-        {
-          actions
-        },
-        {
-          blocksBehind: 3,
-          expireSeconds: 30
-        }
-      );
-    } catch (e) {
-      throw e;
-    }
-    return transaction;
+
+  async refreshProfile({ commit }) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const profile = await auth.getProfile();
+    commit('setUserProfile', profile);
   }
 };

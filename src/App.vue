@@ -7,5 +7,5 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-router-view 
+router-view
 </template>

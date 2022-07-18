@@ -1,0 +1,48 @@
+name: Deploy Production
+
+on:
+  push:
+    branches: [master]
+
+  workflow_dispatch:
+
+env:
+  ISSUER_SECRET: ${{ secrets.ISSUER_SECRET }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Setup Yarn
+        run: |
+          npm install --global yarn
+          echo "$(yarn global bin)" >> $GITHUB_PATH
+
+      - name: Setup Environment
+        run: cp .env.prod .env
+
+      - name: Install Node Modules
+        run: yarn
+
+      - name: Build
+        run: yarn run build
+
+      - name: Deploy
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+        with:
+          server: 213.171.196.5
+          username: ${{ secrets.LC_FTP_USER }}
+          password: ${{ secrets.LC_FTP_PASSWORD }}
+          port: 21
+          protocol: ftp
+          local-dir: ./dist/spa/
+          server-dir: htdocs/
