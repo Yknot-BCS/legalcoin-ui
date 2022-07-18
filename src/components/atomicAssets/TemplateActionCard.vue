@@ -43,7 +43,7 @@ export default defineComponent({
     },
 
     isBuybackNFT() {
-      return !!this.templateData?.immutable_data['saleopen'];
+      return !!this.templateData?.immutable_data['term'];
     },
 
     isMatured() {
