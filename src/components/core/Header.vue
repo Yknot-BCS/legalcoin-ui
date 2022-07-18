@@ -35,7 +35,10 @@ export default {
 q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
   router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
     img.logo.q-mr-md.gt-sm(src='~assets/legalcoin-full.png')
-    img.logo-small.q-mr-md.lt-sm(src='~assets/legalcoin-full.png')
+    img.logo-small.q-mr-md(
+      src='~assets/legalcoin-full.png',
+      v-if='$q.screen.lt.md'
+    )
 
   .col.row.justify-center
     search-bar.toolbar-select.q-mr-md(size='110', v-if='$q.screen.gt.md')
@@ -173,7 +176,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
 .logo
   height: 40px
 .logo-small
-  width: 150px
+  width: 140px
 .logout-btn
   background-color: orange
 .menu-edit
