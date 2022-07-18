@@ -58,28 +58,12 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
       :to='{ name: "login" }'
     )
 
-  .row.items-center.no-wrap
-    div
-      q-btn(flat, round, dense, v-if='$q.screen.lt.sm')
-        q-icon.material-icons-outlined(name='search')
-          q-popup-edit(self='left', anchor='top', max-width='420px')
-            q-toolbar
-              q-icon.btn(
-                name='chevron_left',
-                size='1.5rem',
-                clickable,
-                v-close-popup
-              )
-              search-bar.toolbar-select.q-mr-md(size='32')
-      q-btn(
-        flat,
-        round,
-        dense,
-        :to='{ name: "discover" }',
-        v-if='$q.screen.lt.md'
-      )
+  .row.items-center
+    row
+      search-bar.toolbar-select.lt-sm
+      q-btn.lt-md(flat, round, dense, :to='{ name: "discover" }')
         q-icon.material-icons-outlined(name='grid_view')
-      q-btn.q-ml-xs(
+      q-btn(
         flat,
         round,
         dense,
@@ -172,7 +156,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
 .q-list
   width: 350px
 .logo
-  height:40px
+  height:38px
 .logout-btn
   background-color: orange
 .menu-edit
