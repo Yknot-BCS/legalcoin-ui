@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, computed, ref, onMounted, onBeforeMount } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'src/store';
 import {
   atomic_api,
@@ -21,6 +21,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const route = useRoute();
+    const router = useRouter();
     const showFilter = ref<boolean>(false);
     const search = ref<string>('');
     const profileId = computed(() => route.params.profile);
@@ -30,7 +31,7 @@ export default defineComponent({
     const dataOptions = computed(() => getQueryDataOptions(route.query));
     const page = computed(() => getQueryPage(route.query));
     const limit = computed(() => getQueryLimit(route.query));
-    const status = computed(() => getQueryStatus(route.query));
+    const status = computed(() => getQueryStatus());
     const assetCount = ref<number>(1);
     const collectionCount = ref<number>(1);
     const collections = ref<string>('emissions.lc');

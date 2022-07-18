@@ -146,8 +146,8 @@ export const getQueryDataOptions = function (q: unknown): {
   const route = useRoute();
   const dataOptions = [];
   const query = route.query;
-  if (query['filter[tier]'] && query['filter[tier]'] !== 'All') {
-    dataOptions.push({ key: 'tier', value: query['filter[tier]'] as string });
+  if (query['tier'] && query['tier'] !== 'All') {
+    dataOptions.push({ key: 'tier', value: query['tier'] as string });
   }
   return dataOptions;
 };
@@ -190,7 +190,8 @@ export const get_discover = async function (
 ) {
   let count = 0;
   let data: GalleryCard[] = [];
-  if (market === 'retail') {
+  console.log(market);
+  if (market === 'open') {
     if (status === 'buynow') {
       const rawData = await atomic_market_api.fetchEndpoint('/v2/sales', {
         ...ApiParams,
@@ -437,12 +438,12 @@ export const getTemplateQueryApiOptions = function (q: unknown): {
     order: string;
     match?: string;
   };
-  if (query['filter[tier]'] && query['filter[tier]'] !== 'All') {
+  if (query['tier'] && query['tier'] !== 'All') {
     dataOptions = {
       search: (query['search'] as string) || '',
       sort: (query['sort'] as string) || 'created',
       order: (query['order'] as string) || 'desc',
-      match: (query['filter[tier]'] as string) || null
+      match: (query['tier'] as string) || null
     };
   } else {
     dataOptions = {
@@ -491,13 +492,13 @@ export const getSalesQueryApiOptions = function (
       sort: (query['sort'] as string) || 'created',
       order: (query['order'] as string) || 'desc'
     };
-    if (query['filter[tier]'] && query['filter[tier]'] !== 'All') {
+    if (query['tier'] && query['tier'] !== 'All') {
       dataOptions = {
         ...dataOptions,
-        match: (query['filter[tier]'] as string) || null
+        match: (query['tier'] as string) || null
       };
     }
-    if (query['market'] && (query['market'] as string[]).includes('retail')) {
+    if (query['market'] && (query['market'] as string[]).includes('open')) {
       dataOptions = {
         ...dataOptions,
         seller_blacklist: process.env.AA_ACCOUNT
@@ -538,10 +539,10 @@ export const getSalesQueryApiOptions = function (
       sort: (query['sort'] as string) || 'created',
       order: (query['order'] as string) || 'desc'
     };
-    if (query['filter[tier]'] && query['filter[tier]'] !== 'All') {
+    if (query['tier'] && query['tier'] !== 'All') {
       dataOptions = {
         ...dataOptions,
-        match: (query['filter[tier]'] as string) || null
+        match: (query['tier'] as string) || null
       };
     }
     if (
@@ -583,13 +584,33 @@ export const getQueryLimit = function (q: unknown): number {
   return Number(query['limit'] as string) || 6;
 };
 
-export const getQueryMarket = function (q: unknown): string {
+export const getQueryCollections = function (): string[] {
   const route = useRoute();
   const query = route.query;
-  return (query['market'] as string) || 'primary';
+  return (query['collections'] as string)?.split(',') || [];
 };
 
-export const getQueryPrice = function (q: unknown): {
+export const getQueryStatus = function (): string {
+  const route = useRoute();
+  const query = route.query;
+  return (query['status'] as string) || 'buynow';
+};
+
+export const getQueryTier = function (): string {
+  const route = useRoute();
+  const query = route.query;
+  return (query['tier'] as string) || 'All';
+};
+
+export const getQueryMarket = function (): string {
+  const route = useRoute();
+  const query = route.query;
+  return (query['market'] as string) || route.fullPath.includes('profile')
+    ? 'open'
+    : 'legalcoin';
+};
+
+export const getQueryPrice = function (): {
   min: number;
   max: number;
 } {
@@ -614,10 +635,4 @@ export const getCollectionsList = async function (): Promise<{
   const data = await atomic_api.getCollections(collectionsfilter);
   const dataList = data.map((col) => col.collection_name);
   return { array: dataList, stringList: dataList.toString() };
-};
-
-export const getQueryStatus = function (q: unknown): string {
-  const route = useRoute();
-  const query = route.query;
-  return (query['status'] as string) || 'buynow';
 };
