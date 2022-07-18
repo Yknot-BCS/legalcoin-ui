@@ -59,7 +59,7 @@ export default defineComponent({
 <template lang="pug">
 .row
   | Auction ends {{ displayDate }}
-.row.q-mt-sm
+.row.q-mt-sm.q-gutter-x-sm
   .col-2.column(v-if='days > 0')
     .col.text-bold {{ days }}
     .col Days
