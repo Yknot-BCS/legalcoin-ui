@@ -27,6 +27,7 @@ export default defineComponent({
       isLoggedIn,
       assets,
       storecollections,
+      featuredCollections: ref<GalleryCard[]>([] as GalleryCard[]),
       collections: ref<ICollection[]>(new Object({}) as ICollection[]),
       trendingTemplates: ref<GalleryCard[]>([] as GalleryCard[]),
       screenWidth
@@ -54,7 +55,25 @@ export default defineComponent({
       } as unknown;
 
       this.collections = await atomic_api.getCollections(collectionsfilter);
-      console.log('col', this.collections);
+      console.log(this.collections);
+      this.featuredCollections = this.collections.map((collection) => {
+        return {
+          name: collection.data.name as string,
+          imageUrl:
+            collection.data.img &&
+            (collection.data.img as string).includes('http')
+              ? (collection.data.img as string)
+              : process.env.IPFS_ENDPOINT +
+                '/ipfs/' +
+                (collection.data.img as string),
+          collection: collection.collection_name,
+          template: '',
+          schema: '',
+          id: collection.contract,
+          type: 'collection'
+        } as GalleryCard;
+      });
+      console.log(this.featuredCollections);
     },
     async getTrendingNFTs() {
       let trending = [];
@@ -94,7 +113,8 @@ export default defineComponent({
           collection: template.collection.collection_name,
           template: '',
           schema: '',
-          id: template.template_id
+          id: template.template_id,
+          type: 'template'
         } as GalleryCard;
       });
     }
@@ -143,8 +163,8 @@ q-page
 
     .row.justify-center
       .featured-card.q-pa-sm(
-        v-for='collection in storecollections.slice(0, numberOfCards)',
-        v-if='storecollections.length > 0'
+        v-for='collection in featuredCollections.slice(0, numberOfCards)',
+        v-if='featuredCollections.length > 0'
       )
         Cards.rounded.shadow-10(:data='collection', type='Collections')
 

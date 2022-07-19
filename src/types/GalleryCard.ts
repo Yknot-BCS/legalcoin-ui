@@ -13,11 +13,14 @@ export interface GalleryCard {
   saleopen: number;
   expirystr: string;
   mintprice: string;
+  price: string;
   saleclose: number;
   maturedstr: string;
   description: string;
   maturedvalue: string;
   saleclosestr: string;
+  seller: string;
   yield: string;
   to: string;
+  type: string;
 }

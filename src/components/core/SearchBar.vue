@@ -40,7 +40,7 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-row
+.row
   //- Mobile
   q-btn(
     flat,

@@ -393,7 +393,7 @@ export default defineComponent({
       // Filter for desktop view
       q-card-section
         .row.justify-evenly
-          .col-lg-2.col-md-3.q-pt-md(v-if='showFilter')
+          .col-lg-2.col-md-3.q-pt-md(v-if='showFilter && $q.screen.gt.sm')
             q-card.q-pb-md(bordered, flat)
               AssetFilter(
                 :Status='filterStatus',

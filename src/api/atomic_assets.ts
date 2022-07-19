@@ -5,6 +5,7 @@ import { AtomicMarketApi } from 'atomicmarket';
 import { GalleryCard } from 'src/types';
 import { useRoute } from 'vue-router';
 import { ISale } from 'atomicmarket/build/API/Explorer/Objects';
+import { Asset, Int64 } from '@greymass/eosio';
 
 export const atomic_api = new ExplorerApi(
   process.env.ATOMICASSETS_API_ENDPOINT,
@@ -44,7 +45,8 @@ export const get_assets = async function (
       collection: asset.collection.collection_name,
       template: asset.template.template_id,
       schema: asset.schema.schema_name,
-      id: asset.asset_id
+      id: asset.asset_id,
+      type: 'asset'
     } as GalleryCard;
   });
   return { data, count };
@@ -73,7 +75,8 @@ export const get_collections = async function (
       collection: collection.collection_name,
       template: '',
       schema: '',
-      id: collection.contract
+      id: collection.contract,
+      type: 'collection'
     } as GalleryCard;
   });
   return { data, count };
@@ -111,7 +114,8 @@ export const get_templates = async function (
       collection: template.collection.collection_name,
       template: '',
       schema: '',
-      id: template.template_id
+      id: template.template_id,
+      type: 'template'
     } as GalleryCard;
   });
   return { data, count };
@@ -221,7 +225,8 @@ export const get_discover = async function (
           collection: sales.assets[0].collection.collection_name,
           template: sales.assets[0].template.template_id,
           schema: sales.assets[0].schema.schema_name,
-          id: sales.assets[0].asset_id
+          id: sales.assets[0].asset_id,
+          type: 'sale'
         } as GalleryCard;
       });
     }
@@ -252,8 +257,16 @@ export const get_discover = async function (
                     (asset.data.img as string),
               collection: asset.collection.collection_name,
               template: asset.template.template_id,
+              price: priceAsset(
+                element.price.amount,
+                element.price.token_symbol,
+                element.price.token_precision
+              ),
               schema: asset.schema.schema_name,
-              id: asset.asset_id
+              seller: element.seller,
+              saleclose: Number(element.end_time),
+              id: asset.asset_id,
+              type: 'auction'
             } as GalleryCard;
           })
         );
@@ -262,6 +275,7 @@ export const get_discover = async function (
   } else {
     return await get_templates(ApiParams, Page, ItemsPerPage, DataParams);
   }
+  console.log(data);
   return { data, count };
 };
 
@@ -302,7 +316,8 @@ export const get_sale = async function (
       collection: sales.assets[0].collection.collection_name,
       template: sales.assets[0].template.template_id,
       schema: sales.assets[0].schema.schema_name,
-      id: sales.assets[0].asset_id
+      id: sales.assets[0].asset_id,
+      type: 'sale'
     } as GalleryCard;
   });
 
@@ -344,8 +359,16 @@ export const get_auction = async function (
                 (asset.data.img as string),
           collection: asset.collection.collection_name,
           template: asset.template.template_id,
+          price: priceAsset(
+            element.price.amount,
+            element.price.token_symbol,
+            element.price.token_precision
+          ),
           schema: asset.schema.schema_name,
-          id: asset.asset_id
+          seller: element.seller,
+          id: asset.asset_id,
+          saleclose: Number(element.end_time),
+          type: 'auction'
         } as GalleryCard;
       })
     );
@@ -383,7 +406,8 @@ export const get_profile = async function (
         collection: asset.collection.collection_name,
         template: asset.template.template_id,
         schema: asset.schema.schema_name,
-        id: asset.asset_id
+        id: asset.asset_id,
+        type: 'asset'
       } as GalleryCard;
     });
   }
@@ -414,7 +438,8 @@ export const get_profile = async function (
           collection: asset.collection.collection_name,
           template: asset.template.template_id,
           schema: asset.schema.schema_name,
-          id: asset.asset_id
+          id: asset.asset_id,
+          type: 'auction'
         } as GalleryCard;
       });
     });
@@ -634,4 +659,19 @@ export const getCollectionsList = async function (): Promise<{
   const data = await atomic_api.getCollections(collectionsfilter);
   const dataList = data.map((col) => col.collection_name);
   return { array: dataList, stringList: dataList.toString() };
+};
+
+export const priceAsset = function (
+  amount: string,
+  symbol: string,
+  precision: number
+): string {
+  if (amount) {
+    return Asset.fromUnits(
+      Int64.from(amount),
+      Asset.Symbol.fromParts(symbol, precision)
+    ).toString();
+  } else {
+    return '0.00 LEGAL';
+  }
 };
