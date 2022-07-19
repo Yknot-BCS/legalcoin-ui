@@ -190,7 +190,6 @@ export const get_discover = async function (
 ) {
   let count = 0;
   let data: GalleryCard[] = [];
-  console.log(market);
   if (market === 'open') {
     if (status === 'buynow') {
       const rawData = await atomic_market_api.fetchEndpoint('/v2/sales', {

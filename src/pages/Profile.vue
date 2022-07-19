@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, computed, ref, onMounted, onBeforeMount } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useStore } from 'src/store';
 import {
   atomic_api,
@@ -21,7 +21,6 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const route = useRoute();
-    const router = useRouter();
     const showFilter = ref<boolean>(false);
     const search = ref<string>('');
     const profileId = computed(() => route.params.profile);

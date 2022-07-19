@@ -54,9 +54,7 @@ export default defineComponent({
     const route = useRoute();
     const { Search, Filter, Status, Price, Market, Collection, Tier } =
       toRefs(props);
-    console.log(Market.value);
     const market = ref(getQueryMarket());
-    console.log(market.value);
     const status = ref(getQueryStatus());
     const tier = ref(getQueryTier());
     const collections = ref(getQueryCollections());
@@ -82,10 +80,10 @@ export default defineComponent({
     async function applyFilter(key: string, value: string) {
       let query = { ...route.query };
       query[key] = value;
-      console.log(query);
       await router.push({
         path: router.currentRoute.value.path,
-        query: query
+        query: query,
+        params: { savePosition: 'true' }
       });
     }
 

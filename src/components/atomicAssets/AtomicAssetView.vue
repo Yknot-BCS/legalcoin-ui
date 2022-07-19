@@ -100,7 +100,6 @@ export default defineComponent({
     const market = computed(
       () => (route.query['market'] as string) || 'legalcoin'
     );
-    console.log(market.value);
     const status = computed(() =>
       market.value === 'open'
         ? (route.query['status'] as string) || 'buynow'
@@ -229,7 +228,6 @@ export default defineComponent({
           break;
 
         case 'Discover':
-          console.log(market.value);
           response = await get_discover(
             ApiParams.value,
             Page.value,
@@ -282,7 +280,6 @@ export default defineComponent({
     function applyFilter(key: string, value: string) {
       let query = { ...route.query };
       query[key] = value;
-      console.log(query);
       void router.push({
         path: router.currentRoute.value.path,
         query: query
