@@ -59,8 +59,8 @@ q-layout(view='hHh lpR fff')
   CompleteRegistrationBanners
   q-page-container
     router-view
-    q-separator
-  q-footer(v-if='$q.screen.gt.sm')
+    .space
+  q-footer
     Footer
   q-page-scroller(position='bottom-right', :scroll-offset='150')
     q-btn(fab, color='primary', icon='arrow_upward')
@@ -70,4 +70,6 @@ q-layout(view='hHh lpR fff')
 .separator
   height: 2px
   min-height: 2px
+.space
+  height: 10rem
 </style>
