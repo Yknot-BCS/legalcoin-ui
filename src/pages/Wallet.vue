@@ -81,27 +81,33 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
+img.polygon.tr.animated.fadeInRight.slower(src='~assets/polygons/pg1.svg')
+img.polygon.tr.animated.fadeInRight.slow(src='~assets/polygons/pg2.svg')
+img.polygon.tr(src='~assets/polygons/pg3.svg')
+img.polygon.br.animated.fadeInLeft.slow(src='~assets/polygons/pg4.svg')
+img.polygon.br.animated.fadeInLeft.slower(src='~assets/polygons/pg5.svg')
+img.polygon.br(src='~assets/polygons/pg6.svg')
 q-page
   .row.justify-center
     q-card.q-mt-xl
       q-card-section
-        .text-wallet-heading.text-grey-8
+        .text-heading.text-grey-8
           | Balance
       q-card-section
-        .text-wallet-topline.text-bold 
-          | {{ balance }} LEGAL (LEGALCOIN)
-        .text-wallet-bottomline
+        .text-wallet.text-bold 
+          | {{ balance }} LEGAL
+        .text-wallet
           | £ {{ gbpValue }} (GBP)
           //- TODO get GBP value
       q-separator.q-mx-md
       q-card-section
-        .text-wallet-topline.text-bold 
+        .text-wallet.text-bold 
           | {{ nftCount }} NFTS
-        .text-wallet-bottomline
+        .text-wallet
           | {{ nftValue.toFixed(2) }} (LEGAL)
       q-separator.q-mx-md
       q-card-section
-        .text-wallet-heading.text-grey-8
+        .text-heading.text-grey-8
           | Options
         .row.justify-center.q-mt-sm
           .row.col-6
@@ -126,4 +132,14 @@ q-page
             )
 </template>
 
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+.polygon
+  position: absolute
+  z-index: -1
+  &.tr
+    right: 0rem
+    top: 0rem
+  &.br
+    left: 0rem
+    bottom: 0rem
+</style>
