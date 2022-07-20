@@ -10,5 +10,8 @@ export const mutations: MutationTree<GeneralStateInterface> = {
     options: GeneralStateInterface['options']
   ) {
     state.options = options;
+  },
+  setCollections(state: GeneralStateInterface, collections: string[]) {
+    state.collections = collections;
   }
 };
