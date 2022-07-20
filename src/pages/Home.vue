@@ -120,7 +120,7 @@ export default defineComponent({
     }
   },
   async mounted() {
-    console.log('Home mounted');
+    console.log('As iron sharpens iron, so one person sharpens another.');
     await this.getAllCollections();
     await this.getTrendingNFTs();
   }
