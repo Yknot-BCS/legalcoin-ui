@@ -4,10 +4,11 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { mapGetters } from 'vuex';
 import TokensReceipt from 'src/components/buytokens/TokensReceipt.vue';
+import CustomTooltip from 'src/components/tooltip/CustomTooltip.vue';
 
 export default defineComponent({
   name: 'BuyTokens',
-  components: { TokensReceipt },
+  components: { TokensReceipt, CustomTooltip },
   setup() {
     const checkoutAPI = axios.create({
       baseURL: process.env.ISSUER_API_ENDPOINT
@@ -245,12 +246,11 @@ q-page
                   .col
                     | Processing Fee:
                     q-icon(name='fa-solid fa-circle-info')
-                      q-tooltip(
-                        anchor='top middle',
-                        self='center middle',
-                        max-width='200px'
+                      CustomTooltip(
+                        :text='"This is charged by LegalCoin to cover the costs levied by payment providers such as Visa & Mastercard. This may vary based on the payment method you choose later."',
+                        anchor='center middle',
+                        self='bottom middle'
                       )
-                        | This is charged by LegalCoin to cover the costs levied by payment providers such as Visa & Mastercard. This may vary based on the payment method you choose later.
                   | as low as &#163; {{ processingFee.toFixed(2) }}
           q-card-section
             .row.justify-center
