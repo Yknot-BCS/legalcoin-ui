@@ -3,10 +3,11 @@ import { defineComponent, ref } from 'vue';
 import { Asset } from '@greymass/eosio';
 import { mapGetters } from 'vuex';
 import { atomic_market_api } from 'src/api/atomic_assets';
+import CustomTooltip from 'src/components/tooltip/CustomTooltip.vue';
 
 export default defineComponent({
   name: 'Wallet',
-  components: {},
+  components: { CustomTooltip },
   setup() {
     return {
       balance: ref('0'),
@@ -104,7 +105,7 @@ q-page
         .text-wallet.text-bold 
           | {{ nftCount }} NFTS
           q-icon.q-pl-sm.q-pb-xs(name='fa-solid fa-question-circle')
-            q-tooltip.tooltip(anchor='center right', :offset='[110, 0]') LEGAL value of all owned NFTs
+            CustomTooltip(:text='"LEGAL value of all owned NFTs"')
         .text-wallet
           | {{ nftValue.toFixed(2) }} (LEGAL)
       q-separator.q-mx-md
@@ -144,4 +145,13 @@ q-page
   &.br
     left: 0rem
     bottom: 0rem
+.ol-popup
+  position: absolute
+  background: linear-gradient(90deg, rgba(203, 202, 245, 0.7) 0%, rgba(169, 202, 243, 0.7) 56.377%, rgba(73, 206, 255, 0.7) 100%)
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2)
+  padding: 5px
+  border-radius: 10px
+  bottom: 12px
+  left: -50px
+  min-width: 200px
 </style>
