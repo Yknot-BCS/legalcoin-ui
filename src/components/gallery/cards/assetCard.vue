@@ -37,21 +37,21 @@ export default defineComponent({
 <template lang="pug">
 q-card
   q-card-section
-  .row
-    .col
-      .row
-        .text-h6.heading {{ card.name }}
-      .row
-        .col-auto
-          .text-subtitle4.q-mr-sm {{ card.mintprice }} &#8226;
-        .col-auto
-          .text-subtitle4 {{ card.yield }} yield
-    .col-4
-      q-badge.text-subtitle2.float-right.text(
-        v-if='card.tier',
-        rounded,
-        :color='badgeColour'
-      ) {{ card.tier }}
+    .row
+      .col
+        .row
+          .text-h6.heading {{ card.name }}
+        .row
+          .col-auto
+            .text-subtitle4.q-mr-sm {{ card.mintprice }} &#8226;
+          .col-auto
+            .text-subtitle4 {{ card.yield }} yield
+      .col-4
+        q-badge.text-subtitle2.float-right.text(
+          v-if='card.tier',
+          rounded,
+          :color='badgeColour'
+        ) {{ card.tier }}
   q-separator(inset)
   router-link(:to='card.to')
     q-img.asset-img(:src='card.imageUrl')
