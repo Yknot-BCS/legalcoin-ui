@@ -105,7 +105,10 @@ q-page
         .text-wallet.text-bold 
           | {{ nftCount }} NFTS
           q-icon.q-pl-sm.q-pb-xs(name='fa-solid fa-question-circle')
-            CustomTooltip(:text='"LEGAL value of all owned NFTs"')
+            CustomTooltip(
+              :offset='[0, 15]',
+              :text='"LEGAL value of all owned NFTs"'
+            )
         .text-wallet
           | {{ nftValue.toFixed(2) }} (LEGAL)
       q-separator.q-mx-md
@@ -126,7 +129,7 @@ q-page
               flat,
               @click='$router.push({ name: "withdraw" })'
             )
-            q-tooltip.tooltip Coming soon!
+            CustomTooltip(:text='"Coming soon!"')
           .row.col-12
             q-btn.col.q-mx-sm.q-mt-sm.outline-btn(
               label='VIEW TRANSACTION HISTORY',
@@ -145,13 +148,4 @@ q-page
   &.br
     left: 0rem
     bottom: 0rem
-.ol-popup
-  position: absolute
-  background: linear-gradient(90deg, rgba(203, 202, 245, 0.7) 0%, rgba(169, 202, 243, 0.7) 56.377%, rgba(73, 206, 255, 0.7) 100%)
-  box-shadow: 0 1px 4px rgba(0,0,0,0.2)
-  padding: 5px
-  border-radius: 10px
-  bottom: 12px
-  left: -50px
-  min-width: 200px
 </style>

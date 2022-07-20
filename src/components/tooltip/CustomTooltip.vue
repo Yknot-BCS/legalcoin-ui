@@ -13,8 +13,8 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-tooltip.row.tooltip(
-  anchor='center right',
+q-tooltip.row.justify-center.tooltip(
+  anchor='top middle',
   self='center middle',
   style='background: rgba(0, 0, 0, 0)'
 ) 
@@ -22,14 +22,15 @@ q-tooltip.row.tooltip(
     .row
       .bg-primary.q-px-xs(style='border-radius: 5px 5px 5px 5px')
         | {{ text }}
-    .row.justify-center
-      .col.tritest.justify-center
+    .row
+      .col-5
+      .col.tritest(style='max-width: 10px')
+      .col-5
 </template>
 
 <style lang="sass">
 .tritest
-  width: 10px
-  height: 20px
-  background: red
+  height: 8px
+  background: $primary
   clip-path: polygon(0% 0%, 100% 0%, 50% 100%)
 </style>
