@@ -183,7 +183,7 @@ q-page
       .row.justify-center
         q-card.q-mt-xl(v-if='paymentStatus === "checkout"')
           q-card-section 
-            .text-wallet-heading.text-grey-8
+            .text-heading.text-grey-8
               | Buy LEGAL
 
           q-card-section.text-body2.q-pb-xs
