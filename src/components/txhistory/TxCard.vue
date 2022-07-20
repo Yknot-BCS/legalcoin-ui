@@ -47,7 +47,7 @@ q-card-section.row
       .col
         | {{ displayDate }}
   .col-4.text-bold
-    | {{ amount }} LEGAL
+    | {{ amount }} GBP
 q-separator
 </template>
 
