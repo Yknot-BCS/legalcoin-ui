@@ -25,8 +25,8 @@ export default defineComponent({
     const dataOptions = computed(() => getQueryDataOptions(route.query));
     const page = computed(() => getQueryPage(route.query));
     const limit = computed(() => getQueryLimit(route.query));
-    const price = computed(() => getQueryPrice(route.query));
-    const status = computed(() => getQueryStatus(route.query));
+    const price = computed(() => getQueryPrice());
+    const status = computed(() => getQueryStatus());
     const collections = ref<string>('emissions.lc');
     const assetOptions = computed(() => {
       return {
@@ -58,16 +58,15 @@ export default defineComponent({
 <template lang="pug">
 .row.justify-center
   .col-12
-    q-card(bordered)
-      AtomicAssetsView(
-        :ApiParams='assetOptions',
-        :Page='page',
-        :ItemsPerPage='limit',
-        :DataParams='dataOptions',
-        Type='Sale',
-        :Price='price',
-        :DisableSearch='false'
-      )
+    AtomicAssetsView(
+      :ApiParams='assetOptions',
+      :Page='page',
+      :ItemsPerPage='limit',
+      :DataParams='dataOptions',
+      Type='Discover',
+      :Price='price',
+      :DisableSearch='false'
+    )
 </template>
 
 <style scoped lang="sass">

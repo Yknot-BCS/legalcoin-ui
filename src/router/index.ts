@@ -19,7 +19,12 @@ export default route<StateInterface>(function (
 ) {
   const createHistory = createWebHistory;
   const Router = createRouter({
-    scrollBehavior: () => ({ left: 0, top: 0 }),
+    scrollBehavior: (to, from, savedPosition) => {
+      if(!savedPosition){
+        return;
+      } 
+      if (to.params.savePosition) return {}
+      return { left: 0, top: 0 }},
     routes,
 
     // Leave this as is and make changes in quasar.conf.js instead!

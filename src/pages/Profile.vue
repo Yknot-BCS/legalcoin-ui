@@ -30,7 +30,7 @@ export default defineComponent({
     const dataOptions = computed(() => getQueryDataOptions(route.query));
     const page = computed(() => getQueryPage(route.query));
     const limit = computed(() => getQueryLimit(route.query));
-    const status = computed(() => getQueryStatus(route.query));
+    const status = computed(() => getQueryStatus());
     const assetCount = ref<number>(1);
     const collectionCount = ref<number>(1);
     const collections = ref<string>('emissions.lc');
