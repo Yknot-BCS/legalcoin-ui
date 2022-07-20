@@ -38,13 +38,19 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
+img.polygon.tr.animated.fadeInRight.slower(src='~assets/polygons/pg1.svg')
+img.polygon.tr.animated.fadeInRight.slow(src='~assets/polygons/pg2.svg')
+img.polygon.tr(src='~assets/polygons/pg3.svg')
+img.polygon.br.animated.fadeInLeft.slow(src='~assets/polygons/pg4.svg')
+img.polygon.br.animated.fadeInLeft.slower(src='~assets/polygons/pg5.svg')
+img.polygon.br(src='~assets/polygons/pg6.svg')
 q-page.fit.row.wrap.justify-center
-  q-card.settings-card
+  q-card.settings-card.q-mt-xl
     q-card-section
-      .text-h5.text-grey-8.q-mt-xl.q-mr-lg
+      .text-heading.text-grey-8.q-mr-lg
         | Account Settings
     q-card-section
-      .row.justify-start.items-center.text-grey-8
+      .row.text-settings.justify-start.items-center.text-grey-8
         | {{ account.profile.name }} {{ account.profile.surname }}
         q-btn.edit-btn(
           :to='{ name: "editprofile" }',
@@ -61,14 +67,14 @@ q-page.fit.row.wrap.justify-center
           padding='none',
           font-size='15px'
         )
-          .text-italic
+          .text-settings.text-italic
             | View My Profile
     q-separator
     q-card-section
       q-btn(@click='showUpdatePassword = true', v-if='!showUpdatePassword') Change Password
       UpdatePassword(v-else)
     q-separator
-    q-card-section
+    q-card-section.text-settings
       .text-bold Profile
       div Email: {{ account.profile.email }}
       div Platform Account: {{ account.profile.accountName }}
@@ -116,4 +122,14 @@ q-page.fit.row.wrap.justify-center
   font-size: 20px
   background-color: orange
   border-radius: 5px
+
+.polygon
+  position: absolute
+  z-index: -1
+  &.tr
+    right: 0rem
+    top: 0rem
+  &.br
+    left: 0rem
+    bottom: 0rem
 </style>
