@@ -1,7 +1,6 @@
 <script lang="ts">
 import { defineComponent, computed, ref, onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
-import { useStore } from 'src/store';
 import {
   getQueryDataOptions,
   getSalesQueryApiOptions,
@@ -26,10 +25,9 @@ export default defineComponent({
     const dataOptions = computed(() => getQueryDataOptions(route.query));
     const page = computed(() => getQueryPage(route.query));
     const limit = computed(() => getQueryLimit(route.query));
-    const price = computed(() => getQueryPrice(route.query));
-    const status = computed(() => getQueryStatus(route.query));
+    const price = computed(() => getQueryPrice());
+    const status = computed(() => getQueryStatus());
     const collections = ref<string>('emissions.lc');
-    console.log('status', status.value);
     const assetOptions = computed(() => {
       return {
         state: '1',
@@ -42,7 +40,6 @@ export default defineComponent({
     onBeforeMount(async () => {
       const collectionData = await getCollectionsList();
       collections.value = collectionData.stringList;
-      console.log(collections.value);
     });
     return {
       assetOptions,
@@ -59,18 +56,17 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-page
 .row.justify-center
   .col-12
-    q-card(flat)
-      AtomicAssetsView(
-        :ApiParams='assetOptions',
-        :Page='page',
-        :ItemsPerPage='limit',
-        :DataParams='dataOptions',
-        Type='Sale',
-        :Price='price'
-      )
+    AtomicAssetsView(
+      :ApiParams='assetOptions',
+      :Page='page',
+      :ItemsPerPage='limit',
+      :DataParams='dataOptions',
+      Type='Discover',
+      :Price='price',
+      :DisableSearch='false'
+    )
 </template>
 
 <style scoped lang="sass">

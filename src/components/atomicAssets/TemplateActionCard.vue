@@ -34,7 +34,8 @@ export default defineComponent({
 
   computed: {
     ...mapGetters({
-      accountName: 'account/getAccountName'
+      accountName: 'account/getAccountName',
+      isAuthenticated: 'account/isAuthenticated'
     }),
 
     isForSale() {
@@ -42,7 +43,7 @@ export default defineComponent({
     },
 
     isBuybackNFT() {
-      return !!this.templateData?.immutable_data['saleopen'];
+      return !!this.templateData?.immutable_data['term'];
     },
 
     isMatured() {
@@ -173,7 +174,7 @@ export default defineComponent({
 
       let actions = [
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'assertsale',
           data: {
             sale_id: this.saleData.sale_id,
@@ -190,13 +191,13 @@ export default defineComponent({
           name: 'transfer',
           data: {
             from: this.accountName as string,
-            to: 'atomicmarket',
+            to: process.env.ATOMICMARKET,
             quantity: amountStr,
             memo: 'deposit'
           }
         },
         {
-          account: 'atomicmarket',
+          account: process.env.ATOMICMARKET,
           name: 'purchasesale',
           data: {
             buyer: this.accountName as string,
@@ -302,12 +303,13 @@ q-card
             | Total
             .text-NFTCard-price-value.text-grey-10
               | {{ priceStr }}
-
       q-btn.full-width.q-mt-lg(
         @click='tryBuySale()',
         label='BUY',
-        color='primary'
+        color='primary',
+        :disable='!isAuthenticated'
       )
+      q-tooltip.tooltip(v-if='!isAuthenticated') Please log in
     //- when owning, with list on market button
     //- .div(v-if='isOwned && !isForSale')
     //-   q-btn.full-width.q-mt-lg(

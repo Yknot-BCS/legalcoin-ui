@@ -97,7 +97,7 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
         imageUrl:
           asset.data.img && (asset.data.img as string).includes('http')
             ? (asset.data.img as string)
-            : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+            : process.env.IPFS_ENDPOINT + '/ipfs/' + (asset.data.img as string),
         collection: asset.collection.collection_name,
         template: asset.template.template_id,
         schema: asset.schema.schema_name,
@@ -114,7 +114,7 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
         imageUrl:
           asset.data.img && (asset.data.img as string).includes('http')
             ? (asset.data.img as string)
-            : 'https://ipfs.io/ipfs/' + (asset.data.img as string),
+            : process.env.IPFS_ENDPOINT + '/ipfs/' + (asset.data.img as string),
         collection: asset.collection_name,
         template: '',
         schema: '',
@@ -138,7 +138,9 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
           template.immutable_data.img &&
           (template.immutable_data.img as string).includes('http')
             ? (template.immutable_data.img as string)
-            : 'https://ipfs.io/ipfs/' + (template.immutable_data.img as string),
+            : process.env.IPFS_ENDPOINT +
+              '/ipfs/' +
+              (template.immutable_data.img as string),
         collection: template.collection.collection_name,
         template: '',
         schema: '',

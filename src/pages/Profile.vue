@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, computed, ref, onMounted } from 'vue';
+import { defineComponent, computed, ref, onMounted, onBeforeMount } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from 'src/store';
 import {
@@ -7,7 +7,10 @@ import {
   getQueryDataOptions,
   getQueryApiOptions,
   getQueryPage,
-  getQueryLimit
+  getQueryLimit,
+  getCollectionsList,
+  getQueryStatus,
+  getSalesQueryApiOptions
 } from 'src/api/atomic_assets';
 import GalleryView from 'src/components/gallery/GalleryView.vue';
 import AtomicAssetsView from 'src/components/atomicAssets/AtomicAssetView.vue';
@@ -27,16 +30,26 @@ export default defineComponent({
     const dataOptions = computed(() => getQueryDataOptions(route.query));
     const page = computed(() => getQueryPage(route.query));
     const limit = computed(() => getQueryLimit(route.query));
+    const status = computed(() => getQueryStatus());
     const assetCount = ref<number>(1);
     const collectionCount = ref<number>(1);
+    const collections = ref<string>('emissions.lc');
     const myGalleryOptions = computed(() => {
-      return {
-        owner: profileId.value,
-        search: search.value,
-        min_template_mint: '1',
-        max_template_mint: '7000',
-        ...getQueryApiOptions(route.query)
-      } as unknown;
+      if (status.value == 'buynow') {
+        return {
+          owner: profileId.value,
+          search: search.value,
+          collection_whitelist: collections.value,
+          ...getQueryApiOptions(route.query)
+        } as unknown;
+      } else {
+        return {
+          seller: profileId.value,
+          search: search.value,
+          collection_whitelist: collections.value,
+          ...getSalesQueryApiOptions(route.query, status.value)
+        } as unknown;
+      }
     });
     // - Gallery view
 
@@ -48,6 +61,10 @@ export default defineComponent({
       let data = await atomic_api.getAccount(profileId.value as string);
       assetCount.value = Number(data.assets);
       collectionCount.value = data.collections.length;
+    });
+    onBeforeMount(async () => {
+      const collectionData = await getCollectionsList();
+      collections.value = collectionData.stringList;
     });
     return {
       profileId,
@@ -67,7 +84,6 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-page
 .row.justify-center
   .col-12
     q-card(flat)
@@ -102,9 +118,9 @@ page
         :Page='page',
         :ItemsPerPage='limit',
         :DataParams='dataOptions',
-        Type='Assets',
-        :FilterStatus='false',
-        :FilterPrice='false'
+        Type='Profile',
+        :FilterPrice='false',
+        :FilterMarket='false'
       )
 </template>
 

@@ -4,11 +4,18 @@ import { GalleryCard } from 'src/types';
 import AssetCard from './assetCard.vue';
 import CollectionCard from './collectionCard.vue';
 import ListingCard from './listingCard.vue';
-import TemplateViewer from './templateCard.vue';
+import AuctionCard from './auctionCard.vue';
+import TemplateCard from './templateCard.vue';
 
 export default defineComponent({
   name: 'Cards',
-  components: { AssetCard, CollectionCard, ListingCard, TemplateViewer },
+  components: {
+    AssetCard,
+    CollectionCard,
+    ListingCard,
+    TemplateCard,
+    AuctionCard
+  },
   props: {
     data: {
       type: Object as PropType<GalleryCard>,
@@ -28,17 +35,21 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-div(v-if='cardType === "Assets" || cardType === "Sale"')
+div(v-if='card.type === "asset"')
   AssetCard(:data='card')
 
-div(v-else-if='cardType === "Templates"')
-  TemplateViewer(:data='card')
+div(v-else-if='card.type === "template"')
+  TemplateCard(:data='card')
 
-div(v-else-if='cardType === "Collections"')
+div(v-else-if='card.type === "collection"')
   CollectionCard(:data='card')
 
-div(v-else-if='cardType === "Listings"')
+div(v-else-if='card.type === "listing"')
   ListingCard(:data='card')
+div(v-else-if='card.type === "auction"')
+  AuctionCard(:data='card')
+div(v-else)
+  AssetCard(:data='card')
 </template>
 
 <style lang="sass" scoped></style>

@@ -1,6 +1,5 @@
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
-import { date } from 'quasar';
 
 export default defineComponent({
   name: 'Countdown',
@@ -20,9 +19,6 @@ export default defineComponent({
     };
   },
   computed: {
-    displayDate() {
-      return date.formatDate(this.endDate, 'd MMMM, YYYY [at] h:mma [GMT]Z');
-    },
     seconds() {
       return Math.trunc(this.diff) % 60;
     },
@@ -57,21 +53,11 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-.row
-  | Auction ends {{ displayDate }}
-.row.q-mt-sm.q-gutter-x-sm
-  .col-2.column(v-if='days > 0')
-    .col.text-bold {{ days }}
-    .col Days
-  .col-2.column(v-if='hours > 0 || days > 0')
-    .col.text-bold {{ hours }}
-    .col Hours
-  .col-2.column(v-if='minutes > 0 || hours > 0 || days > 0')
-    .col.text-bold {{ minutes }}
-    .col Minutes
-  .col-2.column
-    .col.text-bold {{ seconds }}
-    .col Seconds
+.row.q-col-gutter-x-sm
+  .col-12.column(v-if='days > 0') {{ days }} days left
+  .col-12.column(v-else-if='hours > 0 && days <= 0') {{ hours }} hours left
+  .col-12.column(v-else-if='minutes > 0 && hours <= 0 && days <= 0') {{ minutes }} minutes left
+  .col-12.column(v-else) Expired
 </template>
 
 <style lang="sass"></style>

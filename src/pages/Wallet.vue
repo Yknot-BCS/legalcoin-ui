@@ -81,39 +81,45 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
+img.polygon.tr.animated.fadeInRight.slower(src='~assets/polygons/pg1.svg')
+img.polygon.tr.animated.fadeInRight.slow(src='~assets/polygons/pg2.svg')
+img.polygon.tr(src='~assets/polygons/pg3.svg')
+img.polygon.br.animated.fadeInLeft.slow(src='~assets/polygons/pg4.svg')
+img.polygon.br.animated.fadeInLeft.slower(src='~assets/polygons/pg5.svg')
+img.polygon.br(src='~assets/polygons/pg6.svg')
 q-page
   .row.justify-center
     q-card.q-mt-xl
       q-card-section
-        .text-wallet-heading.text-grey-8
+        .text-heading.text-grey-8
           | Balance
       q-card-section
-        .text-wallet-topline.text-bold 
-          | {{ balance }} LEGAL (LEGALCOIN)
-        .text-wallet-bottomline
+        .text-wallet.text-bold 
+          | {{ balance }} LEGAL
+        .text-wallet
           | £ {{ gbpValue }} (GBP)
           //- TODO get GBP value
       q-separator.q-mx-md
       q-card-section
-        .text-wallet-topline.text-bold 
+        .text-wallet.text-bold 
           | {{ nftCount }} NFTS
           q-icon.q-pl-sm.q-pb-xs(name='fa-solid fa-question-circle')
             q-tooltip.tooltip(anchor='center right', :offset='[110, 0]') LEGAL value of all owned NFTs
-        .text-wallet-bottomline
+        .text-wallet
           | {{ nftValue.toFixed(2) }} (LEGAL)
       q-separator.q-mx-md
       q-card-section
-        .text-wallet-heading.text-grey-8
+        .text-heading.text-grey-8
           | Options
         .row.justify-center.q-mt-sm
           .row.col-6
-            q-btn.col.q-mx-sm.q-mt-sm.wallet-btn(
+            q-btn.col.q-mx-sm.q-mt-sm.outline-btn(
               label='BUY LEGALCOIN',
               flat,
               @click='$router.push({ name: "buytokens", params: { status: "checkout" } })'
             )
           .row.col-6
-            q-btn.col.q-mx-sm.q-mt-sm.wallet-btn(
+            q-btn.col.q-mx-sm.q-mt-sm.outline-btn(
               label='WITHDRAW',
               disable,
               flat,
@@ -121,7 +127,7 @@ q-page
             )
             q-tooltip.tooltip Coming soon!
           .row.col-12
-            q-btn.col.q-mx-sm.q-mt-sm.wallet-btn(
+            q-btn.col.q-mx-sm.q-mt-sm.outline-btn(
               label='VIEW TRANSACTION HISTORY',
               flat,
               @click='$router.push({ name: "txhistory" })'
@@ -129,17 +135,13 @@ q-page
 </template>
 
 <style lang="sass" scoped>
-.wallet-btn
-  border: 0.5px solid $gray-80
-  font-family: 'ralewayregular'
-  border-radius: 6px 6px 6px 6px
-.text-wallet-heading
-  font-size: 1.25rem
-  font-family: 'ralewayregular'
-.text-wallet-topline
-  font-size: 0.88rem
-  font-family: 'heveticaneue'
-.text-wallet-bottomline
-  font-size: 0.88rem
-  font-family: 'ralewayregular'
+.polygon
+  position: absolute
+  z-index: -1
+  &.tr
+    right: 0rem
+    top: 0rem
+  &.br
+    left: 0rem
+    bottom: 0rem
 </style>

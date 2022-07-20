@@ -34,7 +34,8 @@ export default {
 <template lang="pug">
 q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
   router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
-    img.logo.q-mr-md(src='~assets/legalcoin-full.png')
+    img.logo.q-mr-md(v-if='$q.screen.gt.sm', src='~assets/legalcoin-full.png')
+    img.logo-small.q-mr-sm(v-else, src='~assets/legalcoin-full.png')
 
   .col.row.justify-center
     search-bar.toolbar-select.q-mr-md(size='100', v-if='$q.screen.gt.md')
@@ -58,25 +59,14 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
       :to='{ name: "login" }'
     )
 
-  .row.items-center.no-wrap
-    div
-      q-btn(
-        flat,
-        round,
-        dense,
-        :to='{ name: "mobile-search" }',
-        v-if='$q.screen.lt.sm'
-      )
-        q-icon.material-icons-outlined(name='search')
-      q-btn(
-        flat,
-        round,
-        dense,
-        :to='{ name: "discover" }',
-        v-if='$q.screen.lt.md'
-      )
+  .row.items-center.q-col-gutter-sm
+    .col
+      search-bar.toolbar-select.lt-sm
+    .col
+      q-btn.lt-md(flat, round, dense, :to='{ name: "discover" }')
         q-icon.material-icons-outlined(name='grid_view')
-      q-btn.q-ml-xs(
+    .col
+      q-btn(
         flat,
         round,
         dense,
@@ -169,12 +159,14 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
 .q-list
   width: 350px
 .logo
-  height:40px
+  height:38px
+.logo-small
+  height:30px
 .logout-btn
   background-color: orange
 .menu-edit
   top: 200px
   align: left
-.blue
-  color: $primary
+.btn
+  right: 5px
 </style>

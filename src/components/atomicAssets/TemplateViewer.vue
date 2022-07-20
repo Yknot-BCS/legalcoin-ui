@@ -29,7 +29,7 @@ export default defineComponent({
   },
   computed: {
     assetImg(): string {
-      return `https://ipfs.io/ipfs/${<string>(
+      return `${process.env.IPFS_ENDPOINT}/ipfs/${<string>(
         this.templateData.immutable_data?.img
       )}`;
     }

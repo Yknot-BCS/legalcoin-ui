@@ -1,10 +1,11 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from 'vue';
 import { GalleryCard } from 'src/types';
+import CountDown from './Countdown.vue';
 
 export default defineComponent({
-  name: 'TemplateCard',
-  components: {},
+  name: 'AuctionCard',
+  components: { CountDown },
   props: {
     data: {
       type: Object as PropType<GalleryCard>,
@@ -37,18 +38,26 @@ export default defineComponent({
 <template lang="pug">
 q-card
   q-card-section
-    q-badge.text-subtitle2.float-right.text(rounded, :color='badgeColour') {{ card.tier }}
+    q-badge.text-subtitle2.float-right.text(
+      v-if='card.tier',
+      rounded,
+      :color='badgeColour'
+    ) {{ card.tier }}
     .row
       .text-h6.heading {{ card.name }}
     .row
-      .col-auto
-        .q-mr-sm {{ card.mintprice }} &#8226;
-      .col-auto
-        .text-subtitle4 {{ card.yield }} yield
+      .col-7
+        .text-subtitle4.q-mr-sm {{ card.price }}
+      .col-5
+        .text-subtitle4.float-right {{ card.yield }} yield
+    .row
+      .col-12.q-py-sm
+        q-badge.text-black(color='grey-3') {{ card.seller }}
+    .row
+      .col-12
+        CountDown(:endDate='new Date(card.saleclose)')
   q-separator(inset)
-  router-link(
-    :to='{ name: "template", params: { collection_name: card.collection, template_id: card.id } }'
-  )
+  router-link(:to='card.to')
     q-img.asset-img(:src='card.imageUrl')
 </template>
 
@@ -57,10 +66,10 @@ q-card
   width: 100%
   height: 500px
   max-height: 400px
-.column
-  width: 100px
 .heading
   font-weight: bold
+.column
+  width: 95px
 .text
   margin-top: 15px
 </style>

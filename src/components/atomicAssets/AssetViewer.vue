@@ -46,7 +46,9 @@ export default defineComponent({
   },
   computed: {
     assetImg(): string {
-      return `https://ipfs.io/ipfs/${<string>this.assetData.data.img}`;
+      return `${process.env.IPFS_ENDPOINT}/ipfs/${<string>(
+        this.assetData.data.img
+      )}`;
     }
   }
 });
@@ -143,7 +145,10 @@ export default defineComponent({
 // .container
 //   border: 1px solid $grey-6
 //   border-radius: 13px
-.asset-container
+.asset-container-desktop
+  width: 100%
+  max-width: 64rem
+.asset-container-mobile
   width: 100%
   max-width: 30rem
 </style>

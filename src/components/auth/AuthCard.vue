@@ -5,8 +5,7 @@ export default defineComponent({});
 
 <template lang="pug">
 .page-wrapper
-  q-card.q-pa-lg.bg-grey-1.shadow-10.animated.fadeInDown
-    img.q-my-lg(src='~assets/legalcoin-full.png', style='width: 12rem')
+  q-card.q-pa-lg.bg-grey-1.shadow-10.animated.fadeInDown.login-card
     slot
 </template>
 

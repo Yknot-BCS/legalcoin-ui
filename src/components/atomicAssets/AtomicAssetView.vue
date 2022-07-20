@@ -15,17 +15,17 @@ import {
   get_assets,
   get_collections,
   get_templates,
-  get_sale,
+  get_discover,
   getCollectionsList,
-  getQueryMarket,
-  getQueryStatus
+  get_profile
 } from 'src/api/atomic_assets';
 import { AssetsApiParams } from 'atomicassets/build/API/Explorer/Params';
 import { useRouter, useRoute } from 'vue-router';
+import AssetFilter from 'src/components/atomicAssets/AssetFilter.vue';
 
 export default defineComponent({
   name: 'AtomicAssetView',
-  components: { GalleryView },
+  components: { GalleryView, AssetFilter },
   props: {
     ApiParams: {
       type: Object as PropType<unknown>,
@@ -51,6 +51,11 @@ export default defineComponent({
       type: Object as PropType<{ min: number; max: number }>,
       required: false
     },
+    DisableSearch: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
     DisableFilter: {
       type: Boolean,
       required: false,
@@ -62,6 +67,11 @@ export default defineComponent({
       default: true
     },
     FilterPrice: {
+      type: Boolean,
+      required: false,
+      default: true
+    },
+    FilterMarket: {
       type: Boolean,
       required: false,
       default: true
@@ -83,14 +93,16 @@ export default defineComponent({
     const $q = useQuasar();
     const GalleryData = ref<GalleryCard[]>([]);
     const disableFilter = computed(() => props.DisableFilter);
-    const showFilter = ref<boolean>(false);
+    const showFilter = ref<boolean>($q.screen.gt.sm);
     const showFilterDialog = ref<boolean>(false);
     const DataParams = computed(() => props.DataParams);
     const ApiParams = computed(() => props.ApiParams);
-    const market = ref(getQueryMarket(route.query));
-    const status = ref<string>(
-      market.value === 'retail'
-        ? getQueryStatus(route.query).toString()
+    const market = computed(
+      () => (route.query['market'] as string) || 'legalcoin'
+    );
+    const status = computed(() =>
+      market.value === 'open'
+        ? (route.query['status'] as string) || 'buynow'
         : 'buynow'
     );
     const { Page, ItemsPerPage, Type } = toRefs(props);
@@ -101,18 +113,6 @@ export default defineComponent({
     const search =
       ref<string>((ApiParams.value as AssetsApiParams).search as string) ||
       ref('');
-    const tier = ref<string>(
-      DataParams.value.find((v) => v.key === 'tier')
-        ? DataParams.value.find((v) => v.key === 'tier').value
-        : 'All'
-    );
-    const tierOptions = ref([
-      { label: 'Diamond', value: 'Diamond' },
-      { label: 'Gold', value: 'Gold' },
-      { label: 'Silver', value: 'Silver' },
-      { label: 'Bronze', value: 'Bronze' },
-      { label: 'All', value: 'All' }
-    ]);
     const pageOptions = [6, 12, 24, 48];
     const limit = ref(ItemsPerPage);
     const assetCount = ref<number>(1);
@@ -165,8 +165,10 @@ export default defineComponent({
     const Pages = computed((): number =>
       Math.ceil(assetCount.value / limit.value)
     );
+    const disableSearch = computed(() => props.DisableSearch);
     const filterStatus = computed(() => props.FilterStatus);
     const filterPrice = computed(() => props.FilterPrice);
+    const filterMarket = computed(() => props.FilterMarket);
     const filterCollection = computed(() => props.FilterCollection);
     const filterTier = computed(() => props.Tier);
     const collections = ref(
@@ -190,7 +192,6 @@ export default defineComponent({
       };
       switch (Type.value) {
         case 'Assets':
-          DataParams.value;
           response = await get_assets(
             ApiParams.value,
             Page.value,
@@ -226,15 +227,28 @@ export default defineComponent({
 
           break;
 
-        case 'Sale':
-          response = await get_sale(
+        case 'Discover':
+          response = await get_discover(
+            ApiParams.value,
+            Page.value,
+            ItemsPerPage.value,
+            DataParams.value,
+            status.value,
+            market.value
+          );
+
+          GalleryData.value = response.data;
+          assetCount.value = response.count;
+
+          break;
+        case 'Profile':
+          response = await get_profile(
             ApiParams.value,
             Page.value,
             ItemsPerPage.value,
             DataParams.value,
             status.value
           );
-
           GalleryData.value = response.data;
           assetCount.value = response.count;
 
@@ -255,102 +269,33 @@ export default defineComponent({
       }
     }
     // Apply page filter to url query
-    async function updatePage(val: number) {
-      await router.push({
-        path: router.currentRoute.value.path,
-        query: {
-          search: search.value,
-          'filter[tier]': tier.value,
-          sort: sort.value.sort,
-          page: val,
-          limit: ItemsPerPage.value,
-          order: sort.value.order
-        }
-      });
+    function updatePage(val: number) {
+      applyFilter('page', val.toString());
     }
     // Apply limit filter to url query
-    async function updateLimit(val: number) {
-      await router.push({
-        path: router.currentRoute.value.path,
-        query: {
-          search: search.value,
-          'filter[tier]': tier.value,
-          sort: sort.value.sort,
-          page: 1,
-          limit: val,
-          order: sort.value.order
-        }
-      });
-    }
-    // Apply tier filter to url query
-    async function updateTier(val: string) {
-      await router.push({
-        path: router.currentRoute.value.path,
-        query: {
-          search: search.value,
-          'filter[tier]': val,
-          sort: sort.value.sort,
-          page: 1,
-          limit: limit.value,
-          order: sort.value.order,
-          market: JSON.stringify(market.value)
-        }
-      });
+    function updateLimit(val: number) {
+      applyFilter('limit', val.toString());
     }
     // Apply filters to url query
-    function applyFilters() {
-      if (Type.value === 'Sale') {
-        void router.push({
-          path: router.currentRoute.value.path,
-          query: {
-            search: search.value,
-            'filter[tier]': tier.value,
-            sort: sort.value.sort,
-            order: sort.value.order,
-            page: 1,
-            limit: ItemsPerPage.value,
-            market: market.value,
-            status: status.value,
-            min_price: price.value.min,
-            max_price: price.value.max,
-            collections:
-              collections.value.length > 0
-                ? collections.value.toString()
-                : collectionsArray.value.toString()
-          }
-        });
-      } else {
-        void router.push({
-          path: router.currentRoute.value.path,
-          query: {
-            search: search.value,
-            'filter[tier]': tier.value,
-            sort: sort.value.sort,
-            order: sort.value.order,
-            page: 1,
-            limit: ItemsPerPage.value,
-            market: market.value,
-            status: status.value,
-            collections:
-              collections.value.length > 0
-                ? collections.value.toString()
-                : collectionsArray.value.toString()
-          }
-        });
-      }
+    function applyFilter(key: string, value: string) {
+      let query = { ...route.query };
+      query[key] = value;
+      void router.push({
+        path: router.currentRoute.value.path,
+        query: query
+      });
     }
     // if any change is detected in these values update gallery data
     watch([DataParams, ApiParams, Page, ItemsPerPage], () => {
       void getData();
     });
-    watch([market], () => {
-      void applyFilters();
-    });
-    watch(ApiParams, (newval, olval) => {
+
+    watch(ApiParams, (newval) => {
       collections.value = (
         newval as AssetsApiParams
       ).collection_whitelist?.split(',');
     });
+
     // When component mounts get gallery data
     onMounted(() => {
       void getCollectionsList().then((collectionData) => {
@@ -370,13 +315,10 @@ export default defineComponent({
       showFilterDialog,
       getData,
       Filter,
-      applyFilters,
-      updateTier,
+      applyFilter,
       updateLimit,
       updatePage,
       search,
-      tier,
-      tierOptions,
       showFilter,
       price,
       nftCount: ref(0),
@@ -391,14 +333,15 @@ export default defineComponent({
       collections,
       collectionsArray,
       model: ref('one'),
-      market
+      market,
+      disableSearch,
+      filterMarket
     };
   }
 });
 </script>
 
 <template lang="pug">
-page
 .row.justify-center
   .col-12
     q-card(flat)
@@ -421,21 +364,22 @@ page
                 :label='$q.screen.lt.md ? "Filters" : ""'
               )
           .col-md-8.col-sm-12.col-xs-12(
-            :class='$q.screen.lt.md ? "order-last" : ""'
+            :class='$q.screen.lt.md ? "order-last" : ""',
+            v-if='disableSearch'
           )
             q-input(
               dense,
               outlined,
               v-model='search',
               placeholder='Search',
-              @update:model-value='() => { applyFilters(); }'
+              @update:model-value='(val) => { applyFilter("search", val.toString()); }'
             )
               template(v-slot:prepend)
                 q-icon(v-if='search === ""', name='search')
                 q-icon.cursor-pointer(
                   v-else,
                   name='clear',
-                  @click='() => { search = ""; applyFilters(); }'
+                  @click='() => { search = ""; applyFilter("search", ""); }'
                 )
           .col-md-3.col-sm-6.col-xs-6
             q-select.filters-selection(
@@ -443,137 +387,21 @@ page
               dense,
               v-model='sort',
               :options='sortOptions',
-              @update:model-value='() => { applyFilters(); }',
+              @update:model-value='(val) => { applyFilter("sort", val.sort); applyFilter("order", val.order); }',
               color='primary'
             )
       // Filter for desktop view
       q-card-section
         .row.justify-evenly
-          .col-lg-2.col-md-3.q-pt-md(v-if='showFilter')
+          .col-lg-2.col-md-3.q-pt-md(v-if='showFilter && $q.screen.gt.sm')
             q-card.q-pb-md(bordered, flat)
-              .q-pa-md
-                q-btn-toggle(
-                  v-model='market',
-                  spread,
-                  no-caps,
-                  rounded,
-                  unelevated,
-                  toggle-color='primary',
-                  color='white',
-                  text-color='primary',
-                  :options='[ { label: " Legalcoin market", value: "primary" }, { label: "Open Market", value: "retail" }, ]'
-                )
-              q-expansion-item(
-                expand-separator,
-                icon='query_stats',
-                label='Status',
-                default-opened,
-                v-if='filterStatus'
+              AssetFilter(
+                :Status='filterStatus',
+                :Market='filterMarket',
+                :Collection='filterCollection',
+                :Tier='filterTier',
+                :Price='filterPrice'
               )
-                .row.q-col-gutter-sm.q-pa-md
-                  .col-12
-                    .row
-                      .col-6 Buy Now
-                      .col-6
-                        q-radio.float-right.q-pl-md(
-                          v-model='status',
-                          val='buynow',
-                          color='primary',
-                          @update:model-value='() => { applyFilters(); }'
-                        )
-                  .col-12(v-if='market === "retail"')
-                    .row
-                      .col-6 On Auction
-                      .col-6
-                        q-radio.float-right.q-pl-md(
-                          v-model='status',
-                          val='auction',
-                          color='primary',
-                          @update:model-value='() => { applyFilters(); }'
-                        )
-              q-expansion-item(
-                expand-separator,
-                icon='diamond',
-                label='Tier',
-                v-if='filterTier'
-              )
-                .row.q-col-gutter-sm.q-pa-md
-                  .col-12
-                    .row
-                      .col-6 Diamond
-                      .col-6
-                        q-radio.float-right.q-pl-md(
-                          v-model='tier',
-                          val='Diamond',
-                          @update:model-value='(v) => { updateTier(v); }'
-                        )
-                  .col-12
-                    .row
-                      .col-6 Gold
-                      .col-6
-                        q-radio.float-right.q-pl-md(
-                          v-model='tier',
-                          val='Gold',
-                          @update:model-value='(v) => { updateTier(v); }'
-                        )
-                  .col-12
-                    .row
-                      .col-6 Silver
-                      .col-6
-                        q-radio.float-right.q-pl-md(
-                          v-model='tier',
-                          val='Silver',
-                          @update:model-value='(v) => { updateTier(v); }'
-                        )
-                  .col-12
-                    .row
-                      .col-6 Bronze
-                      .col-6
-                        q-radio.float-right.q-pl-md(
-                          v-model='tier',
-                          val='Bronze',
-                          @update:model-value='(v) => { updateTier(v); }'
-                        )
-                  .col-12
-                    .row
-                      .col-6 All
-                      .col-6
-                        q-radio.float-right.q-pl-md(
-                          v-model='tier',
-                          val='All',
-                          @update:model-value='(v) => { updateTier(v); }'
-                        )
-
-              q-expansion-item(
-                expand-separator,
-                icon='attach_money',
-                label='Price',
-                v-if='filterPrice'
-              )
-                q-range.q-pa-lg(
-                  v-model='price',
-                  :min='0',
-                  :max='12000',
-                  label,
-                  @change='() => { applyFilters(); }'
-                )
-              q-expansion-item(
-                expand-separator,
-                icon='collections',
-                label='Collection',
-                v-if='filterCollection'
-              )
-                .row.q-col-gutter-sm.q-pa-md
-                  .col-12(v-for='col in collectionsArray')
-                    .row
-                      .col-6 {{ col }}
-                      .col-6
-                        q-checkbox.float-right.q-pl-md(
-                          v-model='collections',
-                          :val='col',
-                          color='primary',
-                          @update:model-value='(value) => { applyFilters(); }'
-                        )
 
           // Gallery section
           div(:class='showFilter ? "col-lg-10 col-md-9" : "col-12"')
@@ -612,128 +440,13 @@ page
               style='z-index: 1'
             )
             .q-pa-md
-              q-btn-toggle.q-py-md(
-                v-model='market',
-                spread,
-                no-caps,
-                rounded,
-                unelevated,
-                toggle-color='primary',
-                color='white',
-                text-color='primary',
-                :options='[ { label: " Legalcoin market", value: "primary" }, { label: "Open Market", value: "retail" }, ]'
+              AssetFilter(
+                :Status='filterStatus',
+                :Market='filterMarket',
+                :Collection='filterCollection',
+                :Tier='filterTier',
+                :Price='filterPrice'
               )
-              q-expansion-item(
-                expand-separator,
-                icon='query_stats',
-                label='Status',
-                default-opened,
-                v-if='filterStatus'
-              )
-                .row.q-col-gutter-sm.q-pa-md
-                  .col-12
-                    .row
-                      .col-6 Buy Now
-                      .col-6
-                        q-radio.float-right.q-pl-md(
-                          v-model='status',
-                          val='buynow',
-                          color='primary',
-                          @update:model-value='() => { applyFilters(); }'
-                        )
-                  .col-12(v-if='market === "retail"')
-                    .row
-                      .col-6 On Auction
-                      .col-6
-                        q-radio.float-right.q-pl-md(
-                          v-model='status',
-                          val='auction',
-                          color='primary',
-                          @update:model-value='() => { applyFilters(); }'
-                        )
-              q-expansion-item(
-                expand-separator,
-                icon='diamond',
-                label='Tier',
-                v-if='filterTier'
-              )
-                .row.q-col-gutter-sm.q-pa-md
-                  .col-12
-                    .row
-                      .col-6 Diamond
-                      .col-6
-                        q-radio.float-right.q-pl-md(
-                          v-model='tier',
-                          val='Diamond',
-                          @update:model-value='(v) => { updateTier(v); }'
-                        )
-                  .col-12
-                    .row
-                      .col-6 Gold
-                      .col-6
-                        q-radio.float-right.q-pl-md(
-                          v-model='tier',
-                          val='Gold',
-                          @update:model-value='(v) => { updateTier(v); }'
-                        )
-                  .col-12
-                    .row
-                      .col-6 Silver
-                      .col-6
-                        q-radio.float-right.q-pl-md(
-                          v-model='tier',
-                          val='Silver',
-                          @update:model-value='(v) => { updateTier(v); }'
-                        )
-                  .col-12
-                    .row
-                      .col-6 Bronze
-                      .col-6
-                        q-radio.float-right.q-pl-md(
-                          v-model='tier',
-                          val='Bronze',
-                          @update:model-value='(v) => { updateTier(v); }'
-                        )
-                  .col-12
-                    .row
-                      .col-6 All
-                      .col-6
-                        q-radio.float-right.q-pl-md(
-                          v-model='tier',
-                          val='All',
-                          @update:model-value='(v) => { updateTier(v); }'
-                        )
-
-              q-expansion-item(
-                expand-separator,
-                icon='attach_money',
-                label='Price',
-                v-if='filterPrice'
-              )
-                q-range.q-pa-lg(
-                  v-model='price',
-                  :min='0',
-                  :max='12000',
-                  label,
-                  @change='() => { applyFilters(); }'
-                )
-              q-expansion-item(
-                expand-separator,
-                icon='collections',
-                label='Collection',
-                v-if='filterCollection'
-              )
-                .row.q-col-gutter-sm.q-pa-md
-                  .col-12(v-for='col in collectionsArray')
-                    .row
-                      .col-6 {{ col }}
-                      .col-6
-                        q-checkbox.float-right.q-pl-md(
-                          v-model='collections',
-                          :val='col',
-                          color='primary',
-                          @update:model-value='(value) => { applyFilters(); }'
-                        )
 </template>
 
 <style scoped lang="sass">

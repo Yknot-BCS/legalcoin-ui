@@ -27,6 +27,7 @@ export default defineComponent({
       isLoggedIn,
       assets,
       storecollections,
+      featuredCollections: ref<GalleryCard[]>([] as GalleryCard[]),
       collections: ref<ICollection[]>(new Object({}) as ICollection[]),
       trendingTemplates: ref<GalleryCard[]>([] as GalleryCard[]),
       screenWidth
@@ -54,16 +55,35 @@ export default defineComponent({
       } as unknown;
 
       this.collections = await atomic_api.getCollections(collectionsfilter);
-      console.log('col', this.collections);
+      console.log(this.collections);
+      this.featuredCollections = this.collections.map((collection) => {
+        return {
+          name: collection.data.name as string,
+          imageUrl:
+            collection.data.img &&
+            (collection.data.img as string).includes('http')
+              ? (collection.data.img as string)
+              : process.env.IPFS_ENDPOINT +
+                '/ipfs/' +
+                (collection.data.img as string),
+          collection: collection.collection_name,
+          template: '',
+          schema: '',
+          id: collection.contract,
+          type: 'collection'
+        } as GalleryCard;
+      });
+      console.log(this.featuredCollections);
     },
     async getTrendingNFTs() {
       let trending = [];
       for (const collection of this.collections) {
         let templateStatsFilter = {
-          symbol: 'WAX',
+          symbol: process.env.LC_SYMBOL,
           search: collection.collection_name
         } as unknown;
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let templateStats: any = await atomic_market_api.fetchEndpoint(
           '/v1/stats/templates',
           templateStatsFilter
@@ -87,12 +107,14 @@ export default defineComponent({
             template.immutable_data.img &&
             (template.immutable_data.img as string).includes('http')
               ? (template.immutable_data.img as string)
-              : 'https://ipfs.io/ipfs/' +
+              : process.env.IPFS_ENDPOINT +
+                '/ipfs/' +
                 (template.immutable_data.img as string),
           collection: template.collection.collection_name,
           template: '',
           schema: '',
-          id: template.template_id
+          id: template.template_id,
+          type: 'template'
         } as GalleryCard;
       });
     }
@@ -132,7 +154,7 @@ q-page
       .landing-right
         .landing-right-card-container
           .main-asset.col-md-6.q-pa-lg(v-if='assets.length > 0')
-            Cards.shadow-10(:data='assets[0]', type='Assets')
+            Cards(:data='assets[0]', type='Assets')
 
     //- Featured Collections
   .div
@@ -141,8 +163,8 @@ q-page
 
     .row.justify-center
       .featured-card.q-pa-sm(
-        v-for='collection in storecollections.slice(0, numberOfCards)',
-        v-if='storecollections.length > 0'
+        v-for='collection in featuredCollections.slice(0, numberOfCards)',
+        v-if='featuredCollections.length > 0'
       )
         Cards.rounded.shadow-10(:data='collection', type='Collections')
 
@@ -178,6 +200,9 @@ q-page
 .pgb
   position: relative
 
+.rounded
+  border-radius: 1rem
+  overflow: hidden
 .landing-heading
   color: $grey-9
   text-align: center

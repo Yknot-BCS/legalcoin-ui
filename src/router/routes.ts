@@ -108,24 +108,6 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
-    path: '/buy',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      { path: '', name: 'buy', component: () => import('pages/Buy.vue') }
-    ]
-  },
-  {
-    path: '/buy/collections',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      {
-        path: '',
-        name: 'buyCollections',
-        component: () => import('pages/Collection.vue')
-      }
-    ]
-  },
-  {
     path: '/gallery',
     component: () => import('layouts/MainLayout.vue'),
     children: [

@@ -47,7 +47,9 @@ export default defineComponent({
   },
   computed: {
     collectionImg(): string {
-      return `https://ipfs.io/ipfs/${<string>this.collectionData.data.img}`;
+      return `${process.env.IPFS_ENDPOINT}/ipfs/${<string>(
+        this.collectionData.data.img
+      )}`;
     }
   },
   methods: {
@@ -79,22 +81,24 @@ export default defineComponent({
 
 <template lang="pug">
 q-page
-  //- Collection Card
   //- Background image
-  .row
-    q-img.bg-img(src='~assets/collections/slanted-gradient.svg', height='20em')
-
-  //- Collection image 
-  .row.q-px-lg
-    .col-3
+  .row(style='height: 11rem')
+    q-img.bg-img(
+      src='~assets/collections/slanted-gradient.svg',
+      height='20rem'
+    )
+  //- Collection image
+  .row.q-px-lg.items-center.justify-between(style='height: 12rem')
+    .col.q-pt-xl
       q-card.asset-img
         q-img(:src='collectionImg')
-
-  //- Collection name and links
-  .row.justify-between.content-center.items-center.q-pa-lg 
-    .text-h2 
-      | {{ collectionData.data.name }}
-    .row.q-gutter-lg
+    //- Collection name and description //- Todo: smallest mobile view, links overlap title
+  .row 
+    .col.q-pl-lg
+      .row.text-h3
+        | {{ collectionData.data.name }}
+    //- Links
+    .col.self-center.text-right.q-gutter-lg.q-pr-lg
       q-btn(
         round,
         icon='fa-solid fa-globe',
@@ -102,18 +106,15 @@ q-page
         target='_blank'
       )
       q-btn(round, icon='fa-solid fa-ellipsis')
-
-  //- Collection description
-  .row.justify-start.q-pa-lg 
-    .text-subtitle1 
+  .row.text-subtitle1.q-px-xs.q-py-sm.q-pl-lg
+    .col.text-bold
       | {{ collectionData.data.description }}
-
-  //- Collection info
-  .column.justify-start.q-pa-lg
+    //- Info
+  .row.q-pl-lg
     .col Creator: {{ collectionData.authorized_accounts?.[0] }}
     .col Market Fee: {{ collectionData.market_fee * 100 }}%
     .col Created: {{ new Date(Number(collectionData.created_at_time)).toLocaleDateString() }}
-
+  //- Assets
   .row.justify-center
     .col-12
       q-card(flat)

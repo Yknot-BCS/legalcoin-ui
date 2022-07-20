@@ -38,7 +38,6 @@ export default defineComponent({
         this.$route.params.collection_name as string,
         this.$route.params.template_id as string
       );
-      console.log(this.templateData);
     },
 
     async getSaleData() {
@@ -60,11 +59,9 @@ export default defineComponent({
             ? ''
             : this.$route.params.template_id,
         state: 1,
-        seller:
-          this.$route.query.seller === undefined ? '' : this.$route.query.seller
+        seller: process.env.AA_ACCOUNT
       } as unknown;
       this.saleData = (await atomic_market_api.getSales(saleFilter))[0];
-      console.log(this.saleData);
     },
 
     async updateTemplateInfo() {
@@ -74,7 +71,6 @@ export default defineComponent({
   },
   async mounted() {
     if (this.$route.params.template_id) {
-      console.log('Is Template');
       await this.updateTemplateInfo();
     }
   }
