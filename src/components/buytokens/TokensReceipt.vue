@@ -121,80 +121,113 @@ export default defineComponent({
 //- | Receipt for
 //-     | Buying of LEGAL
 //- If payment has succeeded
-q-card.receipt-card(v-if='paymentStatus === "success"')
-  q-card-section 
-    .text-h5.text-grey-8 
-      | Transaction Summary
+//- q-card.receipt-card(v-if='paymentStatus === "success"')
+//-   q-card-section 
+//-     .text-h5.text-grey-8 
+//-       | Transaction Summary
 
-  q-card-section.row
-    .col-2.text-center
-      q-icon(name='fa-solid fa-money-bill-wave')
-    .col-10
-      .col
-        | Amount
-      .col
-        | {{ amount }} {{ currency }}
-  q-separator
-  q-card-section.row
-    .col-2.text-center
-      q-icon(name='fa-solid fa-calendar-days')
-    .col-10
-      .col
-        | Date
-      .col
-        | {{ displayDate }}
-  q-separator
-  q-card-section.row
-    .col-2.text-center
-      q-icon(name='fa-solid fa-tag')
-    .col-10
-      .col
-        | Order Number
-      .col
-        | {{ orderRef }}
-  q-separator
-  q-card-section.row
-    .col-2.text-center
-      q-spinner-clock(v-if='issueInProgress')
-      q-icon(v-else, name='fa-solid fa-hourglass') 
-    .col-10
-      .col
-        | Payout Status
-      .col(v-if='issueInProgress')
-        | Issuing tokens in progress
-      .col(v-if='!issueInProgress')
-        | Issuing tokens completed
-        //- TODO - add link to transaction on block explorer
-  q-separator
-  q-card-section.row(v-if='hasError == true')
-    .col-2.text-center
-      q-icon(name='fa-solid fa-bug', color='red')
-    .col-10
-      .col(style='color: red')
-        | Order failed to issue tokens
-      .col(style='color: red')
-        | {{ errorMessage }}
-  q-separator
-  .row
-    q-btn.col-12(
-      label='View Balance',
-      @click='$router.push({ name: "wallet" })'
+//-   q-card-section.row
+//-     .col-2.text-center
+//-       q-icon(name='fa-solid fa-money-bill-wave')
+//-     .col-10
+//-       .col
+//-         | Amount
+//-       .col
+//-         | {{ amount }} {{ currency }}
+//-   q-separator
+//-   q-card-section.row
+//-     .col-2.text-center
+//-       q-icon(name='fa-solid fa-calendar-days')
+//-     .col-10
+//-       .col
+//-         | Date
+//-       .col
+//-         | {{ displayDate }}
+//-   q-separator
+//-   q-card-section.row
+//-     .col-2.text-center
+//-       q-icon(name='fa-solid fa-tag')
+//-     .col-10
+//-       .col
+//-         | Order Number
+//-       .col
+//-         | {{ orderRef }}
+//-   q-separator
+//-   q-card-section.row
+//-     .col-2.text-center
+//-       q-spinner-clock(v-if='issueInProgress')
+//-       q-icon(v-else, name='fa-solid fa-hourglass') 
+//-     .col-10
+//-       .col
+//-         | Payout Status
+//-       .col(v-if='issueInProgress')
+//-         | Issuing tokens in progress
+//-       .col(v-if='!issueInProgress')
+//-         | Issuing tokens completed
+//-         //- TODO - add link to transaction on block explorer
+//-   q-separator
+//-   q-card-section.row(v-if='hasError == true')
+//-     .col-2.text-center
+//-       q-icon(name='fa-solid fa-bug', color='red')
+//-     .col-10
+//-       .col(style='color: red')
+//-         | Order failed to issue tokens
+//-       .col(style='color: red')
+//-         | {{ errorMessage }}
+//-   q-separator
+//-   .row
+//-     q-btn.col-12(
+//-       label='View Balance',
+//-       @click='$router.push({ name: "wallet" })'
+//-     )
+//-     //- TODO add fee and any other details
+//- //- If payment has failed
+//- q-card(v-if='paymentStatus === "failure"')
+//-   q-card-section
+//-     | Payment failed
+//-   q-card-section
+//-     | {{ status }}
+//-   q-card-section
+//-     | Please review your transaction and try again.
+//-   q-card-section
+//-     q-btn(
+//-       color='primary',
+//-       label='Back',
+//-       @click='$router.push({ name: "wallet" })'
+//-     )
+.text-h5.text-black.q-mt-md 
+      | Transaction Summary
+q-card.q-my-md.q-mx-sm(v-if='paymentStatus === "success"')
+  q-card-section.bg-grey-5.bordered
+    .text-subtitle3 RECEIPT FOR
+    .text-h5 VW Gas Emissions #345/10000
+  q-separator(dark, inset)
+  .q-pa-md
+    q-markup-table.deatails-table(
+    title="Treats"
+    hide-bottom,
+    flat,
     )
-    //- TODO add fee and any other details
-//- If payment has failed
-q-card(v-if='paymentStatus === "failure"')
-  q-card-section
-    | Payment failed
-  q-card-section
-    | {{ status }}
-  q-card-section
-    | Please review your transaction and try again.
-  q-card-section
-    q-btn(
-      color='primary',
-      label='Back',
-      @click='$router.push({ name: "wallet" })'
-    )
+      t-body
+        tr
+          td.text-left Payment To
+          td.text-left LegalCoin
+        tr
+          td.text-left Payment From
+          td Account Name
+        tr
+          td.text-left Amount
+          td {{amount}} {{currency}}
+        tr
+          td.text-left Date
+          td {{displayDate}}
+        tr
+          td.text-left Order Number
+          td {{orderRef}}
+        tr
+          td.text-left Payout Status
+          td Issuing tokens completed
+
 </template>
 
 <style lang="sass" scoped>
@@ -203,4 +236,24 @@ q-card(v-if='paymentStatus === "failure"')
   max-width: 30rem
   height: 100%
   max-height: 30rem
+
+.deatails-table
+  max-width: 100%
+  text-align: left
+
+  thead tr:first-child th:first-child
+    background-color: #fff
+    width: 70%
+    text-align: left
+
+  td:first-child
+    background-color: #f0f0f0
+    width: 30%
+    text-align: left
+
+.text-subtitle3
+  font-size: 11px
+  color: $grey-8
+.text-h5
+  font-size: 20px
 </style>
