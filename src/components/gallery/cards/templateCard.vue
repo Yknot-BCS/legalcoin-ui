@@ -29,6 +29,11 @@ export default defineComponent({
         default:
           return 'grey';
       }
+    },
+    getPrice() {
+      if (this.card.price == undefined) {
+        return this.card.mintprice;
+      } else return this.card.price;
     }
   }
 });
@@ -49,24 +54,37 @@ q-card
 
     //- Large cards details
     .row(v-if='$q.screen.gt.xs')
-      .col-auto
-        .q-mr-sm {{ card.mintprice }} &#8226;
-      .col-auto
-        .text-subtitle4 {{ card.yield }} yield
-
+      .col
+        .row
+          .col-auto
+            | Price:
+          .col-auto
+            | {{ getPrice }}
+        .row
+          .col-auto
+            | Yield:
+          .col-auto
+            .text-subtitle4 {{ card.yield }}
     //- Small cards details
-    .row(v-else, style='font-size: 0.72rem')
-      .col-auto
-        | {{ card.mintprice }}
-      .col-auto
-        | &nbsp; &#8226; &nbsp; {{ card.yield }} yield
+    .row(v-else, style='font-size: 0.64rem')
+      .col
+        .row
+          .col-auto
+            | Price:
+          .col-auto
+            | {{ getPrice }}
+        .row
+          .col-auto
+            | Yield:
+          .col-auto
+            | {{ card.yield }}
 
   q-separator(inset)
   router-link(
     :to='{ name: "template", params: { collection_name: card.collection, template_id: card.id } }'
   )
-    q-img.asset-img-sm(v-if='$q.screen.lt.sm', :src='card.imageUrl')
-      q-badge.text-subtitle2.float-right.text-sm(rounded, :color='badgeColour') {{ card.tier }}
+    q-img.row.asset-img-sm(v-if='$q.screen.lt.sm', :src='card.imageUrl')
+      q-badge.text-subtitle2.text-sm(rounded, :color='badgeColour') {{ card.tier }}
     q-img.asset-img-lg(v-else, :src='card.imageUrl')
 </template>
 

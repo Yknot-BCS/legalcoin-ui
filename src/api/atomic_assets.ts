@@ -224,6 +224,11 @@ export const get_discover = async function (
                 (sales.assets[0].data.img as string),
           collection: sales.assets[0].collection.collection_name,
           template: sales.assets[0].template.template_id,
+          price: priceAsset(
+            sales.price.amount,
+            sales.price.token_symbol,
+            sales.price.token_precision
+          ),
           schema: sales.assets[0].schema.schema_name,
           id: sales.assets[0].asset_id,
           type: 'sale'
@@ -315,6 +320,11 @@ export const get_sale = async function (
             (sales.assets[0].data.img as string),
       collection: sales.assets[0].collection.collection_name,
       template: sales.assets[0].template.template_id,
+      price: priceAsset(
+        sales.price.amount,
+        sales.price.token_symbol,
+        sales.price.token_precision
+      ),
       schema: sales.assets[0].schema.schema_name,
       id: sales.assets[0].asset_id,
       type: 'sale'
