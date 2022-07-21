@@ -69,10 +69,14 @@ q-card
 </template>
 
 <style lang="sass" scoped>
-.asset-img
+.asset-img-lg
   width: 100%
   height: 500px
   max-height: 400px
+.asset-img-sm
+  width: 100%
+  height: 500px
+  max-height: 200px
 .heading
   font-weight: bold
 .column
