@@ -26,13 +26,14 @@ q-card(bordered)
   router-link(
     :to='{ name: "collection", params: { collection: card.collection } }'
   )
-    q-img.asset-img(:src='card.imageUrl')
+    .row(style='height: 400px')
+      .col.self-center.q-mb-xl
+        q-img.asset-img(:src='card.imageUrl')
 </template>
 
 <style lang="sass" scoped>
 .asset-img
   width: 100%
-  height: 500px
   max-height: 400px
 .heading
   font-weight: bold
