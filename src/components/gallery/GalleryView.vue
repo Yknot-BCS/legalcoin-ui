@@ -31,9 +31,6 @@ export default defineComponent({
     :key='card.id'
   )
     Cards(:data='card', :type='cardType')
-  //- .col-12(v-else, v-for='card in cards', :key='card.id')
-  //-   Cards(:data='card', :type='cardType')
-
   .col-12(v-if='cards.length === 0')
     q-card.noItems
       .text-h4.text-center No items to display
