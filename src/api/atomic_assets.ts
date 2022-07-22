@@ -225,6 +225,11 @@ export const get_discover = async function (
           collection: sales.assets[0].collection.collection_name,
           template: sales.assets[0].template.template_id,
           schema: sales.assets[0].schema.schema_name,
+          price: priceAsset(
+            sales.price.amount,
+            sales.price.token_symbol,
+            sales.price.token_precision
+          ),
           id: sales.assets[0].asset_id,
           type: 'sale'
         } as GalleryCard;
@@ -237,6 +242,7 @@ export const get_discover = async function (
         ItemsPerPage,
         DataParams
       );
+      console.log(rawData);
       count = await atomic_market_api.countAuctions({
         ...ApiParams,
         ...DataParams
@@ -270,6 +276,7 @@ export const get_discover = async function (
             } as GalleryCard;
           })
         );
+        console.log(data);
       });
     }
   } else {
@@ -423,25 +430,34 @@ export const get_profile = async function (
       ...DataParams
     });
     rawData.forEach((element) => {
-      data = element.assets.map((asset) => {
-        return {
-          ...asset.data,
-          to: '/asset/' + asset.asset_id,
-          yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
-          name: asset.data.name as string,
-          imageUrl:
-            asset.data.img && (asset.data.img as string).includes('http')
-              ? (asset.data.img as string)
-              : process.env.IPFS_ENDPOINT +
-                '/ipfs/' +
-                (asset.data.img as string),
-          collection: asset.collection.collection_name,
-          template: asset.template.template_id,
-          schema: asset.schema.schema_name,
-          id: asset.asset_id,
-          type: 'auction'
-        } as GalleryCard;
-      });
+      data = data.concat(
+        element.assets.map((asset) => {
+          return {
+            ...asset.data,
+            to: '/asset/' + asset.asset_id,
+            yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
+            name: asset.data.name as string,
+            imageUrl:
+              asset.data.img && (asset.data.img as string).includes('http')
+                ? (asset.data.img as string)
+                : process.env.IPFS_ENDPOINT +
+                  '/ipfs/' +
+                  (asset.data.img as string),
+            collection: asset.collection.collection_name,
+            template: asset.template.template_id,
+            price: priceAsset(
+              element.price.amount,
+              element.price.token_symbol,
+              element.price.token_precision
+            ),
+            schema: asset.schema.schema_name,
+            seller: element.seller,
+            id: asset.asset_id,
+            saleclose: Number(element.end_time),
+            type: 'auction'
+          } as GalleryCard;
+        })
+      );
     });
   }
 

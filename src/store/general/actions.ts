@@ -3,11 +3,11 @@
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { GeneralStateInterface } from './state';
-import { atomic_api, atomic_market_api } from 'src/api/atomic_assets';
+import { atomic_api } from 'src/api/atomic_assets';
 import { Template } from 'src/types';
 
 export const actions: ActionTree<GeneralStateInterface, StateInterface> = {
-  async updateSearch({ commit, dispatch, state }, search: string) {
+  async updateSearch({ commit, dispatch }, search: string) {
     commit('setSearch', search);
     await dispatch('updateOptions');
   },

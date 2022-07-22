@@ -44,6 +44,7 @@ export default defineComponent({
         } as unknown;
       } else {
         return {
+          state: '1,2,3,4',
           seller: profileId.value,
           search: search.value,
           collection_whitelist: collections.value,
