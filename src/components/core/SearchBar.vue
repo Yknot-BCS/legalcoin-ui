@@ -89,7 +89,7 @@ export default defineComponent({
         :to='"/asset/" + scope.opt.id'
       )
         q-item-section
-          q-item-label.text-bold.q-pr-lg(v-html='scope.opt.label')
+          q-item-label.text-weight-medium.q-pl-lg(v-html='scope.opt.label')
 </template>
 
 <style scoped lang="sass">
