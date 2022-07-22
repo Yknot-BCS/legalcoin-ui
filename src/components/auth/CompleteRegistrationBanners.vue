@@ -73,21 +73,28 @@ export default {
   )(
     rounded
   ) Email not verified. Please check your mail for a verification request. If you have not received one, we can resend the request.
+    //- .avatar
+    //-   img(src='~assets/yknot-dark.png', height='40')
     template(v-slot:action)
       q-btn(flat, label='Dismiss', @click='dismissed = true')
       q-btn(flat, label='Resend', @click='resendEmail')
   q-banner.bg-primary.text-white.animated.fadeInLeft(v-if='showLogoutBanner')(
     rounded
   ) We still need to create an account for you on the blockchain. To complete this process, we need sign you out and back in.
+    //- .avatar
+    //-   img(src='~assets/yknot-dark.png', height='40')
     template(v-slot:action)
       q-btn(flat, label='Dismiss', @click='dismissed = true')
       q-btn(flat, label='Sign out', @click='logout')
 </template>
 
 <style lang="sass" scoped>
-// .banner-wrapper
-//   position: absolute
-//   z-index: 1
+.banner-wrapper
+  position: absolute
+  z-index: 1
+.avatar
+  position: absolute
+  margin-top: 5px
 .q-banner
   flex-basis: 600px
   flex-grow: 0

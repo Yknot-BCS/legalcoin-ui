@@ -205,8 +205,7 @@ export default defineComponent({
     isOnAuction() {
       if (
         !!this.aucData &&
-        !this.aucData.claimed_by_buyer &&
-        !this.aucData.claimed_by_seller
+        (!this.aucData.claimed_by_buyer || !this.aucData.claimed_by_seller)
       ) {
         return true;
       } else {
@@ -270,9 +269,9 @@ export default defineComponent({
   mounted() {
     if (this.assetData.asset_id) {
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      this.pollAsset = setInterval(() => {
-        void this.$emit('updateAssetInfo');
-      }, 5000);
+      // this.pollAsset = setInterval(() => {
+      //   void this.$emit('updateAssetInfo');
+      // }, 5000);
     }
   },
   beforeUnmount() {
@@ -337,7 +336,19 @@ export default defineComponent({
         this.$q.notify({
           color: 'green-4',
           textColor: 'white',
-          message: 'Complete'
+          message: 'Complete',
+          actions: [
+            {
+              label: 'View in profile',
+              color: 'white',
+              handler: () => {
+                void this.$router.push({
+                  name: 'profile',
+                  params: { profile: this.accountName as string }
+                });
+              }
+            }
+          ]
         });
         this.$emit('updateAssetInfo');
       } catch (e: unknown) {
@@ -626,16 +637,24 @@ q-card
     .row.justify-between.items-center.fit.wrap
       .col-10.text-italic.text-subtitle2.column
         .col(v-if='isOnAuction')
-          //- router-link(
-          //-   :to='{ name: "profile", params: { profile: aucData?.seller } }'
-          //- )
-          | Seller: {{ aucData?.seller }}
+          .row.justify-start
+            .col-shrink
+              | Seller:
+            .col-shrink.q-pl-xs
+              router-link(
+                :to='{ name: "profile", params: { profile: aucData?.seller != undefined ? aucData?.seller : "loading" } }'
+              )
+                | {{ isAucSeller ? 'You' : aucData?.seller }}
         .col(v-else) 
           //- TODO hyperlink this to profile page
-          //- router-link(
-          //-   :to='{ name: "profile", params: { profile: assetData?.data?.owner } }'
-          //- )
-          | Owner: {{ assetData?.owner }}
+          .row.justify-start
+            .col-shrink
+              | Owner:
+            .col-shrink.q-pl-xs
+              router-link(
+                :to='{ name: "profile", params: { profile: assetData?.owner } }'
+              )
+                | {{ isOwned ? 'You' : assetData?.owner }}
       //- share icon
       .col-2.row.justify-center
         q-btn(icon='share', size='md', @click='shareURL', round)
@@ -685,7 +704,7 @@ q-card
         color='primary',
         :disabled='!isAuthenticated'
       )
-      q-tooltip.tooltip(v-if='!isAuthenticated') Please log in
+        q-tooltip.tooltip(v-if='!isAuthenticated') Please log in
     //- when owning, with list on market button
     .div(v-if='isOwned && !isForSale && !isOnAuction')
       q-btn.full-width.q-mt-lg(
@@ -708,8 +727,10 @@ q-card
       q-btn.full-width.q-mt-lg(
         @click='tryAcceptOffer()',
         label='CLAIM',
-        color='primary'
+        color='primary',
+        :disable='!isAuthenticated'
       )
+        q-tooltip.tooltip(v-if='!isAuthenticated') Please log in
 
     //- when on auction, show highest bid and time left
     //- Sates: 1: Listed, 2: Cancelled, 3: SOLD, 4: Invalid/Done No bids
@@ -736,8 +757,10 @@ q-card
           v-if='!isAucSeller && aucData?.state !== 4',
           @click='showAucDialog = true',
           label='Place Bid',
-          color='primary'
+          color='primary',
+          :disable='!isAuthenticated'
         )
+          q-tooltip.tooltip(v-if='!isAuthenticated') Please log in
 
     //- when on auction and is seller, show cancel auction button or claim button
     q-card-section(
@@ -754,7 +777,7 @@ q-card
       q-btn.full-width(
         v-if='aucData?.state == 3',
         @click='tryAucClaimSel()',
-        label='CLAIM AUCTION',
+        label='CLAIM AUCTION FUNDS',
         color='primary'
       )
 
@@ -765,7 +788,7 @@ q-card
       //- Claim auction button
       q-btn.full-width(
         @click='tryAucClaimBuy()',
-        label='CLAIM AUCTION',
+        label='CLAIM AUCTION ASSET',
         color='primary'
       )
 
@@ -799,4 +822,8 @@ q-card
     )
 </template>
 
-<style lang="sass"></style>
+<style lang="sass">
+a
+  text-decoration: none
+  color: blue
+</style>

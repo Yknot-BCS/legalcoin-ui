@@ -59,21 +59,20 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
       :to='{ name: "login" }'
     )
 
-  .row.items-center.q-col-gutter-sm
-    .col
-      search-bar.toolbar-select.lt-sm
-    .col
-      q-btn.lt-md(flat, round, dense, :to='{ name: "discover" }')
-        q-icon.material-icons-outlined(name='grid_view')
-    .col
-      q-btn(
-        flat,
-        round,
-        dense,
-        v-if='!isLoggedIn && $q.screen.lt.md',
-        :to='{ name: "login" }'
-      )
-        q-icon.material-icons-outlined(name='account_circle')
+  .row.items-center
+    search-bar.lt-sm
+
+    q-btn.lt-md(flat, round, dense, :to='{ name: "discover" }')
+      q-icon.material-icons-outlined(name='grid_view')
+
+    q-btn(
+      flat,
+      round,
+      dense,
+      v-if='!isLoggedIn && $q.screen.lt.md',
+      :to='{ name: "login" }'
+    )
+      q-icon.material-icons-outlined(name='account_circle')
     q-btn(
       dense,
       flat,
@@ -149,15 +148,6 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
   flex-basis: 500px
   flex-grow: 0
   flex-shrink: 1
-.toolbar-link
-  color: black
-  text-decoration: none
-  font-size: 1.2rem
-  &:hover
-    opacity: 0.7
-    color: $primary
-.q-list
-  width: 350px
 .logo
   height:38px
 .logo-small
@@ -167,6 +157,4 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
 .menu-edit
   top: 200px
   align: left
-.btn
-  right: 5px
 </style>
