@@ -822,6 +822,7 @@ q-card
 
     //- auction dialog
     AucBidDialog(
+      v-if='isOnAuction',
       :aucData='currentAucData',
       v-model='showAucDialog',
       @update:showAucDialog='showAucDialog = $event',
