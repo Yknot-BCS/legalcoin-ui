@@ -112,7 +112,7 @@ export default defineComponent({
     async getAucData() {
       // Don't get cancelled auctions
       let aucFilter = {
-        state: '1,2,3,4',
+        state: '1',
         asset_id:
           this.$route.params.asset === undefined
             ? ''
@@ -122,7 +122,24 @@ export default defineComponent({
         sort: 'auction_id',
         limit: 100
       } as unknown;
-      this.aucData = await atomic_market_api.getAuctions(aucFilter);
+      let response = await atomic_market_api.getAuctions(aucFilter);
+      if (response.length > 0) {
+        this.aucData = response;
+      } else {
+        aucFilter = {
+          participant: this.accountName,
+          asset_id:
+            this.$route.params.asset === undefined
+              ? ''
+              : this.$route.params.asset,
+          page: 1,
+          order: 'desc',
+          sort: 'auction_id',
+          limit: 100
+        } as unknown;
+        this.aucData = await atomic_market_api.getAuctions(aucFilter);
+      }
+
       console.log(this.aucData);
     },
 

@@ -204,34 +204,7 @@ export default defineComponent({
     // ---------------------------
     currentAucData() {
       if (this.aucData.length > 0) {
-        // Should first claim previous auction funds if any
-        if (
-          this.aucData.filter(
-            (auc) =>
-              this.accountName === auc.seller &&
-              auc.state === 3 &&
-              auc.claimed_by_seller === false
-          ).length > 0
-        ) {
-          return this.aucData.filter(
-            (auc) =>
-              this.accountName === auc.seller &&
-              auc.state === 3 &&
-              !auc.claimed_by_seller
-          )[0];
-        }
-
-        // If the last one failed, cancel auction first
-        if (
-          (this.aucData?.[0].state === 3 || this.aucData?.[0].state === 4) &&
-          (!this.aucData?.[0].claimed_by_seller ||
-            !this.aucData?.[0].claimed_by_buyer)
-        ) {
-          return this.aucData?.[0];
-        }
-
-        // Is on auction if state is 1
-        return this.aucData.filter((auc) => auc.state === 1)[0];
+        return this.aucData?.[0];
       } else {
         return undefined;
       }
@@ -784,7 +757,7 @@ q-card
 
         //- Top bid, with bid button
         .column(v-else)
-          .text-grey-9 Top bid
+          .text-grey-9 Top bid - {{ currentAucData?.bids[currentAucData?.bids?.length - 1]?.account }}
           .text-bold {{ highestBidDisplay }}
         q-btn.full-width.q-mt-lg(
           v-if='!isAucSeller && currentAucData?.state !== 4',
