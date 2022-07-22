@@ -39,7 +39,7 @@ export default defineComponent({
       required: false
     },
     aucData: {
-      type: Object as PropType<IAuction>,
+      type: Object as PropType<IAuction[]>,
       required: false
     }
   },
@@ -202,11 +202,44 @@ export default defineComponent({
     // ---------------------------
     // Auction relevant properties
     // ---------------------------
+    currentAucData() {
+      if (this.aucData.length > 0) {
+        // Should first claim previous auction funds if any
+        if (
+          this.aucData.filter(
+            (auc) =>
+              this.accountName === auc.seller &&
+              auc.state === 3 &&
+              auc.claimed_by_seller === false
+          ).length > 0
+        ) {
+          return this.aucData.filter(
+            (auc) =>
+              this.accountName === auc.seller &&
+              auc.state === 3 &&
+              !auc.claimed_by_seller
+          )[0];
+        }
+
+        // If the last one failed, cancel auction first
+        if (
+          (this.aucData?.[0].state === 3 || this.aucData?.[0].state === 4) &&
+          (!this.aucData?.[0].claimed_by_seller ||
+            !this.aucData?.[0].claimed_by_buyer)
+        ) {
+          return this.aucData?.[0];
+        }
+
+        // Is on auction if state is 1
+        return this.aucData.filter((auc) => auc.state === 1)[0];
+      } else {
+        return undefined;
+      }
+    },
+
     isOnAuction() {
-      if (
-        !!this.aucData &&
-        (!this.aucData.claimed_by_buyer || !this.aucData.claimed_by_seller)
-      ) {
+      if (!!this.currentAucData) {
+        console.log('currentAucData', this.currentAucData);
         return true;
       } else {
         return false;
@@ -214,12 +247,12 @@ export default defineComponent({
     },
 
     isAucSeller() {
-      return this.accountName === this.aucData?.seller;
+      return this.accountName === this.currentAucData?.seller;
     },
 
     bids(): IAuctionBid[] {
       if (this.isOnAuction) {
-        return this.aucData?.bids;
+        return this.currentAucData?.bids;
       } else {
         return [];
       }
@@ -249,17 +282,17 @@ export default defineComponent({
         let bidAsset = Asset.fromUnits(
           Int64.from(this.highestBid),
           Asset.Symbol.fromParts(
-            this.aucData?.price?.token_symbol,
-            this.aucData?.price?.token_precision
+            this.currentAucData?.price?.token_symbol,
+            this.currentAucData?.price?.token_precision
           )
         );
         return bidAsset;
       } else {
         let startPriceAsset = Asset.fromUnits(
-          Int64.from(this.aucData.price.amount),
+          Int64.from(this.currentAucData.price.amount),
           Asset.Symbol.fromParts(
-            this.aucData.price?.token_symbol,
-            this.aucData?.price?.token_precision
+            this.currentAucData.price?.token_symbol,
+            this.currentAucData?.price?.token_precision
           )
         );
         return startPriceAsset;
@@ -269,9 +302,9 @@ export default defineComponent({
   mounted() {
     if (this.assetData.asset_id) {
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      // this.pollAsset = setInterval(() => {
-      //   void this.$emit('updateAssetInfo');
-      // }, 5000);
+      this.pollAsset = setInterval(() => {
+        void this.$emit('updateAssetInfo');
+      }, 5000);
     }
   },
   beforeUnmount() {
@@ -505,7 +538,7 @@ export default defineComponent({
           account: process.env.ATOMICMARKET,
           name: 'auctclaimsel',
           data: {
-            auction_id: this.aucData.auction_id
+            auction_id: this.currentAucData.auction_id
           }
         }
       ];
@@ -543,7 +576,7 @@ export default defineComponent({
           account: process.env.ATOMICMARKET,
           name: 'auctclaimbuy',
           data: {
-            auction_id: this.aucData.auction_id
+            auction_id: this.currentAucData.auction_id
           }
         }
       ];
@@ -581,7 +614,7 @@ export default defineComponent({
           account: process.env.ATOMICMARKET,
           name: 'cancelauct',
           data: {
-            auction_id: this.aucData.auction_id
+            auction_id: this.currentAucData.auction_id
           }
         }
       ];
@@ -642,9 +675,9 @@ q-card
               | Seller:
             .col-shrink.q-pl-xs
               router-link(
-                :to='{ name: "profile", params: { profile: aucData?.seller != undefined ? aucData?.seller : "loading" } }'
+                :to='{ name: "profile", params: { profile: currentAucData?.seller != undefined ? currentAucData?.seller : "loading" } }'
               )
-                | {{ isAucSeller ? 'You' : aucData?.seller }}
+                | {{ isAucSeller ? 'You' : currentAucData?.seller }}
         .col(v-else) 
           //- TODO hyperlink this to profile page
           .row.justify-start
@@ -735,17 +768,17 @@ q-card
     //- when on auction, show highest bid and time left
     //- Sates: 1: Listed, 2: Cancelled, 3: SOLD, 4: Invalid/Done No bids
     q-card-section(
-      v-if='isOnAuction && (aucData?.state === 1 || aucData?.state === 4)'
+      v-if='isOnAuction && (currentAucData?.state === 1 || currentAucData?.state === 4)'
     )
       //- Countdown component
       q-card-section
-        Countdown(:endDate='new Date(Number(aucData?.end_time))')
+        Countdown(:endDate='new Date(Number(currentAucData?.end_time))')
 
       q-separator(color='primary')
 
       q-card-section
         //- Starting value if no bids
-        .column(v-if='aucData?.bids?.length === 0')
+        .column(v-if='currentAucData?.bids?.length === 0')
           .text-grey-9 No bids - Starting value
           .text-bold {{ highestBidDisplay }}
 
@@ -754,28 +787,28 @@ q-card
           .text-grey-9 Top bid
           .text-bold {{ highestBidDisplay }}
         q-btn.full-width.q-mt-lg(
-          v-if='!isAucSeller && aucData?.state !== 4',
+          v-if='!isAucSeller && currentAucData?.state !== 4',
           @click='showAucDialog = true',
           label='Place Bid',
           color='primary',
-          :disable='!isAuthenticated'
+          :disable='!isAuthenticated || Number(currentAucData.end_time) < Date.now()'
         )
           q-tooltip.tooltip(v-if='!isAuthenticated') Please log in
 
     //- when on auction and is seller, show cancel auction button or claim button
     q-card-section(
-      v-if='isOnAuction && isAucSeller && !aucData.claimed_by_seller'
+      v-if='isOnAuction && isAucSeller && !currentAucData.claimed_by_seller'
     )
       //- Cancel auction button,
       q-btn.full-width(
-        v-if='aucData?.state === 1 || aucData?.state === 4',
+        v-if='currentAucData?.state === 1 || currentAucData?.state === 4',
         @click='tryCancelAuction()',
         label='CANCEL AUCTION',
         color='primary'
       )
       //- Claim auction button
       q-btn.full-width(
-        v-if='aucData?.state == 3',
+        v-if='currentAucData?.state == 3',
         @click='tryAucClaimSel()',
         label='CLAIM AUCTION FUNDS',
         color='primary'
@@ -783,7 +816,7 @@ q-card
 
     //- when on auction and is buyer, show claim auction button
     q-card-section(
-      v-if='isOnAuction && !isAucSeller && !aucData.claimed_by_buyer && aucData.buyer == accountName && aucData.state == 3'
+      v-if='isOnAuction && !isAucSeller && !currentAucData.claimed_by_buyer && currentAucData.buyer == accountName && currentAucData.state == 3'
     )
       //- Claim auction button
       q-btn.full-width(
@@ -804,6 +837,7 @@ q-card
 
     //- | bid: {{ bids }}
     //- | top value: {{ highestBid }}
+    //- | auctdata: {{ currentAucData }}
 
     //- list on market dialog
     CreateListingDialog(
@@ -815,7 +849,7 @@ q-card
 
     //- auction dialog
     AucBidDialog(
-      :aucData='aucData',
+      :aucData='currentAucData',
       v-model='showAucDialog',
       @update:showAucDialog='showAucDialog = $event',
       @update-asset-info='$emit("updateAssetInfo", $event)'
