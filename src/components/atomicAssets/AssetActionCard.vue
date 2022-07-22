@@ -736,8 +736,10 @@ q-card
           v-if='!isAucSeller && aucData?.state !== 4',
           @click='showAucDialog = true',
           label='Place Bid',
-          color='primary'
+          color='primary',
+          :disable='!isAuthenticated'
         )
+        q-tooltip.tooltip(v-if='!isAuthenticated') Please log in
 
     //- when on auction and is seller, show cancel auction button or claim button
     q-card-section(
