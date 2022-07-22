@@ -46,7 +46,8 @@ export const get_assets = async function (
       template: asset.template.template_id,
       schema: asset.schema.schema_name,
       id: asset.asset_id,
-      type: 'asset'
+      type: 'asset',
+      key: asset.asset_id
     } as GalleryCard;
   });
   return { data, count };
@@ -76,7 +77,8 @@ export const get_collections = async function (
       template: '',
       schema: '',
       id: collection.contract,
-      type: 'collection'
+      type: 'collection',
+      key: collection.contract
     } as GalleryCard;
   });
   return { data, count };
@@ -115,7 +117,8 @@ export const get_templates = async function (
       template: '',
       schema: '',
       id: template.template_id,
-      type: 'template'
+      type: 'template',
+      key: template.template_id
     } as GalleryCard;
   });
   return { data, count };
@@ -231,7 +234,8 @@ export const get_discover = async function (
             sales.price.token_precision
           ),
           id: sales.assets[0].asset_id,
-          type: 'sale'
+          type: 'sale',
+          key: sales.assets[0].asset_id
         } as GalleryCard;
       });
     }
@@ -272,7 +276,8 @@ export const get_discover = async function (
               seller: element.seller,
               saleclose: Number(element.end_time),
               id: asset.asset_id,
-              type: 'auction'
+              type: 'auction',
+              key: element.auction_id + asset.asset_id
             } as GalleryCard;
           })
         );
@@ -324,7 +329,8 @@ export const get_sale = async function (
       template: sales.assets[0].template.template_id,
       schema: sales.assets[0].schema.schema_name,
       id: sales.assets[0].asset_id,
-      type: 'sale'
+      type: 'sale',
+      key: sales.assets[0].asset_id
     } as GalleryCard;
   });
 
@@ -375,7 +381,8 @@ export const get_auction = async function (
           seller: element.seller,
           id: asset.asset_id,
           saleclose: Number(element.end_time),
-          type: 'auction'
+          type: 'auction',
+          key: element.auction_id + asset.asset_id
         } as GalleryCard;
       })
     );
@@ -414,7 +421,8 @@ export const get_profile = async function (
         template: asset.template.template_id,
         schema: asset.schema.schema_name,
         id: asset.asset_id,
-        type: 'asset'
+        type: 'asset',
+        key: asset.asset_id
       } as GalleryCard;
     });
   }
@@ -454,7 +462,8 @@ export const get_profile = async function (
             seller: element.seller,
             id: asset.asset_id,
             saleclose: Number(element.end_time),
-            type: 'auction'
+            type: 'auction',
+            key: element.auction_id + asset.asset_id
           } as GalleryCard;
         })
       );
