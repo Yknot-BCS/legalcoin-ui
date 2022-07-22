@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, PropType, ref, computed } from 'vue';
+import { defineComponent, PropType, ref } from 'vue';
 import {
   ISale,
   IBuyoffer,
@@ -43,28 +43,13 @@ export default defineComponent({
       required: false
     }
   },
-  setup(props) {
-    const aucData = computed(() => props.aucData);
-    console.log('oi');
-    console.log(aucData.value);
-    // let currentAucData = ref<IAuction>(new Object({}) as IAuction);
-
-    const currentAucData = ref(aucData.value[0]);
-
-    // if (aucData.value && aucData.value.length > 0) {
-    //   currentAucData = computed(
-    //     () => aucData.value.filter((auc) => auc.state === 1)[0]
-    //   );
-    // }
-    console.log('meow', currentAucData);
-
+  setup() {
     return {
       quantity: ref(1),
       transaction: null,
       pollAsset: null,
       showListingDialog: ref(false),
-      showAucDialog: ref(false),
-      currentAucData
+      showAucDialog: ref(false)
     };
   },
 
@@ -217,9 +202,44 @@ export default defineComponent({
     // ---------------------------
     // Auction relevant properties
     // ---------------------------
+    currentAucData() {
+      if (this.aucData.length > 0) {
+        // Should first claim previous auction funds if any
+        if (
+          this.aucData.filter(
+            (auc) =>
+              this.accountName === auc.seller &&
+              auc.state === 3 &&
+              auc.claimed_by_seller === false
+          ).length > 0
+        ) {
+          return this.aucData.filter(
+            (auc) =>
+              this.accountName === auc.seller &&
+              auc.state === 3 &&
+              !auc.claimed_by_seller
+          )[0];
+        }
+
+        // If the last one failed, cancel auction first
+        if (
+          (this.aucData?.[0].state === 3 || this.aucData?.[0].state === 4) &&
+          (!this.aucData?.[0].claimed_by_seller ||
+            !this.aucData?.[0].claimed_by_buyer)
+        ) {
+          return this.aucData?.[0];
+        }
+
+        // Is on auction if state is 1
+        return this.aucData.filter((auc) => auc.state === 1)[0];
+      } else {
+        return undefined;
+      }
+    },
+
     isOnAuction() {
       if (!!this.currentAucData) {
-        console.log('grr', this.currentAucData);
+        console.log('currentAucData', this.currentAucData);
         return true;
       } else {
         return false;
@@ -282,9 +302,9 @@ export default defineComponent({
   mounted() {
     if (this.assetData.asset_id) {
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
-      // this.pollAsset = setInterval(() => {
-      //   void this.$emit('updateAssetInfo');
-      // }, 5000);
+      this.pollAsset = setInterval(() => {
+        void this.$emit('updateAssetInfo');
+      }, 5000);
     }
   },
   beforeUnmount() {
@@ -771,7 +791,7 @@ q-card
           @click='showAucDialog = true',
           label='Place Bid',
           color='primary',
-          :disable='!isAuthenticated'
+          :disable='!isAuthenticated || Number(currentAucData.end_time) < Date.now()'
         )
           q-tooltip.tooltip(v-if='!isAuthenticated') Please log in
 
@@ -817,6 +837,7 @@ q-card
 
     //- | bid: {{ bids }}
     //- | top value: {{ highestBid }}
+    //- | auctdata: {{ currentAucData }}
 
     //- list on market dialog
     CreateListingDialog(
