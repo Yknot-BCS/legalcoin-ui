@@ -12,6 +12,7 @@ import {
 } from 'src/api/atomic_assets';
 import { useRoute } from 'vue-router';
 import AtomicAssetsView from 'src/components/atomicAssets/AtomicAssetView.vue';
+import { copyToClipboard } from 'quasar';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -56,6 +57,16 @@ export default defineComponent({
     }
   },
   methods: {
+    shareURL() {
+      void copyToClipboard(window.location.origin + this.$route.path).then(
+        () => {
+          this.$q.notify({
+            color: 'positive',
+            message: 'Copied URL to clipboard'
+          });
+        }
+      );
+    },
     isLegalCoin(authorized_accounts: string) {
       // Check if the asset is from legalcoin
       if (authorized_accounts === process.env.AA_ACCOUNT) {
@@ -114,7 +125,7 @@ q-page
         :href='`http://twitter.com/intent/tweet?text=Check%20out%20this%20collection%20on%20LegalCoin:&url=${tweetURL}`',
         target='_blank'
       ) 
-      q-btn(round, icon='fa-solid fa-ellipsis')
+      q-btn(round, icon='fa-solid fa-ellipsis', @click='shareURL')
   .row.text-subtitle1.q-px-xs.q-py-sm.q-pl-lg
     .col.text-bold
       | {{ collectionData.data.description }}
