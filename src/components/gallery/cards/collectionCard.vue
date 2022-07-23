@@ -26,8 +26,8 @@ q-card(bordered)
   router-link(
     :to='{ name: "collection", params: { collection: card.collection } }'
   )
-    .row(style='height: 400px')
-      .col.self-center.q-mb-xl
+    .row.collection-card
+      .col.self-center
         q-img.asset-img(:src='card.imageUrl')
 </template>
 
@@ -37,4 +37,6 @@ q-card(bordered)
   max-height: 400px
 .heading
   font-weight: bold
+.collection-card
+  height: 400px
 </style>
