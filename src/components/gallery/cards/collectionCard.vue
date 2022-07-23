@@ -20,17 +20,18 @@ export default defineComponent({
 
 <template lang="pug">
 q-card(bordered)
-  q-card-section
+  q-card-section.bg-white(style='z-index: 2')
     .text-h6.heading {{ card.name }}
   q-separator(inset)
   router-link(
     :to='{ name: "collection", params: { collection: card.collection } }'
   )
-    q-img.asset-img(:src='card.imageUrl')
+    q-img.asset-img.zoom(:src='card.imageUrl')
 </template>
 
 <style lang="sass" scoped>
 .asset-img
+  z-index: 1
   width: 100%
   height: 500px
   max-height: 400px
