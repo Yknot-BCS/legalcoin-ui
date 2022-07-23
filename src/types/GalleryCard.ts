@@ -5,6 +5,7 @@ export interface GalleryCard {
   template: string;
   schema: string;
   id: string;
+  key: string;
   caseref: string;
   term: number;
   tier: string;

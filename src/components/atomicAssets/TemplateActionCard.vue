@@ -217,7 +217,19 @@ export default defineComponent({
         this.$q.notify({
           color: 'green-4',
           textColor: 'white',
-          message: 'Complete'
+          message: 'Complete',
+          actions: [
+            {
+              label: 'View in profile',
+              color: 'white',
+              handler: () => {
+                void this.$router.push({
+                  name: 'profile',
+                  params: { profile: this.accountName as string }
+                });
+              }
+            }
+          ]
         });
         this.$emit('updateAssetInfo');
       } catch (e: unknown) {

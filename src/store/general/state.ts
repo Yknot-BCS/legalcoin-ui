@@ -7,11 +7,13 @@ export interface GeneralStateInterface {
     disabled: boolean;
     id: string;
   }[];
+  collections: string[];
 }
 
 export function state(): GeneralStateInterface {
   return {
     search: '',
-    options: []
+    options: [],
+    collections: []
   };
 }

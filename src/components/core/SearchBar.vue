@@ -14,6 +14,7 @@ export default defineComponent({
 
     onMounted(() => {
       void store.dispatch('general/updateOptions');
+      void store.dispatch('general/getCollectionsList');
     });
 
     return {
@@ -88,7 +89,7 @@ export default defineComponent({
         :to='"/asset/" + scope.opt.id'
       )
         q-item-section
-          q-item-label(v-html='scope.opt.label')
+          q-item-label.text-weight-medium.q-pl-lg(v-html='scope.opt.label')
 </template>
 
 <style scoped lang="sass">

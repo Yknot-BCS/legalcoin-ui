@@ -44,7 +44,8 @@ export default defineComponent({
         } as unknown;
       } else {
         return {
-          seller: profileId.value,
+          state: '1,3,4',
+          participant: profileId.value,
           search: search.value,
           collection_whitelist: collections.value,
           ...getSalesQueryApiOptions(route.query, status.value)

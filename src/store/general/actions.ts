@@ -3,11 +3,8 @@
 import { ActionTree } from 'vuex';
 import { StateInterface } from '../index';
 import { GeneralStateInterface } from './state';
-import { atomic_api, atomic_market_api } from 'src/api/atomic_assets';
+import { atomic_api } from 'src/api/atomic_assets';
 import { Template } from 'src/types';
-
-// Split multiple with ","
-const collection_whitelist = 'emission.lc';
 
 export const actions: ActionTree<GeneralStateInterface, StateInterface> = {
   async updateSearch({ commit, dispatch }, search: string) {
@@ -16,68 +13,46 @@ export const actions: ActionTree<GeneralStateInterface, StateInterface> = {
   },
   async updateOptions({ commit, state }) {
     const options = [];
-    const assetOptions = {
-      owner: process.env.AA_ACCOUNT,
-      page: 1,
-      order: 'desc',
-      limit: 3,
-      search: state.search,
-      sort: 'created'
-    };
+    const collection_whitelist = state.collections;
     const CollectionOptions = {
       authorized_account: process.env.AA_ACCOUNT,
       page: 1,
       order: 'desc',
       limit: 3,
-      search: state.search,
       sort: 'created'
     };
     const TemplateOptions = {
       collection_whitelist,
       page: 1,
       order: 'desc',
-      limit: 3,
+      limit: 4,
       match: state.search,
       sort: 'created'
     };
-    const assetData = await atomic_market_api.getAssets(assetOptions as any);
-    if (assetData.length > 0) {
+    const AccountOptions = {
+      page: 1,
+      order: 'desc',
+      limit: 3,
+      match_owner: state.search,
+      sort: 'created'
+    };
+    const accountData = await atomic_api.getAccounts(AccountOptions as any);
+    if (accountData.length > 0) {
       options.push({
-        label: 'Assets',
+        label: 'Accounts',
         groupLabel: true,
-        group: 'asset',
+        group: 'account',
         disabled: true,
         id: ''
       });
     }
-    assetData.forEach((asset) => {
+    accountData.forEach((account) => {
       options.push({
-        label: asset.name,
+        label: account.account,
         groupLabel: false,
-        group: 'asset',
+        group: 'account',
         disabled: false,
-        id: asset.asset_id
-      });
-    });
-    const collectionData = await atomic_api.getCollections(
-      CollectionOptions as any
-    );
-    if (collectionData.length > 0) {
-      options.push({
-        label: 'Collections',
-        groupLabel: true,
-        group: 'collection',
-        disabled: true,
-        id: ''
-      });
-    }
-    collectionData.forEach((collection) => {
-      options.push({
-        label: collection.data.name,
-        groupLabel: false,
-        group: 'collection',
-        disabled: false,
-        id: collection.data.name
+        id: account.account
       });
     });
     const templateData = (await atomic_api.getTemplates(
@@ -101,6 +76,38 @@ export const actions: ActionTree<GeneralStateInterface, StateInterface> = {
         id: template.template_id
       });
     });
+    const collectionData = await atomic_api.getCollections(
+      CollectionOptions as any
+    );
+    if (collectionData.length > 0) {
+      options.push({
+        label: 'Collections',
+        groupLabel: true,
+        group: 'collection',
+        disabled: true,
+        id: ''
+      });
+    }
+    collectionData.forEach((collection) => {
+      options.push({
+        label: collection.data.name,
+        groupLabel: false,
+        group: 'collection',
+        disabled: false,
+        id: collection.data.name
+      });
+    });
     commit('setOptions', options);
+  },
+  async getCollectionsList({ commit }) {
+    const collectionsfilter = {
+      authorized_account: process.env.AA_ACCOUNT,
+      limit: 100,
+      order: 'desc',
+      sort: 'created'
+    } as unknown;
+    const data = await atomic_api.getCollections(collectionsfilter);
+    const dataList = data.map((col) => col.collection_name);
+    commit('setCollections', dataList.toString());
   }
 };
