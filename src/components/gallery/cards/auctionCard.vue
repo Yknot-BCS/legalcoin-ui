@@ -86,7 +86,7 @@ q-card
     .row
       .col-12
         CountDown(:endDate='new Date(card.saleclose)')
-  q-separator(inset)
+  q-separator.q-mb-xs.q-mx-x(inset)
   router-link(:to='card.to')
     q-img.row.asset-img-sm(v-if='$q.screen.lt.md', :src='card.imageUrl')
       q-badge.text-subtitle1.badge-sm(rounded, :color='badgeColour') {{ card.tier }}

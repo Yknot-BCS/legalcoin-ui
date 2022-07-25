@@ -87,7 +87,7 @@ q-card
           .col-auto
             | {{ card.yield }}
 
-  q-separator(inset)
+  q-separator.q-mb-xs.q-mx-xs(inset)
   router-link(
     :to='{ name: "template", params: { collection_name: card.collection, template_id: card.id } }'
   )
