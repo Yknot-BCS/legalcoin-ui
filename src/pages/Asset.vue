@@ -23,7 +23,7 @@ export default defineComponent({
     const saleData = ref<ISale>(new Object({}) as ISale);
     const buyofferData = ref<IBuyoffer>(new Object({}) as IBuyoffer);
     const offerData = ref<IMarketOffer>(new Object({}) as IMarketOffer);
-    const aucData = ref<IAuction>(new Object({}) as IAuction);
+    const aucData = ref<IAuction[]>(new Object({}) as IAuction[]);
     const store = useStore();
     const accountName = computed(
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
@@ -112,17 +112,34 @@ export default defineComponent({
     async getAucData() {
       // Don't get cancelled auctions
       let aucFilter = {
-        state: '1,3,4',
+        state: '1',
         asset_id:
           this.$route.params.asset === undefined
             ? ''
             : this.$route.params.asset,
         page: 1,
         order: 'desc',
-        sort: 'created',
+        sort: 'auction_id',
         limit: 100
       } as unknown;
-      this.aucData = (await atomic_market_api.getAuctions(aucFilter))[0];
+      let response = await atomic_market_api.getAuctions(aucFilter);
+      if (response.length > 0) {
+        this.aucData = response;
+      } else {
+        aucFilter = {
+          participant: this.accountName,
+          asset_id:
+            this.$route.params.asset === undefined
+              ? ''
+              : this.$route.params.asset,
+          page: 1,
+          order: 'desc',
+          sort: 'auction_id',
+          limit: 100
+        } as unknown;
+        this.aucData = await atomic_market_api.getAuctions(aucFilter);
+      }
+
       console.log(this.aucData);
     },
 
