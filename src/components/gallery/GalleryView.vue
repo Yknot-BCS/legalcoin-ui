@@ -25,8 +25,8 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-.row.q-col-gutter-md.q-pa-md
-  .col-xs-6.col-sm-6.col-md-4.col-lg-3.col-xl-2(
+.row.q-col-gutter-md
+  .col-xs-6.col-sm-4.col-md-4.col-lg-3.col-xl-2(
     v-for='card in cards',
     :key='card.id'
   )

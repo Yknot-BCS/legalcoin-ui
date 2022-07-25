@@ -41,19 +41,19 @@ export default defineComponent({
 
 <template lang="pug">
 q-card
-  q-card-section
-    .row
+  q-card-section(v-if='$q.screen.gt.sm')
+    .row.col
       .col-10
         //- Title of cards
-        .row(v-if='$q.screen.gt.xs')
+        .row
           .text-body1.heading {{ card.name }}
-        .row(v-else)
-          .text-body2.heading {{ card.name }}
-      .col-2(v-if='$q.screen.gt.xs')
-        q-badge.text-subtitle2.float-right(rounded, :color='badgeColour') {{ card.tier }}
-
+    .col-2
+      q-badge.text-subtitle2.badge-lg.float-right(
+        rounded,
+        :color='badgeColour'
+      ) {{ card.tier }}
     //- Large cards details
-    .row(v-if='$q.screen.gt.xs')
+    .row
       .col
         .row
           .col-auto
@@ -65,8 +65,16 @@ q-card
             | Yield:
           .col-auto
             .text-subtitle4 {{ card.yield }}
+
+  q-card-section(v-else)
+    .row
+      .col-10
+        //- Title of cards
+        .row
+          .text-body2.heading {{ card.name }}
+
     //- Small cards details
-    .row(v-else, style='font-size: 0.64rem')
+    .row(style='font-size: 0.64rem')
       .col
         .row
           .col-auto
@@ -83,28 +91,28 @@ q-card
   router-link(
     :to='{ name: "template", params: { collection_name: card.collection, template_id: card.id } }'
   )
-    q-img.row.asset-img-sm(v-if='$q.screen.lt.sm', :src='card.imageUrl')
-      q-badge.text-subtitle2.text-sm(rounded, :color='badgeColour') {{ card.tier }}
+    q-img.row.asset-img-sm(v-if='$q.screen.lt.md', :src='card.imageUrl')
+      q-badge.text-subtitle1.badge-sm(rounded, :color='badgeColour') {{ card.tier }}
     q-img.asset-img-lg(v-else, :src='card.imageUrl')
 </template>
 
 <style lang="sass" scoped>
 .asset-img-lg
   width: 100%
-  height: 500px
-  max-height: 400px
+  height: 20rem
 .asset-img-sm
   width: 100%
-  height: 500px
-  max-height: 200px
+  height: 10rem
 .column
   width: 100px
 .heading
   font-weight: bold
-.text
-  margin-top: 15px
-.text-sm
-  margin-top: 15px
+.badge-lg
+  padding: 5px 5px 5px 5px
+  font-size: 1.3rem
+.badge-sm
+  margin-top: 10px
   margin-left: 10px
+  padding: 0px 5px 0px 5px
   max-height: 30px
 </style>
