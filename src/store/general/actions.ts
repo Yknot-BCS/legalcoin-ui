@@ -43,7 +43,8 @@ export const actions: ActionTree<GeneralStateInterface, StateInterface> = {
         groupLabel: true,
         group: 'account',
         disabled: true,
-        id: ''
+        id: '',
+        to: ''
       });
     }
     accountData.forEach((account) => {
@@ -52,7 +53,8 @@ export const actions: ActionTree<GeneralStateInterface, StateInterface> = {
         groupLabel: false,
         group: 'account',
         disabled: false,
-        id: account.account
+        id: account.account,
+        to: '/profile/' + account.account
       });
     });
     const templateData = (await atomic_api.getTemplates(
@@ -64,7 +66,8 @@ export const actions: ActionTree<GeneralStateInterface, StateInterface> = {
         groupLabel: true,
         group: 'template',
         disabled: true,
-        id: ''
+        id: '',
+        to: ''
       });
     }
     templateData.forEach((template) => {
@@ -73,7 +76,12 @@ export const actions: ActionTree<GeneralStateInterface, StateInterface> = {
         groupLabel: false,
         group: 'template',
         disabled: false,
-        id: template.template_id
+        id: template.template_id,
+        to:
+          '/template/' +
+          template.collection.collection_name +
+          '/' +
+          template.template_id
       });
     });
     const collectionData = await atomic_api.getCollections(
@@ -85,7 +93,8 @@ export const actions: ActionTree<GeneralStateInterface, StateInterface> = {
         groupLabel: true,
         group: 'collection',
         disabled: true,
-        id: ''
+        id: '',
+        to: ''
       });
     }
     collectionData.forEach((collection) => {
@@ -94,7 +103,8 @@ export const actions: ActionTree<GeneralStateInterface, StateInterface> = {
         groupLabel: false,
         group: 'collection',
         disabled: false,
-        id: collection.data.name
+        id: collection.data.name,
+        to: '/collection/' + collection.collection_name
       });
     });
     commit('setOptions', options);
