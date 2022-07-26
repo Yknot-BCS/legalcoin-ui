@@ -84,55 +84,51 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
     )
       q-menu.menu-edit(auto-close, fit)
         q-list(dense)
+          //- Profile
           q-item.menu-link(
             v-if='isLoggedIn',
             clickable,
             :to='{ name: "profile", params: { profile: accountName } }'
           )
             q-item-section.q-pa-sm
-              q-btn(
-                flat,
-                icon='account_circle',
-                label='Profile',
-                dense,
-                align='left',
-                font-size='10px'
-              )
+              .row.justify-center.items-center
+                .col-shrink.q-pr-xs
+                  q-icon(name='account_circle', size='md')
+                .col
+                  .text-h6 Profile
+
           q-separator(v-if='isLoggedIn')
-          // TODO add params for profile, gallery and wallet
+          //- Wallet
           q-item.menu-link(clickable, :to='{ name: "wallet" }')
             q-item-section.q-pa-sm
-              q-btn(
-                flat,
-                icon='wallet',
-                label='Wallet',
-                dense,
-                align='left',
-                font-size='10px'
-              )
+              .row.justify-center.items-center
+                .col-shrink.q-pr-xs
+                  q-icon(name='wallet', size='md')
+                .col
+                  .text-h6 Wallet
           q-separator(v-if='isLoggedIn')
+          //- Settings
           q-item.menu-link(
             clickable,
             :to='{ name: "account-settings", params: { profile: accountName } }'
           )
             q-item-section.q-pa-sm
-              q-btn(
-                flat,
-                icon='settings',
-                label='Settings',
-                dense,
-                align='left',
-                font-size='10px'
-              )
+              .row.justify-center.items-center
+                .col-shrink.q-pr-xs
+                  q-icon(name='settings', size='md')
+                .col
+                  .text-h6 Settings
           q-separator(v-if='isLoggedIn')
           q-separator
+          //- Logout
           q-item(v-if='isLoggedIn')
-            q-item-section.q-pa-lg
+            q-item-section.q-pa-md
               q-btn.logout-btn(
                 flat,
                 label='Sign Out',
                 dense,
                 font-size='10px',
+                text-color='white',
                 @click='logout()'
               )
 </template>
