@@ -52,12 +52,12 @@ export default defineComponent({
         this.collectionData.data.img
       )}`;
     },
-    tweetURL(): string {
+    shareURL(): string {
       return window.location.origin + this.$route.path;
     }
   },
   methods: {
-    shareURL() {
+    clipboardURL() {
       void copyToClipboard(window.location.origin + this.$route.path).then(
         () => {
           this.$q.notify({
@@ -113,13 +113,13 @@ q-page
         | {{ collectionData.data.name }}
     //- Links
     .col.self-center.text-right.q-gutter-lg.q-pr-lg
-      q-btn.text-body2(icon='fas fa-share-alt', round, size='1rem')
-        q-menu
+      q-btn.text-body2(icon='share', round, size='md')
+        q-menu(:offset='[10, 0]', anchor='top left', self='top right')
           q-list
             q-item(
               clickable,
               v-close-popup,
-              :href='`http://twitter.com/intent/tweet?text=Check%20out%20this%20collection%20on%20LegalCoin:&url=${tweetURL}`',
+              :href='`http://twitter.com/intent/tweet?text=Check%20out%20this%20collection%20on%20LegalCoin:&url=${shareURL}`',
               target='_blank'
             )
               q-item-section.share-dropdown-icon
@@ -130,14 +130,14 @@ q-page
             q-item(
               clickable,
               v-close-popup,
-              :href='`https://www.facebook.com/sharer/sharer.php?u=${tweetURL}`',
+              :href='`https://www.facebook.com/sharer/sharer.php?u=${shareURL}`',
               target='_blank'
             )
               q-item-section.share-dropdown-icon
                 q-icon(name='fab fa-facebook', size='2rem')
               q-item-section.share-dropdown-text Share to Facebook
             q-separator
-            q-item(clickable, v-close-popup, @click='shareURL')
+            q-item(clickable, v-close-popup, @click='clipboardURL')
               q-item-section.share-dropdown-icon
                 q-icon(name='fa fa-clipboard', size='2rem')
               q-item-section.share-dropdown-text Copy link

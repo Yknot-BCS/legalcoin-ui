@@ -136,6 +136,10 @@ export default defineComponent({
       }
     },
 
+    shareURL(): string {
+      return window.location.origin + this.$route.path;
+    },
+
     expectedYield() {
       if (this.templateData) {
         return getYield(
@@ -246,7 +250,7 @@ export default defineComponent({
       }
     },
 
-    shareURL() {
+    clipboardURL() {
       void copyToClipboard(window.location.origin + this.$route.path).then(
         () => {
           this.$q.notify({
@@ -274,7 +278,34 @@ q-card
           q-icon.q-ml-sm(name='fa-solid fa-circle-check', color='green')
       //- share icon
       .col-2.row.justify-center
-        q-btn(icon='share', size='md', @click='shareURL', round)
+        q-btn.text-body2(icon='share', round, size='md')
+        q-menu(anchor='top left', self='top right')
+          q-list
+            q-item(
+              clickable,
+              v-close-popup,
+              :href='`http://twitter.com/intent/tweet?text=Check%20out%20this%20collection%20on%20LegalCoin:&url=${shareURL}`',
+              target='_blank'
+            )
+              q-item-section.share-dropdown-icon
+                q-icon(name='fab fa-twitter', size='2rem')
+              q-item-section.share-dropdown-text Share to Twitter
+            q-separator
+            //- Facebook link doesn't work with locally hosted app, but if provided with valid web URL will work
+            q-item(
+              clickable,
+              v-close-popup,
+              :href='`https://www.facebook.com/sharer/sharer.php?u=${shareURL}`',
+              target='_blank'
+            )
+              q-item-section.share-dropdown-icon
+                q-icon(name='fab fa-facebook', size='2rem')
+              q-item-section.share-dropdown-text Share to Facebook
+            q-separator
+            q-item(clickable, v-close-popup, @click='clipboardURL')
+              q-item-section.share-dropdown-icon
+                q-icon(name='fa fa-clipboard', size='2rem')
+              q-item-section.share-dropdown-text Copy link
 
     //- maturity
     .row.fit.wrap 
