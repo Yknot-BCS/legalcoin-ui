@@ -5,6 +5,7 @@ import { AtomicMarketApi } from 'atomicmarket';
 import { GalleryCard } from 'src/types';
 import { useRoute } from 'vue-router';
 import { ISale } from 'atomicmarket/build/API/Explorer/Objects';
+import { Asset, Int64 } from '@greymass/eosio';
 
 export const atomic_api = new ExplorerApi(
   process.env.ATOMICASSETS_API_ENDPOINT,
@@ -44,7 +45,9 @@ export const get_assets = async function (
       collection: asset.collection.collection_name,
       template: asset.template.template_id,
       schema: asset.schema.schema_name,
-      id: asset.asset_id
+      id: asset.asset_id,
+      type: 'asset',
+      key: asset.asset_id
     } as GalleryCard;
   });
   return { data, count };
@@ -73,7 +76,9 @@ export const get_collections = async function (
       collection: collection.collection_name,
       template: '',
       schema: '',
-      id: collection.contract
+      id: collection.contract,
+      type: 'collection',
+      key: collection.contract
     } as GalleryCard;
   });
   return { data, count };
@@ -111,7 +116,9 @@ export const get_templates = async function (
       collection: template.collection.collection_name,
       template: '',
       schema: '',
-      id: template.template_id
+      id: template.template_id,
+      type: 'template',
+      key: template.template_id
     } as GalleryCard;
   });
   return { data, count };
@@ -146,8 +153,8 @@ export const getQueryDataOptions = function (q: unknown): {
   const route = useRoute();
   const dataOptions = [];
   const query = route.query;
-  if (query['filter[tier]'] && query['filter[tier]'] !== 'All') {
-    dataOptions.push({ key: 'tier', value: query['filter[tier]'] as string });
+  if (query['tier'] && query['tier'] !== 'All') {
+    dataOptions.push({ key: 'tier', value: query['tier'] as string });
   }
   return dataOptions;
 };
@@ -190,7 +197,7 @@ export const get_discover = async function (
 ) {
   let count = 0;
   let data: GalleryCard[] = [];
-  if (market === 'retail') {
+  if (market === 'open') {
     if (status === 'buynow') {
       const rawData = await atomic_market_api.fetchEndpoint('/v2/sales', {
         ...ApiParams,
@@ -221,7 +228,14 @@ export const get_discover = async function (
           collection: sales.assets[0].collection.collection_name,
           template: sales.assets[0].template.template_id,
           schema: sales.assets[0].schema.schema_name,
-          id: sales.assets[0].asset_id
+          price: priceAsset(
+            sales.price.amount,
+            sales.price.token_symbol,
+            sales.price.token_precision
+          ),
+          id: sales.assets[0].asset_id,
+          type: 'sale',
+          key: sales.assets[0].asset_id
         } as GalleryCard;
       });
     }
@@ -232,6 +246,7 @@ export const get_discover = async function (
         ItemsPerPage,
         DataParams
       );
+      console.log(rawData);
       count = await atomic_market_api.countAuctions({
         ...ApiParams,
         ...DataParams
@@ -252,16 +267,27 @@ export const get_discover = async function (
                     (asset.data.img as string),
               collection: asset.collection.collection_name,
               template: asset.template.template_id,
+              price: priceAsset(
+                element.price.amount,
+                element.price.token_symbol,
+                element.price.token_precision
+              ),
               schema: asset.schema.schema_name,
-              id: asset.asset_id
+              seller: element.seller,
+              saleclose: Number(element.end_time),
+              id: asset.asset_id,
+              type: 'auction',
+              key: element.auction_id + asset.asset_id
             } as GalleryCard;
           })
         );
+        console.log(data);
       });
     }
   } else {
     return await get_templates(ApiParams, Page, ItemsPerPage, DataParams);
   }
+  console.log(data);
   return { data, count };
 };
 
@@ -302,7 +328,9 @@ export const get_sale = async function (
       collection: sales.assets[0].collection.collection_name,
       template: sales.assets[0].template.template_id,
       schema: sales.assets[0].schema.schema_name,
-      id: sales.assets[0].asset_id
+      id: sales.assets[0].asset_id,
+      type: 'sale',
+      key: sales.assets[0].asset_id
     } as GalleryCard;
   });
 
@@ -344,8 +372,17 @@ export const get_auction = async function (
                 (asset.data.img as string),
           collection: asset.collection.collection_name,
           template: asset.template.template_id,
+          price: priceAsset(
+            element.price.amount,
+            element.price.token_symbol,
+            element.price.token_precision
+          ),
           schema: asset.schema.schema_name,
-          id: asset.asset_id
+          seller: element.seller,
+          id: asset.asset_id,
+          saleclose: Number(element.end_time),
+          type: 'auction',
+          key: element.auction_id + asset.asset_id
         } as GalleryCard;
       })
     );
@@ -383,7 +420,9 @@ export const get_profile = async function (
         collection: asset.collection.collection_name,
         template: asset.template.template_id,
         schema: asset.schema.schema_name,
-        id: asset.asset_id
+        id: asset.asset_id,
+        type: 'asset',
+        key: asset.asset_id
       } as GalleryCard;
     });
   }
@@ -399,24 +438,35 @@ export const get_profile = async function (
       ...DataParams
     });
     rawData.forEach((element) => {
-      data = element.assets.map((asset) => {
-        return {
-          ...asset.data,
-          to: '/asset/' + asset.asset_id,
-          yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
-          name: asset.data.name as string,
-          imageUrl:
-            asset.data.img && (asset.data.img as string).includes('http')
-              ? (asset.data.img as string)
-              : process.env.IPFS_ENDPOINT +
-                '/ipfs/' +
-                (asset.data.img as string),
-          collection: asset.collection.collection_name,
-          template: asset.template.template_id,
-          schema: asset.schema.schema_name,
-          id: asset.asset_id
-        } as GalleryCard;
-      });
+      data = data.concat(
+        element.assets.map((asset) => {
+          return {
+            ...asset.data,
+            to: '/asset/' + asset.asset_id,
+            yield: getYield(asset.data.mintprice, asset.data.maturedvalue),
+            name: asset.data.name as string,
+            imageUrl:
+              asset.data.img && (asset.data.img as string).includes('http')
+                ? (asset.data.img as string)
+                : process.env.IPFS_ENDPOINT +
+                  '/ipfs/' +
+                  (asset.data.img as string),
+            collection: asset.collection.collection_name,
+            template: asset.template.template_id,
+            price: priceAsset(
+              element.price.amount,
+              element.price.token_symbol,
+              element.price.token_precision
+            ),
+            schema: asset.schema.schema_name,
+            seller: element.seller,
+            id: asset.asset_id,
+            saleclose: Number(element.end_time),
+            type: 'auction',
+            key: element.auction_id + asset.asset_id
+          } as GalleryCard;
+        })
+      );
     });
   }
 
@@ -437,12 +487,12 @@ export const getTemplateQueryApiOptions = function (q: unknown): {
     order: string;
     match?: string;
   };
-  if (query['filter[tier]'] && query['filter[tier]'] !== 'All') {
+  if (query['tier'] && query['tier'] !== 'All') {
     dataOptions = {
       search: (query['search'] as string) || '',
       sort: (query['sort'] as string) || 'created',
       order: (query['order'] as string) || 'desc',
-      match: (query['filter[tier]'] as string) || null
+      match: (query['tier'] as string) || null
     };
   } else {
     dataOptions = {
@@ -491,13 +541,13 @@ export const getSalesQueryApiOptions = function (
       sort: (query['sort'] as string) || 'created',
       order: (query['order'] as string) || 'desc'
     };
-    if (query['filter[tier]'] && query['filter[tier]'] !== 'All') {
+    if (query['tier'] && query['tier'] !== 'All') {
       dataOptions = {
         ...dataOptions,
-        match: (query['filter[tier]'] as string) || null
+        match: (query['tier'] as string) || null
       };
     }
-    if (query['market'] && (query['market'] as string[]).includes('retail')) {
+    if (query['market'] && (query['market'] as string[]).includes('open')) {
       dataOptions = {
         ...dataOptions,
         seller_blacklist: process.env.AA_ACCOUNT
@@ -538,10 +588,10 @@ export const getSalesQueryApiOptions = function (
       sort: (query['sort'] as string) || 'created',
       order: (query['order'] as string) || 'desc'
     };
-    if (query['filter[tier]'] && query['filter[tier]'] !== 'All') {
+    if (query['tier'] && query['tier'] !== 'All') {
       dataOptions = {
         ...dataOptions,
-        match: (query['filter[tier]'] as string) || null
+        match: (query['tier'] as string) || null
       };
     }
     if (
@@ -583,13 +633,33 @@ export const getQueryLimit = function (q: unknown): number {
   return Number(query['limit'] as string) || 6;
 };
 
-export const getQueryMarket = function (q: unknown): string {
+export const getQueryCollections = function (): string[] {
   const route = useRoute();
   const query = route.query;
-  return (query['market'] as string) || 'primary';
+  return (query['collections'] as string)?.split(',') || [];
 };
 
-export const getQueryPrice = function (q: unknown): {
+export const getQueryStatus = function (): string {
+  const route = useRoute();
+  const query = route.query;
+  return (query['status'] as string) || 'buynow';
+};
+
+export const getQueryTier = function (): string {
+  const route = useRoute();
+  const query = route.query;
+  return (query['tier'] as string) || 'All';
+};
+
+export const getQueryMarket = function (): string {
+  const route = useRoute();
+  const query = route.query;
+  return (query['market'] as string) || route.fullPath.includes('profile')
+    ? 'open'
+    : 'legalcoin';
+};
+
+export const getQueryPrice = function (): {
   min: number;
   max: number;
 } {
@@ -616,8 +686,17 @@ export const getCollectionsList = async function (): Promise<{
   return { array: dataList, stringList: dataList.toString() };
 };
 
-export const getQueryStatus = function (q: unknown): string {
-  const route = useRoute();
-  const query = route.query;
-  return (query['status'] as string) || 'buynow';
+export const priceAsset = function (
+  amount: string,
+  symbol: string,
+  precision: number
+): string {
+  if (amount) {
+    return Asset.fromUnits(
+      Int64.from(amount),
+      Asset.Symbol.fromParts(symbol, precision)
+    ).toString();
+  } else {
+    return '0.00 LEGAL';
+  }
 };

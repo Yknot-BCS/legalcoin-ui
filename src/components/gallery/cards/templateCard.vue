@@ -36,24 +36,28 @@ export default defineComponent({
 
 <template lang="pug">
 q-card
-  q-card-section
-    q-badge.text-subtitle2.float-right.text(rounded, :color='badgeColour') {{ card.tier }}
+  q-card-section.bg-white(style='z-index: 2')
     .row
-      .text-h6.heading {{ card.name }}
-    .row
-      .col-auto
-        .q-mr-sm {{ card.mintprice }} &#8226;
-      .col-auto
-        .text-subtitle4 {{ card.yield }} yield
+      .col
+        .row
+          .text-h6.heading {{ card.name }}
+        .row
+          .col-auto
+            .q-mr-sm {{ card.mintprice }} &#8226;
+          .col-auto
+            .text-subtitle4 {{ card.yield }} yield
+      .col-4
+        q-badge.text-subtitle2.float-right.text(rounded, :color='badgeColour') {{ card.tier }}
   q-separator(inset)
   router-link(
     :to='{ name: "template", params: { collection_name: card.collection, template_id: card.id } }'
   )
-    q-img.asset-img(:src='card.imageUrl')
+    q-img.asset-img.zoom(:src='card.imageUrl')
 </template>
 
 <style lang="sass" scoped>
 .asset-img
+  z-index: 1
   width: 100%
   height: 500px
   max-height: 400px

@@ -34,7 +34,8 @@ export default {
 <template lang="pug">
 q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
   router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
-    img.logo.q-mr-md(src='~assets/legalcoin-full.png')
+    img.logo.q-mr-md(v-if='$q.screen.gt.sm', src='~assets/legalcoin-full.png')
+    img.logo-small.q-mr-sm(v-else, src='~assets/legalcoin-full.png')
 
   .col.row.justify-center
     search-bar.toolbar-select.q-mr-md(size='100', v-if='$q.screen.gt.md')
@@ -58,32 +59,20 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
       :to='{ name: "login" }'
     )
 
-  .row.items-center.no-wrap
-    div
-      q-btn(
-        flat,
-        round,
-        dense,
-        :to='{ name: "mobile-search" }',
-        v-if='$q.screen.lt.sm'
-      )
-        q-icon.material-icons-outlined(name='search')
-      q-btn(
-        flat,
-        round,
-        dense,
-        :to='{ name: "discover" }',
-        v-if='$q.screen.lt.md'
-      )
-        q-icon.material-icons-outlined(name='grid_view')
-      q-btn.q-ml-xs(
-        flat,
-        round,
-        dense,
-        v-if='!isLoggedIn && $q.screen.lt.md',
-        :to='{ name: "login" }'
-      )
-        q-icon.material-icons-outlined(name='account_circle')
+  .row.items-center
+    search-bar.lt-sm
+
+    q-btn.lt-md(flat, round, dense, :to='{ name: "discover" }')
+      q-icon.material-icons-outlined(name='grid_view')
+
+    q-btn(
+      flat,
+      round,
+      dense,
+      v-if='!isLoggedIn && $q.screen.lt.md',
+      :to='{ name: "login" }'
+    )
+      q-icon.material-icons-outlined(name='account_circle')
     q-btn(
       dense,
       flat,
@@ -95,55 +84,51 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
     )
       q-menu.menu-edit(auto-close, fit)
         q-list(dense)
+          //- Profile
           q-item.menu-link(
             v-if='isLoggedIn',
             clickable,
             :to='{ name: "profile", params: { profile: accountName } }'
           )
             q-item-section.q-pa-sm
-              q-btn(
-                flat,
-                icon='account_circle',
-                label='Profile',
-                dense,
-                align='left',
-                font-size='10px'
-              )
+              .row.justify-center.items-center
+                .col-shrink.q-pr-xs
+                  q-icon(name='account_circle', size='md')
+                .col
+                  .text-h6 Profile
+
           q-separator(v-if='isLoggedIn')
-          // TODO add params for profile, gallery and wallet
+          //- Wallet
           q-item.menu-link(clickable, :to='{ name: "wallet" }')
             q-item-section.q-pa-sm
-              q-btn(
-                flat,
-                icon='wallet',
-                label='Wallet',
-                dense,
-                align='left',
-                font-size='10px'
-              )
+              .row.justify-center.items-center
+                .col-shrink.q-pr-xs
+                  q-icon(name='wallet', size='md')
+                .col
+                  .text-h6 Wallet
           q-separator(v-if='isLoggedIn')
+          //- Settings
           q-item.menu-link(
             clickable,
             :to='{ name: "account-settings", params: { profile: accountName } }'
           )
             q-item-section.q-pa-sm
-              q-btn(
-                flat,
-                icon='settings',
-                label='Settings',
-                dense,
-                align='left',
-                font-size='10px'
-              )
+              .row.justify-center.items-center
+                .col-shrink.q-pr-xs
+                  q-icon(name='settings', size='md')
+                .col
+                  .text-h6 Settings
           q-separator(v-if='isLoggedIn')
           q-separator
+          //- Logout
           q-item(v-if='isLoggedIn')
-            q-item-section.q-pa-lg
+            q-item-section.q-pa-md
               q-btn.logout-btn(
                 flat,
                 label='Sign Out',
                 dense,
                 font-size='10px',
+                text-color='white',
                 @click='logout()'
               )
 </template>
@@ -159,22 +144,13 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
   flex-basis: 500px
   flex-grow: 0
   flex-shrink: 1
-.toolbar-link
-  color: black
-  text-decoration: none
-  font-size: 1.2rem
-  &:hover
-    opacity: 0.7
-    color: $primary
-.q-list
-  width: 350px
 .logo
-  height:40px
+  height:38px
+.logo-small
+  height:30px
 .logout-btn
   background-color: orange
 .menu-edit
   top: 200px
   align: left
-.blue
-  color: $primary
 </style>

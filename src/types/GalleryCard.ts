@@ -5,6 +5,7 @@ export interface GalleryCard {
   template: string;
   schema: string;
   id: string;
+  key: string;
   caseref: string;
   term: number;
   tier: string;
@@ -13,11 +14,14 @@ export interface GalleryCard {
   saleopen: number;
   expirystr: string;
   mintprice: string;
+  price: string;
   saleclose: number;
   maturedstr: string;
   description: string;
   maturedvalue: string;
   saleclosestr: string;
+  seller: string;
   yield: string;
   to: string;
+  type: string;
 }

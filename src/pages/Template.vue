@@ -69,6 +69,15 @@ export default defineComponent({
       await this.getSaleData();
     }
   },
+  watch: {
+    '$route.params.template_id': {
+      handler: async function () {
+        await this.updateTemplateInfo();
+      },
+      deep: true,
+      immediate: true
+    }
+  },
   async mounted() {
     if (this.$route.params.template_id) {
       await this.updateTemplateInfo();

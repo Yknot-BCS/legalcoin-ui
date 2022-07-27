@@ -30,7 +30,7 @@ export default defineComponent({
     const dataOptions = computed(() => getQueryDataOptions(route.query));
     const page = computed(() => getQueryPage(route.query));
     const limit = computed(() => getQueryLimit(route.query));
-    const status = computed(() => getQueryStatus(route.query));
+    const status = computed(() => getQueryStatus());
     const assetCount = ref<number>(1);
     const collectionCount = ref<number>(1);
     const collections = ref<string>('emissions.lc');
@@ -44,7 +44,8 @@ export default defineComponent({
         } as unknown;
       } else {
         return {
-          seller: profileId.value,
+          state: '1,3,4',
+          participant: profileId.value,
           search: search.value,
           collection_whitelist: collections.value,
           ...getSalesQueryApiOptions(route.query, status.value)
