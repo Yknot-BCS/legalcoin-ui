@@ -100,7 +100,7 @@ export default {
   background: #14151C
   padding: 1rem
   padding-top: 2rem
-  padding-bottom: 5rem
+  padding-bottom: 1rem
 
 .router-link
   text-decoration: none
