@@ -1,10 +1,23 @@
+<script lang="ts">
+import packageInfo from '../../../package.json';
+
+export default {
+  components: {},
+  setup() {
+    return { version: packageInfo.version };
+  }
+};
+</script>
+
 <template lang="pug">
 .top
-  img.q-mr-md(src='~assets/legalcoin-dark.png', height='64')
-  img(src='~assets/yknot-dark.png', height='64')
+  a(href='https://legalcoin.com', target='_blank')
+    img.q-mr-md(src='~assets/legalcoin-dark.png', height='64')
+  a(href='https://y-knot.io', target='_blank')
+    img(src='~assets/yknot-dark.png', height='64')
 .bot
-  .row.justify-center.container
-    .col-12.col-md-3.section
+  .row.justify-center.q-gutter-x-lg
+    .col-12.col-md-2.section
       h4 Contact Us
       p.sub-heading Location:
       p.text-grey-6
@@ -27,13 +40,45 @@
         | Legalcoin is working to bring the legal industry into the digital world. We allow you access to the justice you deserve. Play a role in bringing large conglomorates to justice.
     .col-12.col-md-3.section
       h4 Our Community
-      <q-btn class="q-mr-sm" round color="primary" icon="fa-brands fa-twitter" href="https://twitter.com/LegalCoinLabs" target="_blank"/>
-      <q-btn class="q-mr-sm" round color="primary" icon="fa-brands fa-facebook" href="https://www.facebook.com/groups/289152189780273" target="_blank"/>
-      <q-btn class="q-mr-sm" round color="primary" icon="fa-brands fa-linkedin" href="https://www.linkedin.com/company/legal-coin/" target="_blank"/>
-      <q-btn class="q-mr-sm" round color="primary" icon="fa-brands fa-discord" href="https://discord.gg/6S8qwbxd" target="_blank"/>
-      <q-btn class="q-mr-sm" round color="primary" icon="fa-brands fa-telegram" href="https://t.me/joinchat/PoG6go_yjhozNmM0" target="_blank"/>
+      q-btn.q-mr-sm(
+        round,
+        color='primary',
+        icon='fa-brands fa-twitter',
+        href='https://twitter.com/LegalCoinLabs',
+        target='_blank'
+      )
+      q-btn.q-mr-sm(
+        round,
+        color='primary',
+        icon='fa-brands fa-facebook',
+        href='https://www.facebook.com/groups/289152189780273',
+        target='_blank'
+      )
+      q-btn.q-mr-sm(
+        round,
+        color='primary',
+        icon='fa-brands fa-linkedin',
+        href='https://www.linkedin.com/company/legal-coin/',
+        target='_blank'
+      )
+      q-btn.q-mr-sm(
+        round,
+        color='primary',
+        icon='fa-brands fa-discord',
+        href='https://discord.gg/6S8qwbxd',
+        target='_blank'
+      )
+      q-btn.q-mr-sm(
+        round,
+        color='primary',
+        icon='fa-brands fa-telegram',
+        href='https://t.me/joinchat/PoG6go_yjhozNmM0',
+        target='_blank'
+      )
   p.text-grey-6.q-mt-lg
     | © 2021 - {{ new Date().getFullYear() }} Legalcoin. All Rights Reserved
+  p.text-grey-6.q-mt-xs
+    | Version: {{ version }}
 </template>
 
 <style lang="sass" scoped>
