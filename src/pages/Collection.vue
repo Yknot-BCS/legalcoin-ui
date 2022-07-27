@@ -113,19 +113,35 @@ q-page
         | {{ collectionData.data.name }}
     //- Links
     .col.self-center.text-right.q-gutter-lg.q-pr-lg
-      q-btn(
-        round,
-        icon='fa-solid fa-globe',
-        :href='collectionData.data?.url',
-        target='_blank'
-      )
-      q-btn(
-        round,
-        icon='fab fa-twitter',
-        :href='`http://twitter.com/intent/tweet?text=Check%20out%20this%20collection%20on%20LegalCoin:&url=${tweetURL}`',
-        target='_blank'
-      ) 
-      q-btn(round, icon='fa-solid fa-ellipsis', @click='shareURL')
+      q-btn.text-body2(icon='fas fa-share-alt', round, size='1rem')
+        q-menu
+          q-list
+            q-item(
+              clickable,
+              v-close-popup,
+              :href='`http://twitter.com/intent/tweet?text=Check%20out%20this%20collection%20on%20LegalCoin:&url=${tweetURL}`',
+              target='_blank'
+            )
+              q-item-section.share-dropdown-icon
+                q-icon(name='fab fa-twitter', size='2rem')
+              q-item-section.share-dropdown-text Share to Twitter
+            q-separator
+            //- Facebook link doesn't work with locally hosted app, but if provided with valid web URL will work
+            q-item(
+              clickable,
+              v-close-popup,
+              :href='`https://www.facebook.com/sharer/sharer.php?u=${tweetURL}`',
+              target='_blank'
+            )
+              q-item-section.share-dropdown-icon
+                q-icon(name='fab fa-facebook', size='2rem')
+              q-item-section.share-dropdown-text Share to Facebook
+            q-separator
+            q-item(clickable, v-close-popup, @click='shareURL')
+              q-item-section.share-dropdown-icon
+                q-icon(name='fa fa-clipboard', size='2rem')
+              q-item-section.share-dropdown-text Copy link
+
   .row.text-subtitle1.q-px-xs.q-py-sm.q-pl-lg
     .col.text-bold
       | {{ collectionData.data.description }}
@@ -158,4 +174,8 @@ q-page
 
 .bg-img
   z-index: -1
+.share-dropdown-icon
+  max-width: 2rem
+.share-dropdown-text
+  min-width: 8rem
 </style>
