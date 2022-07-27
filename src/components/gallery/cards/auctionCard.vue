@@ -37,49 +37,56 @@ export default defineComponent({
 
 <template lang="pug">
 q-card
+  //- Desktop
   q-card-section(v-if='$q.screen.gt.sm')
     .row.col
       .col-10
         //- Title of cards
         .row
-          .text-body1.heading {{ card.name }}
-    .col-2
-      q-badge.text-subtitle2.badge-lg.float-right(
-        rounded,
-        :color='badgeColour'
-      ) {{ card.tier }}
+          .text-subtitle2.heading {{ card.name }}
+      .col-2
+        q-badge.text-subtitle2.float-right(rounded, :color='badgeColour') {{ card.tier }}
       //- Large cards details
-    .row
+    .row(style='font-size: 0.7rem')
+      .col-8
+        .col-auto.text-bold
+          | Price:
+        .col-auto.values
+          img.q-pr-xs(
+            src='~assets/legalcoin-trimmed.png',
+            style='height: 10px'
+          )
+          | {{ card.price }}
       .col
-        .row
-          .col-auto
-            | Price:
-          .col-auto
-            | {{ card.price }}
-        .row
-          .col-auto
-            | Yield:
-          .col-auto
-            .text-subtitle4 {{ card.yield }}
+        .col-auto.text-bold
+          .text-right Yield:
+        .col-auto.float-right.values
+          .text-subtitle4 {{ card.yield }}
+  //- Mobile
   q-card-section(v-else)
     .row
       .col-10
         //- Title of cards
         .row
-          .text-body2.heading {{ card.name }}
+          .text-subtitle1.heading {{ card.name }}
+      .col-2.self-center
+        q-badge.text-subtitle2.float-right(rounded, :color='badgeColour')
     //- Small cards details
-    .row(style='font-size: 0.64rem')
+    .row(style='font-size: 0.7rem')
+      .col-10
+        .col-auto.text-bold
+          | Price:
+        .col-auto
+          img.q-pr-sm(
+            src='~assets/legalcoin-trimmed.png',
+            style='height: 10px'
+          )
+          | {{ card.price }}
       .col
-        .row
-          .col-auto
-            | Price:
-          .col-auto
-            | {{ card.price }}
-        .row
-          .col-auto
-            | Yield:
-          .col-auto
-            | {{ card.yield }}
+        .col-auto.text-bold
+          .text-right Yield:
+        .col-auto.float-right
+          .text-subtitle4 {{ card.yield }}
     .row
       .col-12.q-py-sm
         q-badge.text-black(color='grey-3') {{ card.seller }}
@@ -88,34 +95,28 @@ q-card
         CountDown(:endDate='new Date(card.saleclose)')
   q-separator.q-mb-xs.q-mx-x(inset)
   router-link(:to='card.to')
-    q-img.row.asset-img-sm(v-if='$q.screen.lt.md', :src='card.imageUrl')
-      q-badge.text-subtitle1.badge-sm(rounded, :color='badgeColour') {{ card.tier }}
-    q-img.asset-img-lg(v-else, :src='card.imageUrl')
+    q-img.asset-img-lg(v-if='$q.screen.gt.sm', :src='card.imageUrl')
+    q-img.asset-img-md(
+      v-if='$q.screen.lt.md && $q.screen.gt.xs',
+      :src='card.imageUrl'
+    )
+    q-img.asset-img-sm(v-if='$q.screen.lt.sm', :src='card.imageUrl')
 </template>
 
 <style lang="sass" scoped>
 .asset-img-lg
   width: 100%
   height: 20rem
+.asset-img-md
+  width: 100%
+  height: 15rem
 .asset-img-sm
   width: 100%
   height: 10rem
+.column
+  width: 100px
 .heading
   font-weight: bold
-.column
-  width: 95px
-.text
-  margin-top: 15px
-.text-sm
-  margin-top: 15px
-  margin-left: 10px
-  max-height: 30px
-.badge-lg
-  padding: 5px 5px 5px 5px
+.values
   font-size: 1rem
-.badge-sm
-  margin-top: 10px
-  margin-left: 10px
-  padding: 0px 5px 0px 5px
-  max-height: 30px
 </style>
