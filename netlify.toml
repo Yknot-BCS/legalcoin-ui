@@ -22,7 +22,7 @@
   LC_SYMBOL="LEGAL"
   LC_PRECISION="2"
 
-[context.dev.environment]
+[context.develop.environment]
   APP_NAME="LegalCoin"
   DEVELOPMENT="true"
   NETWORK_CHAIN_ID="1eaa0824707c8c16bd25145493bf062aecddfeb56c736f6ba6397f3195f33c9f"
