@@ -2,7 +2,11 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'App'
+  name: 'App',
+  data() {
+    this.$rollbar.info('Hello world.');
+    return {};
+  }
 });
 </script>
 

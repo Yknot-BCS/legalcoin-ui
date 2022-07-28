@@ -25,6 +25,7 @@
     "highcharts-vue": "^1.4.0",
     "moment": "^2.29.2",
     "quasar": "^2.7.1",
+    "rollbar": "^2.25.0",
     "ual-anchor": "1.1.5",
     "universal-authenticator-library": "^0.3.0",
     "vue": "^3.0.0",
