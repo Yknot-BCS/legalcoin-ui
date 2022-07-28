@@ -13,6 +13,10 @@ import { useQuasar } from 'quasar';
 
 export default defineComponent({
   components: { Cards },
+  data() {
+    this.$rollbar.log('Hello world.');
+    return {};
+  },
   setup() {
     const $q = useQuasar();
     const screenWidth = computed(() => $q.screen.width);

@@ -12,7 +12,7 @@ declare module '@vue/runtime-core' {
 export default boot(({ app }) => {
   // something to do
   app.config.globalProperties.$rollbar = new Rollbar({
-    accessToken: '51d299798ff44681b73b401018e6bd92',
+    accessToken: 'c701948604814554800cb77f5d6308b2',
     captureUncaught: true,
     captureUnhandledRejections: true
   });
