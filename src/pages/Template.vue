@@ -91,7 +91,7 @@ q-card(flat, square)
   q-card-section.row.bg-white.items-center.content-center.justify-center
     .col-2
       q-btn(icon='fas fa-arrow-left', round, flat, onclick='history.go(-1)')
-    .col-8.text-body1.text-uppercase.text-center.self-center Template viewer
+    .col-8.text-body1.text-uppercase.text-center.self-center Asset Class
     .col-2
   q-separator
 .div(v-if='isLegalCoin')
