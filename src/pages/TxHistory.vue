@@ -104,9 +104,16 @@ export default defineComponent({
 q-page
   .row.justify-center
     q-card(v-if='isAuthenticated')
-      q-card-section
-        .text-h4.text-grey-8
-          | Transaction History
+      q-card-section.row.bg-white.items-center.content-center.justify-center
+        .col-2
+          q-btn(
+            icon='fas fa-arrow-left',
+            round,
+            flat,
+            onclick='history.go(-1)'
+          )
+        .col-8.text-body1.text-uppercase.text-center.self-center Transaction History
+        .col-2
       q-separator
 
       q-card-section(v-if='transactions.length > 0')

@@ -177,6 +177,13 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
+q-card(flat, square)
+  q-card-section.row.bg-white.items-center.content-center.justify-center
+    .col-2
+      q-btn(icon='fas fa-arrow-left', round, flat, onclick='history.go(-1)')
+    .col-8.text-body1.text-uppercase.text-center.self-center Wallet
+    .col-2
+  q-separator
 q-page
   .row.justify-center
     q-form(@submit='tryBuyTokens')

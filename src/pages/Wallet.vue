@@ -81,6 +81,13 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
+q-card(flat, square)
+  q-card-section.row.bg-white.items-center.content-center.justify-center
+    .col-2
+      q-btn(icon='fas fa-arrow-left', round, flat, onclick='history.go(-1)')
+    .col-8.text-body1.text-uppercase.text-center.self-center Wallet
+    .col-2
+  q-separator
 img.polygon.tr.animated.fadeInRight.slower(src='~assets/polygons/pg1.svg')
 img.polygon.tr.animated.fadeInRight.slow(src='~assets/polygons/pg2.svg')
 img.polygon.tr(src='~assets/polygons/pg3.svg')
