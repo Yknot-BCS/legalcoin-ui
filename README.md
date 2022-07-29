@@ -1,5 +1,9 @@
 ![](./LegalCoin.png "LegalCoin")
 
+Main Net: [![Netlify Status](https://api.netlify.com/api/v1/badges/1d51edfe-1d59-48a1-a624-5ab6e95a138f/deploy-status)](https://app.netlify.com/sites/legalcoin/deploys) [https://app.legalcoin.com/](https://app.legalcoin.com/)  
+
+Test Net: [![Netlify Status](https://api.netlify.com/api/v1/badges/1d51edfe-1d59-48a1-a624-5ab6e95a138f/deploy-status?branch=develop)](https://app.netlify.com/sites/legalcoin/deploys) [https://develop--legalcoin.netlify.app/](https://develop--legalcoin.netlify.app/)
+
 ---
 
 ## Introduction

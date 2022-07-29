@@ -28,7 +28,7 @@ export default defineComponent({
 .row.q-col-gutter-md
   .col-xs-6.col-sm-4.col-md-4.col-lg-3.col-xl-2(
     v-for='card in cards',
-    :key='card.id'
+    :key='card.key'
   )
     Cards(:data='card', :type='cardType')
   .col-12(v-if='cards.length === 0')

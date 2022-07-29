@@ -5,7 +5,7 @@ import { IAuction } from 'atomicmarket/build/API/Explorer/Objects';
 import { Asset } from '@greymass/eosio';
 
 export default defineComponent({
-  name: 'AuctionBidDialog',
+  name: 'AucBidDialog',
   components: {},
   props: {
     aucData: {

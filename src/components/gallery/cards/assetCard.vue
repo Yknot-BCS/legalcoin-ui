@@ -42,7 +42,7 @@ export default defineComponent({
 <template lang="pug">
 q-card
   //- Desktop
-  q-card-section(v-if='$q.screen.gt.sm')
+  q-card-section.bg-white(style='z-index: 2')(v-if='$q.screen.gt.sm')
     .row.col.justify-between
       .col-8
         //- Title of cards
@@ -67,7 +67,7 @@ q-card
         .col-auto.float-right.values
           .text-subtitle4 {{ card.yield }}
   //- Mobile
-  q-card-section(v-else)
+  q-card-section.bg-white(style='z-index: 2')(v-else)
     .row
       .col-10
         //- Title of cards
@@ -93,12 +93,12 @@ q-card
           .text-subtitle4 {{ card.yield }}
 
   router-link(:to='card.to')
-    q-img.asset-img-lg(v-if='$q.screen.gt.sm', :src='card.imageUrl')
-    q-img.asset-img-md(
+    q-img.asset-img-lg.zoom(v-if='$q.screen.gt.sm', :src='card.imageUrl')
+    q-img.asset-img-md.zoom(
       v-if='$q.screen.lt.md && $q.screen.gt.xs',
       :src='card.imageUrl'
     )
-    q-img.asset-img-sm(v-if='$q.screen.lt.sm', :src='card.imageUrl')
+    q-img.asset-img-sm.zoom(v-if='$q.screen.lt.sm', :src='card.imageUrl')
 </template>
 
 <style lang="sass" scoped>

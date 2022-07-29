@@ -52,13 +52,13 @@ q-page.fit.row.wrap.justify-center
     q-card-section
       .row.text-settings.justify-start.items-center.text-grey-8
         | {{ account.profile.name }} {{ account.profile.surname }}
-        q-btn.edit-btn(
-          :to='{ name: "editprofile" }',
-          icon='edit',
-          flat,
-          outline,
-          color='grey-6'
-        )
+        //- q-btn.edit-btn(
+        //-   :to='{ name: "editprofile" }',
+        //-   icon='edit',
+        //-   flat,
+        //-   outline,
+        //-   color='grey-6'
+        //- )
       .col
         q-btn(
           :to='{ name: "profile" }',
