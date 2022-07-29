@@ -43,8 +43,8 @@ export default defineComponent({
 q-card
   //- Desktop
   q-card-section(v-if='$q.screen.gt.sm')
-    .row.col
-      .col-10
+    .row.col.justify-between
+      .col-8
         //- Title of cards
         .row
           .text-subtitle2.heading {{ card.name }}
