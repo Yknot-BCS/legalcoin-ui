@@ -49,7 +49,10 @@ q-card
         .row
           .text-subtitle2.heading {{ card.name }}
       .col-2
-        q-badge.text-subtitle2.float-right(rounded, :color='badgeColour') {{ card.tier }}
+        q-badge.q-mb-xs.text-subtitle2.float-right(
+          rounded,
+          :color='badgeColour'
+        ) {{ card.tier }}
     //- Large cards details
     .row(style='font-size: 0.7rem')
       .col-8
