@@ -13,7 +13,10 @@ export default defineComponent({
   },
   setup(props) {
     const card = computed(() => props.data);
-    return { card };
+    return {
+      card,
+      viewCard: true
+    };
   },
   computed: {
     badgeColour() {
@@ -30,12 +33,19 @@ export default defineComponent({
           return 'grey';
       }
     }
+  },
+  methods: {
+    changeCard() {
+      this.viewCard = !this.viewCard;
+      console.log(this.viewCard);
+      this.$forceUpdate();
+    }
   }
 });
 </script>
 
 <template lang="pug">
-q-card
+q-card(v-if='viewCard')
   q-card-section.bg-white(style='z-index: 2')
     .row
       .col
@@ -48,6 +58,9 @@ q-card
             .text-subtitle4 {{ card.yield }} yield
       .col-4
         q-badge.text-subtitle2.float-right.text(rounded, :color='badgeColour') {{ card.tier }}
+    .row
+      q-btn(v-model='viewCard', color='red', @click='changeCard()')
+        | test
   q-separator(inset)
   router-link(
     :to='{ name: "template", params: { collection_name: card.collection, template_id: card.id } }'
