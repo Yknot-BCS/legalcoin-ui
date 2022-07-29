@@ -152,9 +152,9 @@ q-page
           )
     .col-12.col-md-6.pgb
       .landing-right
-        .landing-right-card-container
-          .main-asset.col-md-6.q-pa-lg(v-if='assets.length > 0')
-            Cards(:data='assets[0]', type='Assets')
+        .landing-right-card-container.main-asset-cont
+          .col-md-6.q-pa-lg.main-asset-fixer(v-if='assets.length > 0')
+            Cards(style='width: 20rem', :data='assets[0]', type='Assets')
 
     //- Featured Collections
   .div
@@ -197,6 +197,14 @@ q-page
 </template>
 
 <style lang="sass" scoped>
+.main-asset-cont
+  float: left,
+  position: relative,
+  left: 50%
+.main-asset-fixer
+  float: right,
+  position: relative,
+  left: -50%
 .pgb
   position: relative
 
