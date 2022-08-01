@@ -83,8 +83,12 @@ export default defineComponent({
     };
   },
   computed: {
-    getJdenticon(name) {
-      const svgString = toSvg(name, 100);
+    genJdenticon() {
+      const svgString = toSvg(
+        this.profile.name + ' ' + this.profile.surname,
+        100
+      );
+      console.log(this.profile.name + ' ' + this.profile.surname);
       console.log(svgString);
       return svgString;
     }
@@ -106,8 +110,9 @@ export default defineComponent({
         //- Avatar and name
       q-card-section.fit.column.wrap.justify-center.items-center.content-center
         q-avatar(size='6rem')
-          img(v-if='isMyAccount', :src='getJdenticon(profile.name)')
-          q-btn(:click='getJdenticon(profile.name)')
+          //- img(src='~/assets/Account_Icon.svg')
+
+        //- q-btn(label='Test', :click='genJdenticon()')
         .col.q-mt-sm
           .col.text-subtitle1.text-bold
             | {{ isMyAccount ? profile.name + ' ' + profile.surname : profileId }}
