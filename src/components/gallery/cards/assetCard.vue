@@ -29,6 +29,11 @@ export default defineComponent({
         default:
           return 'grey';
       }
+    },
+    getPrice() {
+      if (this.card.price == undefined) {
+        return this.card.mintprice;
+      } else return this.card.price;
     }
   }
 });
@@ -38,35 +43,36 @@ export default defineComponent({
 q-card
   q-card-section.bg-white(style='z-index: 2')
     .row
+      .col-10
+        //- Title of cards
+        .row
+          .text-subtitle1.heading {{ `${card.collectionTitle} #${card.mintNumber}` }}
+      .col-2.self-center
+        q-badge.float-right.lt-md(rounded, :color='badgeColour')
+        q-badge.float-right.gt-sm(rounded, :color='badgeColour') 
+          .text-subtitle3 {{ card.tier }}
+    //- Small cards details
+    .row.q-mt-sm
+      .col-10
+        .col-auto.text-bold
+          | Price:
+        .col-auto
+          img.lc-currency.q-pr-xs(src='~assets/legalcoin-trimmed.png')
+          | {{ getPrice }}
       .col
-        .row
-          .text-h6.heading {{ card.name }}
-        .row
-          .col-auto
-            .text-subtitle4.q-mr-sm {{ card.mintprice }} &#8226;
-          .col-auto
-            .text-subtitle4 {{ card.yield }} yield
-      .col-4
-        q-badge.text-subtitle2.float-right.text(
-          v-if='card.tier',
-          rounded,
-          :color='badgeColour'
-        ) {{ card.tier }}
-  q-separator(inset)
+        .col-auto.text-bold
+          .text-right Yield:
+        .col-auto.float-right
+          .text-subtitle4 {{ card.yield }}
+
   router-link(:to='card.to')
-    q-img.asset-img.zoom(:src='card.imageUrl')
+    q-img.zoom(:src='card.imageUrl')
 </template>
 
 <style lang="sass" scoped>
-.asset-img
-  z-index: 1
-  width: 100%
-  height: 500px
-  max-height: 400px
 .heading
   font-weight: bold
-.column
-  width: 95px
-.text
-  margin-top: 15px
+
+.lc-currency
+  height: 1em
 </style>

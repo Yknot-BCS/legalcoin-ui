@@ -1,3 +1,5 @@
+import { IAuction, IAuctionBid } from 'atomicmarket/build/API/Explorer/Objects';
+
 export interface GalleryCard {
   name: string;
   imageUrl: string;
@@ -24,4 +26,8 @@ export interface GalleryCard {
   yield: string;
   to: string;
   type: string;
+  topBid: IAuctionBid;
+  mintNumber: string;
+  auctionInfo: IAuction;
+  collectionTitle: string;
 }

@@ -38,39 +38,45 @@ export default defineComponent({
 <template lang="pug">
 q-card
   q-card-section.bg-white(style='z-index: 2')
-    q-badge.text-subtitle2.float-right.text(
-      v-if='card.tier',
-      rounded,
-      :color='badgeColour'
-    ) {{ card.tier }}
     .row
-      .text-h6.heading {{ card.name }}
-    .row
-      .col-7
-        .text-subtitle4.q-mr-sm {{ card.price }}
-      .col-5
-        .text-subtitle4.float-right {{ card.yield }} yield
-    .row
-      .col-12.q-py-sm
-        q-badge.text-black(color='grey-3') {{ card.seller }}
-    .row
-      .col-12
+      .col-10
+        //- Title of cards
+        .row
+          .text-subtitle1.heading {{ `${card.collectionTitle} #${card.mintNumber}` }}
+        //- Tier badge
+      .col-2.self-center
+        q-badge.float-right.lt-md(rounded, :color='badgeColour')
+        q-badge.float-right.gt-sm(rounded, :color='badgeColour') 
+          .text-subtitle3 {{ card.tier }}
+    //- Small cards details
+    .row.q-mt-sm
+      .col-10
+        .col-auto.text-bold
+          | Top Bid:
+        .col-auto
+          img.lc-currency.q-pr-xs(src='~assets/legalcoin-trimmed.png')
+          | {{ card.price }}
+      .col
+        .col-auto.text-bold
+          .text-right Yield:
+        .col-auto.float-right
+          .text-subtitle4 {{ card.yield }}
+
+    //- Countdown
+    .row.q-mt-sm
+      .col-12.text-grey-8
         CountDown(:endDate='new Date(card.saleclose)')
-  q-separator(inset)
+  q-separator.q-mb-xs.q-mx-x(inset)
   router-link(:to='card.to')
-    q-img.asset-img.zoom(:src='card.imageUrl')
+    q-img.asset-img-lg.zoom(:src='card.imageUrl')
 </template>
 
 <style lang="sass" scoped>
-.asset-img
-  z-index: 1
-  width: 100%
-  height: 500px
-  max-height: 400px
 .heading
   font-weight: bold
-.column
-  width: 95px
-.text
-  margin-top: 15px
+.values
+  font-size: 1rem
+
+.lc-currency
+  height: 1em
 </style>
