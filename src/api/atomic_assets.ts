@@ -47,7 +47,9 @@ export const get_assets = async function (
       schema: asset.schema.schema_name,
       id: asset.asset_id,
       type: 'asset',
-      key: asset.asset_id
+      key: asset.asset_id,
+      mintNumber: asset.template_mint,
+      collectionTitle: asset.collection.name
     } as GalleryCard;
   });
   return { data, count };
@@ -235,7 +237,9 @@ export const get_discover = async function (
           ),
           id: sales.assets[0].asset_id,
           type: 'sale',
-          key: sales.assets[0].asset_id
+          key: sales.assets[0].asset_id,
+          mintNumber: sales.assets[0].template_mint,
+          collectionTitle: sales.collection.name
         } as GalleryCard;
       });
     }
@@ -277,11 +281,13 @@ export const get_discover = async function (
               saleclose: Number(element.end_time),
               id: asset.asset_id,
               type: 'auction',
-              key: element.auction_id + asset.asset_id
+              key: element.auction_id + asset.asset_id,
+              topBid: element.bids[element.bids.length - 1],
+              mintNumber: asset.template_mint,
+              collectionTitle: asset.collection.name
             } as GalleryCard;
           })
         );
-        console.log(data);
       });
     }
   } else {
@@ -335,7 +341,9 @@ export const get_sale = async function (
       schema: sales.assets[0].schema.schema_name,
       id: sales.assets[0].asset_id,
       type: 'sale',
-      key: sales.assets[0].asset_id
+      key: sales.assets[0].asset_id,
+      mintNumber: sales.assets[0].template_mint,
+      collectionTitle: sales.collection.name
     } as GalleryCard;
   });
 
@@ -430,7 +438,9 @@ export const get_profile = async function (
         schema: asset.schema.schema_name,
         id: asset.asset_id,
         type: 'asset',
-        key: asset.asset_id
+        key: asset.asset_id,
+        mintNumber: asset.template_mint,
+        collectionTitle: asset.collection.name
       } as GalleryCard;
     });
   }
