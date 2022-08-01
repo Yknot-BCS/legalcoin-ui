@@ -14,6 +14,7 @@ import {
 } from 'src/api/atomic_assets';
 import GalleryView from 'src/components/gallery/GalleryView.vue';
 import AtomicAssetsView from 'src/components/atomicAssets/AtomicAssetView.vue';
+import { toSvg } from 'jdenticon';
 
 export default defineComponent({
   name: 'Profile',
@@ -80,6 +81,13 @@ export default defineComponent({
       assetCount,
       collectionCount
     };
+  },
+  computed: {
+    getJdenticon(name) {
+      const svgString = toSvg(name, 100);
+      console.log(svgString);
+      return svgString;
+    }
   }
 });
 </script>
@@ -98,7 +106,8 @@ export default defineComponent({
         //- Avatar and name
       q-card-section.fit.column.wrap.justify-center.items-center.content-center
         q-avatar(size='6rem')
-          img(src='~/assets/Account_Icon.svg')
+          img(v-if='isMyAccount', :src='getJdenticon(profile.name)')
+          q-btn(:click='getJdenticon(profile.name)')
         .col.q-mt-sm
           .col.text-subtitle1.text-bold
             | {{ isMyAccount ? profile.name + ' ' + profile.surname : profileId }}
