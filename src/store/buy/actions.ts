@@ -101,7 +101,9 @@ export const actions: ActionTree<BuyStateInterface, StateInterface> = {
         collection: asset.collection.collection_name,
         template: asset.template.template_id,
         schema: asset.schema.schema_name,
-        id: asset.asset_id
+        id: asset.asset_id,
+        mintNumber: asset.template_mint,
+        collectionTitle: asset.collection.name
       } as GalleryCard;
     });
     commit('setAssets', gallerydata);

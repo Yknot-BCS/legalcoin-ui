@@ -154,7 +154,7 @@ q-page
       .landing-right
         .landing-right-card-container.main-asset-cont
           .col-md-6.q-pa-lg.main-asset-fixer(v-if='assets.length > 0')
-            Cards(style='width: 20rem', :data='assets[0]', type='Assets')
+            Cards(style='width: 25rem', :data='assets[0]', type='Assets')
 
     //- Featured Collections
   .div
@@ -229,7 +229,7 @@ q-page
     margin-left:10%
 
   .landing-right
-    padding: 5rem
+    padding:10rem
   .landing-right-card-container
     max-width:40rem
 
