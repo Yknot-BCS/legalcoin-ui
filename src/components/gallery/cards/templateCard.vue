@@ -98,24 +98,10 @@ q-card
   router-link(
     :to='{ name: "template", params: { collection_name: card.collection, template_id: card.id } }'
   )
-    q-img.asset-img-lg.zoom(v-if='$q.screen.gt.sm', :src='card.imageUrl')
-    q-img.asset-img-md.zoom(
-      v-if='$q.screen.lt.md && $q.screen.gt.xs',
-      :src='card.imageUrl'
-    )
-    q-img.asset-img-sm.zoom(v-if='$q.screen.lt.sm', :src='card.imageUrl')
+    q-img.zoom(v-if='$q.screen.gt.sm', :src='card.imageUrl')
 </template>
 
 <style lang="sass" scoped>
-.asset-img-lg
-  width: 100%
-  height: 20rem
-.asset-img-md
-  width: 100%
-  height: 15rem
-.asset-img-sm
-  width: 100%
-  height: 10rem
 .column
   width: 100px
 .heading

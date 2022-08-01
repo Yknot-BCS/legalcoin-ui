@@ -387,7 +387,10 @@ export const get_auction = async function (
           id: asset.asset_id,
           saleclose: Number(element.end_time),
           type: 'auction',
-          key: element.auction_id + asset.asset_id
+          key: element.auction_id + asset.asset_id,
+          topBid: element.bids[element.bids.length - 1],
+          mintNumber: asset.template_mint,
+          collectionTitle: asset.collection.name
         } as GalleryCard;
       })
     );
@@ -443,6 +446,7 @@ export const get_profile = async function (
       ...DataParams
     });
     rawData.forEach((element) => {
+      console.log(element);
       data = data.concat(
         element.assets.map((asset) => {
           return {
@@ -468,7 +472,10 @@ export const get_profile = async function (
             id: asset.asset_id,
             saleclose: Number(element.end_time),
             type: 'auction',
-            key: element.auction_id + asset.asset_id
+            key: element.auction_id + asset.asset_id,
+            topBid: element.bids[element.bids.length - 1],
+            mintNumber: asset.template_mint,
+            collectionTitle: asset.collection.name
           } as GalleryCard;
         })
       );

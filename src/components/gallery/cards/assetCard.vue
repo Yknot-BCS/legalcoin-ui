@@ -84,7 +84,7 @@ q-card
         .col-auto.text-bold
           | Price:
         .col-auto
-          img.q-pr-sm(
+          img.q-pr-xs(
             src='~assets/legalcoin-trimmed.png',
             style='height: 10px'
           )
@@ -96,12 +96,7 @@ q-card
           .text-subtitle4 {{ card.yield }}
 
   router-link(:to='card.to')
-    q-img.asset-img-lg.zoom(v-if='$q.screen.gt.sm', :src='card.imageUrl')
-    q-img.asset-img-md.zoom(
-      v-if='$q.screen.lt.md && $q.screen.gt.xs',
-      :src='card.imageUrl'
-    )
-    q-img.asset-img-sm.zoom(v-if='$q.screen.lt.sm', :src='card.imageUrl')
+    q-img.zoom(:src='card.imageUrl')
 </template>
 
 <style lang="sass" scoped>
