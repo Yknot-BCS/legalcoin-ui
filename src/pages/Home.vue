@@ -151,10 +151,11 @@ q-page
             v-if='!isLoggedIn'
           )
     .col-12.col-md-6.pgb
-      .landing-right
-        .landing-right-card-container.main-asset-cont
-          .col-md-6.q-pa-lg.main-asset-fixer(v-if='assets.length > 0')
-            Cards(style='width: 25rem', :data='assets[0]', type='Assets')
+      .row.justify-center
+        .landing-right
+          .landing-right-card-container
+            .col-md-6.q-pa-lg(v-if='assets.length > 0')
+              Cards(style='width: 25em', :data='assets[0]', type='Assets')
 
     //- Featured Collections
   .div
