@@ -279,7 +279,7 @@ q-card
       //- share icon
       .col-2.row.justify-center
         q-btn.text-body2(icon='share', round, size='md')
-        q-menu(anchor='top left', self='top right')
+        q-menu(:offset='[120, 10]')
           q-list
             q-item(
               clickable,
@@ -287,9 +287,11 @@ q-card
               :href='`http://twitter.com/intent/tweet?text=Check%20out%20this%20collection%20on%20LegalCoin:&url=${shareURL}`',
               target='_blank'
             )
-              q-item-section.share-dropdown-icon
-                q-icon(name='fab fa-twitter', size='2rem')
-              q-item-section.share-dropdown-text Share to Twitter
+              q-item-section
+                .row.items-center
+                  .col-shrink.q-pr-sm
+                    q-icon(name='fab fa-twitter', size='2rem', color='blue')
+                  .col.text-bold Share to Twitter
             q-separator
             //- Facebook link doesn't work with locally hosted app, but if provided with valid web URL will work
             q-item(
@@ -298,14 +300,22 @@ q-card
               :href='`https://www.facebook.com/sharer/sharer.php?u=${shareURL}`',
               target='_blank'
             )
-              q-item-section.share-dropdown-icon
-                q-icon(name='fab fa-facebook', size='2rem')
-              q-item-section.share-dropdown-text Share to Facebook
+              q-item-section
+                .row.items-center
+                  .col-shrink.q-pr-sm
+                    q-icon(
+                      name='fab fa-facebook',
+                      size='2rem',
+                      style='color: #4267b2'
+                    )
+                  .col.text-bold Share to Facebook
             q-separator
             q-item(clickable, v-close-popup, @click='clipboardURL')
-              q-item-section.share-dropdown-icon
-                q-icon(name='fa fa-clipboard', size='2rem')
-              q-item-section.share-dropdown-text Copy link
+              q-item-section
+                .row.items-center
+                  .col-shrink.q-pr-sm
+                    q-icon(name='fa fa-clipboard', size='2rem')
+                  .col.text-bold Copy link
 
     //- maturity
     .row.fit.wrap 

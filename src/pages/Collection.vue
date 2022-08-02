@@ -114,7 +114,7 @@ q-page
     //- Links
     .col.self-center.text-right.q-gutter-lg.q-pr-lg
       q-btn.text-body2(icon='share', round, size='md')
-        q-menu(:offset='[10, 0]', anchor='top left', self='top right')
+        q-menu(:offset='[150, 10]')
           q-list
             q-item(
               clickable,
@@ -122,9 +122,11 @@ q-page
               :href='`http://twitter.com/intent/tweet?text=Check%20out%20this%20collection%20on%20LegalCoin:&url=${shareURL}`',
               target='_blank'
             )
-              q-item-section.share-dropdown-icon
-                q-icon(name='fab fa-twitter', size='2rem')
-              q-item-section.share-dropdown-text Share to Twitter
+              q-item-section
+                .row.items-center
+                  .col-shrink.q-pr-sm
+                    q-icon(name='fab fa-twitter', size='2rem', color='blue')
+                  .col.text-bold Share to Twitter
             q-separator
             //- Facebook link doesn't work with locally hosted app, but if provided with valid web URL will work
             q-item(
@@ -133,14 +135,22 @@ q-page
               :href='`https://www.facebook.com/sharer/sharer.php?u=${shareURL}`',
               target='_blank'
             )
-              q-item-section.share-dropdown-icon
-                q-icon(name='fab fa-facebook', size='2rem')
-              q-item-section.share-dropdown-text Share to Facebook
+              q-item-section
+                .row.items-center
+                  .col-shrink.q-pr-sm
+                    q-icon(
+                      name='fab fa-facebook',
+                      size='2rem',
+                      style='color: #4267b2'
+                    )
+                  .col.text-bold Share to Facebook
             q-separator
             q-item(clickable, v-close-popup, @click='clipboardURL')
-              q-item-section.share-dropdown-icon
-                q-icon(name='fa fa-clipboard', size='2rem')
-              q-item-section.share-dropdown-text Copy link
+              q-item-section
+                .row.items-center
+                  .col-shrink.q-pr-sm
+                    q-icon(name='fa fa-clipboard', size='2rem')
+                  .col.text-bold Copy link
 
   .row.text-subtitle1.q-px-xs.q-py-sm.q-pl-lg
     .col.text-bold
@@ -174,8 +184,4 @@ q-page
 
 .bg-img
   z-index: -1
-.share-dropdown-icon
-  max-width: 2rem
-.share-dropdown-text
-  min-width: 8rem
 </style>
