@@ -84,10 +84,7 @@ export default defineComponent({
   },
   methods: {
     identicon() {
-      const svgString = toSvg(
-        this.profile.name + ' ' + this.profile.surname,
-        96
-      );
+      const svgString = toSvg(this.$route.params.profile, 84);
       return svgString;
     },
     testJdent() {
@@ -111,9 +108,7 @@ export default defineComponent({
         //- Avatar and name
       q-card-section.fit.column.wrap.justify-center.items-center.content-center
         q-avatar(size='6rem')
-          // eslint-disable-next-line prettier/prettier
-          div(v-html='identicon')
-        q-btn(label='Test', @click='testJdent')
+          | <div v-html='identicon()'></div>
         .col.q-mt-sm
           .col.text-subtitle1.text-bold
             | {{ isMyAccount ? profile.name + ' ' + profile.surname : profileId }}
