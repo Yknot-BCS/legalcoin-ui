@@ -153,34 +153,42 @@ q-page
     .col-12.col-md-6.pgb
       .row.justify-center
         .landing-right
+          img.flipY.img3.polygon(src='~assets/polygons/pg2.svg')
+          img.flipY.img3.polygon(src='~assets/polygons/pg3.svg')
           .landing-right-card-container
             .col-md-6.q-pa-lg(v-if='assets.length > 0')
               Cards(style='width: 25em', :data='assets[0]', type='Assets')
-
+  //- q-separator(color='dark')
     //- Featured Collections
-  .div
+  .div.pgb-f
     .row.justify-center
-      h2.text-grey-9.text-center Featured Collections
-
+      .col.featured-parent(style='height: 2rem')
+        img.flipY.img1.polygon.br.fadeInLeft.slow(
+          src='~assets/polygons/pg4.svg'
+        )
+        img.flipX.img2.polygon.tr.fadeInLeft.slower(
+          src='~assets/polygons/pg3.svg'
+        )
+      h2.featured-index.text-grey-9.text-center Featured Collections
+      .col
     .row.justify-center
-      .featured-card.q-pa-sm(
+      .featured-card.featured-index.q-pa-sm(
         v-for='collection in featuredCollections.slice(0, numberOfCards)',
         v-if='featuredCollections.length > 0'
       )
         Cards.rounded.shadow-10(:data='collection', type='Collections')
 
-    .row.justify-center.q-mt-md
+    .row.justify-center.q-mt-md.q-pb-xl
       q-btn(
         :to='{ name: "discover" }',
         label='Explore More',
         color='primary',
         size='lg'
       )
-
+  //- q-separator(color='dark')
   .div
     .row.justify-center
       h2.text-grey-9.text-center Trending NFTs
-
     .row.justify-center
       .featured-card.q-pa-sm(
         v-for='template in trendingTemplates.slice(0, numberOfCards)',
@@ -208,6 +216,8 @@ q-page
   left: -50%
 .pgb
   position: relative
+.pgb-f
+  position: relative
 
 .rounded
   border-radius: 1rem
@@ -219,6 +229,32 @@ q-page
   font-family: "ralewayregular"
   font-size: 1.5rem
   text-align: center
+.featured-index
+  z-index: 5
+.featured-parent
+  position: relative
+  top: 0
+  left: 0
+.img1
+  position: relative
+  top: 0
+  left: 0
+  width: 32rem
+  // border: 1px red solid
+.img2
+  position: absolute
+  top: 0
+  left: 0
+  // border: 1px green solid
+.img3
+  position: absolute
+  bottom: 0
+  right: 0
+  // border: 1px green solid
+.flipX
+  transform: scaleX(-1)
+.flipY
+  transform: scaleY(-1)
 
 @media (min-width: $breakpoint-sm-max)
   .landing-left
@@ -245,6 +281,18 @@ q-page
     background-image: url("~assets/polygons/polygon_home_trending_horizontal.svg")
     background-repeat: no-repeat
     background-size: cover
+  .pgb-f::before
+    content:' '
+    position: absolute
+    z-index: -1
+    top: 0rem
+    left: 0%
+    right: 25%
+    bottom: 0rem
+    transform: scaleY(-1) scaleX(-1)
+    background-image: url("~assets/polygons/polygon_home_trending_horizontal.svg")
+    background-repeat: no-repeat
+    background-size: cover
 @media (max-width: $breakpoint-md-min)
   .landing-right
     margin-top: 10rem
@@ -256,6 +304,18 @@ q-page
     left: 0rem
     right: 0rem
     bottom: 0rem
+    background-image: url("~assets/polygons/polygon_home_trending_vertical.svg")
+    background-repeat: no-repeat
+    background-size: cover
+  .pgb-f::before
+    content:' '
+    position: absolute
+    z-index: -1
+    top: 0rem
+    left: 0rem
+    right: 0rem
+    bottom: 0rem
+    transform: scaleY(-1)
     background-image: url("~assets/polygons/polygon_home_trending_vertical.svg")
     background-repeat: no-repeat
     background-size: cover
