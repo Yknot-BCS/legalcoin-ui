@@ -4,8 +4,6 @@ import { boot } from 'quasar/wrappers';
 export default boot(({ app }) => {
   if (process.env.NODE_ENV === 'production') {
     app.config.errorHandler = (err) => {
-      // const error = new Error('Report caught error to New Relic');
-      // console.log(err);
       /* eslint-disable */
       try {
         throw err;
