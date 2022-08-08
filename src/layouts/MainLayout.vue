@@ -56,7 +56,7 @@ export default {
 q-layout(view='hHh lpR fff')
   dev-banner(v-if='DEVELOPMENT')
   Header
-  CompleteRegistrationBanners
+  CompleteRegistrationBanners.banner
   q-page-container
     router-view
     .space
@@ -72,4 +72,6 @@ q-layout(view='hHh lpR fff')
   min-height: 2px
 .space
   height: 10rem
+.banner
+  z-index: 5
 </style>
