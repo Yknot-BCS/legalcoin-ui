@@ -192,7 +192,10 @@ export default defineComponent({
 <template lang="pug">
 q-dialog(v-model='showDialog')
   q-card
-    q-tabs(v-model='listingType')
+    q-tabs.text-white.bg-grey-6(
+      v-model='listingType',
+      active-bg-color='primary'
+    )
       q-tab(name='sale', label='Sale')
       q-tab(name='auction', label='Auction')
 
