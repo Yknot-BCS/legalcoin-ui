@@ -21,7 +21,7 @@ export default route<StateInterface>(function (
   const Router = createRouter({
     scrollBehavior: (to, from, savedPosition) => {
       if(!savedPosition){
-        return;
+        return { left: 0, top: 0 };
       } 
       if (to.params.savePosition) return {}
       return { left: 0, top: 0 }},
