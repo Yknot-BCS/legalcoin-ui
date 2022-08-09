@@ -22,7 +22,10 @@ export default defineComponent({
       onSubmit: async () => {
         try {
           await auth.passwordResetRequest(userEmail);
-          await router.push({ name: 'passwordresetsent' });
+          await router.push({
+            name: 'passwordresetsent',
+            params: { email: userEmail.value }
+          });
         } catch (error) {
           if (error instanceof Error) {
             quasar.notify({
