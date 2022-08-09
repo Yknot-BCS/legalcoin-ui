@@ -12,6 +12,7 @@ import TemplateActionCard from 'src/components/atomicAssets/TemplateActionCard.v
 export default defineComponent({
   name: 'TemplateCardView',
   components: { DetailsTable, Description, Timeline, TemplateActionCard },
+  emits: ['updateAssetInfo'],
   props: {
     templateData: {
       type: Object as PropType<ITemplate>,

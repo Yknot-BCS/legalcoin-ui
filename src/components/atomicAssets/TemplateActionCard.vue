@@ -12,6 +12,7 @@ import { getYield } from 'src/api/atomic_assets';
 export default defineComponent({
   name: 'TemplateActionCard',
   components: { Timeline },
+  emits: ['updateAssetInfo'],
   props: {
     templateData: {
       type: Object as PropType<ITemplate>,
@@ -28,7 +29,8 @@ export default defineComponent({
       transaction: null,
       pollAsset: null,
       listPrice: ref(0),
-      showListingDialog: ref(false)
+      showListingDialog: ref(false),
+      balance: ref('0')
     };
   },
 
@@ -39,7 +41,7 @@ export default defineComponent({
     }),
 
     isForSale() {
-      return !!this.saleData || this.saleData?.price !== undefined;
+      return !!this.saleData && this.saleData?.price !== undefined;
     },
 
     isBuybackNFT() {
@@ -149,15 +151,33 @@ export default defineComponent({
       } else {
         return '0';
       }
+    },
+
+    hasEnoughBalance() {
+      if (this.isForSale) {
+        return Number(this.balance) >= this.salePrice;
+      } else {
+        return false;
+      }
     }
   },
-  mounted() {
+  async mounted() {
     // if (this.assetData.asset_id) {
     //   // eslint-disable-next-line @typescript-eslint/no-misused-promises
     //   this.pollAsset = setInterval(() => {
     //     void this.$emit('updateAssetInfo');
     //   }, 10000);
     // }
+
+    // Get balance
+    await this.getBalance();
+  },
+  watch: {
+    async isForSale() {
+      if (this.isForSale) {
+        await this.getBalance();
+      }
+    }
   },
   beforeUnmount() {
     clearInterval(this.pollAsset);
@@ -165,6 +185,18 @@ export default defineComponent({
 
   methods: {
     ...mapActions({ sendTransaction: 'account/sendTransaction' }),
+
+    async getBalance() {
+      if (this.isAuthenticated && this.isForSale) {
+        const tokenBal: Asset[] = await this.$api.getTokenBalances(
+          this.saleData.price.token_contract,
+          this.accountName
+        );
+        if (tokenBal.length > 0) {
+          this.balance = tokenBal[0].value.toFixed(2);
+        }
+      }
+    },
 
     async buySale() {
       console.log('tryBuySale');
@@ -360,9 +392,24 @@ q-card
         @click='tryBuySale()',
         label='BUY',
         color='primary',
-        :disable='!isAuthenticated'
+        :disable='!isAuthenticated',
+        v-if='hasEnoughBalance'
       )
       q-tooltip.tooltip(v-if='!isAuthenticated') Please log in
+
+      //- if not enough balance, show insufficient buy LEGAL button
+      .q-mt-lg.text-center.text-NFTCard-price-head.text-red(
+        v-if='!hasEnoughBalance'
+      )
+        | Insufficient balance: {{ balance }} {{ saleData.price.token_symbol }}
+      q-btn.full-width.q-mt-md(
+        :to='{ name: "buytokens", params: { status: "checkout" } }',
+        label='BUY MORE LEGAL TOKENS',
+        color='primary',
+        :disable='!isAuthenticated',
+        v-if='!hasEnoughBalance'
+      )
+
     //- when owning, with list on market button
     //- .div(v-if='isOwned && !isForSale')
     //-   q-btn.full-width.q-mt-lg(
@@ -377,6 +424,9 @@ q-card
     //- | is owned by LC: {{ isOwnedByLC }},
     //- | has buy order: {{ hasBuyOrder }},
     //- | can claim: {{ isClaimable }}
+    //- | isauthenticated: {{ isAuthenticated }},
+    //- | balance: {{ balance }},
+    //- | hasenoughbalance: {{ hasEnoughBalance }},
 </template>
 
 <style lang="sass"></style>

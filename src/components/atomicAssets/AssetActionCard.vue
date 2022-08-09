@@ -21,6 +21,7 @@ import { getYield } from 'src/api/atomic_assets';
 export default defineComponent({
   name: 'AssetActionCard',
   components: { Timeline, CreateListingDialog, Countdown, AucBidDialog },
+  emits: ['updateAssetInfo'],
   props: {
     assetData: {
       type: Object as PropType<IMarketAsset>,
@@ -49,7 +50,8 @@ export default defineComponent({
       transaction: null,
       pollAsset: null,
       showListingDialog: ref(false),
-      showAucDialog: ref(false)
+      showAucDialog: ref(false),
+      balance: ref('0')
     };
   },
 
@@ -69,7 +71,7 @@ export default defineComponent({
     },
 
     isForSale() {
-      return !!this.saleData || this.saleData?.price !== undefined;
+      return !!this.saleData && this.saleData?.price !== undefined;
     },
 
     isOwnedByLC() {
@@ -274,14 +276,32 @@ export default defineComponent({
         );
         return startPriceAsset;
       }
+    },
+
+    hasEnoughBalance() {
+      if (this.isForSale) {
+        return Number(this.balance) >= this.salePrice;
+      } else {
+        return false;
+      }
     }
   },
-  mounted() {
+  async mounted() {
     if (this.assetData.asset_id) {
       // eslint-disable-next-line @typescript-eslint/no-misused-promises
       this.pollAsset = setInterval(() => {
         void this.$emit('updateAssetInfo');
       }, 5000);
+    }
+
+    // Get balance
+    await this.getBalance();
+  },
+  watch: {
+    async isForSale() {
+      if (this.isForSale) {
+        await this.getBalance();
+      }
     }
   },
   beforeUnmount() {
@@ -290,6 +310,18 @@ export default defineComponent({
 
   methods: {
     ...mapActions({ sendTransaction: 'account/sendTransaction' }),
+
+    async getBalance() {
+      if (this.isAuthenticated && this.isForSale) {
+        const tokenBal: Asset[] = await this.$api.getTokenBalances(
+          this.saleData.price.token_contract,
+          this.accountName
+        );
+        if (tokenBal.length > 0) {
+          this.balance = tokenBal[0].value.toFixed(2);
+        }
+      }
+    },
 
     async buySale() {
       console.log('tryBuySale');
@@ -750,9 +782,23 @@ q-card
         @click='tryBuySale()',
         label='BUY',
         color='primary',
-        :disabled='!isAuthenticated'
+        :disabled='!isAuthenticated',
+        v-if='hasEnoughBalance'
       )
         q-tooltip.tooltip(v-if='!isAuthenticated') Please log in
+
+      //- if not enough balance, show insufficient buy LEGAL button
+      .q-mt-lg.text-center.text-NFTCard-price-head.text-red(
+        v-if='!hasEnoughBalance'
+      )
+        | Insufficient balance: {{ balance }} {{ saleData.price.token_symbol }}
+      q-btn.full-width.q-mt-md(
+        :to='{ name: "buytokens", params: { status: "checkout" } }',
+        label='BUY MORE LEGAL TOKENS',
+        color='primary',
+        :disable='!isAuthenticated',
+        v-if='!hasEnoughBalance'
+      )
     //- when owning, with list on market button
     .div(v-if='isOwned && !isForSale && !isOnAuction')
       q-btn.full-width.q-mt-lg(
