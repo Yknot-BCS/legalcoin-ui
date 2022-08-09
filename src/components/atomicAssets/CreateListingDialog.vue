@@ -48,6 +48,13 @@ export default defineComponent({
       let hoursToSecs = this.aucTHours * 60 * 60;
       let minsToSecs = this.aucTMins * 60;
       return daysToSecs + hoursToSecs + minsToSecs;
+    },
+
+    afterFeePrice() {
+      return (
+        this.listPrice -
+        this.listPrice * this.assetData.collection.market_fee
+      ).toFixed(Number(process.env.LC_PRECISION));
     }
   },
 
@@ -189,6 +196,7 @@ q-dialog(v-model='showDialog')
       q-tab(name='sale', label='Sale')
       q-tab(name='auction', label='Auction')
 
+    //- Sale
     q-tab-panels(v-model='listingType')
       q-tab-panel(name='sale')
         q-card-section
@@ -200,6 +208,13 @@ q-dialog(v-model='showDialog')
             label='Price (LEGAL)',
             outlined
           )
+          .column.q-mt-sm
+            .col
+              .text-bold Fee summary
+            .col
+              | Collection Fee: {{ assetData.collection.market_fee * 100 }}%
+          .row.q-mt-sm
+            | You will receive {{ afterFeePrice }} LEGAL
         q-card-section
           q-btn.q-mr-sm(
             @click='tryListNFT()',
@@ -211,6 +226,7 @@ q-dialog(v-model='showDialog')
             label='CANCEL',
             color='primary'
           )
+      //- Auction
       q-tab-panel(name='auction')
         q-card-section
           .text-bold
@@ -242,6 +258,11 @@ q-dialog(v-model='showDialog')
               label='Minutes',
               outlined
             )
+          .column.q-mt-md
+            .col
+              .text-bold Fee summary
+            .col
+              | Collection Fee: {{ assetData.collection.market_fee * 100 }}%
         q-card-section
           q-btn.q-mr-sm(@click='tryAucNFT()', label='CONFIRM', color='primary')
           q-btn(
