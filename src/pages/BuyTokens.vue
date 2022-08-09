@@ -177,6 +177,12 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
+img.polygon.tr.animated.fadeInRight.slower(src='~assets/polygons/pg1.svg')
+img.polygon.tr.animated.fadeInRight.slow(src='~assets/polygons/pg2.svg')
+img.polygon.tr(src='~assets/polygons/pg3.svg')
+img.polygon.br.animated.fadeInLeft.slow(src='~assets/polygons/pg4.svg')
+img.polygon.br.animated.fadeInLeft.slower(src='~assets/polygons/pg5.svg')
+img.polygon.br(src='~assets/polygons/pg6.svg')
 q-page
   .row.justify-center
     q-form(@submit='tryBuyTokens')
@@ -266,4 +272,14 @@ q-page
     )
 </template>
 
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+.polygon
+  position: absolute
+  z-index: -1
+  &.tr
+    right: 0rem
+    top: 0rem
+  &.br
+    left: 0rem
+    bottom: 0rem
+</style>
