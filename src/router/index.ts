@@ -53,7 +53,7 @@ export default route<StateInterface>(function (
       }
     }
     // Route to home when already logged in
-    if (to.name === 'login' && auth.isLoggedIn() && isAuthenticated) {
+    if (to.name === 'login' && auth.isLoggedIn() && isAuthenticated && store.state.account.profile.accountName != '') {
       return { name: 'home' };
     }
   });

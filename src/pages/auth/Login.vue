@@ -69,7 +69,7 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-//Desktop
+//- Desktop
 q-card.row.col.animated.fadeInDown.justify-center.triangle(
   v-if='$q.screen.gt.sm'
 )
@@ -109,7 +109,7 @@ q-card.row.col.animated.fadeInDown.justify-center.triangle(
     .q-mt-lg(style='border: 1px solid #ddd')
     .row.justify-center.align-center.q-mt-lg
       router-link.skip-link(:to='{ name: "home" }') Skip this step
-
+//- Mobile
 AuthCard.col-6.animated.fadeInDown.q-ma-sm(v-else)
   .row.justify-center
     img(src='~assets/legalcoin-full.png', style='width: 13rem')

@@ -42,9 +42,6 @@ export default defineComponent({
             });
           }
         }
-      },
-      onContinue: async () => {
-        await router.replace('/');
       }
     };
   }

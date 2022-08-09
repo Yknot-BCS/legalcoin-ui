@@ -48,7 +48,9 @@ export default defineComponent({
 .row.justify-center
   AuthCard.col-6
     .text-h5.col-12.text-weight-bold Let's verify your email
-    p.col-12 Check your {{ $store.state.account.profile.email }} inbox to verify your account and get started.
+    p.col-12 Check your &nbsp
+      a(href='javascript:;') {{ $store.state.account.profile.email }}
+      | &nbsp inbox to verify your account and get started.
     q-btn.col-12(@click='resendEmail()', color='primary') Resend Email
     q-btn.col-12.q-ml-md(@click='logout()', color='primary') Sign Out
 </template>

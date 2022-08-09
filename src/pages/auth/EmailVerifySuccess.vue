@@ -1,13 +1,7 @@
 <script lang="ts">
-import { useRouter } from 'vue-router';
 export default {
   setup() {
-    const router = useRouter();
-    return {
-      onContinue: async () => {
-        await router.replace('/');
-      }
-    };
+    return {};
   }
 };
 </script>
@@ -18,7 +12,7 @@ export default {
     .text-h5.col-12 Email Verification Succeeded
     p
       | We have successfully verified your email address. Click the button below to continue home.
-    q-btn.col-12(@click='onContinue()', color='primary')
+    q-btn.col-12(:to='{ name: "login" }', color='primary')
       | Continue
 </template>
 
