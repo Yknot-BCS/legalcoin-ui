@@ -13,10 +13,11 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-AuthCard
-  .text-h5.col-12.text-weight-bold Reset Link Sent
-  p.q-mt-md
-    | We have emailed a password reset link to [email]. Click that link to continue.
+.row.justify-center
+  AuthCard
+    .text-h5.col-12.text-weight-bold Reset Link Sent
+    p.q-mt-md
+      | We have emailed a password reset link to [email]. Click that link to continue.
 </template>
 
 <style lang="sass" scoped></style>
