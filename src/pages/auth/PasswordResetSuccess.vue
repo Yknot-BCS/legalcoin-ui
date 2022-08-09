@@ -11,7 +11,9 @@ export default defineComponent({
     const router = useRouter();
     return {
       onContinue: async () => {
-        await router.replace('/');
+        await router.push({
+          name: 'login'
+        });
       }
     };
   }
@@ -23,9 +25,9 @@ export default defineComponent({
   AuthCard.col
     .text-h5.col-12.text-weight-bold Password Reset Successful
     p.q-my-md
-      | We have successfully set your new password. Click the button below to continue home.
+      | We have successfully set your new password. Click the button below to log in.
     q-btn.col-12(@click='onContinue()', color='primary')
-      | Continue To Home
+      | Continue To Login
 </template>
 
 <style lang="sass" scoped>

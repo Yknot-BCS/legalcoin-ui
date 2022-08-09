@@ -8,10 +8,12 @@ export default defineComponent({
     AuthCard
   },
   setup() {
-    return { userEmail: '' };
+    return {};
   },
-  mounted() {
-    this.userEmail = this.$route.params.email as string;
+  computed: {
+    email() {
+      return this.$route.params.email;
+    }
   }
 });
 </script>
@@ -22,7 +24,7 @@ export default defineComponent({
     .text-h5.col-12.text-weight-bold Reset Link Sent
     p.q-mt-md
       | We have emailed a password reset link to &nbsp
-      a(href='javascript:;') {{ userEmail }}.
+      a(href='javascript:;') {{ email }}.
       | &nbsp Check your email at this address to continue.
 </template>
 
