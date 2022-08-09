@@ -87,13 +87,20 @@ export default defineComponent({
 <template lang="pug">
 .row.justify-center
   .col-12
-    q-card(flat)
+    q-card(square, flat)
       q-card-section.row.fit.bg-white.items-center.content-center.justify-center(
         v-if='isMyAccount'
       )
-        .text-bold
-          | YOUR PROFILE
-      q-separator.q-mx-md
+        .col-2
+          q-btn(
+            icon='fas fa-arrow-left',
+            round,
+            flat,
+            onclick='history.go(-1)'
+          )
+        .col-8.text-body1.text-uppercase.text-center.self-center Your profile
+        .col-2
+      q-separator
       q-card-section.bg-white
         //- Avatar and name
       q-card-section.fit.column.wrap.justify-center.items-center.content-center
