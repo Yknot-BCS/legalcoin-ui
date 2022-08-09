@@ -3,10 +3,11 @@ import { defineComponent, ref } from 'vue';
 import { Asset } from '@greymass/eosio';
 import { mapGetters } from 'vuex';
 import { atomic_market_api } from 'src/api/atomic_assets';
+import CustomTooltip from 'src/components/tooltip/CustomTooltip.vue';
 
 export default defineComponent({
   name: 'Wallet',
-  components: {},
+  components: { CustomTooltip },
   setup() {
     return {
       balance: ref('0'),
@@ -103,6 +104,11 @@ q-page
       q-card-section
         .text-wallet.text-bold 
           | {{ nftCount }} NFTS
+          q-icon.q-pl-sm.q-pb-xs(name='fa-solid fa-question-circle')
+            CustomTooltip(
+              :offset='[0, 15]',
+              :text='"LEGAL value of all owned NFTs"'
+            )
         .text-wallet
           | {{ nftValue.toFixed(2) }} (LEGAL)
       q-separator.q-mx-md
@@ -123,7 +129,7 @@ q-page
               flat,
               @click='$router.push({ name: "withdraw" })'
             )
-            q-tooltip Coming soon!
+            CustomTooltip(:text='"Coming soon!"')
           .row.col-12
             q-btn.col.q-mx-sm.q-mt-sm.outline-btn(
               label='VIEW TRANSACTION HISTORY',
