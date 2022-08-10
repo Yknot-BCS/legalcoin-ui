@@ -10,6 +10,7 @@ import TemplateViewer from 'src/components/atomicAssets/TemplateViewer.vue';
 export default defineComponent({
   name: 'Template',
   components: { TemplateViewer },
+  emits: ['updateAssetInfo'],
   setup() {
     const saleData = ref<ISale>(new Object({}) as ISale);
     const templateData = ref<ITemplate>(new Object({}) as ITemplate);
@@ -70,12 +71,12 @@ export default defineComponent({
     }
   },
   watch: {
-    '$route.params.template_id': {
-      handler: async function () {
+    async '$route.params.template_id'(newvalue) {
+      if (newvalue !== undefined) {
         await this.updateTemplateInfo();
-      },
-      deep: true,
-      immediate: true
+      }
+      // deep: true,
+      // immediate: true
     }
   },
   async mounted() {

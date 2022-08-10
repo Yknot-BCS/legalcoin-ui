@@ -3,7 +3,7 @@ import { defineComponent, PropType, computed } from 'vue';
 import { GalleryCard } from 'src/types';
 
 export default defineComponent({
-  name: 'TemplateCard',
+  name: 'CollectionCard',
   components: {},
   props: {
     data: {

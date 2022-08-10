@@ -3,7 +3,6 @@ import { defineComponent, PropType, computed } from 'vue';
 import { GalleryCard } from 'src/types';
 import AssetCard from './assetCard.vue';
 import CollectionCard from './collectionCard.vue';
-import ListingCard from './listingCard.vue';
 import AuctionCard from './auctionCard.vue';
 import TemplateCard from './templateCard.vue';
 
@@ -12,7 +11,6 @@ export default defineComponent({
   components: {
     AssetCard,
     CollectionCard,
-    ListingCard,
     TemplateCard,
     AuctionCard
   },
@@ -44,10 +42,9 @@ div(v-else-if='card.type === "template"')
 div(v-else-if='card.type === "collection"')
   CollectionCard(:data='card')
 
-div(v-else-if='card.type === "listing"')
-  ListingCard(:data='card')
 div(v-else-if='card.type === "auction"')
   AuctionCard(:data='card')
+
 div(v-else)
   AssetCard(:data='card')
 </template>

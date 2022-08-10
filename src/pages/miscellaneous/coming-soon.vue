@@ -8,7 +8,7 @@ export default defineComponent({
 
 <template lang="pug">
 .row.q-pt-lg.q-pl-lg.q-mb-lg
-  router-link.row.items-center.cursor-pointer(to='/')
+  router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
     img.logo.q-mr-md(src='~assets/legalcoin-full.png')
 
 .fullscreen.text-white.text-center.q-pa-xl.flex.flex-center
@@ -19,7 +19,7 @@ export default defineComponent({
       color='primary',
       text-color='white',
       unelevated,
-      to='/',
+      :to='{ name: "home" }',
       label='Back to Home',
       no-caps
     )

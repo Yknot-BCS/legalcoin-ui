@@ -12,6 +12,7 @@ import TemplateActionCard from 'src/components/atomicAssets/TemplateActionCard.v
 export default defineComponent({
   name: 'TemplateCardView',
   components: { DetailsTable, Description, Timeline, TemplateActionCard },
+  emits: ['updateAssetInfo'],
   props: {
     templateData: {
       type: Object as PropType<ITemplate>,
@@ -19,7 +20,7 @@ export default defineComponent({
     },
     saleData: {
       type: Object as PropType<ISale>,
-      required: true
+      required: false
     }
   },
   setup() {

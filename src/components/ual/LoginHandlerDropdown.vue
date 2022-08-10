@@ -38,7 +38,7 @@ export default defineComponent({
         this.clearAccount();
       }
       if (this.$route.path !== '/') {
-        await this.$router.push({ path: '/' });
+        await this.$router.push({ name: 'home' });
       }
     },
     clearAccount(): void {

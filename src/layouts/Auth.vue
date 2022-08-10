@@ -17,7 +17,7 @@ export default defineComponent({
   img.polygon.br(src='~assets/polygons/pg6.svg')
 
   q-layout.row.content-center(view='hHh lpR fFf')
-    router-link.cursor-pointer(to='/')
+    router-link.cursor-pointer(:to='{ name: "home" }')
     .col.content-center
       q-page-container
         router-view
