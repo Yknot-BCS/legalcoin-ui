@@ -6,9 +6,10 @@ import {
 import { defineComponent, ref, computed } from 'vue';
 import {
   atomic_api,
-  getTemplateQueryApiOptions,
+  getSalesQueryApiOptions,
   getQueryPage,
-  getQueryLimit
+  getQueryLimit,
+  getQueryStatus
 } from 'src/api/atomic_assets';
 import { useRoute } from 'vue-router';
 import AtomicAssetsView from 'src/components/atomicAssets/AtomicAssetView.vue';
@@ -28,19 +29,19 @@ export default defineComponent({
     // - Gallery view
     const page = computed(() => getQueryPage(route.query));
     const limit = computed(() => getQueryLimit(route.query));
-    const templateOptions = computed(() => {
+    const status = computed(() => getQueryStatus());
+    const assetOptions = computed(() => {
       return {
-        owner: process.env.AA_ACCOUNT,
-        collection_name: route.params.collection as string,
-        ...getTemplateQueryApiOptions(route.query)
+        state: '1',
+        collection_whitelist: route.params.collection as string,
+        ...getSalesQueryApiOptions(route.query, status.value)
       } as unknown;
     });
-    // - Gallery view
 
     return {
       templatesData,
       collectionData,
-      templateOptions,
+      assetOptions,
       page,
       limit
     };
@@ -119,11 +120,12 @@ q-page
     .col-12
       q-card(flat)
         AtomicAssetsView(
-          :ApiParams='templateOptions',
+          :ApiParams='assetOptions',
           :Page='page',
           :ItemsPerPage='limit',
           :DataParams='[]',
-          Type='Templates'
+          Type='Discover',
+          :FilterCollection='false'
         )
 </template>
 

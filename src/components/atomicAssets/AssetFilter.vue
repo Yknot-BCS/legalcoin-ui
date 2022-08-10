@@ -111,6 +111,11 @@ export default defineComponent({
       await applyFilter('status', 'buynow');
     });
 
+    watch([route.query], () => {
+      market.value = getQueryMarket();
+      status.value = getQueryStatus();
+    });
+
     return {
       applyFilter,
       tierOptions,
