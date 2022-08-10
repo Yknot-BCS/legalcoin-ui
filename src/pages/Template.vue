@@ -70,12 +70,12 @@ export default defineComponent({
     }
   },
   watch: {
-    '$route.params.template_id': {
-      handler: async function () {
+    async '$route.params.template_id'(newvalue) {
+      if (newvalue !== undefined) {
         await this.updateTemplateInfo();
-      },
-      deep: true,
-      immediate: true
+      }
+      // deep: true,
+      // immediate: true
     }
   },
   async mounted() {

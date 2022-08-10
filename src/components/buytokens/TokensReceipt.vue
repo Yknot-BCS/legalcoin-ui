@@ -110,6 +110,11 @@ export default defineComponent({
         void (await this.tryGetOrderInfo(this.paymentId));
       }, 3000);
     }
+
+    // if redirect, return to redirect page
+    // if (this.$route.query.redirect) {
+    //   this.$router.push(this.$route.query.redirect as string);
+    // }
   },
   beforeUnmount() {
     clearInterval(this.polling);
@@ -121,9 +126,9 @@ export default defineComponent({
 //- | Receipt for
 //-     | Buying of LEGAL
 //- If payment has succeeded
-q-card.receipt-card(v-if='paymentStatus === "success"')
+q-card.q-mt-xl.receipt-card(v-if='paymentStatus === "success"')
   q-card-section 
-    .text-h5.text-grey-8 
+    .text-heading.text-grey-8
       | Transaction Summary
 
   q-card-section.row
@@ -179,6 +184,13 @@ q-card.receipt-card(v-if='paymentStatus === "success"')
     q-btn.col-12(
       label='View Balance',
       @click='$router.push({ name: "wallet" })'
+      v-if="!$route.query?.redirect"
+    )
+    q-btn.col-12(
+      label='Back to Purchase',
+      icon="arrow_back"
+      @click='$router.push($route.query?.redirect as string)'
+      v-if="$route.query?.redirect"
     )
     //- TODO add fee and any other details
 //- If payment has failed

@@ -133,28 +133,31 @@ q-page
   .row
     .col-12.col-md-6
       .landing-left.q-pa-lg
-        h2.landing-heading Fund some of the most worthy Class Action Lawsuits with LegalCoin.
-        p.landing-subheading Giving you access to the justice you deserve. Play a role in bringing large conglomorates to justice by funding cases such as the diesel emissions scandal.
+        h2.landing-heading Get rewarded by funding Class Action Lawsuits with LegalCoin.
+        p.landing-subheading Bring large conglomorates to justice by funding cases. Buy LEGAL tokens to get started.
+        //- p.landing-subheading Giving you access to the justice you deserve. Play a role in bringing large conglomorates to justice by funding cases such as the diesel emissions scandal.
+
         .text-center
           q-btn.q-px-xl.q-ma-sm(
-            :to='{ name: "discover" }',
-            label='Discover',
+            :to='{ name: "buytokens", params: { status: "checkout" } }',
+            label='Buy LEGAL',
             color='primary',
             size='lg'
           )
           q-btn.q-px-xl.q-ma-sm(
-            :to='{ name: "login" }',
+            href='https://docs-30.gitbook.io/legalcoin/',
+            target='_blank',
             label='Learn More',
             size='lg',
             outline,
-            color='primary',
-            v-if='!isLoggedIn'
+            color='primary'
           )
     .col-12.col-md-6.pgb
-      .landing-right
-        .landing-right-card-container.main-asset-cont
-          .col-md-6.q-pa-lg.main-asset-fixer(v-if='assets.length > 0')
-            Cards(style='width: 20rem', :data='assets[0]', type='Assets')
+      .row.justify-center
+        .landing-right
+          .landing-right-card-container
+            .col-md-6.q-pa-lg(v-if='assets.length > 0')
+              Cards(style='width: 25em', :data='assets[0]', type='Assets')
 
     //- Featured Collections
   .div
@@ -229,7 +232,7 @@ q-page
     margin-left:10%
 
   .landing-right
-    padding: 5rem
+    padding:10rem
   .landing-right-card-container
     max-width:40rem
 

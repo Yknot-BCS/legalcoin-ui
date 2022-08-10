@@ -1,11 +1,12 @@
 <script lang="ts">
 import { useStore } from 'src/store';
-import { computed, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import auth from 'src/auth';
 import { useQuasar } from 'quasar';
 
-export default {
+export default defineComponent({
+  name: 'CompleteRegistrationBanners',
   setup() {
     const store = useStore();
     const router = useRouter();
@@ -60,43 +61,36 @@ export default {
       showLogoutBanner,
       logout
     };
+  },
+  mounted() {
+    if (this.showLogoutBanner) {
+      void this.logout();
+    }
   }
-};
+});
 </script>
 
 <template lang="pug">
-.banner-wrapper.q-ma-sm.row.justify-start(
-  v-if='showVerifyEmailBanner || showLogoutBanner'
-)
+q-toolbar.top-banner(v-if='showVerifyEmailBanner || showLogoutBanner')
   q-banner.bg-primary.text-white.animated.fadeInLeft(
     v-if='showVerifyEmailBanner'
   )(
     rounded
   ) Email not verified. Please check your mail for a verification request. If you have not received one, we can resend the request.
-    //- .avatar
-    //-   img(src='~assets/yknot-dark.png', height='40')
     template(v-slot:action)
       q-btn(flat, label='Dismiss', @click='dismissed = true')
       q-btn(flat, label='Resend', @click='resendEmail')
   q-banner.bg-primary.text-white.animated.fadeInLeft(v-if='showLogoutBanner')(
     rounded
   ) We still need to create an account for you on the blockchain. To complete this process, we need sign you out and back in.
-    //- .avatar
-    //-   img(src='~assets/yknot-dark.png', height='40')
     template(v-slot:action)
       q-btn(flat, label='Dismiss', @click='dismissed = true')
       q-btn(flat, label='Sign out', @click='logout')
 </template>
 
 <style lang="sass" scoped>
-.banner-wrapper
-  position: absolute
-  z-index: 1
-.avatar
-  position: absolute
-  margin-top: 5px
-.q-banner
-  flex-basis: 600px
-  flex-grow: 0
-  flex-shrink: 1
+.top-banner
+  background: $primary
+  min-height: 0.2rem
+  justify-content: center
 </style>

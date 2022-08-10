@@ -16,6 +16,7 @@ import { useStore } from 'src/store';
 export default defineComponent({
   name: 'Asset',
   components: { AssetViewer },
+  emits: ['updateAssetInfo'],
   setup() {
     const assetData = ref<IMarketAsset>(
       new Object({ data: { img: '' } }) as IMarketAsset

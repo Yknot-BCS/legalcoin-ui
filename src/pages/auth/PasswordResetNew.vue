@@ -42,9 +42,6 @@ export default defineComponent({
             });
           }
         }
-      },
-      onContinue: async () => {
-        await router.replace('/');
       }
     };
   }
@@ -52,27 +49,28 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-AuthCard
-  .text-h5.col-12.text-weight-bold Set New Password
-  p.col-12 to continue to LegalCoin
-  q-form.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
-    q-input.col-12(
-      v-model='userPassword',
-      type='password',
-      label='Password',
-      lazy-rules,
-      :rules='[requiredRule]',
-      autocomplete='new-password'
-    )
-    q-input.col-12(
-      v-model='userPasswordConfirm',
-      type='password',
-      label='Retype Password',
-      lazy-rules,
-      :rules='[requiredRule, passwordMatchRule]',
-      autocomplete='new-password'
-    )
-    q-btn.col-12(type='submit', color='primary') Reset Password
+.row.justify-center
+  AuthCard
+    .text-h5.col-12.text-weight-bold Set New Password
+    p.col-12 to continue to LegalCoin
+    q-form.col-12.row.q-mb-sm.q-gutter-y-lg(@submit='onSubmit')
+      q-input.col-12(
+        v-model='userPassword',
+        type='password',
+        label='Password',
+        lazy-rules,
+        :rules='[requiredRule]',
+        autocomplete='new-password'
+      )
+      q-input.col-12(
+        v-model='userPasswordConfirm',
+        type='password',
+        label='Retype Password',
+        lazy-rules,
+        :rules='[requiredRule, passwordMatchRule]',
+        autocomplete='new-password'
+      )
+      q-btn.col-12(type='submit', color='primary') Reset Password
 </template>
 
 <style lang="sass" scoped>

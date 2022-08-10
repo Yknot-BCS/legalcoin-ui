@@ -37,89 +37,46 @@ export default defineComponent({
 
 <template lang="pug">
 q-card
-  //- Desktop
-  q-card-section.bg-white(style='z-index: 2')(v-if='$q.screen.gt.sm')
-    .row.col.justify-between
-      .col-8
-        //- Title of cards
-        .row
-          .text-subtitle2.heading {{ card.name }}
-      .col-2
-        q-badge.q-mb-xs.text-subtitle2.float-right(
-          rounded,
-          :color='badgeColour'
-        ) {{ card.tier }}
-      //- Large cards details
-    .row(style='font-size: 0.7rem')
-      .col-8
-        .col-auto.text-bold
-          | Price:
-        .col-auto.values
-          img.q-pr-xs(
-            src='~assets/legalcoin-trimmed.png',
-            style='height: 10px'
-          )
-          | {{ card.price }}
-      .col
-        .col-auto.text-bold
-          .text-right Yield:
-        .col-auto.float-right.values
-          .text-subtitle4 {{ card.yield }}
-  //- Mobile
-  q-card-section.bg-white(style='z-index: 2')(v-else)
+  q-card-section.bg-white(style='z-index: 2')
     .row
       .col-10
         //- Title of cards
         .row
-          .text-subtitle1.heading {{ card.name }}
+          .text-subtitle1.heading {{ `${card.collectionTitle} #${card.mintNumber}` }}
+        //- Tier badge
       .col-2.self-center
-        q-badge.text-subtitle2.float-right(rounded, :color='badgeColour')
+        q-badge.float-right.lt-md(rounded, :color='badgeColour')
+        q-badge.float-right.gt-sm(rounded, :color='badgeColour') 
+          .text-subtitle3 {{ card.tier }}
     //- Small cards details
-    .row(style='font-size: 0.7rem')
-      .col-10
+    .row.q-mt-sm
+      .col-9
         .col-auto.text-bold
-          | Price:
+          | Top Bid:
         .col-auto
-          img.q-pr-sm(
-            src='~assets/legalcoin-trimmed.png',
-            style='height: 10px'
-          )
+          img.lc-currency.q-pr-xs(src='~assets/legalcoin-trimmed.png')
           | {{ card.price }}
       .col
         .col-auto.text-bold
           .text-right Yield:
         .col-auto.float-right
           .text-subtitle4 {{ card.yield }}
-    .row
-      .col-12.q-py-sm
-        q-badge.text-black(color='grey-3') {{ card.seller }}
-    .row
-      .col-12
+
+    //- Countdown
+    .row.q-mt-sm
+      .col-12.text-grey-8
         CountDown(:endDate='new Date(card.saleclose)')
   q-separator.q-mb-xs.q-mx-x(inset)
   router-link(:to='card.to')
-    q-img.asset-img-lg.zoom(v-if='$q.screen.gt.sm', :src='card.imageUrl')
-    q-img.asset-img-md.zoom(
-      v-if='$q.screen.lt.md && $q.screen.gt.xs',
-      :src='card.imageUrl'
-    )
-    q-img.asset-img-sm.zoom(v-if='$q.screen.lt.sm', :src='card.imageUrl')
+    q-img.asset-img-lg.zoom(:src='card.imageUrl')
 </template>
 
 <style lang="sass" scoped>
-.asset-img-lg
-  width: 100%
-  height: 20rem
-.asset-img-md
-  width: 100%
-  height: 15rem
-.asset-img-sm
-  width: 100%
-  height: 10rem
-.column
-  width: 100px
 .heading
   font-weight: bold
 .values
   font-size: 1rem
+
+.lc-currency
+  height: 1em
 </style>
