@@ -17,7 +17,7 @@ import AssetActionCard from 'src/components/atomicAssets/AssetActionCard.vue';
 export default defineComponent({
   name: 'Asset',
   components: { DetailsTable, Description, Timeline, AssetActionCard },
-  emits: ['update-asset-info'],
+  emits: ['updateAssetInfo'],
   props: {
     assetData: {
       type: Object as PropType<IMarketAsset>,

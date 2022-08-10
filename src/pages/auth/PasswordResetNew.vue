@@ -31,7 +31,7 @@ export default defineComponent({
             route.query['resetToken'] as string,
             userPassword.value
           );
-          await router.push('/passwordresetsuccess');
+          await router.push({ name: 'passwordresetsuccess' });
         } catch (error) {
           if (error instanceof Error) {
             quasar.notify({

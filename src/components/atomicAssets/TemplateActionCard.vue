@@ -126,7 +126,6 @@ export default defineComponent({
     },
 
     salePrice(): number {
-      console.log('price', this.saleData?.price);
       return this.priceAsset.value || 0;
     },
 

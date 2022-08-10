@@ -67,7 +67,7 @@ q-card
       .col-12.text-grey-8
         CountDown(:endDate='new Date(card.saleclose)')
   q-separator.q-mb-xs.q-mx-x(inset)
-  router-link(:to='card.to')
+  router-link(:to='{ name: "asset", params: { asset: card.id } }')
     q-img.asset-img-lg.zoom(:src='card.imageUrl')
 </template>
 

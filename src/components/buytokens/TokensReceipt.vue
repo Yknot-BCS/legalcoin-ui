@@ -110,11 +110,6 @@ export default defineComponent({
         void (await this.tryGetOrderInfo(this.paymentId));
       }, 3000);
     }
-
-    // if redirect, return to redirect page
-    // if (this.$route.query.redirect) {
-    //   this.$router.push(this.$route.query.redirect as string);
-    // }
   },
   beforeUnmount() {
     clearInterval(this.polling);

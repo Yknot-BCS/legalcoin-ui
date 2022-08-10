@@ -10,6 +10,7 @@ import TemplateViewer from 'src/components/atomicAssets/TemplateViewer.vue';
 export default defineComponent({
   name: 'Template',
   components: { TemplateViewer },
+  emits: ['updateAssetInfo'],
   setup() {
     const saleData = ref<ISale>(new Object({}) as ISale);
     const templateData = ref<ITemplate>(new Object({}) as ITemplate);

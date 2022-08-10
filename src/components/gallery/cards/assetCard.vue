@@ -65,7 +65,7 @@ q-card
         .col-auto.float-right
           .text-subtitle4 {{ card.yield }}
 
-  router-link(:to='card.to')
+  router-link(:to='{ name: "asset", params: { asset: card.id } }')
     q-img.zoom(:src='card.imageUrl')
 </template>
 
