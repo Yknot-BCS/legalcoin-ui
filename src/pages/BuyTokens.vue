@@ -23,7 +23,8 @@ export default defineComponent({
       checkoutAPI: checkoutAPI,
       paymentId: ref(''),
       minimumAmount: ref(50),
-      changingBuyAmount: ref(false)
+      changingBuyAmount: ref(false),
+      redirectString: ref('')
     };
   },
   computed: {
@@ -121,9 +122,9 @@ export default defineComponent({
               name: `${this.$store.state.account.profile.name} ${this.$store.state.account.profile.surname}`,
               email: this.$store.state.account.profile.email
             },
-            success_url: `${window.location.origin}/buytokens/success`,
-            failure_url: `${window.location.origin}/buytokens/failure`,
-            cancel_url: `${window.location.origin}/buytokens/checkout`
+            success_url: `${window.location.origin}/buytokens/success${this.redirectString}`,
+            failure_url: `${window.location.origin}/buytokens/failure${this.redirectString}`,
+            cancel_url: `${window.location.origin}/buytokens/checkout${this.redirectString}`
           };
 
           const response = await this.checkoutAPI.post(
@@ -168,8 +169,11 @@ export default defineComponent({
     this.spendAmount = '100';
     this.paymentStatus = <string>this.$route.params.status;
 
+    if (this.$route.query.redirect) {
+      this.redirectString = `?redirect=${<string>this.$route.query.redirect}`;
+    }
+
     if (this.paymentStatus === 'success' || this.paymentStatus === 'failure') {
-      console.log(this.paymentStatus);
       this.paymentId = <string>this.$route.query['cko-payment-id'];
     }
   }

@@ -403,7 +403,7 @@ q-card
       )
         | Insufficient balance: {{ balance }} {{ saleData.price.token_symbol }}
       q-btn.full-width.q-mt-md(
-        :to='{ name: "buytokens", params: { status: "checkout" } }',
+        :to='{ name: "buytokens", params: { status: "checkout" }, query: { redirect: $route.path } }',
         label='BUY MORE LEGAL TOKENS',
         color='primary',
         :disable='!isAuthenticated',

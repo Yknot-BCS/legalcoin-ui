@@ -33,6 +33,7 @@ export default route<StateInterface>(function (
     history: createHistory(process.env.VUE_ROUTER_BASE)
   });
 
+  // Email verification checks
   Router.beforeEach(async (to, _) => {
     let isAuthenticated = store.state.account.profile.emailVerified;
     if (auth.isLoggedIn()) {
