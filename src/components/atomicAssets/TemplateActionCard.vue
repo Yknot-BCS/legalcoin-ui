@@ -20,7 +20,7 @@ export default defineComponent({
     },
     saleData: {
       type: Object as PropType<ISale>,
-      required: true
+      required: false
     }
   },
   setup() {
