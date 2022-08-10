@@ -214,6 +214,17 @@ const routes: RouteRecordRaw[] = [
     ]
   },
   {
+    path: '/transfer',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: 'transfer',
+        component: () => import('pages/TokenTransfer.vue')
+      }
+    ]
+  },
+  {
     path: '/not-authorized',
     name: 'not-authorized',
     component: () => import('src/pages/miscellaneous/NotAuthorized.vue')
