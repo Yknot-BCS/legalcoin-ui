@@ -183,6 +183,8 @@ q-page
       )
   //- q-separator(color='dark')
   .div.pgb-b
+    img.flipY.img5.polygon(src='~assets/polygons/pg2.svg')
+    img.flipY.img6.polygon(src='~assets/polygons/pg3.svg')
     .row.justify-center
       h2.text-grey-9.text-center Trending NFTs
     .row.justify-center
@@ -256,6 +258,17 @@ q-page
   bottom: 0
   right: 0
   width: 30%
+.img5
+  position: absolute
+  bottom: -10rem
+  right: 0
+  width: 40%
+  // border: 1px green solid
+.img6
+  position: absolute
+  bottom: -10rem
+  right: 0
+  width: 20%
 .flipX
   transform: scaleX(-1)
 .flipY
