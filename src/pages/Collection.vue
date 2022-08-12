@@ -105,8 +105,9 @@ q-page
   //- Collection image
   .row.q-px-lg.items-center.justify-between(style='height: 12rem')
     .col.q-pt-xl
-      q-card.asset-img
-        q-img(:src='collectionImg')
+      q-card.row.items-center.asset-img
+        q-card-section.col
+          q-img(:src='collectionImg')
     //- Collection name and description //- Todo: smallest mobile view, links overlap title
   .row 
     .col.q-pl-lg
@@ -183,7 +184,6 @@ q-page
   max-height: 200px
   min-width: 200px
   max-width: 200px
-
 .bg-img
   z-index: -1
 </style>
