@@ -7,7 +7,7 @@ import { mapGetters, mapActions } from 'vuex';
 import { Asset, Int64 } from '@greymass/eosio';
 import { date } from 'quasar';
 import { copyToClipboard } from 'quasar';
-import { getYield } from 'src/api/atomic_assets';
+import { atomic_market_api, getYield } from 'src/api/atomic_assets';
 
 export default defineComponent({
   name: 'TemplateActionCard',
@@ -30,7 +30,9 @@ export default defineComponent({
       pollAsset: null,
       listPrice: ref(0),
       showListingDialog: ref(false),
-      balance: ref('0')
+      balance: ref('0'),
+      total: ref(0),
+      allSales: ref([] as ISale[])
     };
   },
 
@@ -125,6 +127,20 @@ export default defineComponent({
       }
     },
 
+    totalAsset() {
+      if (this.saleData?.price) {
+        return Asset.fromUnits(
+          Int64.from(this.total),
+          Asset.Symbol.fromParts(
+            this.saleData?.price?.token_symbol,
+            this.saleData?.price?.token_precision
+          )
+        );
+      } else {
+        return Asset.from('0.00 LEGAL');
+      }
+    },
+
     salePrice(): number {
       return this.priceAsset.value || 0;
     },
@@ -170,12 +186,20 @@ export default defineComponent({
 
     // Get balance
     await this.getBalance();
+    await this.getTotal();
   },
   watch: {
     async isForSale() {
       if (this.isForSale) {
         await this.getBalance();
       }
+    },
+
+    async quantity() {
+      console.log('quantity changed', this.quantity);
+      await this.getTotal();
+
+      console.log(this.allSales);
     }
   },
   beforeUnmount() {
@@ -184,6 +208,32 @@ export default defineComponent({
 
   methods: {
     ...mapActions({ sendTransaction: 'account/sendTransaction' }),
+
+    async getTotal() {
+      this.total = 0;
+
+      let saleFilter = {
+        page: 1,
+        order: 'desc',
+        limit: this.quantity,
+        sort: 'created',
+        collection_name:
+          this.$route.params.collection_name === undefined
+            ? ''
+            : (this.$route.params.collection_name as string),
+        template_id:
+          this.$route.params.template_id === undefined
+            ? ''
+            : this.$route.params.template_id,
+        state: 1,
+        seller: process.env.AA_ACCOUNT
+      } as unknown;
+      this.allSales = await atomic_market_api.getSales(saleFilter);
+
+      for (const sale of this.allSales) {
+        this.total += Number(sale.price.amount);
+      }
+    },
 
     async getBalance() {
       if (this.isAuthenticated && this.isForSale) {
@@ -199,49 +249,54 @@ export default defineComponent({
 
     async buySale() {
       console.log('tryBuySale');
-      let amountStr = Asset.fromUnits(
-        Int64.from(this.saleData.price.amount),
-        Asset.Symbol.fromParts(
-          this.saleData.price.token_symbol,
-          this.saleData.price.token_precision
-        )
-      ).toString();
+      let actions = [];
 
-      let actions = [
-        {
-          account: process.env.ATOMICMARKET,
-          name: 'assertsale',
-          data: {
-            sale_id: this.saleData.sale_id,
-            asset_ids_to_assert: this.saleData.assets.map((a) => a.asset_id), // ['123412341234']
-            listing_price_to_assert: amountStr, //'5.00000000 WAX'
-            settlement_symbol_to_assert: Asset.Symbol.fromParts(
-              this.saleData.price.token_symbol,
-              this.saleData.price.token_precision
-            ).toString() //'8,WAX'
+      for (const sale of this.allSales) {
+        let amountStr = Asset.fromUnits(
+          Int64.from(sale.price.amount),
+          Asset.Symbol.fromParts(
+            sale.price.token_symbol,
+            sale.price.token_precision
+          )
+        ).toString();
+
+        actions.push(
+          {
+            account: process.env.ATOMICMARKET,
+            name: 'assertsale',
+            data: {
+              sale_id: sale.sale_id,
+              asset_ids_to_assert: sale.assets.map((a) => a.asset_id), // ['123412341234']
+              listing_price_to_assert: amountStr, //'5.00000000 WAX'
+              settlement_symbol_to_assert: Asset.Symbol.fromParts(
+                sale.price.token_symbol,
+                sale.price.token_precision
+              ).toString() //'8,WAX'
+            }
+          },
+          {
+            account: sale.price.token_contract,
+            name: 'transfer',
+            data: {
+              from: this.accountName as string,
+              to: process.env.ATOMICMARKET,
+              quantity: amountStr,
+              memo: 'deposit'
+            }
+          },
+          {
+            account: process.env.ATOMICMARKET,
+            name: 'purchasesale',
+            data: {
+              buyer: this.accountName as string,
+              sale_id: sale.sale_id,
+              intended_delphi_median: 0,
+              taker_marketplace: ''
+            }
           }
-        },
-        {
-          account: this.saleData.price.token_contract,
-          name: 'transfer',
-          data: {
-            from: this.accountName as string,
-            to: process.env.ATOMICMARKET,
-            quantity: amountStr,
-            memo: 'deposit'
-          }
-        },
-        {
-          account: process.env.ATOMICMARKET,
-          name: 'purchasesale',
-          data: {
-            buyer: this.accountName as string,
-            sale_id: this.saleData.sale_id,
-            intended_delphi_median: 0,
-            taker_marketplace: ''
-          }
-        }
-      ];
+        );
+      }
+
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       this.transaction = await this.sendTransaction({ actions });
     },
@@ -378,15 +433,13 @@ q-card
             v-model='quantity',
             type='number',
             label='Quantity',
-            disable,
-            readonly,
             outlined
           )
         .col-6
           .column.content-end.items-end.text-NFTCard-price-head.text-grey-10
             | Total
             .text-NFTCard-price-value.text-grey-10
-              | {{ priceStr }}
+              | {{ totalAsset }}
       q-btn.full-width.q-mt-lg(
         @click='tryBuySale()',
         label='BUY',
