@@ -303,7 +303,7 @@ q-page
     position: absolute
     z-index: -1
     top: 0rem
-    left: 25%
+    left: 50%
     right: 0%
     bottom: -10rem
     background-image: url("~assets/polygons/polygon_home_trending_horizontal.svg")
