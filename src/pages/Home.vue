@@ -154,21 +154,17 @@ q-page
       .row.justify-center
         .landing-right
           img.flipY.img3.polygon(src='~assets/polygons/pg2.svg')
-          img.flipY.img3.polygon(src='~assets/polygons/pg3.svg')
+          img.flipY.img4.polygon(src='~assets/polygons/pg3.svg')
           .landing-right-card-container
             .col-md-6.q-pa-lg(v-if='assets.length > 0')
               Cards(style='width: 25em', :data='assets[0]', type='Assets')
   //- q-separator(color='dark')
     //- Featured Collections
-  .div.pgb-f
+  .div.pgb-a
     .row.justify-center
       .col.featured-parent(style='height: 2rem')
-        img.flipY.img1.polygon.br.fadeInLeft.slow(
-          src='~assets/polygons/pg4.svg'
-        )
-        img.flipX.img2.polygon.tr.fadeInLeft.slower(
-          src='~assets/polygons/pg3.svg'
-        )
+        img.flipY.img1(src='~assets/polygons/pg4.svg')
+        img.flipX.img2(src='~assets/polygons/pg3.svg')
       h2.featured-index.text-grey-9.text-center Featured Collections
       .col
     .row.justify-center
@@ -186,7 +182,7 @@ q-page
         size='lg'
       )
   //- q-separator(color='dark')
-  .div
+  .div.pgb-b
     .row.justify-center
       h2.text-grey-9.text-center Trending NFTs
     .row.justify-center
@@ -216,7 +212,9 @@ q-page
   left: -50%
 .pgb
   position: relative
-.pgb-f
+.pgb-a
+  position: relative
+.pgb-b
   position: relative
 
 .rounded
@@ -236,21 +234,28 @@ q-page
   top: 0
   left: 0
 .img1
-  position: relative
+  position: absolute
   top: 0
   left: 0
-  width: 32rem
+  width: 100%
   // border: 1px red solid
 .img2
   position: absolute
   top: 0
   left: 0
-  // border: 1px green solid
+  width: 30%
+  // border: 1px blue solid
 .img3
   position: absolute
   bottom: 0
   right: 0
+  width: 70%
   // border: 1px green solid
+.img4
+  position: absolute
+  bottom: 0
+  right: 0
+  width: 30%
 .flipX
   transform: scaleX(-1)
 .flipY
@@ -281,15 +286,26 @@ q-page
     background-image: url("~assets/polygons/polygon_home_trending_horizontal.svg")
     background-repeat: no-repeat
     background-size: cover
-  .pgb-f::before
+  .pgb-a::before
     content:' '
     position: absolute
     z-index: -1
     top: 0rem
     left: 0%
-    right: 25%
+    right: 50%
     bottom: 0rem
-    transform: scaleY(-1) scaleX(-1)
+    transform: scaleX(-1) scaleY(-1)
+    background-image: url("~assets/polygons/polygon_home_trending_horizontal.svg")
+    background-repeat: no-repeat
+    background-size: cover
+  .pgb-b::before
+    content:' '
+    position: absolute
+    z-index: -1
+    top: 0rem
+    left: 25%
+    right: 0%
+    bottom: -10rem
     background-image: url("~assets/polygons/polygon_home_trending_horizontal.svg")
     background-repeat: no-repeat
     background-size: cover
@@ -307,7 +323,7 @@ q-page
     background-image: url("~assets/polygons/polygon_home_trending_vertical.svg")
     background-repeat: no-repeat
     background-size: cover
-  .pgb-f::before
+  .pgb-a::before
     content:' '
     position: absolute
     z-index: -1
@@ -316,6 +332,18 @@ q-page
     right: 0rem
     bottom: 0rem
     transform: scaleY(-1)
+    background-image: url("~assets/polygons/polygon_home_trending_vertical.svg")
+    background-repeat: no-repeat
+    background-size: cover
+  .pgb-b::before
+    content:' '
+    position: absolute
+    z-index: -1
+    top: 0rem
+    left: 0rem
+    right: 0rem
+    bottom: -10rem
+    transform: scaleX(-1)
     background-image: url("~assets/polygons/polygon_home_trending_vertical.svg")
     background-repeat: no-repeat
     background-size: cover
