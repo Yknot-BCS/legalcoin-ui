@@ -91,7 +91,7 @@ export default defineComponent({
 
       q-tab-panels(v-model='tab', animated)
         q-tab-panel(name='description')
-          Description(:description='assetData?.data?.description')
+          Description(:templateData='assetData.template')
         q-tab-panel(name='details')
           DetailsTable(:data='assetData?.data', :schema='assetData.schema')
     q-card.col-6.q-my-sm.q-mx-md(flat)

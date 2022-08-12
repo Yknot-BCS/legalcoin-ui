@@ -86,8 +86,6 @@ export default {
   font-weight: 400
   font-size: 1.25rem
   margin-bottom: 0.25rem
-.container
-  flex
 .section
   text-align: left
 .top
