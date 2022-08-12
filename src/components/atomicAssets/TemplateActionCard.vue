@@ -196,10 +196,13 @@ export default defineComponent({
     },
 
     async quantity() {
-      console.log('quantity changed', this.quantity);
+      this.total = 0;
       await this.getTotal();
 
-      console.log(this.allSales);
+      if (this.allSales.length < this.quantity) {
+        console.log('cant');
+        this.quantity = this.allSales.length;
+      }
     }
   },
   beforeUnmount() {
