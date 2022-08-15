@@ -59,7 +59,6 @@ q-layout(view='hHh lpR fff')
   CompleteRegistrationBanners
   q-page-container
     router-view
-    .space
   q-footer
     Footer
   q-page-scroller(position='bottom-right', :scroll-offset='150')

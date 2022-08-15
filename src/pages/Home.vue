@@ -132,7 +132,7 @@ q-page
   //- Top section
   .row
     .col-12.col-md-6
-      .landing-left.q-pa-lg
+      .landing-left.q-pa-lg.float-right
         h2.landing-heading Fund some of the most worthy Class Action Lawsuits with LegalCoin.
         p.landing-subheading Giving you access to the justice you deserve. Play a role in bringing large conglomorates to justice by funding cases such as the diesel emissions scandal.
         .text-center
@@ -151,24 +151,19 @@ q-page
             v-if='!isLoggedIn'
           )
     .col-12.col-md-6.pgb
-      .row.justify-center
+      .row.justify-center.feat-card
         .landing-right
-          img.flipY.img3.polygon(src='~assets/polygons/pg2.svg')
-          img.flipY.img4.polygon(src='~assets/polygons/pg3.svg')
           .landing-right-card-container
             .col-md-6.q-pa-lg(v-if='assets.length > 0')
               Cards(style='width: 25em', :data='assets[0]', type='Assets')
-  //- q-separator(color='dark')
+            .col(v-if='$q.screen.gt.lg')
+  q-separator(color='black')
     //- Featured Collections
-  .div.pgb-a
+  .div.bg-feat
     .row.justify-center
-      .col.featured-parent(style='height: 2rem')
-        img.flipY.img1(src='~assets/polygons/pg4.svg')
-        img.flipX.img2(src='~assets/polygons/pg3.svg')
-      h2.featured-index.text-grey-9.text-center Featured Collections
-      .col
+      h2.col.text-grey-9.bg-white.text-center.q-px-xs Featured Collections
     .row.justify-center
-      .featured-card.featured-index.q-pa-sm(
+      .featured-card.q-pa-sm(
         v-for='collection in featuredCollections.slice(0, numberOfCards)',
         v-if='featuredCollections.length > 0'
       )
@@ -181,12 +176,10 @@ q-page
         color='primary',
         size='lg'
       )
-  //- q-separator(color='dark')
-  .div.pgb-b
-    img.flipY.img5.polygon(src='~assets/polygons/pg2.svg')
-    img.flipY.img6.polygon(src='~assets/polygons/pg3.svg')
+  q-separator(color='black')
+  .div.bg-trend
     .row.justify-center
-      h2.text-grey-9.text-center Trending NFTs
+      h2.col.text-grey-9.bg-white.text-center.q-px-xs Trending NFTs
     .row.justify-center
       .featured-card.q-pa-sm(
         v-for='template in trendingTemplates.slice(0, numberOfCards)',
@@ -214,11 +207,11 @@ q-page
   left: -50%
 .pgb
   position: relative
-.pgb-a
+.bg-feat
   position: relative
-.pgb-b
+.bg-trend
   position: relative
-
+  height: 40rem
 .rounded
   border-radius: 1rem
   overflow: hidden
@@ -236,14 +229,13 @@ q-page
   top: 0
   left: 0
 .img1
-  position: absolute
-  top: 0
+  position: relative
   left: 0
-  width: 100%
+  width: 50%
   // border: 1px red solid
 .img2
   position: absolute
-  top: 0
+  top: 345%
   left: 0
   width: 30%
   // border: 1px blue solid
@@ -262,7 +254,7 @@ q-page
   position: absolute
   bottom: -10rem
   right: 0
-  width: 40%
+  width: 35%
   // border: 1px green solid
 .img6
   position: absolute
@@ -273,6 +265,8 @@ q-page
   transform: scaleX(-1)
 .flipY
   transform: scaleY(-1)
+.flip
+  transform: scaleX(-1) scaleY(-1)
 
 @media (min-width: $breakpoint-sm-max)
   .landing-left
@@ -287,7 +281,6 @@ q-page
     padding:10rem
   .landing-right-card-container
     max-width:40rem
-
   .pgb::before
     content:' '
     position: absolute
@@ -299,27 +292,27 @@ q-page
     background-image: url("~assets/polygons/polygon_home_trending_horizontal.svg")
     background-repeat: no-repeat
     background-size: cover
-  .pgb-a::before
+  .bg-feat::before
     content:' '
     position: absolute
     z-index: -1
     top: 0rem
-    left: 0%
-    right: 50%
+    left: 0
+    right: 0
     bottom: 0rem
-    transform: scaleX(-1) scaleY(-1)
-    background-image: url("~assets/polygons/polygon_home_trending_horizontal.svg")
+    transform: scaleY(-1)
+    background-image: url("~assets/polygons/polygon_featured_horizontal.svg")
     background-repeat: no-repeat
     background-size: cover
-  .pgb-b::before
+  .bg-trend::before
     content:' '
     position: absolute
     z-index: -1
     top: 0rem
-    left: 50%
-    right: 0%
-    bottom: -10rem
-    background-image: url("~assets/polygons/polygon_home_trending_horizontal.svg")
+    left: 0rem
+    right: 0rem
+    bottom: 0rem
+    background-image: url("~assets/polygons/polygon_trending_NFTs_horizontal.svg")
     background-repeat: no-repeat
     background-size: cover
 @media (max-width: $breakpoint-md-min)
@@ -336,7 +329,7 @@ q-page
     background-image: url("~assets/polygons/polygon_home_trending_vertical.svg")
     background-repeat: no-repeat
     background-size: cover
-  .pgb-a::before
+  .bg-feat::before
     content:' '
     position: absolute
     z-index: -1
@@ -345,18 +338,6 @@ q-page
     right: 0rem
     bottom: 0rem
     transform: scaleY(-1)
-    background-image: url("~assets/polygons/polygon_home_trending_vertical.svg")
-    background-repeat: no-repeat
-    background-size: cover
-  .pgb-b::before
-    content:' '
-    position: absolute
-    z-index: -1
-    top: 0rem
-    left: 0rem
-    right: 0rem
-    bottom: -10rem
-    transform: scaleX(-1)
     background-image: url("~assets/polygons/polygon_home_trending_vertical.svg")
     background-repeat: no-repeat
     background-size: cover
