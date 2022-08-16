@@ -157,11 +157,11 @@ q-page
             .col-md-6.q-pa-lg(v-if='assets.length > 0')
               Cards(style='width: 25em', :data='assets[0]', type='Assets')
             .col(v-if='$q.screen.gt.lg')
-  q-separator(color='black')
+  q-separator(v-if='$q.screen.gt.md', color='black')
     //- Featured Collections
   .div.bg-feat
     .row.justify-center
-      h2.col.text-grey-9.bg-white.text-center.q-px-xs Featured Collections
+      h2.col.text-grey-9.text-center.q-px-xs Featured Collections
     .row.justify-center
       .featured-card.q-pa-sm(
         v-for='collection in featuredCollections.slice(0, numberOfCards)',
@@ -176,10 +176,10 @@ q-page
         color='primary',
         size='lg'
       )
-  q-separator(color='black')
+  q-separator(v-if='$q.screen.gt.md', color='black')
   .div.bg-trend
     .row.justify-center
-      h2.col.text-grey-9.bg-white.text-center.q-px-xs Trending NFTs
+      h2.col.text-grey-9.text-center.q-px-xs Trending NFTs
     .row.justify-center
       .featured-card.q-pa-sm(
         v-for='template in trendingTemplates.slice(0, numberOfCards)',
@@ -224,6 +224,7 @@ q-page
   text-align: center
 .featured-index
   z-index: 5
+.landing-right
 .featured-parent
   position: relative
   top: 0
@@ -279,6 +280,7 @@ q-page
 
   .landing-right
     padding:10rem
+    margin-right: auto
   .landing-right-card-container
     max-width:40rem
   .pgb::before
@@ -297,10 +299,9 @@ q-page
     position: absolute
     z-index: -1
     top: 0rem
-    left: 0
-    right: 0
+    left: -40%
+    right: 10%
     bottom: 0rem
-    transform: scaleY(-1)
     background-image: url("~assets/polygons/polygon_featured_horizontal.svg")
     background-repeat: no-repeat
     background-size: cover
@@ -308,11 +309,12 @@ q-page
     content:' '
     position: absolute
     z-index: -1
-    top: 0rem
-    left: 0rem
-    right: 0rem
+    top: 0
+    left: 10%
+    right: -40%
     bottom: 0rem
-    background-image: url("~assets/polygons/polygon_trending_NFTs_horizontal.svg")
+    transform: scaleX(-1)
+    background-image: url("~assets/polygons/polygon_featured_horizontal.svg")
     background-repeat: no-repeat
     background-size: cover
 @media (max-width: $breakpoint-md-min)
@@ -338,6 +340,17 @@ q-page
     right: 0rem
     bottom: 0rem
     transform: scaleY(-1)
+    background-image: url("~assets/polygons/polygon_home_trending_vertical.svg")
+    background-repeat: no-repeat
+    background-size: cover
+  .bg-trend::before
+    content:' '
+    position: absolute
+    z-index: -1
+    top: 0rem
+    left: 0rem
+    right: 0rem
+    bottom: 0rem
     background-image: url("~assets/polygons/polygon_home_trending_vertical.svg")
     background-repeat: no-repeat
     background-size: cover
