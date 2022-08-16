@@ -177,6 +177,7 @@ q-page
         size='lg'
       )
   q-separator(v-if='$q.screen.gt.md', color='black')
+    //- Trending NFTs
   .div.bg-trend
     .row.justify-center
       h2.col.text-grey-9.text-center.q-px-xs Trending NFTs
