@@ -66,7 +66,10 @@ q-card
           .text-subtitle4 {{ card.yield }}
 
   router-link(:to='{ name: "asset", params: { asset: card.id } }')
-    q-img.zoom(:src='card.imageUrl')
+    q-img.zoom.asset-img(
+      :src='card.imageUrl',
+      placeholder-src='https://via.placeholder.com/1600x1200/212121/E0A600.jpg?text=LegalCoin'
+    )
 </template>
 
 <style lang="sass" scoped>
