@@ -30,7 +30,10 @@ export default defineComponent({
       featuredCollections: ref<GalleryCard[]>([] as GalleryCard[]),
       collections: ref<ICollection[]>(new Object({}) as ICollection[]),
       trendingTemplates: ref<GalleryCard[]>([] as GalleryCard[]),
-      screenWidth
+      screenWidth,
+      totalBackers: ref(0),
+      totalGBP: ref(0),
+      totalCases: ref(0)
     };
   },
   computed: {
@@ -55,7 +58,7 @@ export default defineComponent({
       } as unknown;
 
       this.collections = await atomic_api.getCollections(collectionsfilter);
-      console.log(this.collections);
+      // console.log(this.collections);
       this.featuredCollections = this.collections.map((collection) => {
         return {
           name: collection.data.name as string,
@@ -73,7 +76,7 @@ export default defineComponent({
           type: 'collection'
         } as GalleryCard;
       });
-      console.log(this.featuredCollections);
+      // console.log(this.featuredCollections);
     },
     async getTrendingNFTs() {
       let trending = [];
@@ -117,12 +120,53 @@ export default defineComponent({
           type: 'template'
         } as GalleryCard;
       });
+    },
+
+    // Get number of backers
+    async getNumberOfBackers() {
+      // TODO this will break if more than 100 users are in the system, will have to page through
+      let filter = {
+        symbol: process.env.LC_SYMBOL
+      };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let stats: any = await atomic_market_api.fetchEndpoint(
+        '/v1/stats/accounts',
+        filter
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      let accounts = stats.results;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+      this.totalBackers = accounts.length;
+    },
+
+    // Get GBP currently invested
+    async getGBPInvested() {
+      let filter = {
+        symbol: process.env.LC_SYMBOL
+      };
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let stats: any = await atomic_market_api.fetchEndpoint(
+        `/v1/stats/accounts/${process.env.AA_ACCOUNT}`,
+        filter
+      );
+      this.totalGBP =
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        stats.result.sell_volume / 10 ** stats.symbol.token_precision;
+    },
+
+    // Get number of cases funded
+    getNumberOfCases() {
+      console.log(this.collections);
+      this.totalCases = this.collections.length;
     }
   },
   async mounted() {
     console.log('As iron sharpens iron, so one person sharpens another.');
     await this.getAllCollections();
     await this.getTrendingNFTs();
+    await this.getGBPInvested();
+    await this.getNumberOfBackers();
+    this.getNumberOfCases();
   }
 });
 </script>
@@ -158,6 +202,11 @@ q-page
           .landing-right-card-container
             .col-md-6.q-pa-lg(v-if='assets.length > 0')
               Cards(style='width: 25em', :data='assets[0]', type='Assets')
+
+    //- Stats sections
+    | Backers: {{ totalBackers }}
+    | Currently Invested: &#163; {{ totalGBP }}
+    | Cases Funded: {{ totalCases }}
 
     //- Featured Collections
   .div
