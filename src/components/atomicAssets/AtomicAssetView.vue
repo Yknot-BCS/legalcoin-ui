@@ -408,7 +408,7 @@ export default defineComponent({
             GalleryView(:data='GalleryData', :type='type')
 
           // Paging for Gallery section
-          .col-12 
+          .col-12.q-mt-md
             .row.justify-center
               q-select.q-px-sm(
                 dense,

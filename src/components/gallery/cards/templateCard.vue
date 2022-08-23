@@ -53,7 +53,7 @@ q-card
           .text-subtitle3 {{ card.tier }}
     //- Small cards details
     .row.q-mt-sm
-      .col-10
+      .col-9
         .col-auto.text-bold
           | Price:
         .col-auto

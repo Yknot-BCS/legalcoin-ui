@@ -21,3 +21,9 @@ export const getTableRows = async function (
 ): Promise<unknown> {
   return await eosioCore.v1.chain.get_table_rows(tableInput);
 };
+
+export const getAccount = async function (
+  accountName: string
+): Promise<unknown> {
+  return await eosioCore.v1.chain.get_account(accountName);
+};

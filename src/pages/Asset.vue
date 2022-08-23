@@ -16,6 +16,7 @@ import { useStore } from 'src/store';
 export default defineComponent({
   name: 'Asset',
   components: { AssetViewer },
+  emits: ['updateAssetInfo'],
   setup() {
     const assetData = ref<IMarketAsset>(
       new Object({ data: { img: '' } }) as IMarketAsset
@@ -70,7 +71,7 @@ export default defineComponent({
       this.buyofferData = (
         await atomic_market_api.getBuyoffers(offerFilter)
       )[0];
-      console.log(this.buyofferData);
+      console.log('buyofferData', this.buyofferData);
     },
 
     async getOfferData() {
@@ -81,7 +82,7 @@ export default defineComponent({
       } as unknown;
 
       this.offerData = (await atomic_market_api.getOffers(offerFilter))[0];
-      console.log(this.offerData);
+      console.log('offerData', this.offerData);
     },
 
     async getSaleData() {
@@ -106,7 +107,7 @@ export default defineComponent({
           this.$route.query.seller === undefined ? '' : this.$route.query.seller
       } as unknown;
       this.saleData = (await atomic_market_api.getSales(saleFilter))[0];
-      console.log(this.saleData);
+      console.log('saleData', this.saleData);
     },
 
     async getAucData() {
@@ -140,7 +141,7 @@ export default defineComponent({
         this.aucData = await atomic_market_api.getAuctions(aucFilter);
       }
 
-      console.log(this.aucData);
+      console.log('aucData', this.aucData);
     },
 
     async updateAssetInfo() {

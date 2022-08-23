@@ -53,7 +53,7 @@ q-card
           .text-subtitle3 {{ card.tier }}
     //- Small cards details
     .row.q-mt-sm
-      .col-10
+      .col-9
         .col-auto.text-bold
           | Price:
         .col-auto
@@ -65,7 +65,7 @@ q-card
         .col-auto.float-right
           .text-subtitle4 {{ card.yield }}
 
-  router-link(:to='card.to')
+  router-link(:to='{ name: "asset", params: { asset: card.id } }')
     q-img.zoom(:src='card.imageUrl')
 </template>
 

@@ -5,7 +5,6 @@
  *  - for existing method enpoint, export from service file and update the import statement here
  */
 import {
-  getAccount,
   getCreator,
   getTokens,
   getTransactions,
@@ -14,7 +13,12 @@ import {
   getTableByScope,
   getBlock
 } from './hyperion'; //  e.g. './new-service' method name stays the same
-import { eosioCore, getTableRows, getTokenBalances } from './eosio_core';
+import {
+  eosioCore,
+  getTableRows,
+  getTokenBalances,
+  getAccount
+} from './eosio_core';
 import accounts from './accounts';
 
 export const api = {

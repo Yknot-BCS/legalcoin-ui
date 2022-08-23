@@ -52,7 +52,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
     )
     q-btn(
       flat,
-      icon='account_circle',
+      icon='o_account_circle',
       label='Account',
       v-if='!isLoggedIn',
       dense,
@@ -76,8 +76,8 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
     q-btn(
       dense,
       flat,
-      round,
       no-wrap,
+      :round='$q.screen.lt.sm ? true : false',
       icon='account_circle',
       :label='$q.screen.gt.sm ? `Account` : `` || $q.screen.lt.sm ? `` : ``',
       v-if='isLoggedIn'

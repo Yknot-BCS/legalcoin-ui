@@ -15,7 +15,7 @@ export default defineComponent({
       color='white',
       text-color='blue',
       unelevated,
-      to='/',
+      :to='{ name: "home" }',
       label='Go Home',
       no-caps
     )
