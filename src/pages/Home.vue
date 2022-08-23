@@ -174,8 +174,9 @@ export default defineComponent({
 <template lang="pug">
 q-page
   //- Top section
-  .row.bg-black
-    .col-12.col-md-6
+  .row.bg-black.img-parent
+    img.img1(v-if='$q.screen.gt.sm', src='~src/assets/bg_img_diag2.svg')
+    .col-12.col-md-6.top
       .landing-left.q-pa-lg.float-right
         h2.landing-heading
           span.text-white You can fund class action &#32
@@ -188,7 +189,7 @@ q-page
         .text-left
           q-btn.q-px-xl.q-ma-sm(
             :to='{ name: "buytokens", params: { status: "checkout" } }',
-            label='Buy LEGAL',
+            label='FUND NOW',
             color='primary',
             size='lg'
           )
@@ -200,20 +201,32 @@ q-page
             outline,
             color='primary'
           )
-    .col-12.col-md-6
+    .col-12.col-md-6.top
       .row.justify-center.feat-card
         .landing-right
           .landing-right-card-container
             .col-md-6.q-pa-lg(v-if='assets.length > 0')
               Cards(style='width: 25em', :data='assets[0]', type='Assets')
 
-    //- Stats sections
-    | Backers: {{ totalBackers }}
-    | Currently Invested: &#163; {{ totalGBP }}
-    | Cases Funded: {{ totalCases }}
+  //- Stats sections
+  .row.q-py-sm
+  .row.justify-center
+    q-separator.q-mr-lg.q-pr-xs(vertical, color='black')
+    .col-3.justify-center
+      .text-left.text-primary.stats-titles Backers
+      .text-left.stats-numbers {{ totalBackers }}
+    q-separator.q-mr-lg.q-pr-xs(vertical, color='black')
+    .col-4.justify-center
+      .text-left.text-primary.stats-titles Currently Invested
+      .text-left.stats-numbers &#163; {{ totalGBP }}
+    q-separator.q-mr-lg.q-pr-xs(vertical, color='black')
+    .col-3.justify-center
+      .text-left.text-primary.stats-titles Cases Funded
+      .text-left.stats-numbers {{ totalCases }}
+  .row.q-py-sm
 
-    //- Featured Collections
-  .div.bg-feat
+  //- Featured Collections
+  .div.q-py-lg.bg-feat
     .row.justify-center
       h2.col.title-section.text-secondary
         span Featured &#32
@@ -232,13 +245,13 @@ q-page
         color='primary',
         size='lg'
       )
-  q-separator
+
   //- How to use LegalCoin
-  .row.justify-center(style='height: 12rem') 
+  .row.justify-center.q-pt-lg(style='height: 12rem') 
     h2.col.title-section.text-black 
       span How to use &#32
       span.underline LegalCoin
-  .row.q-px-xl.justify-center.items-center
+  .row.justify-center.q-pb-xl.q-px-xl.items-center
     .row.justify-center
       .col-4-lg
         img(src='~src/assets/Fund.svg')
@@ -246,9 +259,9 @@ q-page
         img(src='~src/assets/Trade.svg')
       .col-4-lg
         img(src='~src/assets/Claim.svg')
-  q-separator
+
     //- Recommended for you
-  .div.bg-black.img-parent(style='height: 40rem')
+  .div.q-py-lg.bg-black.img-parent(style='height: 40rem')
     img.img1(v-if='$q.screen.gt.sm', src='~src/assets/bg_img_diag4.svg')
     .row.justify-center
       h2.col.title-section.text-black.top
@@ -260,11 +273,11 @@ q-page
         v-if='trendingTemplates.length > 0'
       )
         Cards.rounded.shadow-10(:data='template', type='Templates')
-  q-separator
-  .row.justify-center
+
+  .row.q-pt-lg.justify-center
     .col
       h3.text-black.text-center Become a third-party funder for legal cases and reap reasonable rewards
-  .row.q-px-xl.justify-center.items-center
+  .row.q-pb-xl.q-px-xl.justify-center.items-center
     .row.justify-center
       .col-4-lg.q-px-md
         img(src='~src/assets/ad-1.svg')
@@ -272,22 +285,13 @@ q-page
         img(src='~src/assets/ad-2.svg')
       .col-4-lg.q-px-md
         img(src='~src/assets/ad-3.svg')
-    //- .col-4
-    //-   img.img1(v-if='$q.screen.gt.sm', src='~src/assets/ad-1.svg')
-    //- .col-4
-    //-   img.img1(v-if='$q.screen.gt.sm', src='~src/assets/ad-1.svg')
-    //- .col-4
-    //-   img.img1(v-if='$q.screen.gt.sm', src='~src/assets/ad-1.svg')
-    //- .row.justify-center.q-mt-md
-    //-   q-btn(
-    //-     :to='{ name: "discover" }',
-    //-     label='Explore More',
-    //-     color='primary',
-    //-     size='lg'
-    //-   )
 </template>
 
 <style lang="sass" scoped>
+.stats-titles
+  font-size: 1.5rem
+.stats-numbers
+  font-size: 3rem
 .underline
   text-decoration: underline
   text-decoration-color: $primary
