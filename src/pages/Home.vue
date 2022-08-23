@@ -130,15 +130,21 @@ export default defineComponent({
 <template lang="pug">
 q-page
   //- Top section
-  .row
+  .row.bg-black
     .col-12.col-md-6
       .landing-left.q-pa-lg.float-right
-        h2.landing-heading Fund some of the most worthy Class Action Lawsuits with LegalCoin.
-        p.landing-subheading Giving you access to the justice you deserve. Play a role in bringing large conglomorates to justice by funding cases such as the diesel emissions scandal.
-        .text-center
+        h2.landing-heading
+          span.text-white You can fund class action &#32
+          span.text-primary lawsuits &#32
+          span.text-secondary today with LegalCoin
+        p.landing-subheading.text-white
+          | It's extremely expensive to take legal action against corporate giants. Class action lawsuits give everyday people power against large corporations that have caused them harm.
+          span.text-bold 
+            | And now LegalCoin is giving you access to justice by funding cases agains large conglomerates.
+        .text-left
           q-btn.q-px-xl.q-ma-sm(
             :to='{ name: "discover" }',
-            label='Discover',
+            label='Fund Now',
             color='primary',
             size='lg'
           )
@@ -150,18 +156,25 @@ q-page
             color='primary',
             v-if='!isLoggedIn'
           )
-    .col-12.col-md-6.pgb
+    .col-12.col-md-6
       .row.justify-center.feat-card
         .landing-right
           .landing-right-card-container
             .col-md-6.q-pa-lg(v-if='assets.length > 0')
-              Cards(style='width: 25em', :data='assets[0]', type='Assets')
-            .col(v-if='$q.screen.gt.lg')
-  q-separator(v-if='$q.screen.gt.md', color='black')
+              Cards.top(style='width: 25em', :data='assets[0]', type='Assets')
+            .col(v-if='$q.screen.gt.md')
+  q-separator
+  //- Metadata
+  .row.justify-between(style='height: 12rem') 
+    .col 
+      h1.text-center ~Placeholder for Metadata~
+  q-separator
     //- Featured Collections
   .div.bg-feat
     .row.justify-center
-      h2.col.text-grey-9.text-center.q-px-xs Featured Collections
+      h2.col.title-section.text-secondary
+        span Featured &#32
+        span.underline Collections
     .row.justify-center
       .featured-card.q-pa-sm(
         v-for='collection in featuredCollections.slice(0, numberOfCards)',
@@ -176,28 +189,81 @@ q-page
         color='primary',
         size='lg'
       )
-  q-separator(v-if='$q.screen.gt.md', color='black')
-    //- Trending NFTs
-  .div.bg-trend
+  q-separator
+  //- How to use LegalCoin
+  .row.justify-center(style='height: 12rem') 
+    h2.col.title-section.text-black 
+      span How to use &#32
+      span.underline LegalCoin
+  .row.q-px-xl.justify-center.items-center
     .row.justify-center
-      h2.col.text-grey-9.text-center.q-px-xs Trending NFTs
+      .col-4-lg
+        img(src='~src/assets/Fund.svg')
+      .col-4-lg 
+        img(src='~src/assets/Trade.svg')
+      .col-4-lg
+        img(src='~src/assets/Claim.svg')
+  q-separator
+    //- Recommended for you
+  .div.bg-black.img-parent(style='height: 40rem')
+    img.img1(v-if='$q.screen.gt.sm', src='~src/assets/bg_img_diag4.svg')
+    .row.justify-center
+      h2.col.title-section.text-black.top
+        span Recommended &#32
+        span.underline for you
     .row.justify-center
       .featured-card.q-pa-sm(
         v-for='template in trendingTemplates.slice(0, numberOfCards)',
         v-if='trendingTemplates.length > 0'
       )
         Cards.rounded.shadow-10(:data='template', type='Templates')
-
-    .row.justify-center.q-mt-md
-      q-btn(
-        :to='{ name: "discover" }',
-        label='Explore More',
-        color='primary',
-        size='lg'
-      )
+  q-separator
+  .row.justify-center
+    .col
+      h3.text-black.text-center Become a third-party funder for legal cases and reap reasonable rewards
+  .row.q-px-xl.justify-center.items-center
+    .row.justify-center
+      .col-4-lg.q-px-md
+        img(src='~src/assets/ad-1.svg')
+      .col-4-lg.q-px-md
+        img(src='~src/assets/ad-2.svg')
+      .col-4-lg.q-px-md
+        img(src='~src/assets/ad-3.svg')
+    //- .col-4
+    //-   img.img1(v-if='$q.screen.gt.sm', src='~src/assets/ad-1.svg')
+    //- .col-4
+    //-   img.img1(v-if='$q.screen.gt.sm', src='~src/assets/ad-1.svg')
+    //- .col-4
+    //-   img.img1(v-if='$q.screen.gt.sm', src='~src/assets/ad-1.svg')
+    //- .row.justify-center.q-mt-md
+    //-   q-btn(
+    //-     :to='{ name: "discover" }',
+    //-     label='Explore More',
+    //-     color='primary',
+    //-     size='lg'
+    //-   )
 </template>
 
 <style lang="sass" scoped>
+.underline
+  text-decoration: underline
+  text-decoration-color: $primary
+.featured-collections
+  padding: 2rem
+  padding-top: 5rem
+  padding-left: 5rem
+  text-align: left
+  margin-left:5%
+.trending-NFTs
+  padding: 2rem
+  padding-top: 5rem
+  padding-left: 5rem
+  text-align: left
+  margin-left:5%
+.title-section
+  margin-left: 5%
+.top
+  z-index: 5
 .main-asset-cont
   float: left,
   position: relative,
@@ -218,51 +284,26 @@ q-page
   overflow: hidden
 .landing-heading
   color: $grey-9
-  text-align: center
+  text-align: left
 .landing-subheading
   font-family: "ralewayregular"
-  font-size: 1.5rem
-  text-align: center
+  font-size: 1.0rem
+  text-align: left
 .featured-index
   z-index: 5
 .landing-right
-.featured-parent
+.img-parent
   position: relative
-  top: 0
-  left: 0
+  bottom: 0
+  right: 0
 .img1
-  position: relative
-  left: 0
-  width: 50%
-  // border: 1px red solid
-.img2
-  position: absolute
-  top: 345%
-  left: 0
-  width: 30%
-  // border: 1px blue solid
-.img3
   position: absolute
   bottom: 0
   right: 0
-  width: 70%
+  height: 100%
+  background-size: cover
+  z-index: 0
   // border: 1px green solid
-.img4
-  position: absolute
-  bottom: 0
-  right: 0
-  width: 30%
-.img5
-  position: absolute
-  bottom: -10rem
-  right: 0
-  width: 35%
-  // border: 1px green solid
-.img6
-  position: absolute
-  bottom: -10rem
-  right: 0
-  width: 20%
 .flipX
   transform: scaleX(-1)
 .flipY
@@ -300,10 +341,11 @@ q-page
     position: absolute
     z-index: -1
     top: 0rem
-    left: -40%
-    right: 10%
+    left: 0
+    right: 0
     bottom: 0rem
-    background-image: url("~assets/polygons/polygon_featured_horizontal.svg")
+    width: 100%
+    background-image: url("~src/assets/bg_img_diag3.svg")
     background-repeat: no-repeat
     background-size: cover
   .bg-trend::before
@@ -340,8 +382,7 @@ q-page
     left: 0rem
     right: 0rem
     bottom: 0rem
-    transform: scaleY(-1)
-    background-image: url("~assets/polygons/polygon_home_trending_vertical.svg")
+    background-image: url("~src/assets/bg_img_diag3.svg")
     background-repeat: no-repeat
     background-size: cover
   .bg-trend::before
