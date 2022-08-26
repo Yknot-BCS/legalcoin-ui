@@ -210,20 +210,26 @@ q-page
 
   //- Stats sections
   .row.q-py-sm
-  .row.justify-center.img-section
-    q-separator.q-mr-lg(vertical, color='black')
-    .col
-      .text-left.text-primary.stats-titles Current Backers
-      .text-left.stats-numbers {{ totalBackers }}
-    q-separator.q-mr-lg(vertical, color='black')
-    .col
-      .text-left.text-primary.stats-titles Currently Invested
-      .text-left.stats-numbers &#163; {{ totalGBP }}
-    q-separator.q-mr-lg(vertical, color='black')
-    .col
-      .text-left.text-primary.stats-titles Cases Funded
-      .text-left.stats-numbers {{ totalCases }}
-  .row.q-py-sm
+  .row.justify-evenly.img-section
+    .col-md-4.col-xs-12
+      .row.justify-center.q-pb-sm
+        q-separator.q-mr-lg(vertical, color='black')
+        .col
+          .text-left.text-primary.stats-titles Currently Invested
+          .text-left.stats-numbers &#163; {{ totalGBP }}
+    .col-md-4.col-xs-6
+      .row.q-pb-sm
+        q-separator.q-mr-lg(vertical, color='black')
+        .col
+          .text-left.text-primary.stats-titles Backers
+          .text-left.stats-numbers {{ totalBackers }}
+    .col-md-4.col-xs-6
+      .row.q-pb-sm
+        q-separator.q-mr-lg(vertical, color='black')
+        .col
+          .text-left.text-primary.stats-titles.text-no-wrap Cases Funded
+          .text-left.stats-numbers {{ totalCases }}
+  .row.q-pb-sm
 
   //- Featured Collections
   .div.q-py-xl.bg-feat
@@ -314,9 +320,9 @@ q-page
 
 <style lang="sass" scoped>
 .stats-titles
-  font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300)))
+  font-size: calc(20px + (30 - 20) * ((100vw - 300px) / (1600 - 300)))
 .stats-numbers
-  font-size: calc(14px + (50 - 14) * ((100vw - 300px) / (1600 - 300)))
+  font-size: calc(25px + (50 - 25) * ((100vw - 300px) / (1600 - 300)))
 .underline
   text-decoration: underline
   text-decoration-color: $primary
