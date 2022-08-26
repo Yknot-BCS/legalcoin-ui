@@ -321,18 +321,6 @@ q-page
   text-decoration: underline
   text-decoration-color: $primary
   text-underline-offset: 1rem
-.featured-collections
-  padding: 2rem
-  padding-top: 5rem
-  padding-left: 5rem
-  text-align: left
-  margin-left:5%
-.trending-NFTs
-  padding: 2rem
-  padding-top: 5rem
-  padding-left: 5rem
-  text-align: left
-  margin-left:5%
 .title-section
   margin-left: 5%
 .img-section
@@ -340,16 +328,6 @@ q-page
   margin-right: 5%
 .top
   z-index: 5
-.main-asset-cont
-  float: left,
-  position: relative,
-  left: 50%
-.main-asset-fixer
-  float: right,
-  position: relative,
-  left: -50%
-.pgb
-  position: relative
 .bg-feat
   position: relative
 .bg-trend
@@ -364,8 +342,6 @@ q-page
   font-family: "ralewayregular"
   font-size: 1.0rem
   text-align: left
-.featured-index
-  z-index: 5
 .landing-right
 .img-parent
   position: relative
@@ -404,12 +380,6 @@ q-page
   font-family: "ralewayregular"
   font-size: 1.5rem
   max-width: 25rem
-.flipX
-  transform: scaleX(-1)
-.flipY
-  transform: scaleY(-1)
-.flip
-  transform: scaleX(-1) scaleY(-1)
 
 @media (min-width: $breakpoint-sm-max)
   .landing-left
@@ -425,17 +395,6 @@ q-page
     margin-right: auto
   .landing-right-card-container
     max-width:40rem
-  .pgb::before
-    content:' '
-    position: absolute
-    z-index: -1
-    top: 0rem
-    left: -10rem
-    right: 0rem
-    bottom: 0rem
-    background-image: url("~src/assets/bg_img_diag2.svg")
-    background-repeat: no-repeat
-    background-size: cover
   .bg-feat::before
     content:' '
     position: absolute
@@ -462,17 +421,6 @@ q-page
 @media (max-width: $breakpoint-md-min)
   .landing-right
     margin-top: 10rem
-  .pgb::before
-    content:' '
-    position: absolute
-    z-index: -1
-    top: 2rem
-    left: 0rem
-    right: 0rem
-    bottom: 0rem
-    background-image: url("~src/assets/bg_img_diag2.svg")
-    background-repeat: no-repeat
-    background-size: cover
   .bg-feat::before
     content:' '
     position: absolute
@@ -499,29 +447,4 @@ q-page
   width: 340px
   // width: 20em
   height: 100%
-
-.bg-container
-  position: absolute
-  left: 0
-  right: 0
-  top: 0
-  bottom: 0
-  overflow: hidden
-  z-index: -1
-
-.bg-container-bg
-  position: absolute
-  top: 0
-  left: 0
-  right: 0
-  bottom: 0
-  background: #303030
-  z-index: -2
-
-.bg
-  position: absolute
-  left: 0rem
-  width: 100%
-  z-index: -1
-  background: #fff
 </style>
