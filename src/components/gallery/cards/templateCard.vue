@@ -23,7 +23,7 @@ export default defineComponent({
         case 'Gold':
           return 'yellow-7';
         case 'Bronze':
-          return 'orange-14';
+          return 'deep-orange-5';
         case 'Platinum':
           return 'grey-4';
         default:
