@@ -174,9 +174,8 @@ export default defineComponent({
 <template lang="pug">
 q-page
   //- Top section
-  .row.bg-black.img-parent
-    img.img1(v-if='$q.screen.gt.sm', src='~src/assets/bg_img_diag2.svg')
-    .col-12.col-md-6.top
+  .row.bg-black
+    .col-12.col-md-6.q-pb-xl
       .landing-left.q-pa-lg.float-right
         h2.landing-heading
           span.text-white You can fund class action &#32
@@ -201,7 +200,8 @@ q-page
             outline,
             color='primary'
           )
-    .col-12.col-md-6.top
+    .col-12.col-md-6.img-parent
+      img.img2(src='~src/assets/diag_cuts.svg')
       .row.justify-center.feat-card
         .landing-right
           .landing-right-card-container
@@ -210,23 +210,23 @@ q-page
 
   //- Stats sections
   .row.q-py-sm
-  .row.justify-center
-    q-separator.q-mr-lg.q-pr-xs(vertical, color='black')
-    .col-3.justify-center
-      .text-left.text-primary.stats-titles Backers
+  .row.justify-center.img-section
+    q-separator.q-mr-lg(vertical, color='black')
+    .col
+      .text-left.text-primary.stats-titles Current Backers
       .text-left.stats-numbers {{ totalBackers }}
-    q-separator.q-mr-lg.q-pr-xs(vertical, color='black')
-    .col-4.justify-center
+    q-separator.q-mr-lg(vertical, color='black')
+    .col
       .text-left.text-primary.stats-titles Currently Invested
       .text-left.stats-numbers &#163; {{ totalGBP }}
-    q-separator.q-mr-lg.q-pr-xs(vertical, color='black')
-    .col-3.justify-center
+    q-separator.q-mr-lg(vertical, color='black')
+    .col
       .text-left.text-primary.stats-titles Cases Funded
       .text-left.stats-numbers {{ totalCases }}
   .row.q-py-sm
 
   //- Featured Collections
-  .div.q-py-lg.bg-feat
+  .div.q-py-xl.bg-feat
     .row.justify-center
       h2.col.title-section.text-secondary
         span Featured &#32
@@ -247,22 +247,32 @@ q-page
       )
 
   //- How to use LegalCoin
-  .row.justify-center.q-pt-lg(style='height: 12rem') 
+  .row.justify-center.q-pt-xl
     h2.col.title-section.text-black 
       span How to use &#32
       span.underline LegalCoin
-  .row.justify-center.q-pb-xl.q-px-xl.items-center
-    .row.justify-center
-      .col-4-lg
-        img(src='~src/assets/Fund.svg')
-      .col-4-lg 
-        img(src='~src/assets/Trade.svg')
-      .col-4-lg
-        img(src='~src/assets/Claim.svg')
+  .row.justify-evenly.q-py-xl.q-px-xl.items-center
+    .col-4-lg.q-mx-md
+      .row.justify-center.q-mb-md
+        img.illustration(src='~src/assets/Fund.svg')
+      .row.justify-center.illustration-title.text-center
+        | Fund a lawsuit
+      .illustration-body.text-center.q-mb-xl purchase a stake in a worthy cause
+    .col-4-lg.q-mx-md
+      .row.justify-center.q-mb-md
+        img.illustration(src='~src/assets/Trade.svg')
+      .row.justify-center.illustration-title.text-center
+        | Trade while you wait
+      .illustration-body.text-center.q-mb-xl buy and sell throughout the lawsuit
+    .col-4-lg.q-mx-md
+      .row.justify-center.q-mb-md
+        img.illustration(src='~src/assets/Claim.svg')
+      .row.justify-center.illustration-title.text-center
+        | Get your money back
+      .illustration-body.text-center.q-mb-xl claim your returns at the end
 
-    //- Recommended for you
-  .div.q-py-lg.bg-black.img-parent(style='height: 40rem')
-    img.img1(v-if='$q.screen.gt.sm', src='~src/assets/bg_img_diag4.svg')
+  //- Recommended for you
+  .div.q-py-xl.bg-trend(style='height: 40rem')
     .row.justify-center
       h2.col.title-section.text-black.top
         span Recommended &#32
@@ -274,27 +284,43 @@ q-page
       )
         Cards.rounded.shadow-10(:data='template', type='Templates')
 
-  .row.q-pt-lg.justify-center
-    .col
-      h3.text-black.text-center Become a third-party funder for legal cases and reap reasonable rewards
-  .row.q-pb-xl.q-px-xl.justify-center.items-center
-    .row.justify-center
-      .col-4-lg.q-px-md
-        img(src='~src/assets/ad-1.svg')
-      .col-4-lg.q-px-md
-        img(src='~src/assets/ad-2.svg')
-      .col-4-lg.q-px-md
-        img(src='~src/assets/ad-3.svg')
+  //- Illustrations
+  .row.justify-center.q-py-xl
+    .illustration2-title.col.text-center.text-black 
+      span Become a third-party funder for legal cases and reap reasonable rewards
+  .row.justify-evenly.q-px-xl.q-pb-xl.items-center
+    .col-4-lg
+      .row.justify-center.q-mb-md
+        img.illustration2(src='~src/assets/ad_1.png')
+      .row.justify-center.illustration-title.text-center
+        | An online retail platform
+      .row.justify-center
+        .col-auto.illustration-body.text-center.q-mb-xl selling case-specific NFT's each managed by a smart contract
+    .col-4-lg
+      .row.justify-center.q-mb-md
+        img.illustration2(src='~src/assets/ad_2.png')
+      .row.justify-center.illustration-title.text-center
+        | A secondary marketplace
+      .row.justify-center
+        .col-auto.illustration-body.text-center.q-mb-xl enables you to freely trade your NFTs prior to maturity
+    .col-4-lg
+      .row.justify-center.q-mb-md
+        img.illustration2(src='~src/assets/ad_3.png')
+      .row.justify-center.illustration-title.text-center
+        | Cash in your NFT
+      .row.justify-center
+        .col-auto.illustration-body.text-center.q-mb-xl after the lawsuit and share in the rewards of the winnings
 </template>
 
 <style lang="sass" scoped>
 .stats-titles
-  font-size: 1.5rem
+  font-size: calc(14px + (26 - 14) * ((100vw - 300px) / (1600 - 300)))
 .stats-numbers
-  font-size: 3rem
+  font-size: calc(14px + (50 - 14) * ((100vw - 300px) / (1600 - 300)))
 .underline
   text-decoration: underline
   text-decoration-color: $primary
+  text-underline-offset: 1rem
 .featured-collections
   padding: 2rem
   padding-top: 5rem
@@ -309,6 +335,9 @@ q-page
   margin-left:5%
 .title-section
   margin-left: 5%
+.img-section
+  margin-left: 5%
+  margin-right: 5%
 .top
   z-index: 5
 .main-asset-cont
@@ -325,7 +354,6 @@ q-page
   position: relative
 .bg-trend
   position: relative
-  height: 40rem
 .rounded
   border-radius: 1rem
   overflow: hidden
@@ -350,7 +378,32 @@ q-page
   height: 100%
   background-size: cover
   z-index: 0
-  // border: 1px green solid
+.img2
+  position: absolute
+  bottom: 0
+  right: 0
+  max-width: 100%
+  max-height: 100%
+  background-size: cover
+  z-index: 0
+.illustration
+  max-height: 20rem
+  min-width: 150px
+  aspect-ratio: 4/3
+.illustration2-title
+  font-size: 2.1rem
+  font-family: 'ralewaybold'
+.illustration2
+  max-height: 20rem
+  min-width: 150px
+  max-width: 250px
+.illustration-title
+  font-family: "ralewaybold"
+  font-size: 2rem
+.illustration-body
+  font-family: "ralewayregular"
+  font-size: 1.5rem
+  max-width: 25rem
 .flipX
   transform: scaleX(-1)
 .flipY
@@ -377,10 +430,10 @@ q-page
     position: absolute
     z-index: -1
     top: 0rem
-    left: 25%
+    left: -10rem
     right: 0rem
     bottom: 0rem
-    background-image: url("~assets/polygons/polygon_home_trending_horizontal.svg")
+    background-image: url("~src/assets/bg_img_diag2.svg")
     background-repeat: no-repeat
     background-size: cover
   .bg-feat::before
@@ -400,11 +453,10 @@ q-page
     position: absolute
     z-index: -1
     top: 0
-    left: 10%
-    right: -40%
+    left: 0
+    right: 0
     bottom: 0rem
-    transform: scaleX(-1)
-    background-image: url("~assets/polygons/polygon_featured_horizontal.svg")
+    background-image: url("~src/assets/bg_img_diag4.svg")
     background-repeat: no-repeat
     background-size: cover
 @media (max-width: $breakpoint-md-min)
@@ -418,7 +470,7 @@ q-page
     left: 0rem
     right: 0rem
     bottom: 0rem
-    background-image: url("~assets/polygons/polygon_home_trending_vertical.svg")
+    background-image: url("~src/assets/bg_img_diag2.svg")
     background-repeat: no-repeat
     background-size: cover
   .bg-feat::before
@@ -440,7 +492,7 @@ q-page
     left: 0rem
     right: 0rem
     bottom: 0rem
-    background-image: url("~assets/polygons/polygon_home_trending_vertical.svg")
+    background-image: url("~src/assets/bg_img_diag4.svg")
     background-repeat: no-repeat
     background-size: cover
 .featured-card
