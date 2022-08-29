@@ -70,6 +70,10 @@ q-card
       :src='card.imageUrl',
       placeholder-src='https://via.placeholder.com/1600x1200/212121/E0A600.jpg?text=LegalCoin'
     )
+      template(v-slot:loading)
+        .text-primary
+          q-spinner-ios
+          .q-pt-lg Loading...
 </template>
 
 <style lang="sass" scoped>

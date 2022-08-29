@@ -75,7 +75,7 @@ q-card
       template(v-slot:loading)
         .text-primary
           q-spinner-ios
-          div Loading...
+          .q-pt-lg Loading...
 </template>
 
 <style lang="sass" scoped>
