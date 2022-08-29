@@ -210,25 +210,40 @@ q-page
 
   //- Stats sections
   .row.q-py-sm
-  .row.justify-evenly.img-section
+  .row.justify-center.img-section
     .col-md-4.col-xs-12
       .row.justify-center.q-pb-sm
-        q-separator.q-mr-lg(vertical, color='black')
         .col
-          .text-left.text-primary.stats-titles Currently Invested
-          .text-left.stats-numbers &#163; {{ totalGBP }}
-    .col-md-4.col-xs-6
-      .row.q-pb-sm
-        q-separator.q-mr-lg(vertical, color='black')
+          .text-left(v-if='$q.screen.gt.sm')
+            .stats-titles Currently Invested
+            .stats-numbers &#163; {{ totalGBP }}
+            .stats-line
+          .text-center(v-else)
+            .stats-titles Currently Invested
+            .stats-numbers &#163; {{ totalGBP }}
+            .stats-line.center
+    .col-md-4.col-xs-12
+      .row.justify-center.q-pb-sm
         .col
-          .text-left.text-primary.stats-titles Backers
-          .text-left.stats-numbers {{ totalBackers }}
-    .col-md-4.col-xs-6
-      .row.q-pb-sm
-        q-separator.q-mr-lg(vertical, color='black')
+          .text-left(v-if='$q.screen.gt.sm')
+            .stats-titles Backers
+            .stats-numbers {{ totalBackers }}
+            .stats-line
+          .text-center(v-else)
+            .stats-titles Backers
+            .stats-numbers {{ totalBackers }}
+            .stats-line.center
+    .col-md-4.col-xs-12
+      .row.justify-center.q-pb-sm
         .col
-          .text-left.text-primary.stats-titles.text-no-wrap Cases Funded
-          .text-left.stats-numbers {{ totalCases }}
+          .text-left(v-if='$q.screen.gt.sm')
+            .stats-titles.text-no-wrap Cases Funded
+            .stats-numbers {{ totalCases }}
+            .stats-line
+          .text-center(v-else)
+            .stats-titles.text-no-wrap Cases Funded
+            .stats-numbers {{ totalCases }}
+            .stats-line.center
   .row.q-pb-sm
 
   //- Featured Collections
@@ -320,9 +335,18 @@ q-page
 
 <style lang="sass" scoped>
 .stats-titles
-  font-size: calc(20px + (30 - 20) * ((100vw - 300px) / (1600 - 300)))
+  // font-size: calc(15px + (30 - 15) * ((100vw - 300px) / (1600 - 300)))
+  font-size: 1rem
+  color: #797979
 .stats-numbers
-  font-size: calc(25px + (50 - 25) * ((100vw - 300px) / (1600 - 300)))
+  font-size: 3rem
+  font-weight: 600
+.center
+  margin: auto
+.stats-line
+  height: 2px
+  width: 5em
+  background: black
 .underline
   text-decoration: underline
   text-decoration-color: $primary
