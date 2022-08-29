@@ -28,7 +28,14 @@ q-card(bordered)
   )
     .row.collection-card.zoom
       .col.self-center
-        q-img.asset-img(:src='card.imageUrl')
+        q-img.asset-img(
+          :src='card.imageUrl',
+          placeholder-src='~src/assets/LC-Placeholder.png'
+        )
+          template(v-slot:loading)
+            .text-primary
+              q-spinner-ios.q-pt-lg
+              .q-pt-sm Loading...
 </template>
 
 <style lang="sass" scoped>

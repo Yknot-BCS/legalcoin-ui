@@ -68,12 +68,12 @@ q-card
   router-link(:to='{ name: "asset", params: { asset: card.id } }')
     q-img.zoom.asset-img(
       :src='card.imageUrl',
-      placeholder-src='https://via.placeholder.com/1600x1200/212121/E0A600.jpg?text=LegalCoin'
+      placeholder-src='~src/assets/LC-Placeholder.png'
     )
       template(v-slot:loading)
         .text-primary
-          q-spinner-ios
-          .q-pt-lg Loading...
+          q-spinner-ios.q-pt-lg
+          .q-pt-sm Loading...
 </template>
 
 <style lang="sass" scoped>
