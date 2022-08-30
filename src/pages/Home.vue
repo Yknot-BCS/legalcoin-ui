@@ -33,7 +33,15 @@ export default defineComponent({
       screenWidth,
       totalBackers: ref(0),
       totalGBP: ref(0),
-      totalCases: ref(0)
+      totalCases: ref(0),
+      featAnim(el: Element) {
+        el.classList.add('.animate.fadeInBottom');
+        setTimeout(() => {
+          if (document.body.contains(el)) {
+            el.classList.remove('.animate.fadeInBottom');
+          }
+        }, 2000);
+      }
     };
   },
   computed: {
@@ -201,7 +209,7 @@ q-page
             color='primary'
           )
     .col-12.col-md-6.img-parent
-      img.img2(src='~src/assets/diag_cuts.svg')
+      img.img2.animated.fadeInRight(src='~src/assets/diag_cuts.svg')
       .row.justify-center.feat-card
         .landing-right
           .landing-right-card-container
@@ -209,15 +217,15 @@ q-page
               Cards(style='width: 25em', :data='assets[0]', type='Assets')
 
   //- Stats sections
-  .row.q-py-sm
+  .row.q-py-md
   .row.justify-center.img-section
     .col-md-4.col-xs-12
       .row.justify-center.q-pb-sm
         .col
-          .text-left(v-if='$q.screen.gt.sm')
+          .text-center(v-if='$q.screen.gt.sm')
             .stats-titles Currently Invested
             .stats-numbers &#163; {{ totalGBP }}
-            .stats-line
+            .stats-line.center
           .text-center(v-else)
             .stats-titles Currently Invested
             .stats-numbers &#163; {{ totalGBP }}
@@ -225,29 +233,29 @@ q-page
     .col-md-4.col-xs-12
       .row.justify-center.q-pb-sm
         .col
-          .text-left(v-if='$q.screen.gt.sm')
+          .text-center(v-if='$q.screen.gt.sm')
             .stats-titles Backers
             .stats-numbers {{ totalBackers }}
-            .stats-line
+            .stats-line.center
           .text-center(v-else)
             .stats-titles Backers
             .stats-numbers {{ totalBackers }}
             .stats-line.center
     .col-md-4.col-xs-12
-      .row.justify-center.q-pb-sm
+      .row.justify-center.q-pb-md
         .col
-          .text-left(v-if='$q.screen.gt.sm')
+          .text-center(v-if='$q.screen.gt.sm')
             .stats-titles.text-no-wrap Cases Funded
             .stats-numbers {{ totalCases }}
-            .stats-line
+            .stats-line.center
           .text-center(v-else)
             .stats-titles.text-no-wrap Cases Funded
             .stats-numbers {{ totalCases }}
             .stats-line.center
-  .row.q-pb-sm
+  .row.q-pb-md
 
   //- Featured Collections
-  .div.q-py-xl.bg-feat
+  .div.q-py-xl.bg-feat(v-scroll-fire='featAnim')
     .row.justify-center
       h2.col.title-section.text-secondary
         span Featured &#32

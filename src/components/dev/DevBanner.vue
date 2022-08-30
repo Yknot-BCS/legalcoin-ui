@@ -29,14 +29,15 @@ export default {
 </script>
 
 <template lang="pug">
-q-toolbar.dev-banner.text-secondary 
-  .q-mr-sm Development
-  UalLoginHandler
-  q-checkbox(
-    v-model='useLocalSigner',
-    size='xs',
-    @update:model-value='setUseLocalSigner'
-  ) Use Anchor
+q-header.q-py-sm(elevated) <!-- Remove .q-pb-sm when dev banner removed -->
+  q-toolbar.dev-banner.text-secondary 
+    .q-mr-sm Development
+    UalLoginHandler
+    q-checkbox(
+      v-model='useLocalSigner',
+      size='xs',
+      @update:model-value='setUseLocalSigner'
+    ) Use Anchor
 </template>
 
 <style lang="sass" scoped>
