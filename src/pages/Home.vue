@@ -307,7 +307,7 @@ q-page
         span Recommended &#32
         span.underline for you
     .row.justify-center
-      .featured-card.q-pa-sm(
+      .featured-card.q-py-sm.q-px-md(
         v-for='template in trendingTemplates.slice(0, numberOfCards)',
         v-if='trendingTemplates.length > 0'
       )
