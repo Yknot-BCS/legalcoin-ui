@@ -34,8 +34,8 @@ q-card(bordered)
         )
           template(v-slot:loading)
             .text-primary
-              q-spinner-ios.q-pt-lg
-              .q-pt-sm Loading...
+              .row.q-py-lg
+              .q-pt-xl Loading...
 </template>
 
 <style lang="sass" scoped>

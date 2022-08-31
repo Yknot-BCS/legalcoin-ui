@@ -67,8 +67,8 @@ export default defineComponent({
       )
         template(v-slot:loading)
           .text-primary
-            q-spinner-ios.q-pt-lg
-            .q-pt-sm Loading...
+            .row.q-py-xl
+            .q-pt-xl Loading...
 
     //- Actions
     AssetActionCard.col-6.q-my-sm.q-mx-md(
