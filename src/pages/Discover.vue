@@ -56,7 +56,7 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-.row.justify-center
+.row.justify-center.q-pt-xl
   .col-12
     AtomicAssetsView(
       :ApiParams='assetOptions',

@@ -164,7 +164,7 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-.div(v-if='isLegalCoin')
+.div.q-py-xl(v-if='isLegalCoin')
   AssetViewer(
     :assetData='assetData',
     :saleData='saleData',

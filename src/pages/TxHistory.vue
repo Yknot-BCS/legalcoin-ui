@@ -101,8 +101,8 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-page
-  .row.justify-center
+q-page.q-py-xl
+  .row.justify-center.q-pt-xl
     q-card(v-if='isAuthenticated')
       q-card-section
         .text-h4.text-grey-8
