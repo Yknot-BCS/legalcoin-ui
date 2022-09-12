@@ -67,8 +67,8 @@ export default defineComponent({
       )
         template(v-slot:loading)
           .text-primary
-            .row.q-py-xl
             .q-pt-xl Loading...
+            q-spinner
 
     //- Actions
     AssetActionCard.col-6.q-my-sm.q-mx-md(

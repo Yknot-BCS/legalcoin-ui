@@ -72,8 +72,8 @@ q-card
     )
       template(v-slot:loading)
         .text-primary
-          .row.q-py-lg
           .q-pt-xl Loading...
+          q-spinner
 </template>
 
 <style lang="sass" scoped>
