@@ -47,7 +47,7 @@ q-card
         //- Title of cards
         .row
           .text-subtitle1.heading {{ card.name }}
-      .col-2.self-center
+      .col-2.self-center(v-if='card.tier != "None"')
         q-badge.float-right.lt-md(rounded, :color='badgeColour')
         q-badge.float-right.gt-sm(rounded, :color='badgeColour') 
           .text-subtitle3 {{ card.tier }}
