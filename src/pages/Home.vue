@@ -193,7 +193,7 @@ q-page
   //- Top section
   .row.bg-black
     .col-12.col-md-6.q-pb-xl
-      .landing-left.q-pa-lg.float-right
+      .landing-left.q-pa-lg.float-right.animate-fade
         h2.landing-heading
           span.text-white You can fund class action &#32
           span.text-primary lawsuits &#32
@@ -418,6 +418,14 @@ q-page
   100%
     opacity: 100%
     transform: translateY(0px)
+.animate-fade
+  animation: fade 2s
+
+@keyframes fade
+  0%
+    opacity: 0%
+  100%
+    opacity: 100%
 .stats-titles
   // font-size: calc(15px + (30 - 15) * ((100vw - 300px) / (1600 - 300)))
   font-size: 1rem
