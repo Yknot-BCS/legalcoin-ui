@@ -32,110 +32,115 @@ export default {
 </script>
 
 <template lang="pug">
-q-toolbar.row.q-py-sm.q-px-md.bg-grey-1
-  router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
-    img.logo.q-mr-md(v-if='$q.screen.gt.sm', src='~assets/legalcoin-full.png')
-    img.logo-small.q-mr-sm(v-else, src='~assets/legalcoin-full.png')
+q-header.q-mt-xl(elevated) <!-- Remove .q-mt-xl when dev banner removed -->
+  q-toolbar.row.q-py-sm.q-px-md.bg-grey-1.vertical-top
+    router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
+      img.logo.q-mr-md(
+        v-if='$q.screen.gt.sm',
+        src='~assets/legalcoin-full.png'
+      )
+      img.logo-small.q-mr-sm(v-else, src='~assets/legalcoin-full.png')
 
-  .col.row.justify-center
-    search-bar.toolbar-select.q-mr-md(size='100', v-if='$q.screen.gt.md')
-    search-bar.toolbar-select.q-mr-md(size='50', v-if='$q.screen.md')
-    search-bar.toolbar-select.q-mr-md(size='30', v-if='$q.screen.sm')
+    .col.row.justify-center
+      search-bar.toolbar-select.q-mr-md(size='100', v-if='$q.screen.gt.md')
+      search-bar.toolbar-select.q-mr-md(size='50', v-if='$q.screen.md')
+      search-bar.toolbar-select.q-mr-md(size='30', v-if='$q.screen.sm')
 
-  .q-mr-md.q-gutter-x-md.row.items-center.no-wrap(v-if='$q.screen.gt.sm')
-    q-btn.btn-left(
-      flat,
-      icon='grid_view',
-      label='Discover',
-      dense,
-      :to='{ name: "discover" }'
-    )
-    q-btn(
-      flat,
-      icon='account_circle',
-      label='Account',
-      v-if='!isLoggedIn',
-      dense,
-      :to='{ name: "login" }'
-    )
+    .q-mr-md.q-gutter-x-md.row.items-center.no-wrap(v-if='$q.screen.gt.sm')
+      q-btn(
+        flat,
+        icon='grid_view',
+        label='Discover',
+        dense,
+        :to='{ name: "discover" }'
+      )
+      q-btn(
+        flat,
+        icon='o_account_circle',
+        label='Account',
+        v-if='!isLoggedIn',
+        dense,
+        :to='{ name: "login" }'
+      )
 
-  .row.items-center
-    search-bar.lt-sm
+    .row.items-center
+      search-bar.lt-sm
 
-    q-btn.lt-md(flat, round, dense, :to='{ name: "discover" }')
-      q-icon.material-icons-outlined(name='grid_view')
+      q-btn.lt-md(flat, round, dense, :to='{ name: "discover" }')
+        q-icon.material-icons-outlined(name='grid_view')
 
-    q-btn(
-      flat,
-      round,
-      dense,
-      v-if='!isLoggedIn && $q.screen.lt.md',
-      :to='{ name: "login" }'
-    )
-      q-icon.material-icons-outlined(name='account_circle')
-    q-btn(
-      dense,
-      flat,
-      round,
-      no-wrap,
-      icon='account_circle',
-      :label='$q.screen.gt.sm ? `Account` : `` || $q.screen.lt.sm ? `` : ``',
-      v-if='isLoggedIn'
-    )
-      q-menu.menu-edit(auto-close, fit)
-        q-list(dense)
-          //- Profile
-          q-item.menu-link(
-            v-if='isLoggedIn',
-            clickable,
-            :to='{ name: "profile", params: { profile: accountName } }'
-          )
-            q-item-section.q-pa-sm
-              .row.justify-center.items-center
-                .col-shrink.q-pr-xs
-                  q-icon(name='account_circle', size='md')
-                .col
-                  .text-h6 Profile
+      q-btn(
+        flat,
+        round,
+        dense,
+        v-if='!isLoggedIn && $q.screen.lt.md',
+        :to='{ name: "login" }'
+      )
+        q-icon.material-icons-outlined(name='account_circle')
+      q-btn(
+        dense,
+        flat,
+        no-wrap,
+        :round='$q.screen.lt.sm ? true : false',
+        icon='account_circle',
+        :label='$q.screen.gt.sm ? `Account` : `` || $q.screen.lt.sm ? `` : ``',
+        v-if='isLoggedIn'
+      )
+        q-menu.menu-edit(auto-close, fit)
+          q-list(dense)
+            //- Profile
+            q-item.menu-link(
+              v-if='isLoggedIn',
+              clickable,
+              :to='{ name: "profile", params: { profile: accountName } }'
+            )
+              q-item-section.q-pa-sm
+                .row.justify-center.items-center
+                  .col-shrink.q-pr-xs
+                    q-icon(name='account_circle', size='md')
+                  .col
+                    .text-h6 Profile
 
-          q-separator(v-if='isLoggedIn')
-          //- Wallet
-          q-item.menu-link(clickable, :to='{ name: "wallet" }')
-            q-item-section.q-pa-sm
-              .row.justify-center.items-center
-                .col-shrink.q-pr-xs
-                  q-icon(name='wallet', size='md')
-                .col
-                  .text-h6 Wallet
-          q-separator(v-if='isLoggedIn')
-          //- Settings
-          q-item.menu-link(
-            clickable,
-            :to='{ name: "account-settings", params: { profile: accountName } }'
-          )
-            q-item-section.q-pa-sm
-              .row.justify-center.items-center
-                .col-shrink.q-pr-xs
-                  q-icon(name='settings', size='md')
-                .col
-                  .text-h6 Settings
-          q-separator(v-if='isLoggedIn')
-          q-separator
-          //- Logout
-          q-item(v-if='isLoggedIn')
-            q-item-section.q-pa-md
-              q-btn.logout-btn(
-                flat,
-                label='Sign Out',
-                dense,
-                font-size='10px',
-                text-color='white',
-                @click='logout()'
-              )
+            q-separator(v-if='isLoggedIn')
+            //- Wallet
+            q-item.menu-link(clickable, :to='{ name: "wallet" }')
+              q-item-section.q-pa-sm
+                .row.justify-center.items-center
+                  .col-shrink.q-pr-xs
+                    q-icon(name='wallet', size='md')
+                  .col
+                    .text-h6 Wallet
+            q-separator(v-if='isLoggedIn')
+            //- Settings
+            q-item.menu-link(
+              clickable,
+              :to='{ name: "account-settings", params: { profile: accountName } }'
+            )
+              q-item-section.q-pa-sm
+                .row.justify-center.items-center
+                  .col-shrink.q-pr-xs
+                    q-icon(name='settings', size='md')
+                  .col
+                    .text-h6 Settings
+            q-separator(v-if='isLoggedIn')
+            q-separator
+            //- Logout
+            q-item(v-if='isLoggedIn')
+              q-item-section.q-pa-md
+                q-btn.logout-btn(
+                  flat,
+                  label='Sign Out',
+                  dense,
+                  font-size='10px',
+                  text-color='white',
+                  @click='logout()'
+                )
 </template>
 
 <style scoped lang="sass">
 .q-btn
   font-size: 20px
+  color: black
   &:hover
     color: $primary
   &:focus

@@ -19,6 +19,9 @@ export default {
   .row.justify-center.q-gutter-x-lg
     .col-12.col-md-2.section
       h4 Contact Us
+      p.sub-heading Website:
+      p.text-grey-6
+        a.text-grey-6(href='https://www.legalcoin.com/', target='_blank') legalcoin.com
       p.sub-heading Location:
       p.text-grey-6
         | Floor 2
@@ -86,8 +89,6 @@ export default {
   font-weight: 400
   font-size: 1.25rem
   margin-bottom: 0.25rem
-.container
-  flex
 .section
   text-align: left
 .top

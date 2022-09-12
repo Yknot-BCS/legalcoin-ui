@@ -29,14 +29,15 @@ export default {
 </script>
 
 <template lang="pug">
-.form-wrapper.row.q-pa-md.bg-grey-3
-  .text-h5.col-12 Email Verification Failed
-  p
-    | We could not verify your email address, the link you used has expired.
-    br
-    | To request a new link you can use the button below.
-  q-btn.col-12(@click='resendEmail()', color='primary')
-    | Resend verification email
+.row.justify-center
+  .form-wrapper.row.q-pa-md.bg-grey-3
+    .text-h5.col-12 Email Verification Failed
+    p
+      | We could not verify your email address, the link you used has expired.
+      br
+      | To request a new link you can use the button below.
+    q-btn.col-12(@click='resendEmail()', color='primary')
+      | Resend verification email
 </template>
 
 <style lang="sass" scoped>

@@ -393,7 +393,7 @@ export default defineComponent({
       // Filter for desktop view
       q-card-section
         .row.justify-evenly
-          .col-lg-2.col-md-3.q-pt-md(v-if='showFilter && $q.screen.gt.sm')
+          .col-lg-2.col-md-3.q-pr-md(v-if='showFilter && $q.screen.gt.sm')
             q-card.q-pb-md(bordered, flat)
               AssetFilter(
                 :Status='filterStatus',
@@ -408,7 +408,7 @@ export default defineComponent({
             GalleryView(:data='GalleryData', :type='type')
 
           // Paging for Gallery section
-          .col-12 
+          .col-12.q-mt-md
             .row.justify-center
               q-select.q-px-sm(
                 dense,

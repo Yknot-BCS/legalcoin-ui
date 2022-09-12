@@ -21,7 +21,7 @@ export default route<StateInterface>(function (
   const Router = createRouter({
     scrollBehavior: (to, from, savedPosition) => {
       if(!savedPosition){
-        return;
+        return { left: 0, top: 0 };
       } 
       if (to.params.savePosition) return {}
       return { left: 0, top: 0 }},
@@ -33,6 +33,7 @@ export default route<StateInterface>(function (
     history: createHistory(process.env.VUE_ROUTER_BASE)
   });
 
+  // Email verification checks
   Router.beforeEach(async (to, _) => {
     let isAuthenticated = store.state.account.profile.emailVerified;
     if (auth.isLoggedIn()) {
@@ -53,7 +54,7 @@ export default route<StateInterface>(function (
       }
     }
     // Route to home when already logged in
-    if (to.name === 'login' && auth.isLoggedIn() && isAuthenticated) {
+    if (to.name === 'login' && auth.isLoggedIn() && isAuthenticated && store.state.account.profile.accountName != '') {
       return { name: 'home' };
     }
   });

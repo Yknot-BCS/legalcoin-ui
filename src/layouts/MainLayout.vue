@@ -55,11 +55,10 @@ export default {
 <template lang="pug">
 q-layout(view='hHh lpR fff')
   dev-banner(v-if='DEVELOPMENT')
-  Header
   CompleteRegistrationBanners
+  Header
   q-page-container
     router-view
-    .space
   q-footer
     Footer
   q-page-scroller(position='bottom-right', :scroll-offset='150')

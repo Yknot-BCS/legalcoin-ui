@@ -6,12 +6,14 @@ import {
 import { defineComponent, ref, computed } from 'vue';
 import {
   atomic_api,
-  getTemplateQueryApiOptions,
+  getSalesQueryApiOptions,
   getQueryPage,
-  getQueryLimit
+  getQueryLimit,
+  getQueryStatus
 } from 'src/api/atomic_assets';
 import { useRoute } from 'vue-router';
 import AtomicAssetsView from 'src/components/atomicAssets/AtomicAssetView.vue';
+import { copyToClipboard } from 'quasar';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -28,19 +30,19 @@ export default defineComponent({
     // - Gallery view
     const page = computed(() => getQueryPage(route.query));
     const limit = computed(() => getQueryLimit(route.query));
-    const templateOptions = computed(() => {
+    const status = computed(() => getQueryStatus());
+    const assetOptions = computed(() => {
       return {
-        owner: process.env.AA_ACCOUNT,
-        collection_name: route.params.collection as string,
-        ...getTemplateQueryApiOptions(route.query)
+        state: '1',
+        collection_whitelist: route.params.collection as string,
+        ...getSalesQueryApiOptions(route.query, status.value)
       } as unknown;
     });
-    // - Gallery view
 
     return {
       templatesData,
       collectionData,
-      templateOptions,
+      assetOptions,
       page,
       limit
     };
@@ -50,9 +52,22 @@ export default defineComponent({
       return `${process.env.IPFS_ENDPOINT}/ipfs/${<string>(
         this.collectionData.data.img
       )}`;
+    },
+    shareURL(): string {
+      return window.location.origin + this.$route.path;
     }
   },
   methods: {
+    clipboardURL() {
+      void copyToClipboard(window.location.origin + this.$route.path).then(
+        () => {
+          this.$q.notify({
+            color: 'positive',
+            message: 'Copied URL to clipboard'
+          });
+        }
+      );
+    },
     isLegalCoin(authorized_accounts: string) {
       // Check if the asset is from legalcoin
       if (authorized_accounts === process.env.AA_ACCOUNT) {
@@ -90,8 +105,9 @@ q-page
   //- Collection image
   .row.q-px-lg.items-center.justify-between(style='height: 12rem')
     .col.q-pt-xl
-      q-card.asset-img
-        q-img(:src='collectionImg')
+      q-card.row.items-center.asset-img
+        q-card-section.col
+          q-img(:src='collectionImg')
     //- Collection name and description //- Todo: smallest mobile view, links overlap title
   .row 
     .col.q-pl-lg
@@ -99,13 +115,45 @@ q-page
         | {{ collectionData.data.name }}
     //- Links
     .col.self-center.text-right.q-gutter-lg.q-pr-lg
-      q-btn(
-        round,
-        icon='fa-solid fa-globe',
-        :href='collectionData.data?.url',
-        target='_blank'
-      )
-      q-btn(round, icon='fa-solid fa-ellipsis')
+      q-btn.text-body2(icon='share', round, size='md')
+        q-menu(:offset='[150, 10]')
+          q-list
+            q-item(
+              clickable,
+              v-close-popup,
+              :href='`http://twitter.com/intent/tweet?text=Check%20out%20this%20collection%20on%20LegalCoin:&url=${shareURL}`',
+              target='_blank'
+            )
+              q-item-section
+                .row.items-center
+                  .col-shrink.q-pr-sm
+                    q-icon(name='fab fa-twitter', size='2rem', color='blue')
+                  .col.text-bold Share to Twitter
+            q-separator
+            //- Facebook link doesn't work with locally hosted app, but if provided with valid web URL will work
+            q-item(
+              clickable,
+              v-close-popup,
+              :href='`https://www.facebook.com/sharer/sharer.php?u=${shareURL}`',
+              target='_blank'
+            )
+              q-item-section
+                .row.items-center
+                  .col-shrink.q-pr-sm
+                    q-icon(
+                      name='fab fa-facebook',
+                      size='2rem',
+                      style='color: #4267b2'
+                    )
+                  .col.text-bold Share to Facebook
+            q-separator
+            q-item(clickable, v-close-popup, @click='clipboardURL')
+              q-item-section
+                .row.items-center
+                  .col-shrink.q-pr-sm
+                    q-icon(name='fa fa-clipboard', size='2rem')
+                  .col.text-bold Copy link
+
   .row.text-subtitle1.q-px-xs.q-py-sm.q-pl-lg
     .col.text-bold
       | {{ collectionData.data.description }}
@@ -119,11 +167,12 @@ q-page
     .col-12
       q-card(flat)
         AtomicAssetsView(
-          :ApiParams='templateOptions',
+          :ApiParams='assetOptions',
           :Page='page',
           :ItemsPerPage='limit',
           :DataParams='[]',
-          Type='Templates'
+          Type='Discover',
+          :FilterCollection='false'
         )
 </template>
 
@@ -135,7 +184,6 @@ q-page
   max-height: 200px
   min-width: 200px
   max-width: 200px
-
 .bg-img
   z-index: -1
 </style>

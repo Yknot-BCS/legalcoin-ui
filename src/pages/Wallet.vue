@@ -130,6 +130,12 @@ q-page
               flat,
               @click='$router.push({ name: "txhistory" })'
             )
+          .row.col-12
+            q-btn.col.q-mx-sm.q-mt-sm.outline-btn(
+              label='TRANSFER LEGAL',
+              flat,
+              @click='$router.push({ name: "transfer" })'
+            )
 </template>
 
 <style lang="sass" scoped>
