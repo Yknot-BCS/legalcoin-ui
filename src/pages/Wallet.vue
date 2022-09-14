@@ -119,11 +119,9 @@ q-page
           .row.col-6
             q-btn.col.q-mx-sm.q-mt-sm.outline-btn(
               label='WITHDRAW',
-              disable,
               flat,
               @click='$router.push({ name: "withdraw" })'
             )
-            q-tooltip Coming soon!
           .row.col-12
             q-btn.col.q-mx-sm.q-mt-sm.outline-btn(
               label='VIEW TRANSACTION HISTORY',
