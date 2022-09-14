@@ -66,7 +66,14 @@ q-card
           .text-subtitle4 {{ card.yield }}
 
   router-link(:to='{ name: "asset", params: { asset: card.id } }')
-    q-img.zoom(:src='card.imageUrl')
+    q-img.zoom.asset-img(
+      :src='card.imageUrl',
+      placeholder-src='~src/assets/LC-Placeholder.png'
+    )
+      template(v-slot:loading)
+        .text-primary
+          .q-pt-xl Loading...
+          q-spinner
 </template>
 
 <style lang="sass" scoped>

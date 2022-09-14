@@ -68,7 +68,14 @@ q-card
         CountDown(:endDate='new Date(card.saleclose)')
   q-separator.q-mb-xs.q-mx-x(inset)
   router-link(:to='{ name: "asset", params: { asset: card.id } }')
-    q-img.asset-img-lg.zoom(:src='card.imageUrl')
+    q-img.asset-img-lg.zoom(
+      :src='card.imageUrl',
+      placeholder-src='~src/assets/LC-Placeholder.png'
+    )
+      template(v-slot:loading)
+        .text-primary
+          .q-pt-xl Loading...
+          q-spinner
 </template>
 
 <style lang="sass" scoped>

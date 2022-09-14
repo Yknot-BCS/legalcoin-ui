@@ -107,7 +107,14 @@ q-page
     .col.q-pt-xl
       q-card.row.items-center.asset-img
         q-card-section.col
-          q-img(:src='collectionImg')
+          q-img(
+            :src='collectionImg',
+            placeholder-src='~src/assets/LC-Placeholder.png'
+          )
+            template(v-slot:loading)
+              .text-primary
+                .q-pt-xl Loading...
+                q-spinner
     //- Collection name and description //- Todo: smallest mobile view, links overlap title
   .row 
     .col.q-pl-lg
