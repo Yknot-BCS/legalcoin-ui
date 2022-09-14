@@ -23,7 +23,7 @@ export default defineComponent({
         case 'Gold':
           return 'yellow-7';
         case 'Bronze':
-          return 'orange-14';
+          return 'deep-orange-5';
         case 'Platinum':
           return 'grey-4';
         default:
@@ -47,7 +47,7 @@ q-card
         //- Title of cards
         .row
           .text-subtitle1.heading {{ `${card.collectionTitle} #${card.mintNumber}` }}
-      .col-2.self-center
+      .col-2.self-center(v-if='card.tier != "None"')
         q-badge.float-right.lt-md(rounded, :color='badgeColour')
         q-badge.float-right.gt-sm(rounded, :color='badgeColour') 
           .text-subtitle3 {{ card.tier }}
