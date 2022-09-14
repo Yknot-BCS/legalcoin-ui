@@ -34,13 +34,22 @@ export default defineComponent({
       totalBackers: ref(0),
       totalGBP: ref(0),
       totalCases: ref(0),
-      featAnim(el: Element) {
-        el.classList.add('.animate.fadeInBottom');
-        setTimeout(() => {
-          if (document.body.contains(el)) {
-            el.classList.remove('.animate.fadeInBottom');
-          }
-        }, 2000);
+      animated: false,
+      slideRAnim(el: Element) {
+        el.classList.remove('offLeft');
+        el.classList.add('animate-slideRight');
+      },
+      slideLAnim(el: Element) {
+        el.classList.remove('offRight');
+        el.classList.add('animate-slideLeft');
+      },
+      slideFadeUAnim(el: Element) {
+        el.classList.remove('seethroughOffBottom');
+        el.classList.add('animate-fadeUp');
+      },
+      fadeAnim(el: Element) {
+        el.classList.add('animate-fadeIn');
+        el.classList.remove('seethrough');
       }
     };
   },
@@ -184,7 +193,7 @@ q-page
   //- Top section
   .row.bg-black
     .col-12.col-md-6.q-pb-xl
-      .landing-left.q-pa-lg.float-right
+      .landing-left.q-pa-lg.float-right.animate-fade
         h2.landing-heading
           span.text-white You can fund class action &#32
           span.text-primary lawsuits &#32
@@ -255,9 +264,15 @@ q-page
   .row.q-pb-md
 
   //- Featured Collections
-  .div.q-py-xl.bg-feat(v-scroll-fire='featAnim')
+  .div.q-py-xl.bg-black.img-parent(style='z-index: -2')
+    .div.seethrough(v-scroll-fire='fadeAnim')
+      img.img1.seethroughOffBottom(
+        src='~src/assets/bg_grey_diag.svg',
+        v-scroll-fire='slideFadeUAnim',
+        style='z-index: -1'
+      )
     .row.justify-center
-      h2.col.title-section.text-secondary
+      h2.col.title-section.text-secondary.offLeft(v-scroll-fire='slideRAnim')
         span Featured &#32
         span.underline Collections
     .row.justify-center
@@ -276,24 +291,24 @@ q-page
       )
 
   //- How to use LegalCoin
-  .row.justify-center.q-pt-xl
-    h2.col.title-section.text-black 
+  .row.justify-center.q-pt-xl.bg-white
+    h2.col.title-section.text-black.offLeft(v-scroll-fire='slideRAnim')
       span How to use &#32
       span.underline LegalCoin
-  .row.justify-evenly.q-py-xl.q-px-xl.items-center
-    .col-4-lg.q-mx-md
+  .row.justify-evenly.q-py-xl.bg-white.top.q-px-xl.items-center
+    .col-4-lg.q-mx-md.seethrough(v-scroll-fire='fadeAnim')
       .row.justify-center.q-mb-md
         img.illustration(src='~src/assets/Fund.svg')
       .row.justify-center.illustration-title.text-center
         | Fund a lawsuit
       .illustration-body.text-center.q-mb-xl purchase a stake in a worthy cause
-    .col-4-lg.q-mx-md
+    .col-4-lg.q-mx-md.seethrough(v-scroll-fire='fadeAnim')
       .row.justify-center.q-mb-md
         img.illustration(src='~src/assets/Trade.svg')
       .row.justify-center.illustration-title.text-center
         | Trade while you wait
       .illustration-body.text-center.q-mb-xl buy and sell throughout the lawsuit
-    .col-4-lg.q-mx-md
+    .col-4-lg.q-mx-md.seethrough(v-scroll-fire='fadeAnim')
       .row.justify-center.q-mb-md
         img.illustration(src='~src/assets/Claim.svg')
       .row.justify-center.illustration-title.text-center
@@ -301,12 +316,18 @@ q-page
       .illustration-body.text-center.q-mb-xl claim your returns at the end
 
   //- Recommended for you
-  .div.q-py-xl.bg-trend(style='height: 40rem')
-    .row.justify-center
-      h2.col.title-section.text-black.top
+  .div.q-py-xl.bg-grey-4.img-parent(style='z-index: -2')
+    .div.seethrough(v-scroll-fire='fadeAnim')
+      img.img1.seethroughOffBottom(
+        src='~src/assets/bg_grey_diag.svg',
+        v-scroll-fire='slideFadeUAnim',
+        style='z-index: -1'
+      )
+    .row.justify-center.seethrough(v-scroll-fire='fadeAnim')
+      h2.col.title-section.text-black.offLeft(v-scroll-fire='slideRAnim')
         span Recommended &#32
         span.underline for you
-    .row.justify-center
+    .row.justify-center.seethrough(v-scroll-fire='fadeAnim')
       .featured-card.q-py-sm.q-px-md(
         v-for='template in trendingTemplates.slice(0, numberOfCards)',
         v-if='trendingTemplates.length > 0'
@@ -314,25 +335,27 @@ q-page
         Cards.rounded.shadow-10(:data='template', type='Templates')
 
   //- Illustrations
-  .row.justify-center.q-py-xl
-    .illustration2-title.col.text-center.text-black 
+  .row.justify-center.q-py-xl.bg-white(style='z-index: 1')
+    .illustration2-title.col.text-center.text-black.offLeft(
+      v-scroll-fire='slideRAnim'
+    )
       span Become a third-party funder for legal cases and reap reasonable rewards
-  .row.justify-evenly.q-px-xl.q-pb-xl.items-center
-    .col-4-lg
+  .row.justify-evenly.q-px-xl.q-pb-xl.bg-white.items-center
+    .col-4-lg.seethrough(v-scroll-fire='fadeAnim')
       .row.justify-center.q-mb-md
         img.illustration2(src='~src/assets/ad_1.png')
       .row.justify-center.illustration-title.text-center
         | An online retail platform
       .row.justify-center
         .col-auto.illustration-body.text-center.q-mb-xl selling case-specific NFT's each managed by a smart contract
-    .col-4-lg
+    .col-4-lg.seethrough(v-scroll-fire='fadeAnim')
       .row.justify-center.q-mb-md
         img.illustration2(src='~src/assets/ad_2.png')
       .row.justify-center.illustration-title.text-center
         | A secondary marketplace
       .row.justify-center
         .col-auto.illustration-body.text-center.q-mb-xl enables you to freely trade your NFTs prior to maturity
-    .col-4-lg
+    .col-4-lg.seethrough(v-scroll-fire='fadeAnim')
       .row.justify-center.q-mb-md
         img.illustration2(src='~src/assets/ad_3.png')
       .row.justify-center.illustration-title.text-center
@@ -342,6 +365,67 @@ q-page
 </template>
 
 <style lang="sass" scoped>
+.offLeft
+  transform: translateX(-2000px)
+.animate-slideRight
+  animation: slideRight 0.5s forwards
+
+@keyframes slideRight
+  0%
+    transform: translateX(-2000px)
+  100%
+    transform: translateX(0px)
+.offRight
+  transform: translateX(1500px)
+.animate-slideLeft
+  animation: slideLeft 1s forwards
+
+@keyframes slideLeft
+  0%
+    transform: translateX(1500px)
+  100%
+    transform: translateX(0px)
+.offBottom
+  transform: translateY(200px)
+.animate-slideUp
+  animation: slideUp 3s forwards
+
+@keyframes slideUp
+  0%
+    transform: translateY(200px)
+  100%
+    transform: translateY(0px)
+.seethrough
+  opacity: 0%
+.animate-fadeIn
+  animation: fadeIn 2s
+
+@keyframes fadeIn
+  0%
+    opacity: 0%
+  100%
+    opacity: 100%
+.seethroughOffBottom
+  opacity: 0%
+  transform: translateY(-100px)
+.animate-fadeUp
+  animation: fadeUp 2s
+
+@keyframes fadeUp
+  0%
+    opacity: 0%
+    transform: translateY(200px)
+  100%
+    opacity: 100%
+    transform: translateY(0px)
+.animate-fade
+  animation: fade 2s
+
+@keyframes fade
+  0%
+    opacity: 0%
+  100%
+    opacity: 100%
 .stats-titles
   // font-size: calc(15px + (30 - 15) * ((100vw - 300px) / (1600 - 300)))
   font-size: 1rem
