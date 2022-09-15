@@ -36,7 +36,9 @@ export default defineComponent({
       let clientID = 1;
       let email = account.email;
       let redirectURI = window.location.origin + this.$route.path;
-      let kycURL = `https://yknot.withpersona.com/verify?inquiry-template-id=${templateID}&environment=${environment}&reference-id=${clientID}?redirect-uri=${redirectURI}?fields[email]=${email}`;
+      let kycURL = `https://yknot.withpersona.com/verify?inquiry-template-id=${templateID}&environment=${environment}&reference-id=${clientID}&fields[email-address]=${email}&redirect-uri=${redirectURI}`;
+      // let encodedURL = encodeURIComponent(kycURL);
+      // console.log(encodedURL);
       window.location.href = kycURL;
     }
   },
@@ -63,7 +65,6 @@ q-page(v-if='isAuthenticated')
         //- Step 1: Check if KYC is complete, Do KYC if not complete
         q-step(:name='1', title='Complete KYC', icon='face', :done='step > 1')
           | We need to verify your identity before we can process your withdrawal.
-          | You will be redirected to the KYC provider's website.
           q-card.q-mt-sm
             .row.justify-center
               q-card-section

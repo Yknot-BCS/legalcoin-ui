@@ -32,6 +32,7 @@ export const mutations: MutationTree<AccountStateInterface> = {
       sessionLength: 0
     };
     state.profile = {
+      id: '',
       name: '',
       surname: '',
       email: '',
@@ -40,7 +41,8 @@ export const mutations: MutationTree<AccountStateInterface> = {
       accountName: '',
       publicKey: '',
       secret: '',
-      linkedAccounts: ['']
+      linkedAccounts: [''],
+      kyc: false
     };
     auth.setAccessToken('');
   },

@@ -1,5 +1,6 @@
 // Backend types
 export type User = {
+  id: string;
   name: string;
   surname: string;
   email: string;
@@ -9,6 +10,7 @@ export type User = {
   publicKey: string;
   secret: string;
   linkedAccounts: string[];
+  kyc: boolean;
 };
 
 export type SignInResponse = {
