@@ -1,17 +1,20 @@
 <script lang="ts">
-import { User } from 'src/types';
 import { defineComponent } from 'vue';
 import { ref } from 'vue';
 import { mapGetters } from 'vuex';
+import KYCForm from 'src/components/withdraw/KYCForm.vue';
+import TxTokenForm from 'src/components/withdraw/TxTokenForm.vue';
+import BankForm from 'src/components/withdraw/BankForm.vue';
 
 export default defineComponent({
   name: 'Withdraw',
-  components: {},
+  components: { KYCForm, TxTokenForm, BankForm },
   setup() {
     return {
       step: ref(0),
-      kycStatus: ref('Pending'),
-      kycChecking: ref(false)
+      kycComplete: ref(false),
+      depositComplete: ref(false),
+      bankComplete: ref(false)
     };
   },
   computed: {
@@ -22,30 +25,7 @@ export default defineComponent({
     })
   },
   watch: {},
-  methods: {
-    checkKYC() {
-      console.log('Checking KYC');
-      // this.kycStatus = 'Complete';
-    },
-    doKYC() {
-      console.log('Doing KYC');
-      let templateID = 'itmpl_GZ2JMK4GHYwnFJWxSvFbyeV3';
-      let environment = !process.env.DEVELOPMENT ? 'production' : 'sandbox';
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-      let account = this.account.profile as User;
-      let clientID = 1;
-      let email = account.email;
-      let redirectURI = window.location.origin + this.$route.path;
-      let kycURL = `https://yknot.withpersona.com/verify?inquiry-template-id=${templateID}&environment=${environment}&reference-id=${clientID}&fields[email-address]=${email}&redirect-uri=${redirectURI}`;
-      // let encodedURL = encodeURIComponent(kycURL);
-      // console.log(encodedURL);
-      window.location.href = kycURL;
-    }
-  },
-  mounted() {
-    console.log('Withdraw mounted');
-    this.checkKYC();
-  }
+  methods: {}
 });
 </script>
 
@@ -65,29 +45,14 @@ q-page(v-if='isAuthenticated')
         //- Step 1: Check if KYC is complete, Do KYC if not complete
         q-step(:name='1', title='Complete KYC', icon='face', :done='step > 1')
           | We need to verify your identity before we can process your withdrawal.
-          q-card.q-mt-sm
-            .row.justify-center
-              q-card-section
-                .column.justify-center.items-center(v-if='kycChecking')
-                  | Checking KYC status...
-                  q-spinner.q-mr-sm(color='primary', size='1.5em')
+          KYCForm(@kycComplete='(n: boolean) => (kycComplete = n)')
 
-                .column.justify-center.items-center(
-                  v-if='kycChecking == false'
-                )
-                  | KYC Status: {{ kycStatus }}
-                  q-btn.q-mt-sm(
-                    v-if='kycStatus !== "Complete"',
-                    @click='doKYC()',
-                    color='primary',
-                    label='Proceed with KYC'
-                  )
           q-stepper-navigation
             q-btn(
               @click='step = 2',
               color='primary',
               label='Continue',
-              :disable='kycStatus !== "Complete"'
+              :disable='!kycComplete'
             )
             q-btn.q-ml-sm(
               @click='step = 0',
@@ -104,6 +69,8 @@ q-page(v-if='isAuthenticated')
           :done='step > 2'
         )
           | For each ad campaign that you create, you can control how much you're willing to
+          TxTokenForm(@depositComplete='(n: boolean) => (depositComplete = n)')
+
           q-stepper-navigation
             q-btn(@click='step = 3', color='primary', label='Continue')
             q-btn.q-ml-sm(
@@ -121,6 +88,8 @@ q-page(v-if='isAuthenticated')
           :done='step > 3'
         )
           | For each ad campaign that you create, you can control how much you're willing to
+          BankForm(@bankComplete='(n: boolean) => (bankComplete = n)')
+
           q-stepper-navigation
             q-btn(@click='step = 4', color='primary', label='Continue')
             q-btn.q-ml-sm(
