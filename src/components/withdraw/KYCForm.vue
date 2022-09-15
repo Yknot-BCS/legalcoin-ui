@@ -8,6 +8,7 @@ export default defineComponent({
   components: {},
   setup() {
     return {
+      step: ref(1),
       kycStatus: ref(''),
       kycChecking: ref(true),
       userFirstName: ref(''),
@@ -100,14 +101,125 @@ q-card.q-mt-sm
         .row
           | Please wait until KYC is approved. ETA: 1-2 days
 
-      q-card-section(v-if='kycStatus === ""')
-        //- Personal Info Form
-        .row.fit.justify-center.items-center
-          q-btn.q-mt-sm(
-            @click='doKYC()',
-            color='primary',
-            label='Proceed with KYC'
+  //- q-card-section(v-if='kycStatus === ""')
+  q-stepper(
+    v-if='kycStatus === ""',
+    v-model='step',
+    color='primary',
+    vertical,
+    animated,
+    contracted,
+    infinite
+  )
+    q-step(:name='1', title='Basic Info', icon='person', :done='step > 0')
+      .row.justify-between.q-col-gutter-md
+        .col
+          q-input(
+            outlined,
+            v-model='userFirstName',
+            label='First Name',
+            lazy-rules,
+            :rules='[(val) => val.length > 0 || "First name is required"]'
           )
+        .col
+          q-input(
+            outlined,
+            v-model='userLastName',
+            label='Last Name',
+            lazy-rules,
+            :rules='[(val) => val.length > 0 || "Last name is required"]'
+          )
+
+      q-input(
+        outlined,
+        v-model='userBirthdate',
+        label='Birthdate',
+        lazy-rules,
+        :rules='[(val) => val.length > 0 || "Birthdate is required"]'
+      )
+      //- q-stepper-navigation
+      q-btn(@click='step = 2', color='primary', label='Continue')
+
+    q-step(:name='2', title='Contact', icon='contact_phone', :done='step > 1')
+      q-input(
+        outlined,
+        v-model='userEmail',
+        label='Email',
+        lazy-rules,
+        :rules='[(val) => val.length > 0 || "Email is required"]'
+      )
+      q-input(
+        outlined,
+        v-model='userPhone',
+        label='Phone',
+        lazy-rules,
+        :rules='[(val) => val.length > 0 || "Phone is required"]'
+      )
+      //- q-stepper-navigation
+      q-btn(@click='step = 3', color='primary', label='Continue')
+      q-btn(@click='step = 1', color='primary', label='Back', flat)
+
+    q-step(:name='3', title='Address', icon='home', :done='step > 2')
+      q-input(
+        outlined,
+        v-model='userCountry',
+        label='Country',
+        lazy-rules,
+        :rules='[(val) => val.length > 0 || "Country is required"]'
+      )
+      q-input(
+        outlined,
+        v-model='UserStreet1',
+        label='Street 1',
+        lazy-rules,
+        :rules='[(val) => val.length > 0 || "Street 1 is required"]'
+      )
+      q-input(
+        outlined,
+        v-model='UserStreet2',
+        label='Street 2',
+        lazy-rules,
+        :rules='[(val) => val.length > 0 || "Street 2 is required"]'
+      )
+      q-input(
+        outlined,
+        v-model='userCity',
+        label='City',
+        lazy-rules,
+        :rules='[(val) => val.length > 0 || "City is required"]'
+      )
+      q-input(
+        outlined,
+        v-model='userPostalCode',
+        label='Postal Code',
+        lazy-rules,
+        :rules='[(val) => val.length > 0 || "Postal Code is required"]'
+      )
+      q-input(
+        outlined,
+        v-model='userSubdivision',
+        label='Subdivision',
+        lazy-rules
+      )
+
+      //- q-stepper-navigation
+      q-btn(@click='step = 4', color='primary', label='Continue')
+      q-btn(@click='step = 2', color='primary', label='Back', flat)
+
+    q-step(
+      :name='4',
+      title='Smart Verification',
+      icon='face',
+      :done='step > 4'
+    )
+      .row.justify-center
+        q-btn.q-mt-sm(
+          @click='doKYC()',
+          color='primary',
+          label='Proceed with KYC'
+        )
+      //- q-stepper-navigation
+      //-   q-btn(color='primary', label='Finish')
 </template>
 
 <style lang="sass"></style>
