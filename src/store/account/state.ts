@@ -34,7 +34,7 @@ export function state(): AccountStateInterface {
     // Profile
     isLoggedIn: false,
     profile: {
-      id: '',
+      _id: '',
       name: '',
       surname: '',
       email: '',
@@ -44,7 +44,7 @@ export function state(): AccountStateInterface {
       publicKey: '',
       secret: '',
       linkedAccounts: [''],
-      kyc: false
+      kyc: ''
     },
     session: {
       token: '',

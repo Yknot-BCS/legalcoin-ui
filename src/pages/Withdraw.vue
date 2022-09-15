@@ -12,7 +12,7 @@ export default defineComponent({
   setup() {
     return {
       step: ref(0),
-      kycComplete: ref(false),
+      kycApproved: ref(false),
       depositComplete: ref(false),
       bankComplete: ref(false)
     };
@@ -45,14 +45,14 @@ q-page(v-if='isAuthenticated')
         //- Step 1: Check if KYC is complete, Do KYC if not complete
         q-step(:name='1', title='Complete KYC', icon='face', :done='step > 1')
           | We need to verify your identity before we can process your withdrawal.
-          KYCForm(@kycComplete='(n: boolean) => (kycComplete = n)')
+          KYCForm(@kycApproved='(n: boolean) => (kycApproved = n)')
 
           q-stepper-navigation
             q-btn(
               @click='step = 2',
               color='primary',
               label='Continue',
-              :disable='!kycComplete'
+              :disable='!kycApproved'
             )
             q-btn.q-ml-sm(
               @click='step = 0',
