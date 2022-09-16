@@ -9,6 +9,7 @@ export default defineComponent({
   components: {},
   setup() {
     return {
+      polling: ref(),
       step: ref(1),
       kycStatus: ref(''),
       kycChecking: ref(true),
@@ -40,6 +41,8 @@ export default defineComponent({
           return 'Pending';
         } else if (user.kyc === 'approved') {
           return 'Approved';
+        } else if (user.kyc === 'completed') {
+          return 'Pending Approval';
         } else if (user.kyc === 'declined') {
           return 'Rejected';
         } else {
@@ -70,7 +73,8 @@ export default defineComponent({
       let redirectURI = window.location.origin + this.$route.path;
 
       // Fields
-      // TODO country code
+      // FIXME country code
+      // TODO this isn't enough to update the user profile, will need to make a call to the backend
       let fields = qs.stringify(
         {
           fields: {
@@ -94,9 +98,16 @@ export default defineComponent({
       window.location.href = kycURL;
     }
   },
-  async mounted() {
+  mounted() {
     console.log('KYCForm mounted');
-    await this.checkKYC();
+    // poll for KYC status
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+    this.polling = setInterval(async () => {
+      void (await this.checkKYC());
+    }, 5000);
+  },
+  beforeUnmount() {
+    clearInterval(this.polling);
   }
 });
 </script>

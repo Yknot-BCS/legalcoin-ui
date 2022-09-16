@@ -12,7 +12,7 @@ export default defineComponent({
   setup() {
     return {
       step: ref(0),
-      kycApproved: ref(false),
+      kycApproved: ref(true),
       depositComplete: ref(false),
       bankComplete: ref(false)
     };
