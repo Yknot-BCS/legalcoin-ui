@@ -2,6 +2,7 @@
 import { defineComponent, ref } from 'vue';
 import { User } from 'src/types';
 import { mapGetters } from 'vuex';
+import qs from 'qs';
 
 export default defineComponent({
   name: 'KYCForm',
@@ -14,7 +15,7 @@ export default defineComponent({
       userFirstName: ref(''),
       userLastName: ref(''),
       userEmail: ref(''),
-      userBirthdate: ref(''),
+      userBirthdate: ref('2000-12-30'),
       userPhone: ref(''),
       userCountry: ref(''),
       UserStreet1: ref(''),
@@ -66,11 +67,30 @@ export default defineComponent({
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       let account = this.account.profile as User;
       let refereceID = account._id;
-      let email = account.email;
       let redirectURI = window.location.origin + this.$route.path;
-      let kycURL = `https://yknot.withpersona.com/verify?inquiry-template-id=${templateID}&environment=${environment}&reference-id=${refereceID}&fields[email-address]=${email}&redirect-uri=${redirectURI}`;
-      // let encodedURL = encodeURIComponent(kycURL);
-      // console.log(encodedURL);
+
+      // Fields
+      // TODO country code
+      let fields = qs.stringify(
+        {
+          fields: {
+            'name-first': this.userFirstName,
+            'name-last': this.userLastName,
+            birthdate: this.userBirthdate,
+            'email-address': this.userEmail,
+            'phone-number': this.userPhone,
+            'address-country-code': this.userCountry,
+            'address-street-1': this.UserStreet1,
+            'address-street-2': this.UserStreet2,
+            'address-city': this.userCity,
+            'address-postal-code': this.userPostalCode,
+            'address-subdivision': this.userSubdivision
+          }
+        },
+        { encode: true }
+      );
+      // console.log(fields);
+      let kycURL = `https://yknot.withpersona.com/verify?inquiry-template-id=${templateID}&environment=${environment}&reference-id=${refereceID}&redirect-uri=${redirectURI}&${fields}`;
       window.location.href = kycURL;
     }
   },
@@ -135,8 +155,10 @@ q-card.q-mt-sm
         v-model='userBirthdate',
         label='Birthdate',
         lazy-rules,
+        type='date',
         :rules='[(val) => val.length > 0 || "Birthdate is required"]'
       )
+
       //- q-stepper-navigation
       q-btn(@click='step = 2', color='primary', label='Continue')
 
@@ -146,6 +168,7 @@ q-card.q-mt-sm
         v-model='userEmail',
         label='Email',
         lazy-rules,
+        type='email',
         :rules='[(val) => val.length > 0 || "Email is required"]'
       )
       q-input(
@@ -153,6 +176,7 @@ q-card.q-mt-sm
         v-model='userPhone',
         label='Phone',
         lazy-rules,
+        type='tel',
         :rules='[(val) => val.length > 0 || "Phone is required"]'
       )
       //- q-stepper-navigation
@@ -170,37 +194,29 @@ q-card.q-mt-sm
       q-input(
         outlined,
         v-model='UserStreet1',
-        label='Street 1',
+        label='Street Address',
         lazy-rules,
-        :rules='[(val) => val.length > 0 || "Street 1 is required"]'
+        :rules='[(val) => val.length > 0 || "Street Address is required"]'
       )
-      q-input(
-        outlined,
-        v-model='UserStreet2',
-        label='Street 2',
-        lazy-rules,
-        :rules='[(val) => val.length > 0 || "Street 2 is required"]'
-      )
-      q-input(
-        outlined,
-        v-model='userCity',
-        label='City',
-        lazy-rules,
-        :rules='[(val) => val.length > 0 || "City is required"]'
-      )
-      q-input(
-        outlined,
-        v-model='userPostalCode',
-        label='Postal Code',
-        lazy-rules,
-        :rules='[(val) => val.length > 0 || "Postal Code is required"]'
-      )
-      q-input(
-        outlined,
-        v-model='userSubdivision',
-        label='Subdivision',
-        lazy-rules
-      )
+      q-input(outlined, v-model='UserStreet2', label='Apt/Suite', lazy-rules)
+
+      .row.q-col-gutter-sm.q-mt-sm.q-mb-md
+        .col
+          q-input(outlined, v-model='userCity', label='City', lazy-rules)
+        .col
+          q-input(
+            outlined,
+            v-model='userSubdivision',
+            label='Region',
+            lazy-rules
+          )
+        .col
+          q-input(
+            outlined,
+            v-model='userPostalCode',
+            label='Postal Code',
+            lazy-rules
+          )
 
       //- q-stepper-navigation
       q-btn(@click='step = 4', color='primary', label='Continue')
