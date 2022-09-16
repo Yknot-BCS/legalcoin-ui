@@ -134,7 +134,7 @@ q-card.q-mt-sm
 
   //- q-card-section(v-if='kycStatus === ""')
   q-stepper(
-    v-if='kycStatus === ""',
+    v-if='kycStatus === "" && !kycChecking',
     v-model='step',
     color='primary',
     vertical,

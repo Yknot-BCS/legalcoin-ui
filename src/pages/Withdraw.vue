@@ -12,7 +12,7 @@ export default defineComponent({
   setup() {
     return {
       step: ref(0),
-      kycApproved: ref(true),
+      kycApproved: ref(false),
       depositComplete: ref(false),
       bankComplete: ref(false)
     };
@@ -68,11 +68,16 @@ q-page(v-if='isAuthenticated')
           icon='currency_exchange',
           :done='step > 2'
         )
-          | For each ad campaign that you create, you can control how much you're willing to
+          | Please transfer the desired LEGAL tokens to the LegalCoin wallet address below.
           TxTokenForm(@depositComplete='(n: boolean) => (depositComplete = n)')
 
           q-stepper-navigation
-            q-btn(@click='step = 3', color='primary', label='Continue')
+            q-btn(
+              @click='step = 3',
+              color='primary',
+              label='Continue',
+              :disable='!depositComplete'
+            )
             q-btn.q-ml-sm(
               @click='step = 1',
               color='primary',
@@ -91,7 +96,12 @@ q-page(v-if='isAuthenticated')
           BankForm(@bankComplete='(n: boolean) => (bankComplete = n)')
 
           q-stepper-navigation
-            q-btn(@click='step = 4', color='primary', label='Continue')
+            q-btn(
+              @click='step = 4',
+              color='primary',
+              label='Continue',
+              :disable='!bankComplete'
+            )
             q-btn.q-ml-sm(
               @click='step = 2',
               color='primary',

@@ -74,7 +74,7 @@ export default defineComponent({
           account: process.env.LC_CONTRACT,
           name: 'transfer',
           data: {
-            from: (<string>this.accountName).toLowerCase(),
+            from: (this.accountName as string).toLowerCase(),
             to: this.to,
             quantity: `${parseFloat(this.amount).toFixed(
               Number(process.env.LC_PRECISION)
