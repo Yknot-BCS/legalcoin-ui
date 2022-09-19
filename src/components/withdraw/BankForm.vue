@@ -1,5 +1,6 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { api } from 'src/api';
 
 export default defineComponent({
   name: 'KYCForm',
@@ -17,9 +18,55 @@ export default defineComponent({
     };
   },
   methods: {
-    trySubmit() {
-      console.log('submit');
+    async trySubmit() {
+      try {
+        // eslint-disable-next-line
+        await api.accounts.mutation(`
+              {
+                profileUpdate(input: {bankInfo: 
+                  {name: "${this.fullname}", 
+                  accountNumber: "${this.accountNumber}",
+                  bankName: "${this.bankName}",
+                  bankCode: "${this.bankCode}",
+                  bankAddress: "${this.bankAddress}",
+                  swiftCode: "${this.swiftCode}"
+                  }
+                } )
+              }
+            `);
+        await this.$store.dispatch('account/refreshProfile');
+        this.$q.notify({
+          type: 'positive',
+          message: 'Bank Information Updated'
+        });
+        this.$emit('bankComplete', true);
+      } catch (e: unknown) {
+        if (typeof e === 'string') {
+          e.toUpperCase(); // works, `e` narrowed to string
+        } else if (e instanceof Error) {
+          console.log(e);
+          this.$q.notify({
+            color: 'red-4',
+            textColor: 'white',
+            message: e.message
+          });
+        }
+      }
+    },
+    loadBankInfo() {
+      const bankInfo = this.$store.state.account.profile.bankInfo;
+      if (bankInfo) {
+        this.fullname = bankInfo.name;
+        this.accountNumber = bankInfo.accountNumber;
+        this.bankName = bankInfo.bankName;
+        this.bankCode = bankInfo.bankCode;
+        this.bankAddress = bankInfo.bankAddress;
+        this.swiftCode = bankInfo.swiftCode;
+      }
     }
+  },
+  mounted() {
+    this.loadBankInfo();
   }
 });
 </script>
@@ -61,7 +108,7 @@ q-card.q-mt-sm
           :rules='[(val) => !!val || "SWIFT is required"]'
         )
     .row.justify-center.q-my-md
-      q-btn(type='submit', color='primary', label='Submit')
+      q-btn(type='submit', color='primary', label='Update')
 
 //- TODO SWIFT or SEPA payments. Check
 //- Name, account number, bank name, bank address, bank code, IBAN, BIC/SWIFT

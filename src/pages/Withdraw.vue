@@ -13,7 +13,7 @@ export default defineComponent({
     return {
       step: ref(0),
       kycApproved: ref(false),
-      depositComplete: ref(true),
+      depositComplete: ref(false),
       bankComplete: ref(false)
     };
   },
@@ -61,36 +61,12 @@ q-page(v-if='isAuthenticated')
               flat
             )
 
-        //- Step 2: Transfer LEGAL to LC wallet, Check if LC wallet has LEGAL
+        //- Step 2: Enter bank details, Check if bank details are correct
         q-step(
           :name='2',
-          title='Transfer LEGAL tokens',
-          icon='currency_exchange',
-          :done='step > 2'
-        )
-          | Please transfer the desired LEGAL tokens to the LegalCoin wallet address below.
-          TxTokenForm(@depositComplete='(n: boolean) => (depositComplete = n)')
-
-          q-stepper-navigation
-            q-btn(
-              @click='step = 3',
-              color='primary',
-              label='Continue',
-              :disable='!depositComplete'
-            )
-            q-btn.q-ml-sm(
-              @click='step = 1',
-              color='primary',
-              label='Back',
-              flat
-            )
-
-        //- Step 3: Enter bank details, Check if bank details are correct
-        q-step(
-          :name='3',
           title='Confirm Bank Details',
           icon='account_balance',
-          :done='step > 3'
+          :done='step > 2'
         )
           | Please enter your bank details below. GBP will be deposited into this account.
           | Please note that we can only deposit into to the following countires.
@@ -100,10 +76,34 @@ q-page(v-if='isAuthenticated')
 
           q-stepper-navigation
             q-btn(
-              @click='step = 4',
+              @click='step = 3',
               color='primary',
               label='Continue',
               :disable='!bankComplete'
+            )
+            q-btn.q-ml-sm(
+              @click='step = 1',
+              color='primary',
+              label='Back',
+              flat
+            )
+
+        //- Step 3: Transfer LEGAL to LC wallet, Check if LC wallet has LEGAL
+        q-step(
+          :name='3',
+          title='Transfer LEGAL tokens',
+          icon='currency_exchange',
+          :done='step > 3'
+        )
+          | Please transfer the desired LEGAL tokens to the LegalCoin wallet address below.
+          TxTokenForm(@depositComplete='(n: boolean) => (depositComplete = n)')
+
+          q-stepper-navigation
+            q-btn(
+              @click='step = 4',
+              color='primary',
+              label='Continue',
+              :disable='!depositComplete'
             )
             q-btn.q-ml-sm(
               @click='step = 2',
