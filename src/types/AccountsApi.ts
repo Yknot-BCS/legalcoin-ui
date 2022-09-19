@@ -11,7 +11,18 @@ export type User = {
   secret: string;
   linkedAccounts: string[];
   kyc: string;
+  bankInfo: BankInfo;
 };
+
+export interface BankInfo {
+  name: string;
+  accountNumber: string;
+  bankName: string;
+  bankCode: string;
+  bankAddress: string;
+  swiftCode: string;
+  iban: string;
+}
 
 export type SignInResponse = {
   token: string;

@@ -76,6 +76,15 @@ export async function getProfile() {
         secret
         linkedAccounts
         kyc
+        bankInfo {
+          name
+          accountNumber
+          bankName
+          bankCode
+          bankAddress
+          swiftCode
+          iban
+        }
       }
     }`)) as any;
   const profile = res.profile;

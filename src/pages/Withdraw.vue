@@ -13,7 +13,7 @@ export default defineComponent({
     return {
       step: ref(0),
       kycApproved: ref(false),
-      depositComplete: ref(false),
+      depositComplete: ref(true),
       bankComplete: ref(false)
     };
   },
@@ -92,7 +92,10 @@ q-page(v-if='isAuthenticated')
           icon='account_balance',
           :done='step > 3'
         )
-          | For each ad campaign that you create, you can control how much you're willing to
+          | Please enter your bank details below. GBP will be deposited into this account.
+          | Please note that we can only deposit into to the following countires.
+          | All fees will be paid by the user.
+
           BankForm(@bankComplete='(n: boolean) => (bankComplete = n)')
 
           q-stepper-navigation

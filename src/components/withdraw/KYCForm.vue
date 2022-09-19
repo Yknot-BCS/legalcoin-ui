@@ -19,8 +19,8 @@ export default defineComponent({
       userBirthdate: ref('2000-12-30'),
       userPhone: ref(''),
       userCountry: ref(''),
-      UserStreet1: ref(''),
-      UserStreet2: ref(''),
+      userStreet1: ref(''),
+      userStreet2: ref(''),
       userCity: ref(''),
       userPostalCode: ref(''),
       userSubdivision: ref('')
@@ -84,8 +84,8 @@ export default defineComponent({
             'email-address': this.userEmail,
             'phone-number': this.userPhone,
             'address-country-code': this.userCountry,
-            'address-street-1': this.UserStreet1,
-            'address-street-2': this.UserStreet2,
+            'address-street-1': this.userStreet1,
+            'address-street-2': this.userStreet2,
             'address-city': this.userCity,
             'address-postal-code': this.userPostalCode,
             'address-subdivision': this.userSubdivision
@@ -204,12 +204,12 @@ q-card.q-mt-sm
       )
       q-input(
         outlined,
-        v-model='UserStreet1',
+        v-model='userStreet1',
         label='Street Address',
         lazy-rules,
         :rules='[(val) => val.length > 0 || "Street Address is required"]'
       )
-      q-input(outlined, v-model='UserStreet2', label='Apt/Suite', lazy-rules)
+      q-input(outlined, v-model='userStreet2', label='Apt/Suite', lazy-rules)
 
       .row.q-col-gutter-sm.q-mt-sm.q-mb-md
         .col

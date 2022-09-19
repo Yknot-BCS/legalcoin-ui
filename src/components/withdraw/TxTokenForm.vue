@@ -28,6 +28,8 @@ export default defineComponent({
   async mounted() {
     await this.getBalance();
 
+    // TODO check contract if user has already deposited
+
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.polling = setInterval(async () => {
       void (await this.getBalance());
