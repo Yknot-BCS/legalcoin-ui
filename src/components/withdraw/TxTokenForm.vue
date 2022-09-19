@@ -3,6 +3,7 @@ import { defineComponent, ref } from 'vue';
 import { mapGetters, mapActions } from 'vuex';
 import { Asset } from '@greymass/eosio';
 import { QForm } from 'quasar';
+import { api } from 'src/api';
 
 export default defineComponent({
   name: 'KYCForm',
@@ -16,7 +17,8 @@ export default defineComponent({
       transaction: ref({}),
       balance: ref(''),
       polling: ref(),
-      depositCompleted: ref(false)
+      depositCompleted: ref(false),
+      depositedAmount: ref('0.00')
     };
   },
   computed: {
@@ -28,7 +30,7 @@ export default defineComponent({
   async mounted() {
     await this.getBalance();
 
-    // TODO check contract if user has already deposited
+    // await this.getDepositedAmount(); //TODO taken out for now
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     this.polling = setInterval(async () => {
@@ -114,6 +116,30 @@ export default defineComponent({
           });
         }
       }
+    },
+
+    async getDepositedAmount() {
+      // get table rows
+      const rows = await api.eosioCore.v1.chain.get_table_rows({
+        code: process.env.DEPOSIT_ACCOUNT,
+        scope: 'LEGAL',
+        table: 'deposits',
+        limit: 1000,
+        json: true
+      });
+      if (rows.rows.length > 0) {
+        const deposits = rows.rows.filter(
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          (row) => row.from === this.accountName
+        );
+        // sum up the quantity from each row
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const total: number = deposits.reduce((acc, cur) => {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          return Number(acc) + Asset.fromString(cur.quantity).value;
+        }, 0);
+        this.depositedAmount = total.toFixed(Number(process.env.LC_PRECISION));
+      }
     }
   }
 });
@@ -126,6 +152,10 @@ q-card.q-mt-sm(v-if='!depositCompleted')
       .row.justify-center
         | Balance: {{ balance }}
         | LEGAL
+
+      //- .row.justify-center
+      //-   | Already Deposited: {{ depositedAmount }}
+      //-   | LEGAL
 
       .row.justify-center.q-mt-md
         q-input(

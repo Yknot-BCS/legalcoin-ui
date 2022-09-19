@@ -114,7 +114,7 @@ q-page(v-if='isAuthenticated')
 
         //- Step 4: Complete
         q-step(:name='4', title='Complete', icon='flag', :done='step > 4')
-          | For each ad campaign that you create, you can control how much you're willing to
+          | Success! Your withdrawal is now being processed. It can take 3-5 working days to complete.
           q-stepper-navigation
             q-btn(
               @click='$router.push({ name: "wallet" })',
