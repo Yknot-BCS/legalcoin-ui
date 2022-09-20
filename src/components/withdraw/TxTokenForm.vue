@@ -14,7 +14,7 @@ export default defineComponent({
       to: ref(process.env.DEPOSIT_ACCOUNT),
       amount: ref(''),
       memo: ref(''),
-      transaction: ref({}),
+      transaction: ref({ transactionId: '' }),
       balance: ref(''),
       polling: ref(),
       depositCompleted: ref(false),
@@ -24,7 +24,8 @@ export default defineComponent({
   computed: {
     ...mapGetters({
       accountName: 'account/getAccountName',
-      isAuthenticated: 'account/isAuthenticated'
+      isAuthenticated: 'account/isAuthenticated',
+      account: 'account/account'
     })
   },
   async mounted() {
@@ -92,9 +93,30 @@ export default defineComponent({
       this.transaction = await this.sendTransaction({ actions });
     },
 
+    async updateOfframp() {
+      // make graphql mutation
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      let userId = this.account.profile._id as string;
+      let txId = this.transaction?.transactionId;
+      // eslint-disable-next-line
+      await api.accounts.mutation(`
+        {
+          offrampNew(input: {
+          userId: "${userId}",
+          txId: "${txId}",
+          status: "pending",
+          amount: "${parseFloat(this.amount).toFixed(
+            Number(process.env.LC_PRECISION)
+          )} ${process.env.LC_SYMBOL}"
+        })
+        }
+      `);
+    },
+
     async trySend() {
       try {
         await this.send();
+        await this.updateOfframp();
         this.$q.notify({
           color: 'green-4',
           textColor: 'white',
@@ -122,7 +144,7 @@ export default defineComponent({
       // get table rows
       const rows = await api.eosioCore.v1.chain.get_table_rows({
         code: process.env.DEPOSIT_ACCOUNT,
-        scope: 'LEGAL',
+        scope: process.env.LC_SYMBOL,
         table: 'deposits',
         limit: 1000,
         json: true
