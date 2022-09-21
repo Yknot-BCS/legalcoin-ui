@@ -3,6 +3,7 @@ import { defineComponent, ref } from 'vue';
 import { User } from 'src/types';
 import { mapGetters } from 'vuex';
 import qs from 'qs';
+import { api } from 'src/api';
 
 export default defineComponent({
   name: 'KYCForm',
@@ -46,7 +47,7 @@ export default defineComponent({
         } else if (user.kyc === 'declined') {
           return 'Rejected';
         } else {
-          return 'Incomplete';
+          return user.kyc;
         }
       }
       return 'Incomplete';
@@ -63,13 +64,43 @@ export default defineComponent({
       this.$emit('kycApproved', this.kycStatus === 'approved');
       this.kycChecking = false;
     },
-    doKYC() {
+    async doKYC() {
       console.log('Doing KYC');
-      let templateID = 'itmpl_GZ2JMK4GHYwnFJWxSvFbyeV3';
-      let environment = !process.env.DEVELOPMENT ? 'production' : 'sandbox';
+      // Update KYC profile info
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       let account = this.account.profile as User;
       let refereceID = account._id;
+
+      try {
+        // eslint-disable-next-line
+        await api.accounts.mutation(`
+          {
+            kycProfileUpdate(input:{
+              referenceId: "${refereceID}",
+              nameFirst: "${this.userFirstName}",
+              nameLast: "${this.userLastName}",
+              birthdate: "${this.userBirthdate}",
+              emailAddress: "${this.userEmail}",
+              phoneNumber: "${this.userPhone}",
+              addressStreet1: "${this.userStreet1}",
+              addressStreet2: "${this.userStreet2}",
+              addressCity: "${this.userCity}",
+              addressSubdivision: "${this.userSubdivision}",
+              addressPostalCode: "${this.userPostalCode}",
+              countryCode : "${this.userCountry}",
+            })
+          }
+        `);
+      } catch (error) {
+        console.log(error);
+        this.$q.notify({
+          type: 'negative',
+          message: (error as Error).message
+        });
+      }
+
+      let templateID = 'itmpl_GZ2JMK4GHYwnFJWxSvFbyeV3';
+      let environment = !process.env.DEVELOPMENT ? 'production' : 'sandbox';
       let redirectURI = window.location.origin + this.$route.path;
 
       // Fields
@@ -243,7 +274,7 @@ q-card.q-mt-sm
         q-btn.q-mt-sm(
           @click='doKYC()',
           color='primary',
-          label='Proceed with KYC'
+          label='Continue Smart Verification'
         )
       //- q-stepper-navigation
       //-   q-btn(color='primary', label='Finish')
