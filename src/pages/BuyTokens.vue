@@ -191,7 +191,7 @@ q-page.q-py-xl
   .row.justify-center
     q-form(@submit='tryBuyTokens')
       .row.justify-center
-        q-card.q-mt-xl(v-if='paymentStatus === "checkout"')
+        q-card(v-if='paymentStatus === "checkout"')
           q-card-section 
             .text-heading.text-grey-8
               | Buy LEGAL

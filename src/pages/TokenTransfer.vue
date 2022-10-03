@@ -119,7 +119,7 @@ export default defineComponent({
 <template lang="pug">
 q-page.q-py-xl
   .row.justify-center
-    q-card.q-mt-xl
+    q-card
       q-form(@submit='trySend', ref='sendForm')
         q-card-section
           .text-heading.text-grey-8

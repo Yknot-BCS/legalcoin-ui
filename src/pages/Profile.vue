@@ -95,7 +95,7 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-.row.justify-center.q-py-xl
+.row.justify-center
   .col-12
     q-card(flat)
       q-card-section.row.fit.bg-white.items-center.content-center.justify-center(

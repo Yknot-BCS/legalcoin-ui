@@ -95,7 +95,7 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-q-page.q-py-xl
+q-page
   //- Background image
   .row(style='height: 11rem')
     q-img.bg-img(

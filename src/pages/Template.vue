@@ -88,7 +88,7 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-.div.q-py-xl(v-if='isLegalCoin')
+.div(v-if='isLegalCoin')
   TemplateViewer(
     :templateData='templateData',
     :saleData='saleData',

@@ -45,7 +45,7 @@ img.polygon.br.animated.fadeInLeft.slow(src='~assets/polygons/pg4.svg')
 img.polygon.br.animated.fadeInLeft.slower(src='~assets/polygons/pg5.svg')
 img.polygon.br(src='~assets/polygons/pg6.svg')
 q-page.fit.row.wrap.justify-center.q-py-xl
-  q-card.settings-card.q-mt-xl
+  q-card.settings-card
     q-card-section
       .text-heading.text-grey-8.q-mr-lg
         | Account Settings
