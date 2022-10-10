@@ -87,9 +87,9 @@ img.polygon.tr(src='~assets/polygons/pg3.svg')
 img.polygon.br.animated.fadeInLeft.slow(src='~assets/polygons/pg4.svg')
 img.polygon.br.animated.fadeInLeft.slower(src='~assets/polygons/pg5.svg')
 img.polygon.br(src='~assets/polygons/pg6.svg')
-q-page
+q-page.q-py-xl
   .row.justify-center
-    q-card.q-mt-xl
+    q-card
       q-card-section
         .text-heading.text-grey-8
           | Balance
