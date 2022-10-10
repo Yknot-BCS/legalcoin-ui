@@ -183,7 +183,7 @@ q-expansion-item(
           )
 q-expansion-item(
   expand-separator,
-  icon='workspace_premium',
+  icon='diamond',
   label='Tier',
   v-if='showTier'
 )
@@ -237,7 +237,7 @@ q-expansion-item(
     )
 q-expansion-item(
   expand-separator,
-  icon='collections_bookmark',
+  icon='collections',
   label='Collection',
   v-if='showCollection'
 )
