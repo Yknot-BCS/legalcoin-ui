@@ -207,7 +207,15 @@ q-page
             :to='{ name: "buytokens", params: { status: "checkout" } }',
             label='FUND NOW',
             color='primary',
-            size='lg'
+            size='lg',
+            v-if='isLoggedIn'
+          )
+          q-btn.q-px-xl.q-ma-sm(
+            :to='{ name: "login" }',
+            label='Sign In / Sign Up',
+            color='primary',
+            size='lg',
+            v-else
           )
           q-btn.q-px-xl.q-ma-sm(
             href='https://docs-30.gitbook.io/legalcoin/',
