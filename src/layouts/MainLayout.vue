@@ -54,9 +54,10 @@ export default {
 
 <template lang="pug">
 q-layout(view='hHh lpR fff')
-  dev-banner(v-if='DEVELOPMENT')
-  CompleteRegistrationBanners
-  Header
+  q-header
+    dev-banner(v-if='DEVELOPMENT')
+    CompleteRegistrationBanners
+    Header
   q-page-container
     router-view
   q-footer
