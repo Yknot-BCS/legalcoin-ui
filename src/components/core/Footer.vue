@@ -78,8 +78,16 @@ export default {
         href='https://t.me/joinchat/PoG6go_yjhozNmM0',
         target='_blank'
       )
-  p.text-grey-6.q-mt-lg
+  .text-grey-6.q-mt-lg
     | © 2021 - {{ new Date().getFullYear() }} Legalcoin. All Rights Reserved
+  .row.justify-center.items-center.text-center
+    .col-12.text-grey-6
+      span Platform built with &#32;
+      q-icon(name='favorite')
+      span &#32; & &#32;
+      q-icon(name='coffee')
+      span &#32; by &#32;
+      span(style='text-decoration: underline') YKnot Blockchain Solutions
   p.text-grey-6.q-mt-xs
     | Version: {{ version }}
 </template>
