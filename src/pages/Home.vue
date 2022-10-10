@@ -270,10 +270,9 @@ q-page
   //- Featured Collections
   .div.q-py-xl.bg-black.img-parent
     .div.seethrough(v-scroll-fire='fadeAnim')
-      img.img1.seethroughOffBottom(
+      img.img1.seethrough(
         src='~src/assets/bg_grey_diag.svg',
-        v-scroll-fire='slideFadeUAnim',
-        style='z-index: -1'
+        v-scroll-fire='fadeAnim'
       )
     .row.justify-center
       h2.col.title-section.text-secondary.offLeft(v-scroll-fire='slideRAnim')
@@ -322,10 +321,9 @@ q-page
   //- Recommended for you
   .div.q-py-xl.bg-grey-4.img-parent
     .div.seethrough(v-scroll-fire='fadeAnim')
-      img.img1.seethroughOffBottom(
+      img.img1.seethrough(
         src='~src/assets/bg_grey_diag.svg',
-        v-scroll-fire='slideFadeUAnim',
-        style='z-index: 1'
+        v-scroll-fire='fadeAnim'
       )
     .row.justify-center.seethrough(v-scroll-fire='fadeAnim')
       h2.col.title-section.text-black.offLeft(v-scroll-fire='slideRAnim')
