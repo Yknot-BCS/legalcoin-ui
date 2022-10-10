@@ -39,10 +39,6 @@ export default defineComponent({
         el.classList.remove('offLeft');
         el.classList.add('animate-slideRight');
       },
-      slideLAnim(el: Element) {
-        el.classList.remove('offRight');
-        el.classList.add('animate-slideLeft');
-      },
       slideFadeUAnim(el: Element) {
         el.classList.remove('seethroughOffBottom');
         el.classList.add('animate-fadeUp');
@@ -375,8 +371,6 @@ q-page
     transform: translateX(-2000px)
   100%
     transform: translateX(0px)
-.offRight
-  transform: translateX(1500px)
 .animate-slideLeft
   animation: slideLeft 1s forwards
 
@@ -450,10 +444,6 @@ q-page
   margin-right: 5%
 .top
   z-index: 5
-.bg-feat
-  position: relative
-.bg-trend
-  position: relative
 .rounded
   border-radius: 1rem
   overflow: hidden
@@ -517,54 +507,9 @@ q-page
     margin-right: auto
   .landing-right-card-container
     max-width:40rem
-  .bg-feat::before
-    content:' '
-    position: absolute
-    z-index: -1
-    top: 0rem
-    left: 0
-    right: 0
-    bottom: 0rem
-    width: 100%
-    background-image: url("~src/assets/bg_img_diag3.svg")
-    background-repeat: no-repeat
-    background-size: cover
-  .bg-trend::before
-    content:' '
-    position: absolute
-    z-index: -1
-    top: 0
-    left: 0
-    right: 0
-    bottom: 0rem
-    background-image: url("~src/assets/bg_img_diag4.svg")
-    background-repeat: no-repeat
-    background-size: cover
 @media (max-width: $breakpoint-md-min)
   .landing-right
     margin-top: 10rem
-  .bg-feat::before
-    content:' '
-    position: absolute
-    z-index: -1
-    top: 0rem
-    left: 0rem
-    right: 0rem
-    bottom: 0rem
-    background-image: url("~src/assets/bg_img_diag3.svg")
-    background-repeat: no-repeat
-    background-size: cover
-  .bg-trend::before
-    content:' '
-    position: absolute
-    z-index: -1
-    top: 0rem
-    left: 0rem
-    right: 0rem
-    bottom: 0rem
-    background-image: url("~src/assets/bg_img_diag4.svg")
-    background-repeat: no-repeat
-    background-size: cover
 .featured-card
   width: 340px
   // width: 20em
