@@ -212,7 +212,7 @@ q-page
           )
           q-btn.q-px-xl.q-ma-sm(
             :to='{ name: "login" }',
-            label='Sign In / Sign Up',
+            label='FUND NOW',
             color='primary',
             size='lg',
             v-else
