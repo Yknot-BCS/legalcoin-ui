@@ -142,7 +142,7 @@ export default defineComponent({
 
 <template lang="pug">
 .q-pa-md(v-if='showMarket')
-  q-btn-toggle(
+  q-btn-toggle.primary-border(
     v-model='market',
     spread,
     no-caps,
@@ -183,7 +183,7 @@ q-expansion-item(
           )
 q-expansion-item(
   expand-separator,
-  icon='diamond',
+  icon='workspace_premium',
   label='Tier',
   v-if='showTier'
 )
@@ -237,7 +237,7 @@ q-expansion-item(
     )
 q-expansion-item(
   expand-separator,
-  icon='collections',
+  icon='collections_bookmark',
   label='Collection',
   v-if='showCollection'
 )
@@ -254,4 +254,9 @@ q-expansion-item(
           )
 </template>
 
-<style scoped lang="sass"></style>
+<style scoped lang="sass">
+.primary-border
+  border-style: solid
+  border-color: $primary
+  border-width: thin
+</style>
