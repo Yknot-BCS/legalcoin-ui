@@ -268,12 +268,11 @@ q-page
   .row.q-pb-md
 
   //- Featured Collections
-  .div.q-py-xl.bg-black.img-parent(style='z-index: -2')
+  .div.q-py-xl.bg-black.img-parent
     .div.seethrough(v-scroll-fire='fadeAnim')
-      img.img1.seethroughOffBottom(
+      img.img1.seethrough(
         src='~src/assets/bg_grey_diag.svg',
-        v-scroll-fire='slideFadeUAnim',
-        style='z-index: -1'
+        v-scroll-fire='fadeAnim'
       )
     .row.justify-center
       h2.col.title-section.text-secondary.offLeft(v-scroll-fire='slideRAnim')
@@ -320,12 +319,11 @@ q-page
       .illustration-body.text-center.q-mb-xl claim your returns at the end
 
   //- Recommended for you
-  .div.q-py-xl.bg-grey-4.img-parent(style='z-index: -2')
+  .div.q-py-xl.bg-grey-4.img-parent
     .div.seethrough(v-scroll-fire='fadeAnim')
-      img.img1.seethroughOffBottom(
+      img.img1.seethrough(
         src='~src/assets/bg_grey_diag.svg',
-        v-scroll-fire='slideFadeUAnim',
-        style='z-index: -1'
+        v-scroll-fire='fadeAnim'
       )
     .row.justify-center.seethrough(v-scroll-fire='fadeAnim')
       h2.col.title-section.text-black.offLeft(v-scroll-fire='slideRAnim')
@@ -334,7 +332,8 @@ q-page
     .row.justify-center.seethrough(v-scroll-fire='fadeAnim')
       .featured-card.q-py-sm.q-px-md(
         v-for='template in trendingTemplates.slice(0, numberOfCards)',
-        v-if='trendingTemplates.length > 0'
+        v-if='trendingTemplates.length > 0',
+        style='z-index: 2'
       )
         Cards.rounded.shadow-10(:data='template', type='Templates')
 
