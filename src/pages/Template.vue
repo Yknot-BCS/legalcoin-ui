@@ -39,6 +39,7 @@ export default defineComponent({
         this.$route.params.collection_name as string,
         this.$route.params.template_id as string
       );
+      console.log('templateData', this.templateData);
     },
 
     async getSaleData() {
@@ -63,6 +64,7 @@ export default defineComponent({
         seller: process.env.AA_ACCOUNT
       } as unknown;
       this.saleData = (await atomic_market_api.getSales(saleFilter))[0];
+      console.log('saleData', this.saleData);
     },
 
     async updateTemplateInfo() {

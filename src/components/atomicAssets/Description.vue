@@ -26,8 +26,6 @@ export default defineComponent({
 .row
   .col-12
     .text-body1 {{ description }}
-  .col-12.q-mt-lg
-    .text-subtitle1 Remaining Supply: {{ Number(maxSupply) - Number(issuedSupply) }}/{{ maxSupply }}
 </template>
 
 <style lang="sass"></style>
