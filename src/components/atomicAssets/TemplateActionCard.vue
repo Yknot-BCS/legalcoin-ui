@@ -230,7 +230,6 @@ export default defineComponent({
           seller: process.env.AA_ACCOUNT
         }
       );
-      console.log(this.salesCount);
     },
 
     async getTotal() {
