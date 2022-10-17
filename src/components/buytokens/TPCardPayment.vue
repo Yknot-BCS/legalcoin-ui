@@ -64,7 +64,7 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-form.paymentWidgets(action=`${redirectUrl}`, data-brands='VISA MASTER AMEX')
+form.paymentWidgets(:action=`${redirectUrl}`, data-brands='VISA MASTER AMEX')
 | {{ currentUrl }}
 | {{ orderId }}
 | {{ redirectUrl }}
