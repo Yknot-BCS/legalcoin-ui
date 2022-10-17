@@ -14,6 +14,11 @@ export default defineComponent({
       type: String,
       default: '',
       required: true
+    },
+    orderId: {
+      type: String,
+      default: '',
+      required: true
     }
   },
   setup() {
@@ -25,7 +30,11 @@ export default defineComponent({
       isAuthenticated: 'account/isAuthenticated'
     }),
     currentUrl(): string {
+      console.log(window.location.origin);
       return window.location.origin;
+    },
+    redirectUrl(): string {
+      return `${this.currentUrl}/wallet/buytokens/success?order-id=${this.orderId} `;
     }
   },
   methods: {},
@@ -55,10 +64,10 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-form.paymentWidgets(
-  action=`${currentUrl}/buytokens/success`,
-  data-brands='VISA MASTER AMEX'
-)
+form.paymentWidgets(action=`${redirectUrl}`, data-brands='VISA MASTER AMEX')
+| {{ currentUrl }}
+| {{ orderId }}
+| {{ redirectUrl }}
 </template>
 
 <style lang="sass" scoped></style>

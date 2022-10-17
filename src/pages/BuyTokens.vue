@@ -26,7 +26,8 @@ export default defineComponent({
       minimumAmount: ref(50),
       changingBuyAmount: ref(false),
       redirectString: ref(''),
-      tpId: ref('')
+      tpId: ref(''),
+      paygateSelected: ref(false)
     };
   },
   computed: {
@@ -120,7 +121,7 @@ export default defineComponent({
 
           console.log(this.tpId);
 
-          // TODO navigate to card payment page
+          this.paygateSelected = true;
 
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           // let redirectUrl = response.data.data._links.redirect.href as string;
@@ -164,7 +165,7 @@ export default defineComponent({
     }
 
     if (this.paymentStatus === 'success' || this.paymentStatus === 'failure') {
-      this.paymentId = <string>this.$route.query['cko-payment-id'];
+      this.paymentId = <string>this.$route.query['order-id'];
     }
   }
 });
@@ -181,7 +182,7 @@ q-page.q-py-xl
   .row.justify-center
     q-form(@submit='tryBuyTokens')
       .row.justify-center
-        q-card(v-if='paymentStatus === "checkout"')
+        q-card(v-if='paymentStatus === "checkout" && !paygateSelected')
           q-card-section 
             .text-heading.text-grey-8
               | Buy LEGAL
@@ -259,8 +260,11 @@ q-page.q-py-xl
             | By continuing you agree to the terms and conditions
 
     //- Payment Methods
-    TPCardPayment(v-if='tpId !== ""', :paymentId='tpId')
-    | Ooi: {{ tpId }}
+    TPCardPayment(
+      v-if='tpId !== ""',
+      :paymentId='tpId',
+      :orderId='order.order_id'
+    )
 
     //- Show payment status
     TokensReceipt(
