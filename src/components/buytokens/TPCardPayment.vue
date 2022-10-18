@@ -62,7 +62,7 @@ export default defineComponent({
   form.paymentWidgets(
     v-if='redirectUrl',
     :action='redirectUrl',
-    data-brands='VISA MASTER AMEX BITCOIN PAYPAL'
+    data-brands='VISA MASTER AMEX'
   )
 </template>
 
