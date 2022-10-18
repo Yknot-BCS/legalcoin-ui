@@ -113,7 +113,7 @@ export default defineComponent({
     const search =
       ref<string>((ApiParams.value as AssetsApiParams).search as string) ||
       ref('');
-    const pageOptions = [6, 12, 24, 48];
+    const pageOptions = [12, 24, 48];
     const limit = ref(ItemsPerPage);
     const assetCount = ref<number>(1);
     const sortOptions = ref([
