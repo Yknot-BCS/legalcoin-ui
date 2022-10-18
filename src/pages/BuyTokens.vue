@@ -77,7 +77,6 @@ export default defineComponent({
   },
   methods: {
     async createBuyOrder() {
-      console.log(process.env.ISSUER_API_ENDPOINT);
       try {
         let params = {
           name: 'Buy LEGAL',
@@ -113,13 +112,11 @@ export default defineComponent({
             '/hosted-payments/tp',
             body
           );
-
-          console.log(response);
+          // console.log(response);
 
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
           this.tpId = response.data.data.id as string;
-
-          console.log(this.tpId);
+          // console.log(this.tpId);
 
           this.paygateSelected = true;
 
@@ -139,7 +136,6 @@ export default defineComponent({
       }
     },
     async tryBuyTokens() {
-      console.log('tryBuyTokens');
       this.$q.loading.show({
         message: 'Navigating to payment gateway. Hang on...'
       });
@@ -263,7 +259,7 @@ q-page.q-py-xl
     TPCardPayment(
       v-if='tpId !== ""',
       :paymentId='tpId',
-      :orderId='order.order_id'
+      :orderId='String(order.order_id)'
     )
 
     //- Show payment status

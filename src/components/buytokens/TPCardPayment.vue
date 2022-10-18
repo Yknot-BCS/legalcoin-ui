@@ -25,7 +25,6 @@ export default defineComponent({
       isAuthenticated: 'account/isAuthenticated'
     }),
     currentUrl(): string {
-      console.log(window.location.origin);
       return window.location.origin;
     },
     redirectUrl(): string {
@@ -59,11 +58,12 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-form.paymentWidgets(
-  v-if='redirectUrl',
-  :action='redirectUrl',
-  data-brands='VISA MASTER AMEX'
-)
+.column.justify-center.items-center
+  form.paymentWidgets(
+    v-if='redirectUrl',
+    :action='redirectUrl',
+    data-brands='VISA MASTER AMEX BITCOIN PAYPAL'
+  )
 </template>
 
 <style lang="sass" scoped></style>
