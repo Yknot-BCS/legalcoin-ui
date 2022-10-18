@@ -165,7 +165,7 @@ export default defineComponent({
     }
 
     if (this.paymentStatus === 'success' || this.paymentStatus === 'failure') {
-      this.paymentId = <string>this.$route.query['order-id'];
+      this.paymentId = <string>this.$route.params.orderId;
     }
   }
 });

@@ -1,11 +1,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { ref } from 'vue';
-import axios from 'axios';
-import { date } from 'quasar';
 import { mapGetters } from 'vuex';
-import crypto from 'crypto';
-import { required } from 'yargs';
 
 export default defineComponent({
   name: 'TPCardPayment',
@@ -34,7 +29,7 @@ export default defineComponent({
       return window.location.origin;
     },
     redirectUrl(): string {
-      return `${this.currentUrl}/wallet/buytokens/success?order-id=${this.orderId} `;
+      return `${this.currentUrl}/buytokens/success/${this.orderId}`;
     }
   },
   methods: {},
@@ -64,9 +59,12 @@ export default defineComponent({
 </script>
 
 <template lang="pug">
-form.paymentWidgets(:action=`${redirectUrl}`, data-brands='VISA MASTER AMEX')
-| {{ currentUrl }}
-| {{ orderId }}
+form.paymentWidgets(
+  v-if='redirectUrl',
+  :action='redirectUrl',
+  data-brands='VISA MASTER AMEX'
+)
+
 | {{ redirectUrl }}
 </template>
 

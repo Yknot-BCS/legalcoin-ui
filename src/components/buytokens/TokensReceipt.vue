@@ -42,7 +42,7 @@ export default defineComponent({
     }
   },
   methods: {
-    async tryGetOrderInfo(pg_id: string) {
+    async tryGetOrderInfo(id: string) {
       if (this.isAuthenticated) {
         const hash = crypto
           .createHmac('sha256', process.env.ISSUER_SECRET)
@@ -59,7 +59,7 @@ export default defineComponent({
 
         const response = await issuerAPI.get(
           `/getorders/${<string>this.accountName}`,
-          { params: { pg_id: pg_id } }
+          { params: { id: id } }
         );
 
         /* eslint-disable */
@@ -101,7 +101,6 @@ export default defineComponent({
     }
   },
   async mounted() {
-    // await this.tryGetPaymentInfo(this.paymentId);
     await this.tryGetOrderInfo(this.paymentId);
 
     if (this.issueInProgress) {
