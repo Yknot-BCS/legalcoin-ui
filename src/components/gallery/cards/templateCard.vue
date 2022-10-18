@@ -57,7 +57,7 @@ q-card
         .col-auto.text-bold
           | Price:
         .col-auto
-          .row
+          .row.no-wrap
             img.lc-currency.q-pr-xs(src='~assets/legalcoin-trimmed.png')
             .ellipsis {{ getPrice }}
       .col
