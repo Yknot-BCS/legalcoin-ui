@@ -54,7 +54,7 @@ q-card
         .col-auto.text-bold
           | Top Bid:
         .col-auto
-          .row.no-wrap
+          .row.no-wrap.items-center
             img.lc-currency.q-pr-xs(src='~assets/legalcoin-trimmed.png')
             .ellipsis {{ card.price }}
       .col
