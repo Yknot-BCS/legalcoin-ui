@@ -42,7 +42,7 @@ q-card
       .col-10
         //- Title of cards
         .row
-          .text-subtitle1.heading {{ `${card.collectionTitle} #${card.mintNumber}` }}
+          .text-subtitle1.heading.ellipsis {{ `${card.collectionTitle} #${card.mintNumber}` }}
         //- Tier badge
       .col-2.self-center(v-if='card.tier != "None"')
         q-badge.float-right.lt-md(rounded, :color='badgeColour')
@@ -55,7 +55,7 @@ q-card
           | Top Bid:
         .col-auto
           img.lc-currency.q-pr-xs(src='~assets/legalcoin-trimmed.png')
-          | {{ card.price }}
+          .ellipsis {{ card.price }}
       .col
         .col-auto.text-bold
           .text-right Yield:
