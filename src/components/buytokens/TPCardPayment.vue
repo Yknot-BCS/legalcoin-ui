@@ -64,8 +64,6 @@ form.paymentWidgets(
   :action='redirectUrl',
   data-brands='VISA MASTER AMEX'
 )
-
-| {{ redirectUrl }}
 </template>
 
 <style lang="sass" scoped></style>
