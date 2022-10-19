@@ -14,6 +14,11 @@ export default defineComponent({
       type: String,
       default: '',
       required: true
+    },
+    amount: {
+      type: Number,
+      default: 0,
+      required: true
     }
   },
   setup() {
@@ -59,11 +64,25 @@ export default defineComponent({
 
 <template lang="pug">
 .column.justify-center.items-center
-  form.paymentWidgets(
-    v-if='redirectUrl',
-    :action='redirectUrl',
-    data-brands='VISA MASTER AMEX'
-  )
+  q-card.shrink-card
+    .column.justify-center.items-center
+      q-card-section
+        .text-heading.text-grey-8 Finalise Payment
+      .col.q-mb-md.q-mx-md
+        .text-subtitle1
+          | Please complete the payment process below to finalise your purchase.
+      .col.q-mb-md
+        .text-subtitle2 Purchase price: {{ amount }} GBP
+
+      .col 
+        form.paymentWidgets(
+          v-if='redirectUrl',
+          :action='redirectUrl',
+          data-brands='VISA MASTER AMEX'
+        )
 </template>
 
-<style lang="sass" scoped></style>
+<style lang="sass" scoped>
+.shrink-card
+  flex-basis: 100%
+</style>

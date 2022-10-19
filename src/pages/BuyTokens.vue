@@ -259,7 +259,8 @@ q-page.q-py-xl
     TPCardPayment(
       v-if='tpId !== ""',
       :paymentId='tpId',
-      :orderId='String(order.order_id)'
+      :orderId='String(order.order_id)',
+      :amount='spendAmount'
     )
 
     //- Show payment status
