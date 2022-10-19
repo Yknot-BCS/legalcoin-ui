@@ -100,7 +100,7 @@ export default defineComponent({
       try {
         if (this.order.order_id != '') {
           let body = {
-            entityId: '8ac7a4c883c3f00c0183d4f45294787d',
+            entityId: process.env.PG_ENTITY_ID,
             amount: Number(this.spendAmount),
             currency: 'GBP',
             paymentType: 'DB',
