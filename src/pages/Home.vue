@@ -28,6 +28,8 @@ export default defineComponent({
       assets,
       storecollections,
       featuredCollections: ref<GalleryCard[]>([] as GalleryCard[]),
+      slideCollections: ref(1),
+      slideRecommended: ref(1),
       collections: ref<ICollection[]>(new Object({}) as ICollection[]),
       trendingTemplates: ref<GalleryCard[]>([] as GalleryCard[]),
       screenWidth,
@@ -58,6 +60,12 @@ export default defineComponent({
         numberOfCards = numberOfCards;
       }
       return numberOfCards;
+    },
+    cardCollectionPages(): number {
+      return Math.ceil(this.featuredCollections.length / this.numberOfCards);
+    },
+    cardRecommendedPages(): number {
+      return Math.ceil(this.trendingTemplates.length / this.numberOfCards);
     }
   },
 
@@ -278,12 +286,28 @@ q-page
       h2.col.title-section.text-secondary.offLeft(v-scroll-fire='slideRAnim')
         span Featured &#32
         span.underline Collections
-    .row.justify-center
-      .featured-card.q-pa-sm(
-        v-for='collection in featuredCollections.slice(0, numberOfCards)',
-        v-if='featuredCollections.length > 0'
-      )
-        Cards.rounded.shadow-10(:data='collection', type='Collections')
+
+    q-carousel.bg-transparent(
+      v-model='slideCollections',
+      transition-prev='slide-right',
+      transition-next='slide-left',
+      swipeable,
+      animated,
+      control-color='primary',
+      navigation,
+      padding,
+      arrows,
+      infinite,
+      height='auto',
+      :autoplay='cardCollectionPages > 1 ? true : false'
+    )
+      q-carousel-slide(v-for='page in cardCollectionPages', :name='page')
+        .row.justify-center
+          .featured-card.q-pa-sm(
+            v-for='collection in featuredCollections.slice((page - 1) * numberOfCards, (page - 1) * numberOfCards + numberOfCards)',
+            v-if='featuredCollections.length > 0'
+          )
+            Cards.rounded.shadow-10(:data='collection', type='Collections')
 
     .row.justify-center.q-mt-md.q-pb-xl
       q-btn(
@@ -329,13 +353,29 @@ q-page
       h2.col.title-section.text-black.offLeft(v-scroll-fire='slideRAnim')
         span Recommended &#32
         span.underline for you
-    .row.justify-center.seethrough(v-scroll-fire='fadeAnim')
-      .featured-card.q-py-sm.q-px-md(
-        v-for='template in trendingTemplates.slice(0, numberOfCards)',
-        v-if='trendingTemplates.length > 0',
-        style='z-index: 2'
-      )
-        Cards.rounded.shadow-10(:data='template', type='Templates')
+    //- .row.justify-center.seethrough(v-scroll-fire='fadeAnim')
+
+    q-carousel.bg-transparent(
+      v-model='slideRecommended',
+      transition-prev='slide-right',
+      transition-next='slide-left',
+      swipeable,
+      animated,
+      control-color='primary',
+      navigation,
+      padding,
+      arrows,
+      infinite,
+      height='auto',
+      :autoplay='cardRecommendedPages > 1 ? true : false'
+    )
+      q-carousel-slide(v-for='page in cardRecommendedPages', :name='page')
+        .row.justify-center
+          .featured-card.q-pa-sm(
+            v-for='template in trendingTemplates.slice((page - 1) * numberOfCards, (page - 1) * numberOfCards + numberOfCards)',
+            v-if='trendingTemplates.length > 0'
+          )
+            Cards.rounded.shadow-10(:data='template', type='Templates')
 
   //- Illustrations
   .row.justify-center.q-py-xl.bg-white(style='z-index: 1')
