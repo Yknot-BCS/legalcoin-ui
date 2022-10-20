@@ -19,8 +19,8 @@ export default defineComponent({
       spendAfterFee: ref(0),
       buyAmount: ref('0'),
       order: ref({ order_id: '' }),
-      processingFeePercentage: ref(0.045),
-      ratio: ref(1.01), // GBP to LEGAL rate
+      processingFeePercentage: ref(0.07),
+      ratio: ref(1.0), // GBP to LEGAL rate
       issuerAPI: issuerAPI,
       paymentId: ref(''),
       minimumAmount: ref(50),
