@@ -1,6 +1,6 @@
 import { MutationTree } from 'vuex';
 import { AccountStateInterface } from './state';
-import { AccountDetails, User, Session } from 'src/types';
+import { AccountDetails, User, Session, BankInfo } from 'src/types';
 import { SignTransactionResponse } from 'universal-authenticator-library';
 import auth from 'src/auth';
 import { UALPlatformSignerError } from 'src/components/auth/UALPlatformSignerError';
@@ -32,6 +32,7 @@ export const mutations: MutationTree<AccountStateInterface> = {
       sessionLength: 0
     };
     state.profile = {
+      _id: '',
       name: '',
       surname: '',
       email: '',
@@ -40,7 +41,9 @@ export const mutations: MutationTree<AccountStateInterface> = {
       accountName: '',
       publicKey: '',
       secret: '',
-      linkedAccounts: ['']
+      linkedAccounts: [''],
+      kyc: '',
+      bankInfo: {} as BankInfo
     };
     auth.setAccessToken('');
   },

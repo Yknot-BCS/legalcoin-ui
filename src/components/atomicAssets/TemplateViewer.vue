@@ -44,8 +44,12 @@ export default defineComponent({
   q-card.col-6.q-my-sm.q-mx-md(flat)
     q-img.asset-img(
       :src='assetImg',
-      placeholder-src='https://placeimg.com/500/300/nature'
+      placeholder-src='~src/assets/LC-Placeholder.png'
     )
+      template(v-slot:loading)
+        .text-primary
+          .q-pt-xl Loading...
+          q-spinner
 
   //- Actions
   TemplateActionCard.col-6.q-my-sm.q-mx-md(

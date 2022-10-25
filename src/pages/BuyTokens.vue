@@ -4,12 +4,13 @@ import { ref } from 'vue';
 import axios from 'axios';
 import { mapGetters } from 'vuex';
 import TokensReceipt from 'src/components/buytokens/TokensReceipt.vue';
+import TPCardPayment from 'src/components/buytokens/TPCardPayment.vue';
 
 export default defineComponent({
   name: 'BuyTokens',
-  components: { TokensReceipt },
+  components: { TokensReceipt, TPCardPayment },
   setup() {
-    const checkoutAPI = axios.create({
+    const issuerAPI = axios.create({
       baseURL: process.env.ISSUER_API_ENDPOINT
     });
     return {
@@ -18,13 +19,15 @@ export default defineComponent({
       spendAfterFee: ref(0),
       buyAmount: ref('0'),
       order: ref({ order_id: '' }),
-      processingFeePercentage: ref(0.045),
-      ratio: ref(1.01), // GBP to LEGAL rate
-      checkoutAPI: checkoutAPI,
+      processingFeePercentage: ref(0.07),
+      ratio: ref(1.0), // GBP to LEGAL rate
+      issuerAPI: issuerAPI,
       paymentId: ref(''),
       minimumAmount: ref(50),
       changingBuyAmount: ref(false),
-      redirectString: ref('')
+      redirectString: ref(''),
+      tpId: ref(''),
+      paygateSelected: ref(false)
     };
   },
   computed: {
@@ -51,6 +54,9 @@ export default defineComponent({
     },
     displayAfterFee(): string {
       return Number(this.spendAfterFee).toFixed(2);
+    },
+    currentUrl(): string {
+      return window.location.origin;
     }
   },
   watch: {
@@ -71,11 +77,7 @@ export default defineComponent({
   },
   methods: {
     async createBuyOrder() {
-      console.log(process.env.ISSUER_API_ENDPOINT);
       try {
-        const issuerAPI = axios.create({
-          baseURL: process.env.ISSUER_API_ENDPOINT
-        });
         let params = {
           name: 'Buy LEGAL',
           description: `Bought ${this.buyAmount} LEGAL`,
@@ -86,7 +88,7 @@ export default defineComponent({
           account: this.accountName as string,
           contract: process.env.LC_CONTRACT
         };
-        const response = await issuerAPI.get('/order', { params: params });
+        const response = await this.issuerAPI.get('/order', { params: params });
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         this.order = response.data;
       } catch (error) {
@@ -95,47 +97,33 @@ export default defineComponent({
       }
     },
     async goToPaygate() {
-      // FIXME the checkout.com secret key is not secure
-      // get country code from user's IP
-      const ip = await axios.get('https://api.ipify.org');
-      const countryCode = await axios.get(
-        // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-        `https://ipapi.co/${ip.data}/country_code`
-      );
-
       try {
         if (this.order.order_id != '') {
           let body = {
-            amount: Number(this.spendAmount) * 100,
+            entityId: process.env.PG_ENTITY_ID,
+            amount: Number(this.spendAmount),
             currency: 'GBP',
-            reference: String(this.order.order_id),
-            metadata: {
-              description: this.accountName as string
-            },
-            billing: {
-              address: {
-                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                country: countryCode?.data
-              }
-            },
-            customer: {
-              name: `${this.$store.state.account.profile.name} ${this.$store.state.account.profile.surname}`,
-              email: this.$store.state.account.profile.email
-            },
-            success_url: `${window.location.origin}/buytokens/success${this.redirectString}`,
-            failure_url: `${window.location.origin}/buytokens/failure${this.redirectString}`,
-            cancel_url: `${window.location.origin}/buytokens/checkout${this.redirectString}`
+            paymentType: 'DB',
+            merchantTransactionId: this.order.order_id,
+            descriptor: this.accountName as string
           };
 
-          const response = await this.checkoutAPI.post(
-            '/hosted-payments/cko',
+          const response = await this.issuerAPI.post(
+            '/hosted-payments/tp',
             body
           );
+          // console.log(response);
 
           // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-          let redirectUrl = response.data.data._links.redirect.href as string;
+          this.tpId = response.data.data.id as string;
+          // console.log(this.tpId);
+
+          this.paygateSelected = true;
+
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+          // let redirectUrl = response.data.data._links.redirect.href as string;
           this.$q.loading.hide();
-          window.location.href = redirectUrl;
+          // window.location.href = redirectUrl;
         } else {
           this.$q.notify({
             type: 'negative',
@@ -148,7 +136,6 @@ export default defineComponent({
       }
     },
     async tryBuyTokens() {
-      console.log('tryBuyTokens');
       this.$q.loading.show({
         message: 'Navigating to payment gateway. Hang on...'
       });
@@ -174,7 +161,7 @@ export default defineComponent({
     }
 
     if (this.paymentStatus === 'success' || this.paymentStatus === 'failure') {
-      this.paymentId = <string>this.$route.query['cko-payment-id'];
+      this.paymentId = <string>this.$route.params.orderId;
     }
   }
 });
@@ -187,11 +174,11 @@ img.polygon.tr(src='~assets/polygons/pg3.svg')
 img.polygon.br.animated.fadeInLeft.slow(src='~assets/polygons/pg4.svg')
 img.polygon.br.animated.fadeInLeft.slower(src='~assets/polygons/pg5.svg')
 img.polygon.br(src='~assets/polygons/pg6.svg')
-q-page
+q-page.q-py-xl
   .row.justify-center
     q-form(@submit='tryBuyTokens')
       .row.justify-center
-        q-card.q-mt-xl(v-if='paymentStatus === "checkout"')
+        q-card(v-if='paymentStatus === "checkout" && !paygateSelected')
           q-card-section 
             .text-heading.text-grey-8
               | Buy LEGAL
@@ -267,6 +254,14 @@ q-page
               q-btn.outline-btn(flat, label='CONTINUE', type='submit')
           q-card-section.text-wallet-bottomline
             | By continuing you agree to the terms and conditions
+
+    //- Payment Methods
+    TPCardPayment(
+      v-if='tpId !== ""',
+      :paymentId='tpId',
+      :orderId='String(order.order_id)',
+      :amount='spendAmount'
+    )
 
     //- Show payment status
     TokensReceipt(

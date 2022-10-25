@@ -65,6 +65,7 @@ export async function getProfile() {
   const res = (await api.accounts.query(`
     {
       profile{
+        _id
         name
         surname
         email
@@ -74,6 +75,16 @@ export async function getProfile() {
         publicKey
         secret
         linkedAccounts
+        kyc
+        bankInfo {
+          name
+          accountNumber
+          bankName
+          bankCode
+          bankAddress
+          swiftCode
+          iban
+        }
       }
     }`)) as any;
   const profile = res.profile;

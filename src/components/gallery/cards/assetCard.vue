@@ -23,7 +23,7 @@ export default defineComponent({
         case 'Gold':
           return 'yellow-7';
         case 'Bronze':
-          return 'orange-14';
+          return 'deep-orange-5';
         case 'Platinum':
           return 'grey-4';
         default:
@@ -46,8 +46,8 @@ q-card
       .col-10
         //- Title of cards
         .row
-          .text-subtitle1.heading {{ `${card.collectionTitle} #${card.mintNumber}` }}
-      .col-2.self-center
+          .text-subtitle1.heading.ellipsis {{ `${card.collectionTitle} #${card.mintNumber}` }}
+      .col-2.self-center(v-if='card.tier != "None"')
         q-badge.float-right.lt-md(rounded, :color='badgeColour')
         q-badge.float-right.gt-sm(rounded, :color='badgeColour') 
           .text-subtitle3 {{ card.tier }}
@@ -57,8 +57,9 @@ q-card
         .col-auto.text-bold
           | Price:
         .col-auto
-          img.lc-currency.q-pr-xs(src='~assets/legalcoin-trimmed.png')
-          | {{ getPrice }}
+          .row.no-wrap.items-center
+            img.lc-currency.q-pr-xs(src='~assets/legalcoin-trimmed.png')
+            .ellipsis {{ getPrice }}
       .col
         .col-auto.text-bold
           .text-right Yield:
@@ -66,7 +67,14 @@ q-card
           .text-subtitle4 {{ card.yield }}
 
   router-link(:to='{ name: "asset", params: { asset: card.id } }')
-    q-img.zoom(:src='card.imageUrl')
+    q-img.zoom.asset-img(
+      :src='card.imageUrl',
+      placeholder-src='~src/assets/LC-Placeholder.png'
+    )
+      template(v-slot:loading)
+        .text-primary
+          .q-pt-xl Loading...
+          q-spinner
 </template>
 
 <style lang="sass" scoped>

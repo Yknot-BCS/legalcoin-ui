@@ -167,6 +167,16 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/BuyTokens.vue')
       },
       {
+        path: '/buytokens/:status/:orderId',
+        name: 'ordersuccess',
+        component: () => import('pages/BuyTokens.vue')
+      },
+      {
+        path: '/withdraw/',
+        name: 'withdraw',
+        component: () => import('pages/Withdraw.vue')
+      },
+      {
         path: '/txhistory',
         name: 'txhistory',
         component: () => import('pages/TxHistory.vue')

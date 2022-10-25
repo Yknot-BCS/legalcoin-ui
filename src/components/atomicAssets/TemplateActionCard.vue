@@ -32,7 +32,8 @@ export default defineComponent({
       showListingDialog: ref(false),
       balance: ref('0'),
       total: ref(0),
-      allSales: ref([] as ISale[])
+      allSales: ref([] as ISale[]),
+      salesCount: ref(0)
     };
   },
 
@@ -186,6 +187,7 @@ export default defineComponent({
 
     // Get balance
     await this.getBalance();
+    await this.getSaleSupply();
     await this.getTotal();
   },
   watch: {
@@ -211,6 +213,24 @@ export default defineComponent({
 
   methods: {
     ...mapActions({ sendTransaction: 'account/sendTransaction' }),
+
+    async getSaleSupply() {
+      this.salesCount = await atomic_market_api.fetchEndpoint(
+        '/v2/sales/_count',
+        {
+          collection_name:
+            this.$route.params.collection_name === undefined
+              ? ''
+              : (this.$route.params.collection_name as string),
+          template_id:
+            this.$route.params.template_id === undefined
+              ? ''
+              : this.$route.params.template_id,
+          state: 1,
+          seller: process.env.AA_ACCOUNT
+        }
+      );
+    },
 
     async getTotal() {
       this.total = 0;
@@ -431,14 +451,16 @@ q-card
             .text-NFTCard-price-value.text-grey-10
               | {{ daysToMaturity }}
       .row.justify-between.q-mt-lg
-        .col-3
-          q-input(
-            v-model='quantity',
-            type='number',
-            label='Quantity',
-            outlined
-          )
-        .col-6
+        .col-4
+          .column.fit.items-center.text-available-supply.text-grey-10
+            q-input(
+              v-model='quantity',
+              type='number',
+              label='Quantity',
+              outlined
+            )
+            | Available: {{ salesCount }} / {{ templateData.max_supply }}
+        .col-5
           .column.content-end.items-end.text-NFTCard-price-head.text-grey-10
             | Total
             .text-NFTCard-price-value.text-grey-10
@@ -484,4 +506,8 @@ q-card
     //- | hasenoughbalance: {{ hasEnoughBalance }},
 </template>
 
-<style lang="sass"></style>
+<style lang="sass">
+.text-available-supply
+  font-size: 0.8rem
+  font-family: "ralewayregular"
+</style>

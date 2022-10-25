@@ -14,7 +14,7 @@ export default {
   a(href='https://legalcoin.com', target='_blank')
     img.q-mr-md(src='~assets/legalcoin-dark.png', height='64')
   a(href='https://y-knot.io', target='_blank')
-    img(src='~assets/yknot-dark.png', height='64')
+    img(src='~assets/Y-knot_horizontal_logo.png', height='64')
 .bot
   .row.justify-center.q-gutter-x-lg
     .col-12.col-md-2.section

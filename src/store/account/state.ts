@@ -1,4 +1,4 @@
-import { AccountDetails, User, Session } from 'src/types';
+import { AccountDetails, User, Session, BankInfo } from 'src/types';
 import { SignTransactionResponse } from 'universal-authenticator-library';
 import { UALPlatformSignerError } from 'src/components/auth/UALPlatformSignerError';
 
@@ -34,6 +34,7 @@ export function state(): AccountStateInterface {
     // Profile
     isLoggedIn: false,
     profile: {
+      _id: '',
       name: '',
       surname: '',
       email: '',
@@ -42,7 +43,9 @@ export function state(): AccountStateInterface {
       accountName: '',
       publicKey: '',
       secret: '',
-      linkedAccounts: ['']
+      linkedAccounts: [''],
+      kyc: '',
+      bankInfo: {} as BankInfo
     },
     session: {
       token: '',
