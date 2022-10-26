@@ -32,55 +32,52 @@ export default {
 </script>
 
 <template lang="pug">
-q-toolbar.row.q-py-sm.q-px-md.bg-grey-1.vertical-top
-  router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
-    img.logo.q-mr-md(v-if='$q.screen.gt.sm', src='~assets/legalcoin-full.png')
-    img.logo-small.q-mr-sm(v-else, src='~assets/legalcoin-full.png')
+q-toolbar.row.q-py-sm.q-px-md.bg-grey-1.vertical-top.justify-between
+  .col-3
+    router-link.row.items-center.cursor-pointer(:to='{ name: "home" }')
+      img.logo.q-mr-md(
+        v-if='$q.screen.gt.sm',
+        src='~assets/legalcoin-full.png'
+      )
+      img.logo-small.q-mr-sm(v-else, src='~assets/legalcoin-full.png')
 
-  .col.row.justify-center
-    search-bar.toolbar-select.q-mr-md(size='100', v-if='$q.screen.gt.md')
-    search-bar.toolbar-select.q-mr-md(size='50', v-if='$q.screen.md')
-    search-bar.toolbar-select.q-mr-md(size='30', v-if='$q.screen.sm')
+  .col-6
+    search-bar.toolbar-select(
+      size='100',
+      v-if='$q.screen.gt.md || $q.screen.md'
+    )
+    search-bar.toolbar-select(
+      size='50',
+      v-if='$q.screen.lt.md && $q.screen.sm'
+    )
+    search-bar.toolbar-select(size='30', v-if='$q.screen.lt.sm')
 
-  .q-mr-md.q-gutter-x-md.row.items-center.no-wrap(v-if='$q.screen.gt.sm')
-    q-btn(
+  .col-3.q-mr-md.items-center.float-right(
+    v-if='($q.screen.gt.sm, !isLoggedIn)'
+  )
+    q-btn.float-right(
+      flat,
+      icon='o_account_circle',
+      :label='$q.screen.gt.md ? `Account` : `` || $q.screen.lt.md ? `` : ``',
+      dense,
+      :to='{ name: "login" }'
+    )
+    q-btn.float-right(
       flat,
       icon='grid_view',
-      label='Discover',
+      :label='$q.screen.gt.md ? `Discover` : `` || $q.screen.lt.md ? `` : ``',
       dense,
       :to='{ name: "discover" }'
     )
-    q-btn(
-      flat,
-      icon='o_account_circle',
-      label='Account',
-      v-if='!isLoggedIn',
-      dense,
-      :to='{ name: "login" }'
-    )
 
-  .row.items-center
-    search-bar.lt-sm
-
-    q-btn.lt-md(flat, round, dense, :to='{ name: "discover" }')
-      q-icon.material-icons-outlined(name='grid_view')
-
-    q-btn(
-      flat,
-      round,
-      dense,
-      v-if='!isLoggedIn && $q.screen.lt.md',
-      :to='{ name: "login" }'
-    )
-      q-icon.material-icons-outlined(name='account_circle')
-    q-btn(
+  .col-sm-3.items-center.float-right(v-if='isLoggedIn')
+    q-btn.float-right(
       dense,
       flat,
       no-wrap,
       :round='$q.screen.lt.sm ? true : false',
       icon='account_circle',
-      :label='$q.screen.gt.sm ? `Account` : `` || $q.screen.lt.sm ? `` : ``',
-      v-if='isLoggedIn'
+      :label='$q.screen.gt.md ? `Account` : `` || $q.screen.lt.md ? `` : ``'
     )
       q-menu.menu-edit(auto-close, fit)
         q-list(dense)
@@ -131,6 +128,13 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1.vertical-top
                 text-color='white',
                 @click='logout()'
               )
+    q-btn.float-right(
+      flat,
+      icon='grid_view',
+      dense,
+      :to='{ name: "discover" }',
+      :label='$q.screen.gt.md ? `Discover` : `` || $q.screen.lt.md ? `` : ``'
+    )
 </template>
 
 <style scoped lang="sass">
