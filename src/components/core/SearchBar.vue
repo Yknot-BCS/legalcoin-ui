@@ -43,12 +43,13 @@ export default defineComponent({
 <template lang="pug">
 .div
   //- Mobile
-  q-btn(
+  q-btn.float-right(
     flat,
     round,
     dense,
     icon='search',
     v-if='$q.screen.lt.sm',
+    color='black',
     @click='onSearchClick()',
     size='lg'
   )
