@@ -69,7 +69,8 @@ q-card
   router-link(:to='{ name: "asset", params: { asset: card.id } }')
     q-img.zoom.asset-img(
       :src='card.imageUrl',
-      placeholder-src='~src/assets/LC-Placeholder.png'
+      placeholder-src='~src/assets/LC-Placeholder.png',
+      :ratio='4 / 3'
     )
       template(v-slot:loading)
         .text-primary
