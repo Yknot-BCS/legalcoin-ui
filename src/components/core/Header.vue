@@ -41,7 +41,7 @@ q-toolbar.row.q-py-sm.q-px-md.bg-grey-1.vertical-top.justify-between
       )
       img.logo-small.q-mr-sm(v-else, src='~assets/legalcoin-full.png')
 
-  .col-6
+  .col-4
     search-bar.toolbar-select(
       size='100',
       v-if='$q.screen.gt.md || $q.screen.md'
