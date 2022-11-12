@@ -541,6 +541,7 @@ export const getSalesQueryApiOptions = function (
   min_price?: string;
   max_price?: string;
   symbol?: string;
+  authorized_account?: string;
 } {
   const route = useRoute();
   const query = route.query;
@@ -557,6 +558,7 @@ export const getSalesQueryApiOptions = function (
       min_price?: string;
       max_price?: string;
       symbol?: string;
+      authorized_account?: string;
     };
     dataOptions = {
       search: (query['search'] as string) || '',
@@ -575,7 +577,10 @@ export const getSalesQueryApiOptions = function (
         seller_blacklist: process.env.AA_ACCOUNT
       };
     } else {
-      dataOptions = { ...dataOptions, seller: process.env.AA_ACCOUNT };
+      dataOptions = {
+        ...dataOptions,
+        authorized_account: process.env.AA_ACCOUNT
+      };
     }
     if (query['min_price'] && query['max_price']) {
       dataOptions = {
