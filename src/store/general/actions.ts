@@ -27,7 +27,8 @@ export const actions: ActionTree<GeneralStateInterface, StateInterface> = {
       order: 'desc',
       limit: 4,
       match: state.search,
-      sort: 'created'
+      sort: 'created',
+      authorized_account: process.env.AA_ACCOUNT
     };
     const AccountOptions = {
       page: 1,

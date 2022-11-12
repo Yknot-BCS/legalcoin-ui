@@ -34,7 +34,7 @@ export default defineComponent({
     const status = computed(() => getQueryStatus());
     const assetCount = ref<number>(1);
     const collectionCount = ref<number>(1);
-    const collections = ref<string>('emissions.lc');
+    const collections = ref<string>('');
     const myGalleryOptions = computed(() => {
       if (status.value == 'buynow') {
         return {

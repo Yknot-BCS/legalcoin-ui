@@ -27,7 +27,7 @@ export default defineComponent({
     const limit = computed(() => getQueryLimit(route.query));
     const price = computed(() => getQueryPrice());
     const status = computed(() => getQueryStatus());
-    const collections = ref<string>('emissions.lc');
+    const collections = ref<string>('');
     const assetOptions = computed(() => {
       return {
         state: '1',
