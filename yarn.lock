@@ -2996,10 +2996,10 @@ check-error@^1.0.2:
   resolved "https://registry.npmjs.org/check-error/-/check-error-1.0.2.tgz"
   integrity sha1-V00xLt2Iu13YkS6Sht1sCu1KrII=
 
-checkout-sdk-node@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.npmjs.org/checkout-sdk-node/-/checkout-sdk-node-2.0.1.tgz"
-  integrity sha512-Aq4MdFtTXEZV1hxNFgLNnGyyPv9SaxSgllZY8ZeswSDnp8mED6DenhVTzEXlCgrARhDXHcIgEQKMUIlpRK9M1A==
+checkout-sdk-node@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/checkout-sdk-node/-/checkout-sdk-node-2.0.6.tgz#738597edea96ce0e89fe9f26d1df83ed79f79634"
+  integrity sha512-IZ1RV3eD0n7t6T967n6bj1dXBM34Opy7H7VwJT/PVgTNz5ofiNKTacQ4IgQysHjx81f1JUGLHFYUqsSzH8/k9A==
   dependencies:
     form-data "^4.0.0"
     node-fetch "^2.6.7"
