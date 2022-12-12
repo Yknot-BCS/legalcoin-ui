@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@greymass/eosio": "^0.5.4",
-    "@quasar/extras": "^1.14.0",
+    "@quasar/extras": "^1.15.8",
     "atomicassets": "^1.4.2",
     "atomicmarket": "^1.1.6",
     "axios": "^0.21.1",
