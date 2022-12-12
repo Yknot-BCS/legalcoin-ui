@@ -18,7 +18,7 @@
     "@quasar/extras": "^1.14.0",
     "atomicassets": "^1.4.2",
     "atomicmarket": "^1.1.6",
-    "axios": "^0.21.1",
+    "axios": "^1.2.1",
     "checkout-sdk-node": "^2.0.1",
     "core-js": "^3.6.5",
     "highcharts": "^9.3.2",
