@@ -7920,10 +7920,10 @@ qs@^6.11.0:
   dependencies:
     side-channel "^1.0.4"
 
-quasar@^2.7.1:
-  version "2.7.1"
-  resolved "https://registry.npmjs.org/quasar/-/quasar-2.7.1.tgz"
-  integrity sha512-V2FcD04nHE07p4p0YEeC3ZIA9kodyZ5wdZ+eXRZhUZ3cFugAneJ1D2WCyKoqwM4OReFCk/1jlqQxCCUaTU4X3g==
+quasar@^2.32.2:
+  version "2.32.2"
+  resolved "https://registry.yarnpkg.com/quasar/-/quasar-2.32.2.tgz#4db7a74bca5143c83c493a93b0bd184867fbc12d"
+  integrity sha512-IqQHHYoYL8bfFDAwy5E5X1xv7VpMAdhFHjSaLycueRdLOkXMbntUUphAIof8Q/wgvKQcskYflGV9/OyIPvbkLA==
 
 querystring-es3@^0.2.1:
   version "0.2.1"
